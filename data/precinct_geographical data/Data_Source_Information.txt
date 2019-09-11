@@ -1,0 +1,8 @@
+Michigan: https://gis-michigan.opendata.arcgis.com/datasets/8ce0f3ce3ff74109ac02a26d34a0f4fc_1
+Michigan Department of State 
+(Shapefile format)
+
+
+North Carolina: Duke University Libraries
+https://dl.ncsbe.gov/index.html?prefix=PrecinctMaps/
+(Shapefile format)
