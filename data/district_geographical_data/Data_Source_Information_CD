@@ -1,6 +1,6 @@
 Michigan: http://gis-michigan.opendata.arcgis.com/datasets/c282f3a2f1b84a54ae6dc44bc7568247_15/data
 Michigan Department of State
-(Shapefile format : csv file) [can get in other formats on website like pure shapefile format]
+Shapefile converted to geoJSON
 [2011 data]
 
 Rhode Island: http://www.rigis.org/datasets/congressional-districts/data
