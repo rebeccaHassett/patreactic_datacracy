@@ -1,6 +1,6 @@
 Michigan: https://gis-michigan.opendata.arcgis.com/datasets/8ce0f3ce3ff74109ac02a26d34a0f4fc_1
 Michigan Department of State 
-(Shapefile format : csv file) [can get in other formats on website like pure shapefile format]
+JSON converted from Shapefile
 
 
 North Carolina: Duke University Libraries
@@ -9,4 +9,4 @@ https://dl.ncsbe.gov/index.html?prefix=PrecinctMaps/
 
 Rhode Island: http://www.rigis.org/datasets/d12408938f6d42a4b02256087290cc4f_0
 Rhode Island Geographic Information System
-(Shapefile format: csv file) [can get in other formats on website like pure shapefile format]
+JSON converted from Shapefile
