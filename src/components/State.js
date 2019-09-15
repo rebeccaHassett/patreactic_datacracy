@@ -2,13 +2,21 @@ import React, {Component} from 'react';
 import L from 'leaflet';
 import {Container, Button, Tabs, Tab} from "react-bootstrap";
 import styled from 'styled-components';
-import State_Borders from '../resources/GeoJSON/State_Borders'
 import {Link} from 'react-router-dom';
 import Controls from "./Controls";
+/*import State_Borders from "../resources/GeoJSON/State_Borders";
+import Michigan from "../resources/GeoJSON/Michigan";
+import $ from 'jquery';*/
 
 export default class State extends Component {
 
+    setStateDistrictLayers = (chosen_state) => {
+
+    }
+
+
     componentDidMount() {
+        var map_test;
         var max_bounds;
         var chosen_state = window.location.pathname.split("/").pop();
 
@@ -41,11 +49,40 @@ export default class State extends Component {
             ]
         }).fitBounds(max_bounds);
 
-        var map_style = {
-            "color": "green"
-        };
+        map_test = this.map;
 
-        L.geoJSON(State_Borders, {style: map_style}).addTo(this.map);
+
+        // Fetch the geojson file
+        // $.getJSON('../resources/GeoJSON/Michigan_U.S_Congressional_Districts_Geography.json', function (data) {
+        //     // Define the geojson layer and add it to the map
+        //     L.geoJson(data).addTo(this.map);
+        // });
+
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', '../resources/GeoJSON/Michigan_U.S_Congressional_Districts_Geography.json');
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.responseType = 'json';
+        xhr.onload = function() {
+            if (xhr.status !== 200) return
+            console.log(xhr.response);
+            L.geoJSON(xhr.response).addTo(map_test);
+        };
+        xhr.send();
+
+
+
+/*        var districts = $.ajax({
+            url: '../resources/GeoJSON/Michigan_U.S_Congressional_Districts_Geography.json',
+            dataType: "json",
+            success: console.log("County data successfully loaded."),
+            error: function(xhr) {
+                alert(xhr.statusText)
+            }
+        })
+
+        $.when(districts).done(function() {
+           L.geoJSON(districts.responseJSON).addTo(this.map);
+        });*/
 
     }
 
@@ -78,3 +115,10 @@ const State_Style = styled.div`
       height: 600px;
     }
 `;
+
+function fetchJSON(url) {
+    return fetch(url)
+        .then(function(response) {
+            return response.json();
+        });
+}
