@@ -8,8 +8,9 @@ Rhode Island Geographic Information System
 (Shapefile format: csv file) [can get in other formats on website like pure shapefile format]
 [this data is from 2017-2019
 
-116th US Congressional Districts:
+North Carolina:
 https://catalog.data.gov/dataset/tiger-line-shapefile-2018-nation-u-s-116th-congressional-district-national
-Shapefile format
-Covers all congressional districts
+Shapefile converted to json of all congressional districts in 116th congressional districts
+Used custom python program to parse out North Carolina STATEFP = 37
 Most recent congressional district and linked by a .gov database
+Now in json format, can look at the map of it using mapshaper online
