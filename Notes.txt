@@ -1,0 +1,60 @@
+/*   Equal Population Measure: Supreme Court usually looks at absolute value percentage variation
+between most populated district and least populated district
+\ 5% is usually OK, 7% or more not OK                                 */
+
+/* Natural Boundaries geographical data: roads and rivers */
+/* Voter preference data: party affiliation */
+
+
+
+/* Might want to show gerrymandering data on initial map */
+
+
+/* Real-Time Interim Progress */
+
+
+/* Final results and comparisons */
+
+/* Show data on hover/mouse over*/
+
+/* Maybe options for users to pick colors */
+
+/* Determine colors for different layers displayed on map*/
+
+/* Make selected tab color pop with blue too maybe? */
+
+/* State display constant in one part of screen, would you have moving GUI at another part of screen */
+
+/* Algorithm controls on state map display */
+
+/* Graphs to display results, [compare gerrymandering scores before and after] simulated elections results, lopsided advantage, consistent advantage */
+
+/* compatible colors, contrasting colors for adjacent congressional districts */
+
+/* toggle switch for different displays?*/
+
+/* precinct data on zoom */
+
+/* precinct and district demographic data on hover */
+
+/* display gerrymandering related data, probably on main map or in tab */
+
+/* import boundaries and election data button */
+
+/* Button allowing map to only be updated at end of Phase 1 or every discrete iteration, results are metrics]*/
+
+/* Original congressional district and generated congressional district displays */
+
+/* Choose ethnic group for each district */
+
+/* max and min population for each ethnic group in each such district */
+
+/* User specifies number of batched runs as well as variation in runs [weights] */
+
+/* Run results: seats by party, objective function value, summary of measure data */
+
+/* User select to load single result into map and see evolution */
+
+/* possibly login and signup*/
+
+/* User selects upper and lower bounds for congressional district population for a single group to prevent packing */
