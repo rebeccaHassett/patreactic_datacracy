@@ -45,6 +45,13 @@ export default class Controls extends Component {
                     <Form.Label>Partisan Fairness Measure:</Form.Label>
                     <Slider_Controls></Slider_Controls>
                 </Form.Group>
+                <Form.Group controlId="block-voting">
+                    <Form.Label>Block Voting Measure:</Form.Label>
+                    <Form.Label>Minority Group Percentage:</Form.Label>
+                    <Slider_Controls></Slider_Controls>
+                    <Form.Label>Voting Percentage:</Form.Label>
+                    <Slider_Controls></Slider_Controls>
+                </Form.Group>
                 <Form.Group controlId="voting-rights-act">
                     <Form.Label>Voting Rights Act Information:</Form.Label>
                 </Form.Group>

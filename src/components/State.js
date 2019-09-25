@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import {Link} from 'react-router-dom';
 import Controls from "./Controls";
 import Results_Graphs from "./Results_Graphs";
+import Statistics from "../Statistics";
 /*import State_Borders from "../resources/GeoJSON/State_Borders";
 import Michigan from "../resources/GeoJSON/Michigan";
 import $ from 'jquery';*/
@@ -16,7 +17,10 @@ export default class State extends Component {
             Tab1: false,
             Tab2: false,
             Tab3: true,
-            Tab4: false
+            Tab4: true,
+            Tab5: false,
+            Tab6: false,
+            Tab7: false
         }
     }
 
@@ -110,26 +114,30 @@ export default class State extends Component {
             <State_Style>
                 <Container fluid={true}>
                     <Row noGutters={true}>
-                        <Col sm={2} id="col-1">
-                            <DropdownButton title="Menu" id="Menu">
-                                <Link to='/map'>
-                                <Dropdown.Item href="#/action-1">Back</Dropdown.Item>
-                                </Link>
-                                <Dropdown.Item href="#/action-2">Import Boundary Data</Dropdown.Item>
-                                <Dropdown.Item href="#/action-3">Import Election Data</Dropdown.Item>
-                            </DropdownButton>
+                        <Col sm={3} id="col-1">
+                            <Tabs defaultActiveKey="menu" id="tabs">
+                                <Tab eventKey="menu" title="Map Menu" disabled={this.state.Tab6}>
+                                    <Link to='/map'>
+                                    <Button>Back to US Map</Button>
+                                    </Link>
+                                    <Button>Import Election Data</Button>
+                                    <Button>Import Boundary Data</Button>
+                                    <Button disabled>Toggle to Original Districts</Button>
+                                </Tab>
+                                <Tab eventKey="controls" title="Controls" disabled={this.state.Tab5}>
+                                    <Button>Run</Button>
+                                    <Button>Incremental Run</Button>
+                                    <Button disabled>Next</Button>
+                                    <Controls></Controls>
+                                </Tab>
+                                <Tab eventKey="statistics" title="Statistics" disabled={this.state.Tab7}>
+                                    <Statistics></Statistics>
+                                </Tab>
+                            </Tabs>
                         </Col>
                         <Col>
                             <Tabs defaultActiveKey="map" id="tabs">
-                                <Tab eventKey="Input" title="Input" disabled={this.state.Tab1}>
-                                    <Controls></Controls>
-                                </Tab>
-                                <Tab eventKey="map" title="Original Map" disabled={this.state.Tab2}>
-                                    <Container>
-                                        <div id='map'></div>
-                                    </Container>
-                                </Tab>
-                                <Tab eventKey="new-map" title="Generated Map" disabled={this.state.Tab3}>
+                                <Tab eventKey="map" title="Map" disabled={this.state.Tab2}>
                                     <Container>
                                         <div id='map'></div>
                                     </Container>
@@ -150,12 +158,12 @@ const State_Style = styled.div`
     #map {
       height: 600px;
     }
-    #Menu {
-        width:16vw;
-        background-color: #007bff;
-    }
     #col-1 {
         background-color:  lightgray;
+    }
+    Button {
+        width:24vw;
+        background-color: limegreen;
     }
     
 `;

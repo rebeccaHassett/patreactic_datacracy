@@ -23,8 +23,6 @@ between most populated district and least populated district
 
 /* Make selected tab color pop with blue too maybe? */
 
-/* State display constant in one part of screen, would you have moving GUI at another part of screen */
-
 /* Algorithm controls on state map display */
 
 /* Graphs to display results, [compare gerrymandering scores before and after] simulated elections results, lopsided advantage, consistent advantage */
@@ -39,8 +37,6 @@ between most populated district and least populated district
 
 /* display gerrymandering related data, probably on main map or in tab */
 
-/* import boundaries and election data button */
-
 /* Button allowing map to only be updated at end of Phase 1 or every discrete iteration, results are metrics]*/
 
 /* Original congressional district and generated congressional district displays */
@@ -54,7 +50,5 @@ between most populated district and least populated district
 /* Run results: seats by party, objective function value, summary of measure data */
 
 /* User select to load single result into map and see evolution */
-
-/* possibly login and signup*/
 
 /* User selects upper and lower bounds for congressional district population for a single group to prevent packing */

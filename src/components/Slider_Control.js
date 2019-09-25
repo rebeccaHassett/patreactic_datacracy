@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import Slider from 'react-rangeslider'
 import 'react-rangeslider/lib/index.css'
+import styled from "styled-components";
 
 export default class Slider_Controls extends Component {
     constructor(props, context) {
@@ -19,7 +20,7 @@ export default class Slider_Controls extends Component {
     render() {
         let { volume } = this.state
         return (
-            <Slider
+            <Slider id = "slider"
                 value={volume}
                 orientation="horizontal"
                 onChange={this.handleOnChange}
