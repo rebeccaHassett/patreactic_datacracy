@@ -6,9 +6,9 @@ import {Link} from 'react-router-dom';
 import Controls from "./Controls";
 import Results_Graphs from "./Results_Graphs";
 import Statistics from "../Statistics";
-/*import State_Borders from "../resources/GeoJSON/State_Borders";
+import State_Borders from "../resources/GeoJSON/State_Borders";
 import Michigan from "../resources/GeoJSON/Michigan";
-import $ from 'jquery';*/
+import $ from 'jquery';
 
 export default class State extends Component {
     constructor() {
@@ -75,37 +75,40 @@ export default class State extends Component {
 
         map_test = this.map;
 
-
-        // Fetch the geojson file
-        // $.getJSON('../resources/GeoJSON/Michigan_U.S_Congressional_Districts_Geography.json', function (data) {
-        //     // Define the geojson layer and add it to the map
-        //     L.geoJson(data).addTo(this.map);
-        // });
-
-        const xhr = new XMLHttpRequest();
-        xhr.open('GET', '../resources/GeoJSON/Michigan_U.S_Congressional_Districts_Geography.json');
-        xhr.setRequestHeader('Content-Type', 'application/json');
-        xhr.responseType = 'json';
-        xhr.onload = function () {
-            if (xhr.status !== 200) return
-            console.log(xhr.response);
-            L.geoJSON(xhr.response).addTo(map_test);
+        var precinct_style = {
+            "color": "green"
         };
-        xhr.send();
+
+        var precinct_layer;
+
+        const url = 'http://172.25.81.185:8080/North_Carolina_U.S_Congressional_Districts_Geography.json';
+/*        fetch(url)
+            .then(response => response.text())
+            .then(contents => precinct_layer = contents)
+            .catch(() => console.log("Can’t access " + url + " response. Blocked by browser?"))*/
 
 
-        /*        var districts = $.ajax({
-                    url: '../resources/GeoJSON/Michigan_U.S_Congrsessional_Districts_Geography.json',
+
+
+            //Fetch the geojson file
+
+
+                var layer;
+                var districts = $.ajax({
+                    url: url,
                     dataType: "json",
                     success: console.log("County data successfully loaded."),
-                    error: function(xhr) {
+                    fail: function(xhr) {
                         alert(xhr.statusText)
                     }
                 })
 
+
                 $.when(districts).done(function() {
-                   L.geoJSON(districts.responseJSON).addTo(this.map);
-                });*/
+                    console.log(districts.responseJSON);
+                    layer = L.geoJSON(districts.responseJSON, {style: precinct_style}).addTo(map_test);
+                    console.log(layer);
+                });
 
     }
 
