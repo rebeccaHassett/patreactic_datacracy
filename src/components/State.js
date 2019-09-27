@@ -1,13 +1,11 @@
 import React, {Component} from 'react';
 import L from 'leaflet';
-import {Container, Button, Tabs, Tab, Row, Col, ButtonToolbar, DropdownButton, SplitButton, Dropdown} from "react-bootstrap";
+import {Container, Button, Tabs, Tab, Row, Col} from "react-bootstrap";
 import styled from 'styled-components';
 import {Link} from 'react-router-dom';
 import Controls from "./Controls";
 import Results_Graphs from "./Results_Graphs";
 import Statistics from "../Statistics";
-import State_Borders from "../resources/GeoJSON/State_Borders";
-import Michigan from "../resources/GeoJSON/Michigan";
 import $ from 'jquery';
 
 export default class State extends Component {
@@ -33,10 +31,6 @@ export default class State extends Component {
             this.setState({Tab3: false});
         }
     };
-
-    setStateDistrictLayers = (chosen_state) => {
-
-    }
 
 
     componentDidMount() {
@@ -73,43 +67,8 @@ export default class State extends Component {
             ]
         }).fitBounds(max_bounds);
 
-        map_test = this.map;
-
-        var precinct_style = {
-            "color": "green"
-        };
-
-        var precinct_layer;
-
-        const url = 'http://172.25.81.185:8080/North_Carolina_U.S_Congressional_Districts_Geography.json';
-/*        fetch(url)
-            .then(response => response.text())
-            .then(contents => precinct_layer = contents)
-            .catch(() => console.log("Can’t access " + url + " response. Blocked by browser?"))*/
-
-
-
-
-            //Fetch the geojson file
-
-
-                var layer;
-                var districts = $.ajax({
-                    url: url,
-                    dataType: "json",
-                    success: console.log("County data successfully loaded."),
-                    fail: function(xhr) {
-                        alert(xhr.statusText)
-                    }
-                })
-
-
-                $.when(districts).done(function() {
-                    console.log(districts.responseJSON);
-                    layer = L.geoJSON(districts.responseJSON, {style: precinct_style}).addTo(map_test);
-                    console.log(layer);
-                });
-
+        addDistrictsToState('http://127.0.0.1:8080/district_geographical_data/Rhode_Island/Rhode_Island_U.S_Congressional_Districts_Geography.json', this.map);
+        addDistrictsToState('http://127.0.0.1:8080/district_geographical_data/North_Carolina/North_Carolina_U.S_Congressional_Districts_Geography.json', this.map);
     }
 
     render() {
@@ -121,7 +80,7 @@ export default class State extends Component {
                             <Tabs defaultActiveKey="menu" id="tabs">
                                 <Tab eventKey="menu" title="Map Menu" disabled={this.state.Tab6}>
                                     <Link to='/map'>
-                                    <Button>Back to US Map</Button>
+                                        <Button>Back to US Map</Button>
                                     </Link>
                                     <Button>Import Election Data</Button>
                                     <Button>Import Boundary Data</Button>
@@ -171,9 +130,25 @@ const State_Style = styled.div`
     
 `;
 
-function fetchJSON(url) {
-    return fetch(url)
-        .then(function (response) {
-            return response.json();
-        });
+function addDistrictsToState(url, map) {
+    var layer;
+
+    var district_style = {
+        "color": "green"
+    };
+
+    var state = $.ajax({
+        url: url,
+        dataType: "json",
+        success: console.log("State data successfully loaded."),
+        fail: function (xhr) {
+            alert(xhr.statusText)
+        }
+    })
+
+
+    $.when(state).done(function () {
+            layer = L.geoJSON(state.responseJSON, {style: district_style}).addTo(map);
+            layer.bringToBack();
+    });
 }

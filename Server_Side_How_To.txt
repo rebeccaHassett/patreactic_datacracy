@@ -1,0 +1,5 @@
+1 - In WebStorm terminal, run "npm install http-server"
+
+2- In terminal, "cd node_modules/http-server/bin"
+
+3 - Run "node http-server ../../../data --cors"
