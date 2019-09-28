@@ -69,6 +69,7 @@ export default class State extends Component {
 
         addDistrictsToState('http://127.0.0.1:8080/district_geographical_data/Rhode_Island/Rhode_Island_U.S_Congressional_Districts_Geography.json', this.map);
         addDistrictsToState('http://127.0.0.1:8080/district_geographical_data/North_Carolina/North_Carolina_U.S_Congressional_Districts_Geography.json', this.map);
+        addDistrictsToState('http://127.0.0.1:8080/district_geographical_data/Michigan/Michigan_U.S._Congressional_Districts_v17a.geojson', this.map);
     }
 
     render() {
@@ -149,6 +150,7 @@ function addDistrictsToState(url, map) {
 
     $.when(state).done(function () {
             layer = L.geoJSON(state.responseJSON, {style: district_style}).addTo(map);
-            layer.bringToBack();
+            layer.bringToFront();
+            console.log(layer);
     });
 }
