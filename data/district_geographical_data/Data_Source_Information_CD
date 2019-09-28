@@ -1,12 +1,12 @@
 Michigan: http://gis-michigan.opendata.arcgis.com/datasets/c282f3a2f1b84a54ae6dc44bc7568247_15/data
 Michigan Department of State
 Shapefile converted to geoJSON
-[2011 data]
+[Updated 6 months ago, matches pictures of congressional districts for 2013-present]
 
 Rhode Island: http://www.rigis.org/datasets/congressional-districts/data
 Rhode Island Geographic Information System
 (Shapefile format: csv file) [can get in other formats on website like pure shapefile format]
-[this data is from 2017-2019
+[this data is from 2017-2019]
 
 North Carolina:
 https://catalog.data.gov/dataset/tiger-line-shapefile-2018-nation-u-s-116th-congressional-district-national
@@ -14,3 +14,9 @@ Shapefile converted to json of all congressional districts in 116th congressiona
 Used custom python program to parse out North Carolina STATEFP = 37
 Most recent congressional district and linked by a .gov database
 Now in json format, can look at the map of it using mapshaper online
+[Redrawing happened in 2016] [2016-present map]
+https://www.politico.com/2016-election/results/map/house/north-carolina/ [source shows 2016 election results,
+and the congressional district results match]
+https://www.washingtonpost.com/2016-election-results/north-carolina/ [washington post map shown using new
+congressional districts as well for 2016 elections]
+https://www.washingtonpost.com/election-results/2019-north-carolina-special-general/ [2018 elections]

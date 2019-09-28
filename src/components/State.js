@@ -34,38 +34,44 @@ export default class State extends Component {
 
 
     componentDidMount() {
-        var map_test;
         var max_bounds;
+        var min_zoom;
         var chosen_state = window.location.pathname.split("/").pop();
 
         if (chosen_state === "NorthCarolina") {
             max_bounds = [
-                [36, -81],
-                [33, -80]
+                [37, -71],               /* North East */
+                [33, -85]                /* South West */
             ];
+            min_zoom = 7;
         } else if (chosen_state === "RhodeIsland") {
             max_bounds = [
-                [41, -72],
-                [42, -71]
+                [43, -70],
+                [40, -72]
             ];
+            min_zoom = 9;
         } else { /*Michigan*/
             max_bounds = [
-                [41.5, -90.6],
-                [48, -79.5]
+                [49, -70],
+                [40, -93]
             ];
+            min_zoom = 6;
+
         }
 
         // create map
         this.map = L.map('map', {
-            center: [0, 0],
-            zoom: 5,
+            maxZoom: 20,
+            minZoom: min_zoom,
             maxBounds: max_bounds,
+            maxBoundsViscosity: 1.0,
             layers: [
                 L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
                     attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                 }),
             ]
         }).fitBounds(max_bounds);
+
 
         addDistrictsToState('http://127.0.0.1:8080/district_geographical_data/Rhode_Island/Rhode_Island_U.S_Congressional_Districts_Geography.json', this.map);
         addDistrictsToState('http://127.0.0.1:8080/district_geographical_data/North_Carolina/North_Carolina_U.S_Congressional_Districts_Geography.json', this.map);
