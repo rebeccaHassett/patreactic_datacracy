@@ -6,6 +6,7 @@ import {Link} from 'react-router-dom';
 import Controls from "./Controls";
 import Results_Graphs from "./Results_Graphs";
 import Statistics from "../Statistics";
+import Precinct from "./Precinct";
 import $ from 'jquery';
 
 export default class State extends Component {
@@ -71,6 +72,13 @@ export default class State extends Component {
                 }),
             ]
         }).fitBounds(max_bounds);
+
+        this.map.on("zoomend", function(event) {
+            if(this.getZoom() >= 8) {
+                console.log("LOAD PRECINCTS");
+            }
+        });
+
 
 
         addDistrictsToState('http://127.0.0.1:8080/district_geographical_data/Rhode_Island/Rhode_Island_U.S_Congressional_Districts_Geography.json', this.map);
@@ -157,6 +165,5 @@ function addDistrictsToState(url, map) {
     $.when(state).done(function () {
             layer = L.geoJSON(state.responseJSON, {style: district_style}).addTo(map);
             layer.bringToFront();
-            console.log(layer);
     });
 }
