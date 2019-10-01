@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import L from 'leaflet';
-import {Container, Button, Tabs, Tab, Row, Col} from "react-bootstrap";
+import {Container, Button, Tabs, Tab, Row, Col, Accordion} from "react-bootstrap";
 import styled from 'styled-components';
 import {Link} from 'react-router-dom';
 import Controls from "./Controls";
@@ -84,6 +84,12 @@ export default class State extends Component {
         addDistrictsToState('http://127.0.0.1:8080/district_geographical_data/Rhode_Island/Rhode_Island_U.S_Congressional_Districts_Geography.json', this.map);
         addDistrictsToState('http://127.0.0.1:8080/district_geographical_data/North_Carolina/North_Carolina_U.S_Congressional_Districts_Geography.json', this.map);
         addDistrictsToState('http://127.0.0.1:8080/district_geographical_data/Michigan/Michigan_U.S._Congressional_Districts_v17a.geojson', this.map);
+        const precincts = new Precinct(this.map, 'http://127.0.0.1:8080/precinct_geographical_data/Michigan/2016_Voting_Precincts.geojson');
+        precincts.addPrecinctsToDistricts('http://127.0.0.1:8080/precinct_geographical%20data/Michigan/2016_Voting_Precincts.geojson', this.map);
+        const precincts2 = new Precinct(this.map, 'http://127.0.0.1:8080/precinct_geographical_data/Rhode_Island/Voting_Precincts.geojson');
+        precincts2.addPrecinctsToDistricts('http://127.0.0.1:8080/precinct_geographical%20data/Rhode_Island/Voting_Precincts.geojson', this.map);
+        const precincts3 = new Precinct(this.map, 'http://127.0.0.1:8080/precinct_geographical_data/North_Carolina/NC_PRECINCTS_20190827.json');
+        precincts3.addPrecinctsToDistricts('http://127.0.0.1:8080/precinct_geographical%20data/North_Carolina/NC_PRECINCTS_20190827.json', this.map);
     }
 
     render() {
