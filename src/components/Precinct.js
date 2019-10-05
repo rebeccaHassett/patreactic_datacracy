@@ -17,7 +17,7 @@ class Precinct {
         var state = $.ajax({
             url: url,
             dataType: "json",
-            success: console.log("State data successfully loaded."),
+            success: console.log("PRECINCT ALERT LOADED SUCCESS!"),
             fail: function (xhr) {
                 alert(xhr.statusText)
             }
