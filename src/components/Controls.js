@@ -7,6 +7,10 @@ export default class Controls extends Component {
     render() {
         return (
             <Form>
+                <Form.Group controlId="incremental">
+                    <Form.Label>Incremental Run:</Form.Label>
+                    <Form.Check aria-label="option 1" label="Incremental"/>
+                </Form.Group>
                 <Form.Group controlId="number-districts">
                     <Form.Label>Number of Congressional Districts:</Form.Label>
                     <Slider_Controls></Slider_Controls>

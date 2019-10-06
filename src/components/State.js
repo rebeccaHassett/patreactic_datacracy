@@ -1,12 +1,13 @@
 import React, {Component} from 'react';
 import L from 'leaflet';
-import {Container, Button, Tabs, Tab, Row, Col, Accordion} from "react-bootstrap";
+import {Container, Button, Tabs, Tab, Row, Col, Accordion, Image} from "react-bootstrap";
 import styled from 'styled-components';
 import {Link} from 'react-router-dom';
 import Controls from "./Controls";
 import Results_Graphs from "./Results_Graphs";
 import Statistics from "../Statistics";
 import Precinct from "./Precinct";
+import start from '../resources/images/start.png'
 import $ from 'jquery';
 
 export default class State extends Component {
@@ -88,8 +89,8 @@ export default class State extends Component {
         precincts.addPrecinctsToDistricts('http://127.0.0.1:8080/precinct_geographical%20data/Michigan/2016_Voting_Precincts.geojson', this.map);
         const precincts2 = new Precinct(this.map, 'http://127.0.0.1:8080/precinct_geographical_data/Rhode_Island/Voting_Precincts.geojson');
         precincts2.addPrecinctsToDistricts('http://127.0.0.1:8080/precinct_geographical%20data/Rhode_Island/Voting_Precincts.geojson', this.map);
-        const precincts3 = new Precinct(this.map, 'http://127.0.0.1:8080/precinct_geographical_data/North_Carolina/NC_PRECINCTS_20190827.json');
-        precincts3.addPrecinctsToDistricts('http://127.0.0.1:8080/precinct_geographical%20data/North_Carolina/NC_PRECINCTS_20190827.json', this.map);
+        const precincts3 = new Precinct(this.map, 'http://127.0.0.1:8080/precinct_geographical_data/North_Carolina/nc_precincts.json');
+        precincts3.addPrecinctsToDistricts('http://127.0.0.1:8080/precinct_geographical%20data/North_Carolina/nc_precincts.json', this.map);
     }
 
     render() {
@@ -108,9 +109,6 @@ export default class State extends Component {
                                     <Button disabled>Toggle to Original Districts</Button>
                                 </Tab>
                                 <Tab eventKey="controls" title="Controls" disabled={this.state.Tab5}>
-                                    <Button>Run</Button>
-                                    <Button>Incremental Run</Button>
-                                    <Button disabled>Next</Button>
                                     <Controls></Controls>
                                 </Tab>
                                 <Tab eventKey="statistics" title="Statistics" disabled={this.state.Tab7}>
@@ -122,7 +120,10 @@ export default class State extends Component {
                             <Tabs defaultActiveKey="map" id="tabs">
                                 <Tab eventKey="map" title="Map" disabled={this.state.Tab2}>
                                     <Container>
+                                        <body>
                                         <div id='map'></div>
+                                        <Button id="startButton"><Image src={start}></Image></Button>
+                                        </body>
                                     </Container>
                                 </Tab>
                                 <Tab eventKey="results" title="Results" disabled={this.state.Tab4}>
@@ -144,9 +145,23 @@ const State_Style = styled.div`
     #col-1 {
         background-color:  lightgray;
     }
-    Button {
+    #startButton{
+        position: absolute;
+        right: 20px;
+        padding: 10px;
+        z-index: 400;
+        background-image: '../resources/images/start.png'
+        width: 6vw;
+        border-radius: 90%;   
+        background-color: limegreen;
+        top: 40px;
+     }
+    #col-1 Button {
         width:24vw;
         background-color: limegreen;
+    }
+    Button:disabled {
+        background-color: blue;
     }
     
 `;
