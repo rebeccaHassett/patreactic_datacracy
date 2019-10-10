@@ -1,5 +1,6 @@
 import $ from "jquery";
 import L from "leaflet";
+import Precinct from "./Precinct";
 
 export default class Cluster {
     constructor(map, chosen_state) {
@@ -40,6 +41,9 @@ export default class Cluster {
                 })
                 map.fitBounds(e.layer.getBounds());
                 console.log(e.layer.feature.properties.NAME);
+                //const precincts = new Precinct();
+                //precincts.addPrecinctsToDistricts('http://127.0.0.1:8080/precinct_geographical%20data/Michigan/2016_Voting_Precincts.geojson', map, e.layer.getBounds());
+
             })
             layer.bringToFront();
         });

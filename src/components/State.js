@@ -10,6 +10,8 @@ import Precinct from "./Precinct";
 import start from '../resources/images/start.png'
 import $ from 'jquery';
 import Cluster from "./Cluster";
+import Sidebar from "./Sidebar";
+import menu from '../resources/images/menu.png'
 
 export default class State extends Component {
     constructor() {
@@ -21,9 +23,12 @@ export default class State extends Component {
             Tab4: false,
             Tab5: false,
             Tab6: false,
-            Tab7: false
+            Tab7: false,
+            Sidebar: true
         }
+        this.toggleBox = this.toggleBox.bind(this);
     }
+
 
     /* Changing state of tab on/off*/
     onChangeHandler = e => {
@@ -35,6 +40,9 @@ export default class State extends Component {
         }
     };
 
+    toggleBox() {
+        this.setState(oldState => ({Sidebar: !oldState.Sidebar}));
+    }
 
     componentDidMount() {
         var max_bounds;
@@ -80,8 +88,8 @@ export default class State extends Component {
             ]
         }).fitBounds(max_bounds);
 
-        this.map.on("zoomend", function(event) {
-            if(this.getZoom() >= 8) {
+        this.map.on("zoomend", function (event) {
+            if (this.getZoom() >= 8) {
                 console.log("LOAD PRECINCTS");
             }
         });
@@ -99,43 +107,33 @@ export default class State extends Component {
     render() {
         return (
             <State_Style>
-                <Container fluid={true}>
-                    <Row noGutters={true}>
-                        <Col xs={6} md={3} id="col-1" >
-                            <Tabs defaultActiveKey="menu">
-                                <Tab eventKey="menu" title="Menu" disabled={this.state.Tab6}>
-                                        <Link to='/map'>
-                                            <Button>Back to US Map</Button>
-                                        </Link>
-                                        <Button>Import Election Data</Button>
-                                        <Button>Import Boundary Data</Button>
-                                        <Button disabled>Toggle to Original Districts</Button>
-                                </Tab>
-                                <Tab eventKey="controls" title="Controls" disabled={this.state.Tab5}>
-                                    <Controls></Controls>
-                                </Tab>
-                                <Tab eventKey="statistics" title="Statistics" disabled={this.state.Tab7}>
-                                    <Statistics></Statistics>
-                                </Tab>
-                            </Tabs>
-                        </Col>
-                        <Col>
-                            <Tabs defaultActiveKey="map" id="tabs">
-                                <Tab eventKey="map" title="Map" disabled={this.state.Tab2}>
-                                    <Container>
-                                        <body>
-                                        <div id='map'></div>
-                                        <Button id="startButton"><Image src={start}></Image></Button>
-                                        </body>
-                                    </Container>
-                                </Tab>
-                                <Tab eventKey="results" title="Results" disabled={this.state.Tab4}>
-                                    <Results_Graphs></Results_Graphs>
-                                </Tab>
-                            </Tabs>
-                        </Col>
-                    </Row>
-                </Container>
+                <Row>
+                    <div id="content">
+
+                        <Button id="sidebarCollapse" className="btn btn-info" onClick={this.toggleBox} img src={menu}>
+                            <i className="fas fa-align-left"></i>
+                            Menu
+                        </Button>
+
+                    </div>
+                    {this.state.Sidebar ? <Sidebar/> : null}
+                    <Col>
+                        <Tabs defaultActiveKey="map" id="tabs">
+                            <Tab title="Michigan" disabled>
+                            </Tab>
+                            <Tab eventKey="map" title="Map" disabled={this.state.Tab2}>
+                                <Container>
+                                    <body>
+                                    <div id='map'></div>
+                                    </body>
+                                </Container>
+                            </Tab>
+                            <Tab eventKey="results" title="Results" disabled={this.state.Tab4}>
+                                <Results_Graphs></Results_Graphs>
+                            </Tab>
+                        </Tabs>
+                    </Col>
+                </Row>
             </State_Style>
         );
     }
@@ -150,16 +148,12 @@ const State_Style = styled.div`
         height: 50vw;
         overflow-y: scroll;
     }
-    #startButton{
+    #content{
         position: absolute;
-        right: 20px;
-        padding: 10px;
+        float:left;
         z-index: 400;
-        background-image: '../resources/images/start.png'
-        width: 6vw;
-        border-radius: 90%;   
-        background-color: limegreen;
-        top: 40px;
+        left: 0.5vw;
+        width: 10vw;
      }
     #col-1 Button {
         width:24vw;
@@ -169,4 +163,70 @@ const State_Style = styled.div`
         background-color: blue;
     }
     
+`;
+
+const Sidebar_Style = styled.div`
+ @import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
+
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: #fafafa;
+}
+
+p {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.1em;
+    font-weight: 300;
+    line-height: 1.7em;
+    color: #999;
+}
+
+a, a:hover, a:focus {
+    color: inherit;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+
+#sidebar {
+    /* don't forget to add all the previously mentioned styles here too */
+    background: #7386D5;
+    color: #fff;
+    transition: all 0.3s;
+}
+
+#sidebar .sidebar-header {
+    padding: 20px;
+    background: #6d7fcc;
+}
+
+#sidebar ul.components {
+    padding: 20px 0;
+    border-bottom: 1px solid #47748b;
+}
+
+#sidebar ul p {
+    color: #fff;
+    padding: 10px;
+}
+
+#sidebar ul li a {
+    padding: 10px;
+    font-size: 1.1em;
+    display: block;
+}
+#sidebar ul li a:hover {
+    color: #7386D5;
+    background: #fff;
+}
+
+#sidebar ul li.active > a, a[aria-expanded="true"] {
+    color: #fff;
+    background: #6d7fcc;
+}
+ul ul a {
+    font-size: 0.9em !important;
+    padding-left: 30px !important;
+    background: #6d7fcc;
+}
 `;

@@ -1,60 +1,70 @@
 import React, {Component} from 'react';
+import {Tabs, Tab, Button, Row} from 'react-bootstrap';
+import {Link} from 'react-router-dom';
+import Statistics from "./Statistics";
+import Controls from "./Controls";
 import styled from "styled-components";
 import $ from 'jquery';
 import {Col} from "react-bootstrap";
 
 export default class Sidebar extends Component {
+    constructor() {
+        super();
+        this.state = {
+            Tab1: false,
+            Tab2: false,
+            Tab3: true,
+            Tab4: false,
+            Tab5: false,
+            Tab6: false,
+            Tab7: false,
+            Sidebar: true
+        }
+        this.toggleBox = this.toggleBox.bind(this);
+    }
+    /* Changing state of tab on/off*/
+    onChangeHandler = e => {
+        console.log(e.target.value);
+        if (e.target.value === 'no') {
+            this.setState({Tab13: true});
+        } else {
+            this.setState({Tab3: false});
+        }
+    };
+
+    toggleBox() {
+        this.setState(oldState => ({ Sidebar: !oldState.Sidebar }));
+    }
     render() {
         return (
             <Sidebar_Style>
-            <div className="wrapper">
+                <div className="wrapper">
                 <nav id="sidebar">
-                    <div className="sidebar-header">
-                        <h3>Bootstrap Sidebar</h3>
-                    </div>
+                    <Tabs defaultActiveKey="menu">
+                        <Tab eventKey="menu" title="Menu" disabled={this.state.Tab6}>
+                            <Row>
+                            <Link to='/map'>
+                                <Button>Back to US Map</Button>
+                            </Link>
+                            </Row>
+                            <Row>
+                            <Button>Import Election Data</Button>
+                            </Row>
+                            <Row>
+                            <Button>Import Boundary Data</Button>
+                            </Row>
+                            <Row>
+                            <Button disabled>Toggle to Original Districts</Button>
+                            </Row>
+                        </Tab>
+                        <Tab eventKey="controls" title="Controls" disabled={this.state.Tab5}>
 
-                    <ul className="list-unstyled components">
-                        <p>Dummy Heading</p>
-                        <li className="active">
-                            <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false"
-                               className="dropdown-toggle">Home</a>
-                            <ul className="collapse list-unstyled" id="homeSubmenu">
-                                <li>
-                                    <a href="#">Home 1</a>
-                                </li>
-                                <li>
-                                    <a href="#">Home 2</a>
-                                </li>
-                                <li>
-                                    <a href="#">Home 3</a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="#">About</a>
-                        </li>
-                        <li>
-                            <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false"
-                               className="dropdown-toggle">Pages</a>
-                            <ul className="collapse list-unstyled" id="pageSubmenu">
-                                <li>
-                                    <a href="#">Page 1</a>
-                                </li>
-                                <li>
-                                    <a href="#">Page 2</a>
-                                </li>
-                                <li>
-                                    <a href="#">Page 3</a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="#">Portfolio</a>
-                        </li>
-                        <li>
-                            <a href="#">Contact</a>
-                        </li>
-                    </ul>
+                            <Controls></Controls>
+                        </Tab>
+                        <Tab eventKey="statistics" title="Statistics" disabled={this.state.Tab7}>
+                            <Statistics></Statistics>
+                        </Tab>
+                    </Tabs>
                 </nav>
 
             </div>
@@ -70,7 +80,7 @@ const Sidebar_Style = styled.div`
 
 body {
     font-family: 'Poppins', sans-serif;
-    background: #fafafa;
+    background: white;
 }
 
 p {
@@ -78,7 +88,7 @@ p {
     font-size: 1.1em;
     font-weight: 300;
     line-height: 1.7em;
-    color: #999;
+    color: black;
 }
 
 a, a:hover, a:focus {
@@ -86,17 +96,23 @@ a, a:hover, a:focus {
     text-decoration: none;
     transition: all 0.3s;
 }
+    Button {
+        width:22vw;
+        margin-top: 1vw;
+    }
 
 #sidebar {
-    /* don't forget to add all the previously mentioned styles here too */
-    background: #7386D5;
-    color: #fff;
+    background: lightgray;
+    color: black;
     transition: all 0.3s;
+    height: 50vw;
+    overflow-y: scroll;
+    padding-left: 1.5vw;
+    width: 24vw;
 }
 
 #sidebar .sidebar-header {
-    padding: 20px;
-    background: #6d7fcc;
+    background: white;
 }
 
 #sidebar ul.components {
@@ -115,7 +131,7 @@ a, a:hover, a:focus {
     display: block;
 }
 #sidebar ul li a:hover {
-    color: #7386D5;
+    color: white;
     background: #fff;
 }
 

@@ -30,35 +30,11 @@ export default class Login extends Component {
         return (
             <div>
                 <Container className="Login">
-                    <h1 class="header">Login:</h1>
                     {<form onSubmit={this.handleSubmit}>
-                        <Row>
-                            <Col>
-                                <FormGroup id="email" controlId="email">
-                                    <FormLabel id="email-label">Email: </FormLabel>
-                                    <FormControl autoFocus type="email" value={this.state.email}
-                                                 onChange={this.handleChange}/>
-                                </FormGroup>
-                            </Col>
-                            <Col>
-                                <FormGroup id="password" controlId="password">
-                                    <FormLabel id="password-label">Password: </FormLabel>
-                                    <FormControl id="pwd_box" value={this.state.password} type="password"
-                                                 onChange={this.handleChange}/>
-                                </FormGroup>
-                            </Col>
-                            <Col>
-                                <Link to={`/map`}>
-                                    <Button type="submit" id="login-button">Login</Button>
-                                </Link>
-                            </Col>
-                        </Row>
+                        <Link to={`/map`}>
+                            <Button type="submit" id="login-button">Launch!</Button>
+                        </Link>
                     </form>}
-                    <Row>
-                        <Col>
-                            <Button id="sign-up-button">Sign Up!</Button>
-                        </Col>
-                    </Row>
                 </Container>
             </div>
         );

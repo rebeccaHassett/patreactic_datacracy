@@ -13,12 +13,10 @@ precinctsToClusters['05'] = [[104,118],[154, 200]];
 precinctsToClusters['03'] = [[127,153], [299,360]];
 
     class Precinct {
-    constructor(map, chosen_state) {
-        this.map = map;
-        this.chosen_state = chosen_state;
+    constructor() {
     }
 
-    addPrecinctsToDistricts(url, map) {
+    addPrecinctsToDistricts(url, map, district_bounds) {
         var layer;
 
         var district_style = {
@@ -35,15 +33,18 @@ precinctsToClusters['03'] = [[127,153], [299,360]];
         })
 
         /* Filtering Works */
-        $.when(state).done(function () {
-            var res = $(state.responseJSON.features)
-                .filter(function (i,n){
-                    return n.properties.CountyFips === "163";
-                });
-            res["type"] = "FeatureCollection";
-            console.log(res);
+        $.when(state, district_bounds).done(function () {
+            console.log(district_bounds);
             layer = new L.GeoJSON(state.responseJSON, {style: district_style, filter: function(feature, layer) {
-                return (feature.properties.Id >= 361 && feature.properties.Id <= 381);}}).addTo(map);
+                return (feature.properties.Label === "Greenbush Township")}}).addTo(map);
+            /*layer = new L.GeoJSON(state.responseJSON, {style: district_style, filter: function(feature, latlng) {
+                var polygon = new L.Polygon(feature.geometry.coordinates);
+                console.log("Precinct" + polygon.getBounds());
+                console.log(district_bounds);
+                console.log(district_bounds.contains(polygon.getBounds()));
+                    return (district_bounds.contains(polygon.getBounds()));}}).addTo(map);*/
+            /*map.getBounds();
+            layer = new L.GeoJSON(state.responseJSON, {style: district_style}).addTo(map);*/
             layer.bringToFront();
         });
     }
