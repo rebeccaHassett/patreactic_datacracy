@@ -1,11 +1,13 @@
 import React, {Component} from 'react';
-import {Form, Dropdown} from "react-bootstrap";
+import {Form, Container} from "react-bootstrap";
 import Slider_Controls from "./Slider_Control";
+import styled from "styled-components";
 
 
 export default class Controls extends Component {
     render() {
         return (
+            <Control_Style>
             <Form>
                 <Form.Group controlId="incremental">
                     <Form.Label>Incremental Run:</Form.Label>
@@ -60,6 +62,13 @@ export default class Controls extends Component {
                     <Form.Label>Voting Rights Act Information:</Form.Label>
                 </Form.Group>
             </Form>
+            </Control_Style>
         );
     };
 }
+
+const Control_Style = styled.div`
+    Form {
+        color:lightblue;
+    }
+`;

@@ -12,6 +12,8 @@ import $ from 'jquery';
 import Cluster from "./Cluster";
 import Sidebar from "./Sidebar";
 import menu from '../resources/images/menu.png'
+import Menu_Sidenav from "./Menu_Sidenav";
+import Results_Sidenav from './Results_Sidenav';
 
 export default class State extends Component {
     constructor() {
@@ -108,31 +110,15 @@ export default class State extends Component {
         return (
             <State_Style>
                 <Row>
-                    <div id="content">
-
-                        <Button id="sidebarCollapse" className="btn btn-info" onClick={this.toggleBox} img src={menu}>
-                            <i className="fas fa-align-left"></i>
-                            Menu
-                        </Button>
-
-                    </div>
-                    {this.state.Sidebar ? <Sidebar/> : null}
+                    <Menu_Sidenav side="left"></Menu_Sidenav>
                     <Col>
-                        <Tabs defaultActiveKey="map" id="tabs">
-                            <Tab title="Michigan" disabled>
-                            </Tab>
-                            <Tab eventKey="map" title="Map" disabled={this.state.Tab2}>
-                                <Container>
-                                    <body>
-                                    <div id='map'></div>
-                                    </body>
-                                </Container>
-                            </Tab>
-                            <Tab eventKey="results" title="Results" disabled={this.state.Tab4}>
-                                <Results_Graphs></Results_Graphs>
-                            </Tab>
-                        </Tabs>
+                        <Container>
+                            <body>
+                            <div id='map'></div>
+                            </body>
+                        </Container>
                     </Col>
+                    <Results_Sidenav></Results_Sidenav>
                 </Row>
             </State_Style>
         );
@@ -140,13 +126,9 @@ export default class State extends Component {
 }
 
 const State_Style = styled.div`
+    overflow:hidden;
     #map {
       height: 600px;
-    }
-    #col-1 {
-        background-color:  lightgray;
-        height: 50vw;
-        overflow-y: scroll;
     }
     #content{
         position: absolute;

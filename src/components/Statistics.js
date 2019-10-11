@@ -36,6 +36,7 @@ export default class Statistics extends Component {
                 <p>Jeffrey C. Johnson, IND, 653</p>
                 <p>Salvatore G. Caiozzo, IND, 188</p>
                 <h5>Demographic Data</h5>
+                <Bar_Chart databar={databar}></Bar_Chart>
                 <Pie_Chart dataPie={dataPie}></Pie_Chart>
             </Statistics_Style>
 
@@ -45,6 +46,9 @@ export default class Statistics extends Component {
 
 /*<h3>Influence Districts</h3>*/
 const Statistics_Style = styled.div`
+    * {
+        color: lightblue;
+    }
     #btns, #btns2 {
       width:4vw;
 
@@ -70,6 +74,29 @@ var dataPie = {
                 "#5AD3D1",
                 "#FFC870",
                 "#A8B3C5",
+            ]
+        }
+    ]
+}
+
+var databar =  {
+    labels: ["James R. Langevin", "Rhue R. Reis", "Jeffrey C. Johnson", "Salvatore G. Caiozzo"],
+    datasets: [
+        {
+            label: "Number of Votes",
+            data: [3401, 2496, 653, 188],
+            backgroundColor: [
+                "rgba(255, 134,159,0.4)",
+                "rgba(98,  182, 239,0.4)",
+                "rgba(255, 218, 128,0.4)",
+                "rgba(113, 205, 205,0.4)",
+            ],
+            borderWidth: 2,
+            borderColor: [
+                "rgba(255, 134, 159, 1)",
+                "rgba(98,  182, 239, 1)",
+                "rgba(255, 218, 128, 1)",
+                "rgba(113, 205, 205, 1)",
             ]
         }
     ]
