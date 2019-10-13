@@ -106,7 +106,6 @@ export default class State extends Component {
 
         var that = this;
         const clusters = new Cluster();
-        var cluster_layer;
         clusters.addClustersToState(clusters_url, this.map)
             .then(cluster_layer => clusters.addClustersToState(clusters_url, this.map))
             .then(cluster_layer =>

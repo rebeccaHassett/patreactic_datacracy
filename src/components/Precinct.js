@@ -37,6 +37,13 @@ precinctsToClusters['03'] = [[127,153], [299,360]];
                 console.log(district_bounds.contains(polygon.getBounds()));
                     return (district_bounds.contains(polygon.getBounds()));}}).addTo(map);*/
             layer = L.geoJSON(data, {style: district_style}).addTo(map);
+
+            map.on("zoomend", function(event) {
+               if(this.getZoom() < 7) {
+                   layer.remove();
+               }
+            });
+
             layer.bringToFront();
         });
     }
