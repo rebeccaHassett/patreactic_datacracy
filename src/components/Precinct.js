@@ -44,7 +44,7 @@ precinctsToClusters['03'] = [[127,153], [299,360]];
                }
             });
 
-            layer.bringToFront();
+            layer.bringToBack();
         });
     }
 
