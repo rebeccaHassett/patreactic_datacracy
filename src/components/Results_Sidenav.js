@@ -5,29 +5,15 @@ import Statistics from "./Statistics";
 class Results_Sidenav extends React.Component {
     constructor() {
         super();
-        this.state = {
-            Tab1: false,
-            Tab2: false,
-            Tab3: true,
-            Tab4: false,
-            Tab5: false,
-            Tab6: false,
-            Tab7: false,
-            Sidebar: true
-        }
     }
     showSettings (event) {
         event.preventDefault();
     }
 
-    componentDidMount() {
-        console.log(this.props.cluster_layer);
-    }
-
     render () {
         return (
             <Menu styles={ styles } disableCloseOnEsc noOverlay right width={400}>
-                <Statistics></Statistics>
+                <Statistics sign={this.props.sign}></Statistics>
             </Menu>
         );
     }

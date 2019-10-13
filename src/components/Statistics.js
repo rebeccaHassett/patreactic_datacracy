@@ -6,7 +6,6 @@ import Pie_Chart from "./Pie_Chart";
 
 
 export default class Statistics extends Component {
-
     render() {
         return (
             <Statistics_Style>
@@ -26,18 +25,18 @@ export default class Statistics extends Component {
                         </ButtonGroup>
                     </Col>
                 </Row>
-                <h4>District 2 Election Results:</h4>
-                <h5>County: Burrillville</h5>
-                <h5>Total Voters: 6750</h5>
+                { this.props.sign === true ? <h4>District 2 Election Results:</h4> : <h4>District 10 Election Results:</h4>}
+                { this.props.sign === true ? <h5>County: Burrillville</h5> : <h5>County: Greenbush</h5>}
+                { this.props.sign === true ? <h5>Total Voters: 6750</h5> : <h5>Total Voters: 153437</h5>}
                 <h5>Voting Results Per Candidate</h5>
-                <p>James R. Langevin, DEM, 3401</p>
-                <p>Rhue R. Reis, REP, 2496</p>
-                <p>Jeffrey C. Johnson, IND, 653</p>
-                <p>Salvatore G. Caiozzo, IND, 188</p>
-                <Bar_Chart databar={databar}></Bar_Chart>
+                { this.props.sign === true ? <p>James R. Langevin, DEM, 3401</p> : <p>Thomas, 3424</p>}
+                { this.props.sign === true ? <p>Rhue R. Reis, REP, 2496</p> : <p>Andrew, 3426</p>}
+                { this.props.sign === true ? <p>Jeffrey C. Johnson, IND, 653</p> : <p>Lauren, 233343</p>}
+                { this.props.sign === true ? <p>Salvatore G. Caiozzo, IND, 188</p> : <p>Rebecca, 123244</p>}
+                { this.props.sign === true ? <Bar_Chart databar={databar}></Bar_Chart> : <Bar_Chart databar={databar2}></Bar_Chart>}
                 <h5>Demographic Data</h5>
-                <Pie_Chart dataPie={dataPie}></Pie_Chart>
-            </Statistics_Style>
+                { this.props.sign === true ? <Pie_Chart dataPie={dataPie}></Pie_Chart> : <Pie_Chart dataPie={dataPie2}></Pie_Chart>}
+                    </Statistics_Style>
 
         );
     };
@@ -80,12 +79,57 @@ var dataPie = {
     ]
 }
 
+var dataPie2 = {
+    labels: ["African American", "Asian", "Hispanic", "White"],
+    datasets: [
+        {
+            data: [345453, 120, 11783, 6924342],
+            backgroundColor: [
+                "#F7464A",
+                "#46BFBD",
+                "#FDB45C",
+                "#949FB1",
+            ],
+            hoverBackgroundColor: [
+                "#FF5A5E",
+                "#5AD3D1",
+                "#FFC870",
+                "#A8B3C5",
+            ]
+        }
+    ]
+}
+
+
 var databar = {
     labels: ["James R. Langevin", "Rhue R. Reis", "Jeffrey C. Johnson", "Salvatore G. Caiozzo"],
     datasets: [
         {
             label: "Number of Votes",
             data: [3401, 2496, 653, 188],
+            backgroundColor: [
+                "rgba(255, 134,159,0.4)",
+                "rgba(98,  182, 239,0.4)",
+                "rgba(255, 218, 128,0.4)",
+                "rgba(113, 205, 205,0.4)",
+            ],
+            borderWidth: 2,
+            borderColor: [
+                "rgba(255, 134, 159, 1)",
+                "rgba(98,  182, 239, 1)",
+                "rgba(255, 218, 128, 1)",
+                "rgba(113, 205, 205, 1)",
+            ]
+        }
+    ]
+}
+
+var databar2 = {
+    labels: ["Thomas", "Andrew", "Lauren", "Rebecca"],
+    datasets: [
+        {
+            label: "Number of Votes",
+            data: [3424, 3426, 23343, 123244],
             backgroundColor: [
                 "rgba(255, 134,159,0.4)",
                 "rgba(98,  182, 239,0.4)",

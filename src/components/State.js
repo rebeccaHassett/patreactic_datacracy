@@ -18,7 +18,8 @@ export default class State extends Component {
             Tab5: false,
             Tab6: false,
             Tab7: false,
-            Sidebar: true
+            Sidebar: true,
+            even: true
         }
         this.toggleBox = this.toggleBox.bind(this);
     }
@@ -103,8 +104,25 @@ export default class State extends Component {
             }
         });
 
+        var that = this;
         const clusters = new Cluster();
-        clusters.addClustersToState(clusters_url, this.map);
+        var cluster_layer;
+        clusters.addClustersToState(clusters_url, this.map)
+            .then(cluster_layer => clusters.addClustersToState(clusters_url, this.map))
+            .then(cluster_layer =>
+                {console.log(cluster_layer);
+                    cluster_layer.on('mouseover', function(event) {
+                        console.log(event);
+                        if(parseInt(event.layer.feature.properties.NAME,10) % 2 === 0) {
+                            that.setState({even:true});
+                        }
+                        else {
+                            that.setState({even:false});
+                        }
+                    });
+                return true;})
+            .catch(err => console.log(err));
+
     }
 
     render() {
@@ -119,7 +137,7 @@ export default class State extends Component {
                             </body>
                         </Container>
                     </Col>
-                    <Results_Sidenav></Results_Sidenav>
+                    <Results_Sidenav sign={this.state.even}></Results_Sidenav>
                 </Row>
             </State_Style>
         );

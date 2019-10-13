@@ -40,6 +40,8 @@ export default class Cluster {
 
             })
             layer.bringToFront();
+            return layer;
         });
+        return clusters;
     }
 }
