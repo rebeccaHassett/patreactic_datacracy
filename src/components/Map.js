@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import {Container} from "react-bootstrap";
 import styled from "styled-components";
 import L from "leaflet";
-import $ from "jquery";
 
 
 export default class Map extends Component {
@@ -20,9 +19,9 @@ export default class Map extends Component {
             minZoom: 2.5,
             maxBounds: max_bounds,
             layers: [
-                L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-                    attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-                }),
+                L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
+                    attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ',
+                })
             ]
         }).fitBounds(max_bounds);
 
@@ -62,24 +61,19 @@ function addLayerToMap(url, map, name) {
         "color": "green"
     };
 
-    var state = $.ajax({
-        url: url,
-        dataType: "json",
-        success: console.log("State data successfully loaded."),
-        fail: function (xhr) {
-            alert(xhr.statusText)
+    var state = fetch(url).then(function(response) {
+        if(response.status >= 400) {
+            throw new Error("State geographicdata not loaded from server successfully");
         }
-    })
-
-
-    $.when(state).done(function () {
+        return response.json();
+    }).then(function(data){
         if(name === "Map") {
-            layer = L.geoJSON(state.responseJSON, {style: map_style}).addTo(map);
+            layer = L.geoJSON(data, {style: map_style}).addTo(map);
             layer.bringToBack();
 
         }
         if(name === "North Carolina" || name  === "Rhode Island" || name === "Michigan") {
-            layer = L.geoJSON(state.responseJSON, {style: state_style}).addTo(map);
+            layer = L.geoJSON(data, {style: state_style}).addTo(map);
             var tooltip_options = {maxWidth: 200, autoClose: false, permanent: false, opacity: 0.8, offset: [-10, 0]};
             layer.bindTooltip(name, tooltip_options);
 
@@ -100,6 +94,6 @@ function addLayerToMap(url, map, name) {
             });
             layer.bringToFront();
         }
-
     });
+
 }

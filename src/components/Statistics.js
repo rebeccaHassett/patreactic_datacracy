@@ -1,9 +1,8 @@
 import React, {Component} from 'react';
-import {ButtonGroup, Button, Container, Row, Col} from "react-bootstrap";
+import {ButtonGroup, Button, Row, Col} from "react-bootstrap";
 import styled from "styled-components";
 import Bar_Chart from "./Bar_Chart";
 import Pie_Chart from "./Pie_Chart";
-
 
 
 export default class Statistics extends Component {
@@ -13,18 +12,18 @@ export default class Statistics extends Component {
             <Statistics_Style>
                 <Row>
                     <Col>
-            <ButtonGroup aria-label="Basic example" id="btns">
-                <Button variant="secondary">Presidential</Button>
-                <Button variant="secondary">Congressional</Button>
-            </ButtonGroup>
+                        <ButtonGroup aria-label="Basic example" id="btns">
+                            <Button variant="secondary">Presidential</Button>
+                            <Button variant="secondary">Congressional</Button>
+                        </ButtonGroup>
                     </Col>
                 </Row>
                 <Row>
                     <Col>
-                <ButtonGroup aria-label="Basic example" id="btns2">
-                    <Button variant="secondary">2016</Button>
-                    <Button variant="secondary">2018</Button>
-                </ButtonGroup>
+                        <ButtonGroup aria-label="Basic example" id="btns2">
+                            <Button variant="secondary">2016</Button>
+                            <Button variant="secondary">2018</Button>
+                        </ButtonGroup>
                     </Col>
                 </Row>
                 <h4>District 2 Election Results:</h4>
@@ -35,8 +34,8 @@ export default class Statistics extends Component {
                 <p>Rhue R. Reis, REP, 2496</p>
                 <p>Jeffrey C. Johnson, IND, 653</p>
                 <p>Salvatore G. Caiozzo, IND, 188</p>
-                <h5>Demographic Data</h5>
                 <Bar_Chart databar={databar}></Bar_Chart>
+                <h5>Demographic Data</h5>
                 <Pie_Chart dataPie={dataPie}></Pie_Chart>
             </Statistics_Style>
 
@@ -51,7 +50,9 @@ const Statistics_Style = styled.div`
     }
     #btns, #btns2 {
       width:4vw;
-
+    }
+    #btns2 {
+        margin-bottom: 2vw;
     }
     h4 {
         margin-bottom: 2vw;
@@ -60,7 +61,7 @@ const Statistics_Style = styled.div`
 
 var dataPie = {
     labels: ["African American", "Asian", "Hispanic", "White"],
-        datasets: [
+    datasets: [
         {
             data: [53040, 23006, 117819, 460033],
             backgroundColor: [
@@ -79,7 +80,7 @@ var dataPie = {
     ]
 }
 
-var databar =  {
+var databar = {
     labels: ["James R. Langevin", "Rhue R. Reis", "Jeffrey C. Johnson", "Salvatore G. Caiozzo"],
     datasets: [
         {

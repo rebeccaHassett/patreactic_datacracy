@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Form, Container} from "react-bootstrap";
+import {Form} from "react-bootstrap";
 import Slider_Controls from "./Slider_Control";
 import styled from "styled-components";
 

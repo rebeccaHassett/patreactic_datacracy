@@ -3,7 +3,6 @@ import { bubble as Menu } from 'react-burger-menu'
 import {Button, Row, Tab, Tabs, Container} from "react-bootstrap";
 import {Link} from "react-router-dom";
 import Controls from "./Controls";
-import Statistics from "./Statistics";
 import styled from "styled-components";
 
 class Menu_Sidenav extends React.Component {
@@ -25,7 +24,6 @@ class Menu_Sidenav extends React.Component {
     }
 
 render () {
-    // NOTE: You also need to provide styles, see https://github.com/negomi/react-burger-menu#styling
         return (
             <Menu styles={ styles } disableCloseOnEsc noOverlay left>
                 <Content_Style>
@@ -35,12 +33,6 @@ render () {
                             <Link to='/map'>
                                 <Button>Back to US Map</Button>
                             </Link>
-                        </Row>
-                        <Row>
-                            <Button>Import Election Data</Button>
-                        </Row>
-                        <Row>
-                            <Button>Import Boundary Data</Button>
                         </Row>
                         <Row>
                             <Button disabled>Toggle to Original Districts</Button>
@@ -57,6 +49,9 @@ render () {
 }
 
 const Content_Style = styled.div`
+    * {
+        outline:none;
+    }
     Button {
         width: 23vw;
         margin-top: 2vw;
@@ -66,12 +61,13 @@ const Content_Style = styled.div`
         border-color:black;
     }
 
-    Tab {
+    Tabs {
         border-color:white;
+        outline:none;
     }
 `;
 var styles = {
-    
+
     bmBurgerButton: {
         position: 'fixed',
         width: '4vw',
@@ -87,15 +83,16 @@ var styles = {
 
 },
     bmCrossButton: {
-        height: '24px',
-        width: '24px'
+        height: '3vw',
+        width: '3vw',
+        left:'1vw'
     },
     bmCross: {
         background: '#bdc3c7'
     },
     bmMenuWrap: {
         position: 'fixed',
-        height: '100%'
+        height: '100%',
     },
     bmMenu: {
         background: '#373a47',

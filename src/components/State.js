@@ -2,16 +2,8 @@ import React, {Component} from 'react';
 import L from 'leaflet';
 import {Container, Button, Tabs, Tab, Row, Col, Accordion, Image} from "react-bootstrap";
 import styled from 'styled-components';
-import {Link} from 'react-router-dom';
-import Controls from "./Controls";
-import Results_Graphs from "./Results_Graphs";
-import Statistics from "./Statistics";
 import Precinct from "./Precinct";
-import start from '../resources/images/start.png'
-import $ from 'jquery';
 import Cluster from "./Cluster";
-import Sidebar from "./Sidebar";
-import menu from '../resources/images/menu.png'
 import Menu_Sidenav from "./Menu_Sidenav";
 import Results_Sidenav from './Results_Sidenav';
 
@@ -50,7 +42,10 @@ export default class State extends Component {
         var max_bounds;
         var min_zoom;
         var clusters_url;
+        var precincts_displayed = false;
         var chosen_state = window.location.pathname.split("/").pop();
+
+        console.log(chosen_state);
 
         if (chosen_state === "NorthCarolina") {
             clusters_url = 'http://127.0.0.1:8080/district_geographical_data/North_Carolina/North_Carolina_U.S_Congressional_Districts_Geography.json';
@@ -84,26 +79,32 @@ export default class State extends Component {
             maxBounds: max_bounds,
             maxBoundsViscosity: 1.0,
             layers: [
-                L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-                    attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-                }),
+                L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
+                    attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ',
+                })
             ]
         }).fitBounds(max_bounds);
 
+
         this.map.on("zoomend", function (event) {
-            if (this.getZoom() >= 8) {
+            if (this.getZoom() >= 7) {
+                const precincts = new Precinct();
+                precincts_displayed = true;
+                if(chosen_state === "RhodeIsland") {
+                    precincts.addPrecinctsToDistricts('http://127.0.0.1:8080/precinct_geographical%20data/Rhode_Island/Voting_Precincts.geojson', this);
+                }
+                else if(chosen_state === "NorthCarolina") {
+                    precincts.addPrecinctsToDistricts('http://127.0.0.1:8080/precinct_geographical%20data/North_Carolina/nc_precincts.json', this);
+                }
+                else {
+                    precincts.addPrecinctsToDistricts('http://127.0.0.1:8080/precinct_geographical%20data/Michigan/2016_Voting_Precincts.geojson', this);
+                }
                 console.log("LOAD PRECINCTS");
             }
         });
 
         const clusters = new Cluster();
-        clusters.addClustersToState(clusters_url, this.map)
-        const precincts = new Precinct(this.map, 'http://127.0.0.1:8080/precinct_geographical_data/Michigan/2016_Voting_Precincts.geojson');
-        precincts.addPrecinctsToDistricts('http://127.0.0.1:8080/precinct_geographical%20data/Michigan/2016_Voting_Precincts.geojson', this.map);
-        /*const precincts2 = new Precinct(this.map, 'http://127.0.0.1:8080/precinct_geographical_data/Rhode_Island/Voting_Precincts.geojson');
-        precincts2.addPrecinctsToDistricts('http://127.0.0.1:8080/precinct_geographical%20data/Rhode_Island/Voting_Precincts.geojson', this.map);
-        const precincts3 = new Precinct(this.map, 'http://127.0.0.1:8080/precinct_geographical_data/North_Carolina/nc_precincts.json');
-        precincts3.addPrecinctsToDistricts('http://127.0.0.1:8080/precinct_geographical%20data/North_Carolina/nc_precincts.json', this.map);*/
+        clusters.addClustersToState(clusters_url, this.map);
     }
 
     render() {
@@ -145,70 +146,4 @@ const State_Style = styled.div`
         background-color: blue;
     }
     
-`;
-
-const Sidebar_Style = styled.div`
- @import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
-
-
-body {
-    font-family: 'Poppins', sans-serif;
-    background: #fafafa;
-}
-
-p {
-    font-family: 'Poppins', sans-serif;
-    font-size: 1.1em;
-    font-weight: 300;
-    line-height: 1.7em;
-    color: #999;
-}
-
-a, a:hover, a:focus {
-    color: inherit;
-    text-decoration: none;
-    transition: all 0.3s;
-}
-
-#sidebar {
-    /* don't forget to add all the previously mentioned styles here too */
-    background: #7386D5;
-    color: #fff;
-    transition: all 0.3s;
-}
-
-#sidebar .sidebar-header {
-    padding: 20px;
-    background: #6d7fcc;
-}
-
-#sidebar ul.components {
-    padding: 20px 0;
-    border-bottom: 1px solid #47748b;
-}
-
-#sidebar ul p {
-    color: #fff;
-    padding: 10px;
-}
-
-#sidebar ul li a {
-    padding: 10px;
-    font-size: 1.1em;
-    display: block;
-}
-#sidebar ul li a:hover {
-    color: #7386D5;
-    background: #fff;
-}
-
-#sidebar ul li.active > a, a[aria-expanded="true"] {
-    color: #fff;
-    background: #6d7fcc;
-}
-ul ul a {
-    font-size: 0.9em !important;
-    padding-left: 30px !important;
-    background: #6d7fcc;
-}
 `;

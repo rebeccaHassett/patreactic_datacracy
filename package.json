@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "jquery": "^3.4.1",
     "leaflet": "^1.5.1",
     "mdbreact": "^4.21.0",
     "react": "^16.10.2",

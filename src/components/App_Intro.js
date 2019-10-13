@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Image, Container, Row, Navbar, Nav, Col } from "react-bootstrap";
+import {Image, Container} from "react-bootstrap";
 import styled from 'styled-components';
 import Banner from "./Banner";
 import Login from "./Login"
@@ -31,7 +31,7 @@ export default App_Intro;
 
 const Intro_Style = styled.div`
     .App {
-    background-color: #F8F8F8;
+        background-color: #F8F8F8;
     }
     .Details {
         position: relative;

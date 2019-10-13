@@ -1,4 +1,3 @@
-import $ from "jquery";
 import L from "leaflet";
 
 var precinctsToClusters = {};
@@ -23,35 +22,27 @@ precinctsToClusters['03'] = [[127,153], [299,360]];
             "color": "black"
         };
 
-        var state = $.ajax({
-            url: url,
-            dataType: "json",
-            success: console.log("PRECINCT ALERT LOADED SUCCESS!"),
-            fail: function (xhr) {
-                alert(xhr.statusText)
+        var precinct = fetch(url).then(function(response) {
+            if(response.status >= 400) {
+                throw new Error("Precinct geographic data not loaded from server successfully");
             }
-        })
-
-        /* Filtering Works */
-        $.when(state, district_bounds).done(function () {
-            console.log(district_bounds);
-            layer = new L.GeoJSON(state.responseJSON, {style: district_style, filter: function(feature, layer) {
-                return (feature.properties.Label === "Greenbush Township")}}).addTo(map);
+            return response.json();
+        }).then(function(data){
+            /*layer = new L.GeoJSON(state.responseJSON, {style: district_style, filter: function(feature, layer) {
+                return (feature.properties.Label === "Greenbush Township")}}).addTo(map);*/
             /*layer = new L.GeoJSON(state.responseJSON, {style: district_style, filter: function(feature, latlng) {
                 var polygon = new L.Polygon(feature.geometry.coordinates);
                 console.log("Precinct" + polygon.getBounds());
                 console.log(district_bounds);
                 console.log(district_bounds.contains(polygon.getBounds()));
                     return (district_bounds.contains(polygon.getBounds()));}}).addTo(map);*/
-            /*map.getBounds();
-            layer = new L.GeoJSON(state.responseJSON, {style: district_style}).addTo(map);*/
+            layer = L.geoJSON(data, {style: district_style}).addTo(map);
             layer.bringToFront();
         });
     }
 
 
 
-    //addPrecinctsToDistricts();
 }
 function countyFilter(feature) {
     return false;

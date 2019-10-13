@@ -1,7 +1,4 @@
 import React, {Component} from 'react';
-import { Bar } from "react-chartjs-2";
-import { MDBContainer } from "mdbreact";
-import styled from "styled-components";
 import Bar_Chart from "./Bar_Chart";
 
 export default class State extends Component {

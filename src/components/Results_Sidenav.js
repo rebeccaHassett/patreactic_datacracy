@@ -1,10 +1,6 @@
 import React from 'react';
 import { bubble as Menu } from 'react-burger-menu'
-import {Button, Row, Tab, Tabs} from "react-bootstrap";
-import {Link} from "react-router-dom";
-import Controls from "./Controls";
 import Statistics from "./Statistics";
-import styled from "styled-components";
 
 class Results_Sidenav extends React.Component {
     constructor() {
@@ -24,8 +20,11 @@ class Results_Sidenav extends React.Component {
         event.preventDefault();
     }
 
+    componentDidMount() {
+        console.log(this.props.cluster_layer);
+    }
+
     render () {
-        // NOTE: You also need to provide styles, see https://github.com/negomi/react-burger-menu#styling
         return (
             <Menu styles={ styles } disableCloseOnEsc noOverlay right width={400}>
                 <Statistics></Statistics>

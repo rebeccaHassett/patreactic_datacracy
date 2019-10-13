@@ -50,5 +50,6 @@ const Chart_Styles = styled.div`
         width:20vw;
         height: 20vw;
         float: left;
+        margin-bottom: 5vw;
     }
 `;

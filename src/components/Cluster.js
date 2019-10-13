@@ -1,6 +1,5 @@
-import $ from "jquery";
 import L from "leaflet";
-import Precinct from "./Precinct";
+
 
 export default class Cluster {
     constructor(map, chosen_state) {
@@ -13,18 +12,13 @@ export default class Cluster {
             "color": "green"
         };
 
-        var clusters = $.ajax({
-            url: url,
-            dataType: "json",
-            success: console.log("Cluster data successfully loaded."),
-            fail: function (xhr) {
-                alert(xhr.statusText)
+        var clusters = fetch(url).then(function(response) {
+            if(response.status >= 400) {
+                throw new Error("Failed to load cluster data from server");
             }
-        })
-
-
-        $.when(clusters).done(function () {
-            layer = L.geoJSON(clusters.responseJSON, {style: cluster_style}).addTo(map);
+            return response.json();
+        }).then(function(data) {
+            layer = L.geoJSON(data, {style: cluster_style}).addTo(map);
             layer.on('click', function (e) {
                 // Check for selected
                 if (selected) {
@@ -48,6 +42,4 @@ export default class Cluster {
             layer.bringToFront();
         });
     }
-
-
 }
