@@ -113,7 +113,7 @@ export default class State extends Component {
                 {console.log(cluster_layer);
                     cluster_layer.on('mouseover', function(event) {
                         console.log(event);
-                        if(parseInt(event.layer.feature.properties.NAME,10) % 2 === 0) {
+                        if(parseInt(event.layer.feature.properties.NAME,10) % 2 === 0 || parseInt(event.layer.feature.properties.CD116FP,10) % 2 === 0 || parseInt(event.layer.feature.properties.CD115FP,10) % 2 === 0) {
                             that.setState({even:true});
                         }
                         else {
