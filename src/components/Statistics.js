@@ -33,10 +33,13 @@ export default class Statistics extends Component {
                 { this.props.sign === true ? <p>Rhue R. Reis, REP, 2496</p> : <p>Andrew, 3426</p>}
                 { this.props.sign === true ? <p>Jeffrey C. Johnson, IND, 653</p> : <p>Lauren, 233343</p>}
                 { this.props.sign === true ? <p>Salvatore G. Caiozzo, IND, 188</p> : <p>Rebecca, 123244</p>}
+                <h5>Voters Per Party</h5>
+                { this.props.sign === true ? <Pie_Chart dataPie={dataPieParty1}></Pie_Chart> : <Pie_Chart dataPie={dataPieParty2}></Pie_Chart>}
+                <h5>Voters Per Candidate</h5>
                 { this.props.sign === true ? <Bar_Chart databar={databar}></Bar_Chart> : <Bar_Chart databar={databar2}></Bar_Chart>}
                 <h5>Demographic Data</h5>
                 { this.props.sign === true ? <Pie_Chart dataPie={dataPie}></Pie_Chart> : <Pie_Chart dataPie={dataPie2}></Pie_Chart>}
-                    </Statistics_Style>
+            </Statistics_Style>
 
         );
     };
@@ -99,6 +102,42 @@ var dataPie2 = {
         }
     ]
 }
+
+var dataPieParty1 = {
+    labels: ["Republican","Democrat"],
+    datasets: [
+        {
+            data: [35, 65],
+            backgroundColor: [
+                "#FF0000",
+                "#0000FF",
+            ],
+            hoverBackgroundColor: [
+                "#FF5A5E",
+                "#5AD3D1",
+            ]
+        }
+    ]
+}
+
+
+var dataPieParty2 = {
+    labels: ["Republican", "Democrat"],
+    datasets: [
+        {
+            data: [40, 60],
+            backgroundColor: [
+                "#FF0000",
+                "#0000FF",
+            ],
+            hoverBackgroundColor: [
+                "#FF5A5E",
+                "#5AD3D1",
+            ]
+        }
+    ]
+}
+
 
 
 var databar = {

@@ -34,8 +34,8 @@ const option = {
 
 const Pie_Chart_Styles = styled.div`
     #pie {
-        width:80vw;
-        height:80vw;
+        width:20vw;
+        height:20vw;
         float: left;
     }
 `;
