@@ -1,7 +1,9 @@
 # patreactic_datacracy
 
 ## Application Run Instructions:
-In patreactic_datacracy directory, enter command:
+In patreactic_datacracy directory, enter commands:
+
+"npm install"
 
 "npm run dev"
 
