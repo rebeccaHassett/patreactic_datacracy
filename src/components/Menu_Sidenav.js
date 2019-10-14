@@ -25,7 +25,7 @@ class Menu_Sidenav extends React.Component {
 
 render () {
         return (
-            <Menu styles={ styles } disableCloseOnEsc noOverlay left>
+            <Menu styles={ styles } disableCloseOnEsc noOverlay left isOpen={true}>
                 <Content_Style>
                 <Tabs defaultActiveKey="menu" id="tabs">
                     <Tab eventKey="menu" title="Menu" disabled={this.state.Tab6}>
