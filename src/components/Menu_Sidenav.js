@@ -1,6 +1,6 @@
 import React from 'react';
 import { bubble as Menu } from 'react-burger-menu'
-import {Button, Row, Tab, Tabs, Container} from "react-bootstrap";
+import {Button, Row, Tab, Tabs, Form} from "react-bootstrap";
 import {Link} from "react-router-dom";
 import Controls from "./Controls";
 import styled from "styled-components";
@@ -35,6 +35,15 @@ render () {
                             </Link>
                         </Row>
                         <Row>
+                            <Button>Start</Button>
+                            <Form>
+                                <Form.Group controlId="incremental" id="incremental">
+                                    <Form.Label>Incremental Run:</Form.Label>
+                                    <Form.Check aria-label="option 1" label="Incremental"/>
+                                </Form.Group>
+                            </Form>
+                        </Row>
+                        <Row>
                             <Button disabled>Toggle to Original Districts</Button>
                         </Row>
                     </Tab>
@@ -51,6 +60,9 @@ render () {
 const Content_Style = styled.div`
     * {
         outline:none;
+    }
+    #incremental {
+        color:lightblue;
     }
     Button {
         width: 23vw;

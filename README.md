@@ -1,5 +1,18 @@
 # patreactic_datacracy
 
+## Application Run Instructions:
+In patreactic_datacracy directory, enter command:
+
+"npm run dev"
+
+## Application Features:
+* State, district, and precinct geographical boundaries
+* Right sidebar with voting statistics
+* Voting statistics change when hover over different districts
+* Left sidebar with user controls
+* Graphs and charts for displaying voting statistics
+* Precincts display on zoom
+
 ## Git Workflow
 This is the workflow we will use when making changes to code. In general, each of us will work on one separate feature at a time.
 These features will be in `feature` branches (`feature/blah-blah`). Once the feature is complete, we will create pull requests which will be reviewed
