@@ -11,13 +11,8 @@ export default class State extends Component {
     constructor() {
         super();
         this.state = {
-            Tab1: false,
             Tab2: false,
             Tab3: true,
-            Tab4: false,
-            Tab5: false,
-            Tab6: false,
-            Tab7: false,
             Sidebar: true,
             even: true
         }
@@ -49,7 +44,7 @@ export default class State extends Component {
         console.log(chosen_state);
 
         if (chosen_state === "NorthCarolina") {
-            clusters_url = 'http://127.0.0.1:8080/district_geographical_data/North_Carolina/North_Carolina_U.S_Congressional_Districts_Geography.json';
+            clusters_url = 'http://127.0.0.1:8080/District_Borders?name=North_Carolina';
 
             max_bounds = [
                 [37, -71],               /* North East */
@@ -57,14 +52,14 @@ export default class State extends Component {
             ];
             min_zoom = 7;
         } else if (chosen_state === "RhodeIsland") {
-            clusters_url = 'http://127.0.0.1:8080/district_geographical_data/Rhode_Island/Rhode_Island_U.S_Congressional_Districts_Geography.json';
+            clusters_url = 'http://127.0.0.1:8080/District_Borders?name=Rhode_Island';
             max_bounds = [
                 [43, -70],
                 [40, -72]
             ];
             min_zoom = 9;
         } else { /*Michigan*/
-            clusters_url = 'http://127.0.0.1:8080/district_geographical_data/Michigan/Michigan_U.S._Congressional_Districts_v17a.geojson';
+            clusters_url = 'http://127.0.0.1:8080/District_Borders?name=Michigan';
             max_bounds = [
                 [49, -70],
                 [40, -93]
@@ -92,13 +87,13 @@ export default class State extends Component {
                 const precincts = new Precinct();
                 precincts_displayed = true;
                 if(chosen_state === "RhodeIsland") {
-                    precincts.addPrecinctsToDistricts('http://127.0.0.1:8080/precinct_geographical%20data/Rhode_Island/Voting_Precincts.geojson', this);
+                    precincts.addPrecinctsToDistricts('http://127.0.0.1:8080/Precinct_Borders?name=Rhode_Island', this);
                 }
                 else if(chosen_state === "NorthCarolina") {
-                    precincts.addPrecinctsToDistricts('http://127.0.0.1:8080/precinct_geographical%20data/North_Carolina/nc_precincts.json', this);
+                    precincts.addPrecinctsToDistricts('http://127.0.0.1:8080/Precinct_Borders?name=North_Carolina', this);
                 }
                 else {
-                    precincts.addPrecinctsToDistricts('http://127.0.0.1:8080/precinct_geographical%20data/Michigan/2016_Voting_Precincts.geojson', this);
+                    precincts.addPrecinctsToDistricts('http://127.0.0.1:8080/Precinct_Borders?name=Michigan', this);
                 }
                 console.log("LOAD PRECINCTS");
             }

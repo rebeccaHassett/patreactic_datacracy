@@ -1,8 +1,0 @@
-North Carolina: 
-https://data-ncdenr.opendata.arcgis.com/datasets/nc-counties/data
-
-Rhode Island:
-http://www.rigis.org/datasets/counties
-
-Michigan:
-http://gis-michigan.opendata.arcgis.com/datasets/counties-v17a/data

@@ -22,7 +22,7 @@ function App() {
                 <Switch>
                     <Route exact path="/" component={App_Intro} />
                     <Route exact path="/map" component={Map} />
-                    <Route exact path="/:state" component={State} />
+                    /*<Route exact path="/:state" component={State} />*/
                 </Switch>
             </div>
         </Router>

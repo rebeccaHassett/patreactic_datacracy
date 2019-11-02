@@ -1,9 +1,0 @@
-Rhode Island:
-http://www.rigis.org/datasets/municipalities-1997/data
-
-Michigan:
-https://gis-michigan.opendata.arcgis.com/datasets/0a4035a25683430284bae0637b7e464c_2?geometry=-90.461%2C41.887%2C-76.585%2C44.686
-
-North Carolina:
-https://catalog.data.gov/dataset/tiger-line-shapefile-2016-state-north-carolina-current-county-subdivision-state-based
-

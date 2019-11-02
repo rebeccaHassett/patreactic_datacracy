@@ -25,10 +25,9 @@ export default class Map extends Component {
             ]
         }).fitBounds(max_bounds);
 
-        addLayerToMap('http://127.0.0.1:8080/state_geographical_boundaries_data/States_Geographical_Data.json', this.map, "Map");
-        addLayerToMap('http://127.0.0.1:8080/state_geographical_boundaries_data/Rhode_Island_State_Borders.json', this.map, "Rhode Island");
-        addLayerToMap('http://127.0.0.1:8080/state_geographical_boundaries_data/Michigan_State_Borders.json', this.map, "Michigan");
-        addLayerToMap('http://127.0.0.1:8080/state_geographical_boundaries_data/North_Carolina_State_Borders.json', this.map, "North Carolina");
+        addLayerToMap('http://localhost:8080/State_Borders?name=Rhode_Island', this.map, "Rhode Island");
+        addLayerToMap('http://127.0.0.1:8080/State_Borders?name=Michigan', this.map, "Michigan");
+        addLayerToMap('http://127.0.0.1:8080/State_Borders?name=North_Carolina', this.map, "North Carolina");
 
     }
 
@@ -53,47 +52,37 @@ const Map_Style = styled.div`
 function addLayerToMap(url, map, name) {
     var layer;
 
-    var state_style = {
-        "color": "sienna"
-    };
-
     var map_style = {
         "color": "green"
     };
 
-    var state = fetch(url).then(function(response) {
-        if(response.status >= 400) {
+    var state = fetch(url).then(function (response) {
+        if (response.status >= 400) {
             throw new Error("State geographicdata not loaded from server successfully");
         }
         return response.json();
-    }).then(function(data){
-        if(name === "Map") {
-            layer = L.geoJSON(data, {style: map_style}).addTo(map);
-            layer.bringToBack();
+    }).then(function (data) {
+        console.log(data);
+        layer = L.geoJSON(data, {style: map_style}).addTo(map);
+        var tooltip_options = {maxWidth: 200, autoClose: false, permanent: false, opacity: 0.8, offset: [-10, 0]};
+        layer.bindTooltip(name, tooltip_options);
 
-        }
-        if(name === "North Carolina" || name  === "Rhode Island" || name === "Michigan") {
-            layer = L.geoJSON(data, {style: state_style}).addTo(map);
-            var tooltip_options = {maxWidth: 200, autoClose: false, permanent: false, opacity: 0.8, offset: [-10, 0]};
-            layer.bindTooltip(name, tooltip_options);
-
-            layer.on('mouseover', function (e) {
-                var layer = e.target;
-                layer.setStyle({
-                    color: 'blue'
-                });
+        layer.on('mouseover', function (e) {
+            var layer = e.target;
+            layer.setStyle({
+                color: 'sienna'
             });
-            layer.on('mouseout', function (e) {
-                var layer = e.target;
-                layer.setStyle({
-                    color: 'sienna'
-                });
+        });
+        layer.on('mouseout', function (e) {
+            var layer = e.target;
+            layer.setStyle({
+                color: 'green'
             });
-            layer.on('click', function (e) {
-                window.location.replace("/" + layer._tooltip._content.split(' ').join(''));
-            });
-            layer.bringToFront();
-        }
+        });
+        layer.on('click', function (e) {
+            window.location.replace("/" + layer._tooltip._content.split(' ').join(''));
+        });
+        layer.bringToFront();
     });
 
 }
