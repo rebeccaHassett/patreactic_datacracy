@@ -5,6 +5,7 @@ import {Link} from "react-router-dom";
 import Controls from "./Controls";
 import styled from "styled-components";
 
+
 class Menu_Sidenav extends React.Component {
     constructor() {
         super();
@@ -28,7 +29,7 @@ render () {
             <Menu styles={ styles } disableCloseOnEsc noOverlay left isOpen={true}>
                 <Content_Style>
                 <Tabs defaultActiveKey="menu" id="tabs">
-                    <Tab eventKey="menu" title="Menu" disabled={this.state.Tab6}>
+                    <Tab id="menu" eventKey="menu" title="Menu" disabled={this.state.Tab6}>
                         <Row>
                             <Link to='/map'>
                                 <Button>Back to US Map</Button>
@@ -47,10 +48,13 @@ render () {
                             <Button disabled>Toggle to Original Districts</Button>
                         </Row>
                     </Tab>
-                    <Tab eventKey="controls" title="Controls" disabled={this.state.Tab5}>
-                        <Controls></Controls>
+                    <Tab eventKey="phase0" title="Phase 0">
+                        <h1>Phase 0 Controls</h1>
                     </Tab>
-                </Tabs>
+                <Tab eventKey="controls" title="Controls" disabled={this.state.Tab5}>
+                    <Controls></Controls>
+                </Tab>
+            </Tabs>
                 </Content_Style>
             </Menu>
         );
@@ -76,7 +80,12 @@ const Content_Style = styled.div`
     Tabs {
         border-color:white;
         outline:none;
+        width: 100%;
     }
+    #menu {
+        width: 100%;
+    }
+
 `;
 var styles = {
 
@@ -108,7 +117,7 @@ var styles = {
     },
     bmMenu: {
         background: '#373a47',
-        padding: '2.5em 1.5em 0',
+        padding: '1.0em 1.0em 0',
         fontSize: '1.15em',
         outline:'none'
     },

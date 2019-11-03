@@ -1,6 +1,9 @@
 import React from 'react';
 import { bubble as Menu } from 'react-burger-menu'
+import { Tab, Tabs } from "react-bootstrap";
 import Statistics from "./Statistics";
+import Controls from "./Controls";
+import styled from "styled-components";
 
 class Results_Sidenav extends React.Component {
     constructor() {
@@ -13,11 +16,29 @@ class Results_Sidenav extends React.Component {
     render () {
         return (
             <Menu styles={ styles } disableCloseOnEsc noOverlay right width={400}>
-                <Statistics sign={this.props.sign}></Statistics>
+                <Content_Style>
+                <Tabs defaultActiveKey="District" id="tabs">
+                    <Tab eventKey="State" title="State">
+                        <h4>State Election and Demographic Data</h4>
+                    </Tab>
+                    <Tab eventKey="District" title="District">
+                        <Statistics sign={this.props.sign}></Statistics>
+                    </Tab>
+                    <Tab eventKey="Precinct" title="Precinct">
+                        <h4>Precinct Election and Demographic Data</h4>
+                    </Tab>
+                </Tabs>
+                </Content_Style>
             </Menu>
         );
     }
 }
+
+const Content_Style = styled.div`
+    Tabs {
+        width: 5vw;
+    }
+`;
 
 
 var styles = {

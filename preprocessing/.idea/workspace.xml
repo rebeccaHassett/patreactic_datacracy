@@ -12,12 +12,12 @@
     <favorites_list name="preprocessing" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/preprocessing.py">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/rhode_island_preprocessing.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="243">
-              <caret line="16" column="8" selection-start-line="16" selection-start-column="8" selection-end-line="16" selection-end-column="8" />
+            <state relative-caret-position="-171">
+              <caret line="7" selection-start-line="7" selection-end-line="7" />
               <folding>
                 <element signature="e#0#54#0" expanded="true" />
               </folding>
@@ -25,20 +25,14 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/2016_Voting_Precincts.geojson">
-          <provider selected="true" editor-type-id="LargeFileEditor">
-            <state relative-caret-position="155550">
-              <caret column="1117921" selection-start-column="1117918" selection-end-column="1117921" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Michigan_U.S._Congressional_Districts_v17a.geojson">
+      <file pinned="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/michigan_preprocessing.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="119">
-              <caret column="905" selection-start-column="86" selection-end-column="90" />
+            <state relative-caret-position="136">
+              <caret line="8" lean-forward="true" selection-start-line="8" selection-end-line="8" />
+              <folding>
+                <element signature="e#0#54#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -56,12 +50,44 @@
     <findStrings>
       <find>NAME</find>
       <find>Dis</find>
+      <find>Congressional D</find>
+      <find>properties</find>
+      <find>PROPERTIES</find>
+      <find>}, &quot;geom</find>
+      <find>&quot;OBJECTID&quot;:</find>
+      <find>&quot;OBJECTID&quot;: 1</find>
+      <find>&quot;OBJECTID&quot;</find>
+      <find>&quot;OBJECTID&quot;: 104</find>
+      <find>&quot;OBJECTID&quot;:</find>
+      <find>DISTRICT</find>
+      <find>OBJECTID&quot;</find>
+      <find>OBJECTID&quot;: 1</find>
+      <find>&quot;OBJECTID&quot;: 15</find>
+      <find>&quot;OBJECTID&quot;: 17,</find>
+      <find>OBJECTID&quot;: 21</find>
+      <find>OBJECT</find>
+      <find>OBJECTID&quot;:1</find>
+      <find>OBJECTID&quot;:</find>
+      <find>OBJECTID&quot;: 1,</find>
+      <find>OBJECTID&quot;: 122,</find>
+      <find>OBJECTID&quot;: 159,</find>
+      <find>OBJECTID</find>
+      <find>OBJECTID&quot;: 61</find>
+      <find>OBJECTID&quot;: 219</find>
+      <find>OBJECTID&quot;:</find>
+      <find>OBJECTID&quot;: 567</find>
     </findStrings>
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/preprocessing.py" />
+        <option value="$PROJECT_DIR$/north_carolina_preprocessing.py" />
+        <option value="$PROJECT_DIR$/geopandas_rhode_island_preprocessing.py" />
+        <option value="$PROJECT_DIR$/Voting_Precincts_Rhode_Island.geojson" />
+        <option value="$PROJECT_DIR$/Voting_Precincts_Rhode_Island_New.geojson" />
+        <option value="$PROJECT_DIR$/rhode_island_preprocessing.py" />
+        <option value="$PROJECT_DIR$/michigan_preprocessing.py" />
       </list>
     </option>
   </component>
@@ -76,7 +102,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -88,9 +113,11 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
+    <property name="last_opened_file_path" value="$USER_HOME$/CSE508_Crawling/research-project-f19-jjrv/code/crawler" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
@@ -110,6 +137,34 @@
       </list>
     </option>
   </component>
+  <component name="RunManager">
+    <configuration name="rhode_island_preprocessing" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="preprocessing" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/rhode_island_preprocessing.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.rhode_island_preprocessing" />
+      </list>
+    </recent_temporary>
+  </component>
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -125,46 +180,133 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-6" y="-6" width="1293" height="693" extended-state="6" />
-    <editor active="true" />
     <layout>
-      <window_info id="Favorites" sideWeight="0.5008881" side_tool="true" weight="0.24980111" />
       <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.4991119" visible="true" weight="0.24980111" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info anchor="bottom" id="Version Control" />
-      <window_info anchor="bottom" id="Python Console" />
-      <window_info anchor="bottom" id="Terminal" weight="0.3285968" />
-      <window_info anchor="bottom" id="Event Log" side_tool="true" weight="0.3285968" />
+      <window_info id="Favorites" order="2" sideWeight="0.5008881" side_tool="true" weight="0.24980111" />
       <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="bottom" id="Find" order="1" visible="true" weight="0.3285968" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.3285968" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.39964476" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="Version Control" order="7" />
+      <window_info anchor="bottom" id="Terminal" order="8" weight="0.3285968" />
+      <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" visible="true" weight="0.3285968" />
+      <window_info anchor="bottom" id="Python Console" order="10" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+    </layout>
+    <layout-to-restore>
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.4991119" visible="true" weight="0.24980111" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info id="Favorites" order="2" sideWeight="0.5008881" side_tool="true" weight="0.24980111" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" visible="true" weight="0.3285968" />
       <window_info anchor="bottom" id="Run" order="2" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="Version Control" order="7" />
+      <window_info anchor="bottom" id="Terminal" order="8" weight="0.3285968" />
+      <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" weight="0.3285968" />
+      <window_info anchor="bottom" id="Python Console" order="10" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-    </layout>
+    </layout-to-restore>
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/North_Carolina_U.S_Congressional_Districts_Geography.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="129">
+          <caret line="1" column="565843" selection-start-line="1" selection-start-column="565828" selection-end-line="1" selection-end-column="565843" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/nc_precincts.json">
+      <provider selected="true" editor-type-id="LargeFileEditor">
+        <state>
+          <caret column="10084" selection-start-column="10084" selection-end-column="10084" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/geopandas_rhode_island_preprocessing.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="9" selection-start-line="9" selection-end-line="9" />
+          <folding>
+            <element signature="e#0#10#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Voting_Precincts_Rhode_Island_New.geojson">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="326213">
+          <caret column="2222508" selection-start-column="2222508" selection-end-column="2222508" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/north_carolina_preprocessing.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="334">
+          <caret line="25" column="13" selection-start-line="25" selection-start-column="13" selection-end-line="25" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Voting_Precincts_Rhode_Island.geojson">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="24">
+          <caret column="907042" selection-start-column="907042" selection-end-column="907042" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Rhode_Island_U.S_Congressional_Districts_Geography.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="160">
+          <caret line="1" column="2348985" selection-start-line="1" selection-start-column="2348979" selection-end-line="1" selection-end-column="2348985" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Michigan_U.S._Congressional_Districts_v17a.geojson">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="119">
-          <caret column="905" selection-start-column="86" selection-end-column="90" />
+        <state>
+          <caret column="83" selection-start-column="73" selection-end-column="83" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/rhode_island_preprocessing.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-171">
+          <caret line="7" selection-start-line="7" selection-end-line="7" />
+          <folding>
+            <element signature="e#0#54#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/2016_Voting_Precincts.geojson">
       <provider selected="true" editor-type-id="LargeFileEditor">
-        <state relative-caret-position="155550">
-          <caret column="1117921" selection-start-column="1117918" selection-end-column="1117921" />
+        <state relative-caret-position="107">
+          <caret column="232392" selection-start-column="232392" selection-end-column="232392" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/preprocessing.py">
+    <entry file="file://$PROJECT_DIR$/2016_Voting_Precincts_New.geojson">
+      <provider selected="true" editor-type-id="LargeFileEditor">
+        <state relative-caret-position="107">
+          <caret column="232783" selection-start-column="232770" selection-end-column="232783" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/michigan_preprocessing.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="243">
-          <caret line="16" column="8" selection-start-line="16" selection-start-column="8" selection-end-line="16" selection-end-column="8" />
+        <state relative-caret-position="136">
+          <caret line="8" lean-forward="true" selection-start-line="8" selection-end-line="8" />
           <folding>
             <element signature="e#0#54#0" expanded="true" />
           </folding>
