@@ -12,27 +12,31 @@ def main():
     # NOTE: buffer(0) is a trick for fixing scenarios where polygons have overlapping coordinates
     collect = GeometryCollection([shape(feature["geometry"]).buffer(0) for feature in features])
 
-    for district in features:
-        print(district['properties'])
-        district_polygon = shape(district['geometry'])
-        for precinct in precinct_features:
-            precinct_polygon = shape(precinct['geometry'])
-            if district_polygon.contains(precinct_polygon.buffer(-1e-03)) or precinct_polygon.difference(district_polygon).area < 1e-6:
-                entry = district['properties']['NAMELSAD'].replace('Congressional District ', '')
-                precinct['properties']['DISTRICT'] = entry
-                complete_precinct_features.append(precinct)
+    # For each precinct, get all differences between precinct and district areas and put the precinct into the
+    # minimum difference district.
+    for precinct_index, precinct in enumerate(precinct_features):
+        precinct_polygon = shape(precinct['geometry'])
+        diffs_by_dist = [None]*len(features)
+        for district_index, district in enumerate(features):
+            district_polygon = shape(district['geometry'])
+            # Make list of precinct/district area differences
+            p_d_diff = precinct_polygon.difference(district_polygon).area
+            diffs_by_dist[district_index] = p_d_diff
+            print("Precinct: " + str(precinct_index) + ", District: " + str(district_index))
+
+        # Find minimum district from that list
+        min_diff_area = min(diffs_by_dist)
+        min_diff_dist = diffs_by_dist.index(min_diff_area)
+        # Put precinct in that district
+        district = features[min_diff_dist]
+        entry = district['properties']['NAMELSAD'].replace('Congressional District ', '')
+        precinct['properties']['DISTRICT'] = entry
+        complete_precinct_features.append(precinct)
 
     print("Unmapped List Length: " + str(len(precinct_features)))
     print("Mapped List Length: " + str(len(complete_precinct_features)))
 
-    for i in range(1, len(precinct_features)):
-        val = False
-        for precinct in complete_precinct_features:
-            if int(precinct['properties']['OBJECTID']) == i:
-                val = True
-        if val == False:
-            print("Missing: " + str(i))
-
+    # write new precinct features to file
     f = open("Voting_Precincts_Rhode_Island.geojson", "r")
     data = json.load(f)
     data["features"] = complete_precinct_features

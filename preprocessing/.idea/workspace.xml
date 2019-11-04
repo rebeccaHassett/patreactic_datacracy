@@ -16,8 +16,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/rhode_island_preprocessing.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-171">
-              <caret line="7" selection-start-line="7" selection-end-line="7" />
+            <state>
+              <caret selection-end-line="48" selection-end-column="10" />
               <folding>
                 <element signature="e#0#54#0" expanded="true" />
               </folding>
@@ -25,14 +25,23 @@
           </provider>
         </entry>
       </file>
-      <file pinned="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/michigan_preprocessing.py">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/north_carolina_preprocessing.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="136">
-              <caret line="8" lean-forward="true" selection-start-line="8" selection-end-line="8" />
+            <state relative-caret-position="227">
+              <caret line="36" column="43" selection-start-line="36" selection-start-column="43" selection-end-line="36" selection-end-column="43" />
               <folding>
-                <element signature="e#0#54#0" expanded="true" />
+                <element signature="e#1#55#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/2016_Voting_Precincts.geojson">
+          <provider selected="true" editor-type-id="LargeFileEditor">
+            <state relative-caret-position="21675">
+              <caret column="1275686" selection-start-column="1275686" selection-end-column="1275686" />
             </state>
           </provider>
         </entry>
@@ -58,7 +67,6 @@
       <find>&quot;OBJECTID&quot;: 1</find>
       <find>&quot;OBJECTID&quot;</find>
       <find>&quot;OBJECTID&quot;: 104</find>
-      <find>&quot;OBJECTID&quot;:</find>
       <find>DISTRICT</find>
       <find>OBJECTID&quot;</find>
       <find>OBJECTID&quot;: 1</find>
@@ -74,20 +82,23 @@
       <find>OBJECTID</find>
       <find>OBJECTID&quot;: 61</find>
       <find>OBJECTID&quot;: 219</find>
-      <find>OBJECTID&quot;:</find>
       <find>OBJECTID&quot;: 567</find>
+      <find>&quot;OBJECTID&quot;:1752</find>
+      <find>NAME&quot;:</find>
+      <find>id</find>
     </findStrings>
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/preprocessing.py" />
-        <option value="$PROJECT_DIR$/north_carolina_preprocessing.py" />
         <option value="$PROJECT_DIR$/geopandas_rhode_island_preprocessing.py" />
         <option value="$PROJECT_DIR$/Voting_Precincts_Rhode_Island.geojson" />
         <option value="$PROJECT_DIR$/Voting_Precincts_Rhode_Island_New.geojson" />
-        <option value="$PROJECT_DIR$/rhode_island_preprocessing.py" />
+        <option value="$PROJECT_DIR$/michigan_preprocessing_alt.py" />
         <option value="$PROJECT_DIR$/michigan_preprocessing.py" />
+        <option value="$PROJECT_DIR$/rhode_island_preprocessing.py" />
+        <option value="$PROJECT_DIR$/north_carolina_preprocessing.py" />
       </list>
     </option>
   </component>
@@ -102,17 +113,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="ProjectPane">
-        <subPane>
-          <expand>
-            <path>
-              <item name="preprocessing" type="b2602c69:ProjectViewProjectNode" />
-              <item name="preprocessing" type="462c0819:PsiDirectoryNode" />
-            </path>
-          </expand>
-          <select />
-        </subPane>
-      </pane>
+      <pane id="ProjectPane" />
       <pane id="Scope" />
     </panes>
   </component>
@@ -185,7 +186,7 @@
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" sideWeight="0.5008881" side_tool="true" weight="0.24980111" />
       <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" visible="true" weight="0.3285968" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.3285968" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.3285968" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.39964476" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
@@ -193,7 +194,7 @@
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Version Control" order="7" />
       <window_info anchor="bottom" id="Terminal" order="8" weight="0.3285968" />
-      <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" visible="true" weight="0.3285968" />
+      <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" weight="0.3285968" />
       <window_info anchor="bottom" id="Python Console" order="10" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -227,34 +228,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/nc_precincts.json">
-      <provider selected="true" editor-type-id="LargeFileEditor">
-        <state>
-          <caret column="10084" selection-start-column="10084" selection-end-column="10084" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/geopandas_rhode_island_preprocessing.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="9" selection-start-line="9" selection-end-line="9" />
-          <folding>
-            <element signature="e#0#10#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/geopandas_rhode_island_preprocessing.py" />
     <entry file="file://$PROJECT_DIR$/Voting_Precincts_Rhode_Island_New.geojson">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="326213">
           <caret column="2222508" selection-start-column="2222508" selection-end-column="2222508" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/north_carolina_preprocessing.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="334">
-          <caret line="25" column="13" selection-start-line="25" selection-start-column="13" selection-end-line="25" selection-end-column="13" />
         </state>
       </provider>
     </entry>
@@ -272,43 +250,73 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Michigan_U.S._Congressional_Districts_v17a.geojson">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="83" selection-start-column="73" selection-end-column="83" />
+    <entry file="file://$PROJECT_DIR$/2016_Voting_Precincts_NEW.geojson">
+      <provider selected="true" editor-type-id="LargeFileEditor">
+        <state relative-caret-position="21726">
+          <caret column="1278358" selection-start-column="1278358" selection-end-column="1278358" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/rhode_island_preprocessing.py">
+    <entry file="file://$PROJECT_DIR$/Michigan_U.S._Congressional_Districts_v17a.geojson">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-171">
-          <caret line="7" selection-start-line="7" selection-end-line="7" />
+        <state relative-caret-position="18462">
+          <caret column="1086488" selection-start-column="1086482" selection-end-column="1086488" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/2016_Voting_Precincts.geojson">
+      <provider selected="true" editor-type-id="LargeFileEditor">
+        <state relative-caret-position="21675">
+          <caret column="1275686" selection-start-column="1275686" selection-end-column="1275686" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/2016_Voting_Precincts_ALTTTTTT.geojson">
+      <provider selected="true" editor-type-id="LargeFileEditor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/michigan_preprocessing_alt.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret selection-end-line="58" selection-end-column="10" />
           <folding>
             <element signature="e#0#54#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/2016_Voting_Precincts.geojson">
-      <provider selected="true" editor-type-id="LargeFileEditor">
-        <state relative-caret-position="107">
-          <caret column="232392" selection-start-column="232392" selection-end-column="232392" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/2016_Voting_Precincts_New.geojson">
-      <provider selected="true" editor-type-id="LargeFileEditor">
-        <state relative-caret-position="107">
-          <caret column="232783" selection-start-column="232770" selection-end-column="232783" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/michigan_preprocessing.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="8" lean-forward="true" selection-start-line="8" selection-end-line="8" />
+        <state relative-caret-position="689">
+          <caret line="41" column="32" selection-start-line="41" selection-end-line="42" />
           <folding>
             <element signature="e#0#54#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/rhode_island_preprocessing.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret selection-end-line="48" selection-end-column="10" />
+          <folding>
+            <element signature="e#0#54#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/nc_precincts.json">
+      <provider selected="true" editor-type-id="LargeFileEditor">
+        <state relative-caret-position="119">
+          <caret line="7" column="35" lean-forward="true" selection-start-line="7" selection-start-column="35" selection-end-line="7" selection-end-column="35" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/north_carolina_preprocessing.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="227">
+          <caret line="36" column="43" selection-start-line="36" selection-start-column="43" selection-end-line="36" selection-end-column="43" />
+          <folding>
+            <element signature="e#1#55#0" expanded="true" />
           </folding>
         </state>
       </provider>

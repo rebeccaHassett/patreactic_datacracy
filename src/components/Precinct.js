@@ -18,7 +18,7 @@ import L from "leaflet";
             return response.json();
         }).then(function(data){
             layer = new L.GeoJSON(data, {style: district_style, filter: function(feature, layer) {
-                return (feature.properties.DISTRICT === "14")}}).addTo(map);
+                return (feature.properties.DISTRICT === "1")}}).addTo(map);
             layer.bringToFront()
             /*layer = new L.GeoJSON(state.responseJSON, {style: district_style, filter: function(feature, latlng) {
                 var polygon = new L.Polygon(feature.geometry.coordinates);
