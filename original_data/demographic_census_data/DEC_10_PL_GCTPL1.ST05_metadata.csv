@@ -1,0 +1,16 @@
+GEO.id,Id
+GEO.id2,Id2
+GEO.display-label,Geography
+GCT_STUB.target-geo-id,Target Geo Id
+GCT_STUB.target-geo-id2,Target Geo Id2
+GCT_STUB.display-label,Geographic area,GCT_STUB.display-label
+HD01,Total population
+SUBHD020101,Race - One race - Total
+SUBHD020102,Race - One race - White
+SUBHD020103,Race - One race - Black or African American
+SUBHD020104,Race - One race - American Indian and Alaska Native
+SUBHD020105,Race - One race - Asian
+SUBHD020106,Race - One race - Native Hawaiian and Other Pacific Islander
+SUBHD020107,Race - One race - Some Other Race
+SUBHD0202,Race - Two or More Races
+HD03,Hispanic or Latino (of any race)
