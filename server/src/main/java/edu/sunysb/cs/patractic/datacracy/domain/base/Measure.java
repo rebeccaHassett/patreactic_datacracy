@@ -1,0 +1,12 @@
+package edu.sunysb.cs.patractic.datacracy.domain.base;
+
+public enum Measure {
+    PARTISAN_FAIRNESS,
+    COMPACTNESS,
+    EFFICIENCY_GAP,
+    POPULATION_EQUALITY,
+    COMPETITIVENESS,
+    GERRYMANDER_REPUBLICAN,
+    POPULATION_HOMOGENEITY,
+    GERRYMANDER_DEMOCRAT
+}
