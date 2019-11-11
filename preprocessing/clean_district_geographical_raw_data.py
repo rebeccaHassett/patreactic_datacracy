@@ -17,7 +17,7 @@ def main():
     # Choose state to clean raw data
     if(args.state_number == 1):
         print("Rhode Island")
-        with open("original_data/Rhode_Island_U.S_Congressional_Districts_Geography.json") as f:
+        with open("../original_data/Rhode_Island_U.S_Congressional_Districts_Geography.json") as f:
             features = json.load(f)["features"]
         for feature in features:
             print("feature")
@@ -34,7 +34,7 @@ def main():
 
     elif(args.state_number == 2):
         print("Michigan")
-        with open("original_data/Michigan_U.S._Congressional_Districts_v17a.geojson") as f:
+        with open("../original_data/Michigan_U.S._Congressional_Districts_v17a.geojson") as f:
             features = json.load(f)["features"]
         for feature in features:
             print("feature")
@@ -57,7 +57,7 @@ def main():
 
     elif(args.state_number == 3):
         print("North Carolina")
-        with open("original_data/North_Carolina_U.S_Congressional_Districts_Geography.json") as f:
+        with open("../original_data/North_Carolina_U.S_Congressional_Districts_Geography.json") as f:
             features = json.load(f)["features"]
 
         for feature_index, feature in enumerate(features):
@@ -80,7 +80,7 @@ def main():
 
     if(args.state_number == 1):
         # write new precinct features to file
-        f = open("original_data/Rhode_Island_U.S_Congressional_Districts_Geography.json", "r")
+        f = open("../original_data/Rhode_Island_U.S_Congressional_Districts_Geography.json", "r")
         data = json.load(f)
         data["features"] = features
         f.close()
@@ -89,7 +89,7 @@ def main():
         f.close()
     elif(args.state_number == 2):
         # write new precinct features to file
-        f = open("original_data/Michigan_U.S._Congressional_Districts_v17a.geojson", "r")
+        f = open("../original_data/Michigan_U.S._Congressional_Districts_v17a.geojson", "r")
         data = json.load(f)
         data["features"] = features
         f.close()
@@ -98,7 +98,7 @@ def main():
         f.close()
     else:
         # write new precinct features to file
-        f = open("original_data/North_Carolina_U.S_Congressional_Districts_Geography.json", "r")
+        f = open("../original_data/North_Carolina_U.S_Congressional_Districts_Geography.json", "r")
         data = json.load(f)
         data["features"] = features
         f.close()

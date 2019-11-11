@@ -17,8 +17,8 @@ import L from "leaflet";
             }
             return response.json();
         }).then(function(data){
-            layer = new L.GeoJSON(data, {style: district_style, filter: function(feature, layer) {
-                return (feature.properties.DISTRICT === "15")}}).addTo(map);
+            /*layer = new L.GeoJSON(data, {style: district_style, filter: function(feature, layer) {
+                return (feature.properties.DISTRICT === "15")}}).addTo(map);*/
             layer.bringToFront()
             /*layer = new L.GeoJSON(state.responseJSON, {style: district_style, filter: function(feature, latlng) {
                 var polygon = new L.Polygon(feature.geometry.coordinates);
@@ -26,7 +26,7 @@ import L from "leaflet";
                 console.log(district_bounds);
                 console.log(district_bounds.contains(polygon.getBounds()));
                     return (district_bounds.contains(polygon.getBounds()));}}).addTo(map);*/
-            //layer = L.geoJSON(data, {style: district_style}).addTo(map);
+            layer = L.geoJSON(data, {style: district_style}).addTo(map);
 
             map.on("zoomend", function(event) {
                if(this.getZoom() < 7) {

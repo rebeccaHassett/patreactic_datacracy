@@ -36,7 +36,7 @@ def main():
     # Choose state to clean raw data
     if(args.state_number == 1):
         print("Rhode Island")
-        with open("original_data/Voting_Precincts_Rhode_Island.geojson") as f:
+        with open("../original_data/Voting_Precincts_Rhode_Island.geojson") as f:
             features = json.load(f)["features"]
         curr_incremental_id = "OBJECTID"
         area = "Shape__Area"
@@ -44,7 +44,7 @@ def main():
         curr_precinct_id = "NAME"
     elif(args.state_number == 2):
         print("Michigan")
-        with open("original_data/2016_Voting_Precincts.geojson") as f:
+        with open("../original_data/2016_Voting_Precincts.geojson") as f:
             features = json.load(f)["features"]
         curr_incremental_id = "OBJECTID"
         area = "ShapeSTArea"
@@ -53,7 +53,7 @@ def main():
         convert_precinct_id_to_int = True
     elif(args.state_number == 3):
         print("North Carolina")
-        with open("original_data/nc_precincts.json") as f:
+        with open("../original_data/nc_precincts.json") as f:
             features = json.load(f)["features"]
         curr_incremental_id = "id"
         curr_precinct_id = "prec_id"
@@ -70,7 +70,7 @@ def main():
 
     if(args.state_number == 1):
         # write new precinct features to file
-        f = open("original_data/Voting_Precincts_Rhode_Island.geojson", "r")
+        f = open("../original_data/Voting_Precincts_Rhode_Island.geojson", "r")
         data = json.load(f)
         data["features"] = features
         f.close()
@@ -79,7 +79,7 @@ def main():
         f.close()
     elif(args.state_number == 2):
         # write new precinct features to file
-        f = open("original_data/2016_Voting_Precincts.geojson", "r")
+        f = open("../original_data/2016_Voting_Precincts.geojson", "r")
         data = json.load(f)
         data["features"] = features
         f.close()
@@ -88,7 +88,7 @@ def main():
         f.close()
     else:
         # write new precinct features to file
-        f = open("original_data/nc_precincts.json", "r")
+        f = open("../original_data/nc_precincts.json", "r")
         data = json.load(f)
         data["features"] = features
         f.close()
