@@ -2,43 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6588e9f0-9949-4d3b-836c-f81dcd41dd9e" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/../frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/src/components/Precinct.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/Precinct.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../original_data/census_block_geographical_data/tl_2010_26_tabblock00.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../original_data/census_block_geographical_data/tl_2010_37_tabblock00.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../original_data/census_block_geographical_data/tl_2010_44_tabblock10.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../original_data/demographic_census_data/DEC_10_PL_GCTPL1.ST05.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../original_data/demographic_census_data/DEC_10_PL_GCTPL1.ST05.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../original_data/demographic_census_data/DEC_10_PL_GCTPL1.ST05_metadata.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../original_data/demographic_census_data/DEC_10_PL_GCTPL1.ST05_with_ann.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../original_data/demographic_census_data/RI_race_by_block.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../original_data/demographic_census_data/aff_download_readme_ann.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../original_data/demographic_census_data/mi2010.sf1.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../original_data/demographic_census_data/nc2010.sf1.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../original_data/precinct_election_data/Michigan/2016/2016city.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../original_data/precinct_election_data/Michigan/2016/2016name.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../original_data/precinct_election_data/Michigan/2016/2016offc.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../original_data/precinct_election_data/Michigan/2016/2016vote.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../original_data/precinct_election_data/Michigan/2016/2016vote.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../original_data/precinct_election_data/Michigan/2016/county.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../original_data/precinct_election_data/Michigan/2016/readme.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../original_data/precinct_election_data/Michigan/20161108__mi__general__precinct.csv" beforeDir="false" afterPath="$PROJECT_DIR$/../original_data/precinct_election_data/Michigan/20161108__mi__general__precinct.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../original_data/precinct_election_data/Michigan/20161108__mi__special__general__precinct.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../original_data/precinct_election_data/Michigan/2018/2018city.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../original_data/precinct_election_data/Michigan/2018/2018name.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../original_data/precinct_election_data/Michigan/2018/2018offc.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../original_data/precinct_election_data/Michigan/2018/2018vote.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../original_data/precinct_election_data/Michigan/2018/2018vote.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../original_data/precinct_election_data/Michigan/2018/county.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../original_data/precinct_election_data/Michigan/2018/readme.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../original_data/precinct_election_data/Michigan/20181106__mi__general__precinct.csv" beforeDir="false" afterPath="$PROJECT_DIR$/../original_data/precinct_election_data/Michigan/20181106__mi__general__precinct.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../original_data/precinct_election_data/Michigan/20181106__mi__special__general__precinct.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../original_data/precinct_election_data/North_Carolina/2016.csv" beforeDir="false" afterPath="$PROJECT_DIR$/../original_data/precinct_election_data/North_Carolina/2016.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../original_data/precinct_election_data/North_Carolina/2018.csv" beforeDir="false" afterPath="$PROJECT_DIR$/../original_data/precinct_election_data/North_Carolina/2018.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/clean_district_geographical_raw_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/clean_district_geographical_raw_data.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/clean_precinct_geographical_raw_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/clean_precinct_geographical_raw_data.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../server/database/patreacticDB.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/map_demographic_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/map_demographic_census_block_geo_data.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -52,10 +17,10 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/map_demographic_data.py">
+        <entry file="file://$PROJECT_DIR$/map_demographic_census_block_geo_data.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="257">
-              <caret line="24" column="73" selection-start-line="24" selection-start-column="73" selection-end-line="24" selection-end-column="73" />
+            <state relative-caret-position="6">
+              <caret line="11" column="29" lean-forward="true" selection-start-line="11" selection-start-column="29" selection-end-line="11" selection-end-column="29" />
               <folding>
                 <element signature="e#0#54#0" expanded="true" />
               </folding>
@@ -64,31 +29,10 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/mapped_data/census_blocks_geographical_ri.json">
-          <provider selected="true" editor-type-id="LargeFileEditor">
-            <state relative-caret-position="200">
-              <caret column="623357" selection-start-column="623347" selection-end-column="623357" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/clean_district_geographical_raw_data.py">
+        <entry file="file://$PROJECT_DIR$/map_demographic_precinct_geo_data.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-497">
-              <caret line="19" column="30" selection-start-line="19" selection-start-column="22" selection-end-line="19" selection-end-column="30" />
-              <folding>
-                <element signature="e#0#11#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/preprocessing.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="209">
-              <caret line="94" selection-start-line="94" selection-end-line="101" selection-end-column="13" />
+            <state relative-caret-position="398">
+              <caret line="63" column="20" lean-forward="true" selection-start-line="63" selection-start-column="20" selection-end-line="63" selection-end-column="20" />
               <folding>
                 <element signature="e#0#54#0" expanded="true" />
               </folding>
@@ -97,9 +41,30 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/preprocessing.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="324">
+              <caret line="26" column="40" selection-start-line="26" selection-start-column="40" selection-end-line="26" selection-end-column="40" />
+              <folding>
+                <element signature="e#0#54#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/mapped_data/census_blocks_geographical_ri.json">
+          <provider selected="true" editor-type-id="LargeFileEditor">
+            <state>
+              <caret column="38" lean-forward="true" selection-start-column="38" selection-end-column="38" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/clean_precinct_geographical_raw_data.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="192">
+            <state relative-caret-position="629">
               <caret line="38" column="30" selection-start-line="38" selection-start-column="22" selection-end-line="38" selection-end-column="30" />
               <folding>
                 <element signature="e#0#11#0" expanded="true" />
@@ -170,6 +135,7 @@
         <option value="$PROJECT_DIR$/clean_district_geographical_raw_data.py" />
         <option value="$PROJECT_DIR$/clean_precinct_geographical_raw_data.py" />
         <option value="$PROJECT_DIR$/map_demographic_data.py" />
+        <option value="$PROJECT_DIR$/map_demographic_precinct_geo_data.py" />
       </list>
     </option>
   </component>
@@ -185,7 +151,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -202,6 +167,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -260,7 +226,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/map_demographic_data.py" />
+      <option name="SCRIPT_NAME" value="C:\Users\Rebecca Hassett\WebstormProjects\patreactic_datacracy\preprocessing\map_demographic_census_block_geo_data.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -315,7 +281,7 @@
     <frame x="-6" y="-6" width="1293" height="693" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.4991119" visible="true" weight="0.29594272" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.4991119" visible="true" weight="0.28957835" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" sideWeight="0.5008881" side_tool="true" weight="0.24980111" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -457,7 +423,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/clean_precinct_geographical_raw_data.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="192">
+        <state relative-caret-position="629">
           <caret line="38" column="30" selection-start-line="38" selection-start-column="22" selection-end-line="38" selection-end-column="30" />
           <folding>
             <element signature="e#0#11#0" expanded="true" />
@@ -467,7 +433,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/clean_district_geographical_raw_data.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-497">
+        <state relative-caret-position="17">
           <caret line="19" column="30" selection-start-line="19" selection-start-column="22" selection-end-line="19" selection-end-column="30" />
           <folding>
             <element signature="e#0#11#0" expanded="true" />
@@ -475,20 +441,20 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/preprocessing.py">
+    <entry file="file://$PROJECT_DIR$/map_demographic_census_block_geo_data.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="209">
-          <caret line="94" selection-start-line="94" selection-end-line="101" selection-end-column="13" />
+        <state relative-caret-position="6">
+          <caret line="11" column="29" lean-forward="true" selection-start-line="11" selection-start-column="29" selection-end-line="11" selection-end-column="29" />
           <folding>
             <element signature="e#0#54#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/map_demographic_data.py">
+    <entry file="file://$PROJECT_DIR$/preprocessing.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="257">
-          <caret line="24" column="73" selection-start-line="24" selection-start-column="73" selection-end-line="24" selection-end-column="73" />
+        <state relative-caret-position="324">
+          <caret line="26" column="40" selection-start-line="26" selection-start-column="40" selection-end-line="26" selection-end-column="40" />
           <folding>
             <element signature="e#0#54#0" expanded="true" />
           </folding>
@@ -497,8 +463,18 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/mapped_data/census_blocks_geographical_ri.json">
       <provider selected="true" editor-type-id="LargeFileEditor">
-        <state relative-caret-position="200">
-          <caret column="623357" selection-start-column="623347" selection-end-column="623357" />
+        <state>
+          <caret column="38" lean-forward="true" selection-start-column="38" selection-end-column="38" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/map_demographic_precinct_geo_data.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="398">
+          <caret line="63" column="20" lean-forward="true" selection-start-line="63" selection-start-column="20" selection-end-line="63" selection-end-column="20" />
+          <folding>
+            <element signature="e#0#54#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

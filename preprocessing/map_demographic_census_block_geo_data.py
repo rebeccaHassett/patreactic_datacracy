@@ -31,7 +31,7 @@ def merge_demographic_geographic_data(geo, demographic):
 
 
 def main():
-    parser = argparse.ArgumentParser(description='Clean Precinct Geographical Raw Data')
+    parser = argparse.ArgumentParser(description='Map Demographic Data')
     parser.add_argument('state_number', metavar='N', type=int,
                         help='1 = Rhode Island, 2 = Michigan, 3 = North Carolina')
 
