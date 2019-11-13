@@ -1,14 +1,27 @@
-Michigan: https://gis-michigan.opendata.arcgis.com/datasets/8ce0f3ce3ff74109ac02a26d34a0f4fc_1
-Michigan Department of State 
-JSON converted from Shapefile
+Michigan:
+https://github.com/mggg-states/MI-shapefiles
+MGGG sources:
+* Geographical Data: http://gis-michigan.opendata.arcgis.com/datasets/2016-voting-precincts
+* Demographic Data: https://www.nhgis.org/
+                    https://www.census.gov/cgi-bin/geo/shapefiles/index.php
+                    https://data.census.gov/cedsci/
+* Election Data: https://electionlab.mit.edu/
 
 
-North Carolina: Duke University Libraries
-https://dl.ncsbe.gov/index.html?prefix=PrecinctMaps/
-GeoJSON converted from Shapefile [the 2019 voting precincts geographical data set] [Converted using FME Software]
-https://www.safe.com/fme/fme-desktop/
+North Carolina:
+https://github.com/mggg-states/NC-shapefiles
+MGG sources:
+* Geographical Data and Election Data: https://www.ncleg.gov/RnR/Redistricting/BaseData2016
+* Demographic Data: https://www.nhgis.org/
+                    https://data.census.gov/cedsci/
 
 
-Rhode Island: http://www.rigis.org/datasets/d12408938f6d42a4b02256087290cc4f_0
-Rhode Island Geographic Information System
-JSON converted from Shapefile
+
+Rhode Island:
+https://github.com/mggg-states/RI-shapefiles
+MGGG sources:
+* Geographical Data: http://www.rigis.org/
+* Demographic Data: https://www.census.gov/geographies/mapping-files/time-series/geo/tiger-line-file.html
+                    https://api.census.gov/data/2010/dec/sf1
+                    https://data.census.gov/cedsci/
+* Election Data: http://www.elections.ri.gov/elections/preresults/

@@ -19,7 +19,7 @@ import L from "leaflet";
         }).then(function(data){
             /*layer = new L.GeoJSON(data, {style: district_style, filter: function(feature, layer) {
                 return (feature.properties.DISTRICT === "15")}}).addTo(map);*/
-            layer.bringToFront()
+            //layer.bringToFront()
             /*layer = new L.GeoJSON(state.responseJSON, {style: district_style, filter: function(feature, latlng) {
                 var polygon = new L.Polygon(feature.geometry.coordinates);
                 console.log("Precinct" + polygon.getBounds());
