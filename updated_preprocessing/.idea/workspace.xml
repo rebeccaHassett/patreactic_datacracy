@@ -2,11 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="da7513d8-167f-45a0-92b8-c16a264abf58" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/../frontend/src/components/Precinct.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/Precinct.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../original_data/precinct_geographical data/Data_Source_Information.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../original_data/precinct_geographical data/Data_Source_Information.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../original_data/precinct_geographical data/Michigan/2016_Voting_Precincts.geojson" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../original_data/precinct_geographical data/North_Carolina/nc_precincts.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../original_data/precinct_geographical data/Rhode_Island/Voting_Precincts.geojson" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../original_preprocessing/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../original_preprocessing/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../preprocessing/.idea/encodings.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../preprocessing/.idea/misc.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../preprocessing/.idea/modules.xml" beforeDir="false" />
@@ -21,24 +17,16 @@
       <change beforePath="$PROJECT_DIR$/../preprocessing/clean_data/nc_precincts_CLEAN.json" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../preprocessing/clean_district_geographical_raw_data.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../preprocessing/clean_precinct_geographical_raw_data.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../preprocessing/clean_voting_data.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../preprocessing/map_demographic_census_block_geo_data.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../preprocessing/map_demographic_precinct_geo_data.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../preprocessing/mapped_data/2016_Voting_Precincts_NEW.geojson" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../preprocessing/mapped_data/Voting_Precincts_Rhode_Island_NEW.geojson" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../preprocessing/mapped_data/census_blocks_geographical_ri.json" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../preprocessing/mapped_data/nc_precincts_NEW.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../preprocessing/original_data/2016_Voting_Precincts.geojson" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../preprocessing/original_data/Michigan_U.S._Congressional_Districts_v17a.geojson" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../preprocessing/original_data/North_Carolina_U.S_Congressional_Districts_Geography.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../preprocessing/original_data/Rhode_Island_U.S_Congressional_Districts_Geography.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../preprocessing/original_data/Voting_Precincts_Rhode_Island.geojson" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../preprocessing/original_data/nc_precincts.json" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../preprocessing/preprocessing.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../server/src/main/java/edu/sunysb/cs/patractic/datacracy/controller/BasicBorderController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../server/src/main/java/edu/sunysb/cs/patractic/datacracy/controller/BasicBorderController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../server/src/main/resources/data/precinct_geographical_data/Michigan/2016_Voting_Precincts.geojson" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../server/src/main/resources/data/precinct_geographical_data/North_Carolina/nc_precincts.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../server/src/main/resources/data/precinct_geographical_data/Rhode_Island/Voting_Precincts.geojson" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/clean_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/clean_data.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/map_election_geographic_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/map_election_geographic_data.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -47,12 +35,12 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/clean_data.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="357">
-              <caret line="21" column="34" selection-start-line="21" selection-start-column="34" selection-end-line="21" selection-end-column="34" />
+            <state relative-caret-position="360">
+              <caret line="82" column="42" selection-start-line="82" selection-start-column="42" selection-end-line="82" selection-end-column="42" />
               <folding>
                 <element signature="e#0#11#0" expanded="true" />
               </folding>
@@ -60,14 +48,50 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/map_election_geographic_data.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="170">
-              <caret line="10" column="54" selection-start-line="10" selection-start-column="54" selection-end-line="10" selection-end-column="54" />
+            <state relative-caret-position="323">
+              <caret line="19" selection-start-line="19" selection-end-line="19" />
               <folding>
                 <element signature="e#0#11#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/mapped_data/RI_Precincts_MAPPED.geojson">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="140">
+              <caret column="9473370" selection-start-column="9473370" selection-end-column="9473370" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/mapped_data/MI_Precincts_MAPPED.geojson">
+          <provider selected="true" editor-type-id="LargeFileEditor">
+            <state relative-caret-position="169">
+              <caret column="607615" selection-start-column="607605" selection-end-column="607615" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/mapped_data/NC_VDT_MAPPED.geojson">
+          <provider selected="true" editor-type-id="LargeFileEditor">
+            <state relative-caret-position="101">
+              <caret column="906111" selection-start-column="906111" selection-end-column="906111" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/clean_data/NC_VTD_CLEAN.json">
+          <provider selected="true" editor-type-id="LargeFileEditor">
+            <state relative-caret-position="169">
+              <caret column="1156077" selection-start-column="1156077" selection-end-column="1156077" />
             </state>
           </provider>
         </entry>
@@ -83,6 +107,17 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
+      <find>ELECTION</find>
+      <find>OBJECT</find>
+      <find>OBJECTID&quot;: 1,</find>
+      <find>MECKLENBURG</find>
+      <find>alamance 1210</find>
+      <find>ALAMANCE 1210</find>
+      <find>M</find>
+      <find>MECKLENBURG 21</find>
+      <find>meckl</find>
+      <find>PROPERTIES</find>
+      <find>DURHAM</find>
       <find>properties</find>
     </findStrings>
   </component>
@@ -116,6 +151,16 @@
               <item name="updated_preprocessing" type="b2602c69:ProjectViewProjectNode" />
               <item name="updated_preprocessing" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="updated_preprocessing" type="b2602c69:ProjectViewProjectNode" />
+              <item name="updated_preprocessing" type="462c0819:PsiDirectoryNode" />
+              <item name="clean_data" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="updated_preprocessing" type="b2602c69:ProjectViewProjectNode" />
+              <item name="updated_preprocessing" type="462c0819:PsiDirectoryNode" />
+              <item name="mapped_data" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
@@ -144,7 +189,28 @@
       </list>
     </option>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Python.clean_data">
+    <configuration name="clean_data" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="updated_preprocessing" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/clean_data.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="map_election_geographic_data" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="updated_preprocessing" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -168,6 +234,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.clean_data" />
         <item itemvalue="Python.map_election_geographic_data" />
       </list>
     </recent_temporary>
@@ -189,13 +256,9 @@
     <frame x="-6" y="-6" width="1293" height="693" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info id="Favorites" side_tool="true" />
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.24980111" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info anchor="bottom" id="Version Control" />
-      <window_info anchor="bottom" id="Python Console" />
-      <window_info anchor="bottom" id="Terminal" />
-      <window_info anchor="bottom" id="Event Log" side_tool="true" />
+      <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.3285968" />
@@ -203,46 +266,84 @@
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="Version Control" order="7" />
+      <window_info anchor="bottom" id="Terminal" order="8" />
+      <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
+      <window_info anchor="bottom" id="Python Console" order="10" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
     </layout>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/original_data/MI_precincts.json">
-      <provider selected="true" editor-type-id="LargeFileEditor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/original_data/NC_VTD.json">
-      <provider selected="true" editor-type-id="LargeFileEditor">
-        <state relative-caret-position="238">
-          <caret line="14" column="57" lean-forward="true" selection-start-line="14" selection-start-column="57" selection-end-line="14" selection-end-column="57" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/original_data/RI_Precincts.json">
+    <entry file="file://$PROJECT_DIR$/original_data/MI_precincts.json" />
+    <entry file="file://$PROJECT_DIR$/original_data/NC_VTD.json" />
+    <entry file="file://$PROJECT_DIR$/original_data/RI_Precincts.json" />
+    <entry file="file://$PROJECT_DIR$/clean_data/RI_Precincts_CLEAN.json">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="1" column="876" selection-start-line="1" selection-start-column="876" selection-end-line="1" selection-end-column="876" />
+        <state relative-caret-position="160">
+          <caret column="8376106" selection-start-column="8376096" selection-end-column="8376106" />
         </state>
       </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/clean_data/MI_Precincts_CLEAN.json">
+      <provider selected="true" editor-type-id="LargeFileEditor">
+        <state relative-caret-position="119">
+          <caret column="885" selection-start-column="885" selection-end-column="885" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/2016.csv">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/2018.csv">
+      <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/clean_data.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="357">
-          <caret line="21" column="34" selection-start-line="21" selection-start-column="34" selection-end-line="21" selection-end-column="34" />
+        <state relative-caret-position="360">
+          <caret line="82" column="42" selection-start-line="82" selection-start-column="42" selection-end-line="82" selection-end-column="42" />
           <folding>
             <element signature="e#0#11#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/clean_data/NC_VTD_CLEAN.json">
+      <provider selected="true" editor-type-id="LargeFileEditor">
+        <state relative-caret-position="169">
+          <caret column="1156077" selection-start-column="1156077" selection-end-column="1156077" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/map_election_geographic_data.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="170">
-          <caret line="10" column="54" selection-start-line="10" selection-start-column="54" selection-end-line="10" selection-end-column="54" />
+        <state relative-caret-position="323">
+          <caret line="19" selection-start-line="19" selection-end-line="19" />
           <folding>
             <element signature="e#0#11#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mapped_data/RI_Precincts_MAPPED.geojson">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="140">
+          <caret column="9473370" selection-start-column="9473370" selection-end-column="9473370" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mapped_data/MI_Precincts_MAPPED.geojson">
+      <provider selected="true" editor-type-id="LargeFileEditor">
+        <state relative-caret-position="169">
+          <caret column="607615" selection-start-column="607605" selection-end-column="607615" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mapped_data/NC_VDT_MAPPED.geojson">
+      <provider selected="true" editor-type-id="LargeFileEditor">
+        <state relative-caret-position="101">
+          <caret column="906111" selection-start-column="906111" selection-end-column="906111" />
         </state>
       </provider>
     </entry>

@@ -1,4 +1,5 @@
 import json
+import pandas as pd
 import argparse
 
 '''State Options: 1 = Rhode Island, 2 = Michigan, 3 = North Carolina'''
@@ -11,71 +12,97 @@ def main():
     args = parser.parse_args()
 
     features = {}
+    original_precinct_file = None
+    clean_precinct_file = None
+    remove_fields = None
 
     # Choose state to clean raw data
     if(args.state_number == 1):
         print("Rhode Island")
-        with open("original_data/RI_Precincts.json") as f:
+        original_precinct_file = "../original_data/precinct_geographical data/Rhode_Island/RI_Precincts.json"
+        clean_precinct_file = "clean_data/RI_Precincts_CLEAN.json"
+
+        remove_fields = ["Shape__Are", "Shape__Len", "REGVOT16", "REGVOT18", "TOTVOT18", "GOV18D", "GOV18R", "SEN18D",
+                         "SEN18R", "NH_2MORE", "2MOREVAP", "SENDIST", "TOTPOP", "NH_WHITE", "NH_BLACK", "NH_AMIN",
+                        "NH_ASIAN", "NH_NHPI", "NH_OTHER", "HISP"]
+
+        with open(original_precinct_file) as f:
             features = json.load(f)["features"]
+
+        # all precinct names should be capitalized
         for feature in features:
-            feature["properties"].pop("Shape__Are")
-            feature["properties"].pop("Shape__Len")
-            feature["properties"].pop("REGVOT16")
-            feature["properties"].pop("REGVOT18")
-            feature["properties"].pop("TOTVOT18")
-            feature["properties"].pop("GOV18D")
-            feature["properties"].pop("GOV18R")
-            feature["properties"].pop("SEN18D")
-            feature["properties"].pop("SEN18R")
-            feature["properties"].pop("NH_2MORE")
-            feature["properties"].pop("2MOREVAP")
-            feature["properties"].pop("SENDIST")
-            feature["properties"].pop("SENDIST")
-
-
-
+            prename = feature["properties"].pop("PRENAME")
+            feature["properties"]["PRENAME"] = prename.upper()
 
 
     elif(args.state_number == 2):
         print("Michigan")
-        with open("original_data/2016_Voting_Precincts.geojson") as f:
+        original_precinct_file = "../original_data/precinct_geographical data/Michigan/MI_precincts.json"
+        clean_precinct_file = "clean_data/MI_Precincts_CLEAN.json"
+
+        with open(original_precinct_file) as f:
             features = json.load(f)["features"]
-        curr_incremental_id = "OBJECTID"
-        area = "ShapeSTArea"
-        length = "ShapeSTLength"
-        curr_precinct_id = "Id"
-        convert_precinct_id_to_int = True
+
+        remove_fields = ["ShapeSTLen", "ElectionYe", "county_lat", "county_lon", "TOTPOP", "NH_WHITE", "NH_BLACK",
+            "NH_AMIN", "NH_ASIAN", "NH_NHPI", "NH_OTHER", "HISP", "H_WHITE", "H_BLACK", "H_AMIN",
+            "H_ASIAN", "H_NHPI", "H_OTHER", "2MOREVAP", "SENDIST"]
+
+        # reformatting precinct name information
+        id = 1
+        for feature in features:
+            feature["properties"]["OBJECTID"] = id
+            id = id + 1
+            feature["properties"]["PRENAME"] = feature["properties"].pop("precinct").replace(';','')
+
     elif(args.state_number == 3):
         print("North Carolina")
-        with open("original_data/nc_precincts.json") as f:
+        original_precinct_file = "../original_data/precinct_geographical data/North_Carolina/NC_VTD.json"
+        clean_precinct_file = "clean_data/NC_VTD_CLEAN.json"
+
+        with open(original_precinct_file) as f:
             features = json.load(f)["features"]
-        curr_incremental_id = "id"
-        curr_precinct_id = "prec_id"
+
+        remove_fields = ["ALAND10", "AWATER10", "PL10AA_TOT", "EL08G_GV_D", "EL08G_GV_R", "EL08G_GV_L",
+            "EL08G_GV_T", "EL08G_USS_", "EL08G_US_1", "EL08G_US_2", "EL08G_US_3", "EL08G_US_4", "EL10G_USS_",
+            "EL08G_USS_", "EL10G_US_1", "EL10G_US_2", "EL10G_US_3", "EL10G_US_4", "EL12G_GV_D", "EL12G_GV_R",
+            "EL12G_GV_L", "EL12G_GV_W", "EL12G_GV_1", "EL12G_GV_T", "EL14G_USS_", "EL14G_US_1",
+            "EL14G_US_2", "EL14G_US_3", "EL14G_US_4", "Shape_Leng", "Shape_Area", "EL12G_PR_D", "EL12G_PR_R",
+            "EL12G_PR_L", "EL12G_PR_W", "EL12G_PR_1", "EL12G_PR_T", "EL16G_USS_", "EL16G_US_1", "EL16G_US_2",
+            "EL16G_US_3", "EL16G_GV_D", "EL16G_GV_R", "EL16G_GV_L", "EL16G_GV_T", "BPOP", "nBPOP", "TOTPOP",
+            "NH_WHITE", "NH_BLACK", "NH_AMIN", "NH_ASIAN", "NH_NHPI", "NH_OTHER", "NH_2MORE", "HISP",
+            "H_WHITE", "H_BLACK", "H_AMIN", "H_ASIAN", "H_NHPI", "H_OTHER", "HISP", "H_2MORE", "2MOREVAP"]
+
+        county_info = pd.read_csv("../original_data/precinct_geographical data/North_Carolina/nc_county_fips.csv", delimiter=',')
+
+        # Reformatting precinct name by converting county code to county name
+        id = 1
+        for feature in features:
+            feature["properties"]["OBJECTID"] = id
+            id = id + 1
+            county = county_info[county_info.code == int(feature["properties"]["County"])]
+            prename = county.name.values[0] + " " + feature["properties"]["VTD_Name"]
+            feature["properties"]["PRENAME"] = prename.upper()
     else:
         print("Wrong Input")
         exit()
 
+    # remove unnecessary fields
+    for feature in features:
+        for field in remove_fields:
+            if field in feature["properties"]:
+                feature["properties"].pop(field)
 
 
-    if(args.state_number == 1):
-        # write new precinct features to file
-        f = open("original_data/Voting_Precincts_Rhode_Island.geojson", "r")
-        data = json.load(f)
-        data["features"] = features
-        f.close()
-        f = open("clean_data/Voting_Precincts_Rhode_Island_CLEAN.geojson", "w")
-        f.write(json.dumps(data))
-        f.close()
-    elif(args.state_number == 2):
-        # write new precinct features to file
-        f = open("original_data/2016_Voting_Precincts.geojson", "r")
-        data = json.load(f)
-        data["features"] = features
-        f.close()
-        f = open("clean_data/2016_Voting_Precincts_CLEAN.geojson", "w")
-        f.write(json.dumps(data))
-        f.close()
 
+
+    # write new precinct features to file
+    f = open(original_precinct_file, "r")
+    data = json.load(f)
+    data["features"] = features
+    f.close()
+    f = open(clean_precinct_file, "w")
+    f.write(json.dumps(data))
+    f.close()
 
 
 
