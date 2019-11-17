@@ -4,39 +4,57 @@ import edu.sunysb.cs.patractic.datacracy.domain.enums.ElectionType;
 import edu.sunysb.cs.patractic.datacracy.domain.enums.PoliticalParty;
 import edu.sunysb.cs.patractic.datacracy.domain.enums.Year;
 import edu.sunysb.cs.patractic.datacracy.domain.interfaces.IJurisdiction;
-import org.apache.commons.lang3.NotImplementedException;
 
-import java.util.List;
+import javax.persistence.*;
+import java.util.Set;
 
 /**
  * Contains the election data for a jurisdiction
  */
+@Entity
 public class ElectionData {
-    private final Year year;
-    private final ElectionType type;
+
+    @Id
+    private int id;
+    @ManyToOne
+    private String precinctId;
+    @Column
+    @MapKey
+    private ElectionId electionId;
+    @ManyToOne
+    @JoinColumn(table = "votesByParty", name = "dataId")
     private final long[] votesByParty;
 
     public ElectionData(Year year, ElectionType type, long[] votesByParty) {
-        this.year = year;
-        this.type = type;
+        this.electionId = new ElectionId(year, type);
         this.votesByParty = votesByParty;
     }
 
-    public ElectionData aggregateFromJurisdictions(List<IJurisdiction> jurisdictions) {
-        throw new NotImplementedException("ElectionData::aggregateFromJurisdictions");
+    public static ElectionData aggregateFromJurisdictions(Set<IJurisdiction> jurisdictions, ElectionId electionId) {
+        if (jurisdictions == null || jurisdictions.size() == 0) {
+            return null;
+        }
+        long[] votes = new long[PoliticalParty.values().length];
+        jurisdictions.stream().forEach(j -> {
+            ElectionData data = j.getElectionData(electionId);
+            for (PoliticalParty party : PoliticalParty.values()) {
+                votes[party.ordinal()] = data.getVotes(party);
+            }
+        });
+        return new ElectionData(electionId.year, electionId.electionType, votes);
     }
 
     public Year getYear() {
-        return year;
+        return electionId.year;
     }
 
     public ElectionType getType() {
-        return type;
+        return electionId.electionType;
     }
 
     public PoliticalParty getWinningParty() {
         PoliticalParty highest = PoliticalParty.DEMOCRAT;
-        for (PoliticalParty party: PoliticalParty.values()) {
+        for (PoliticalParty party : PoliticalParty.values()) {
             if (votesByParty[party.ordinal()] > votesByParty[highest.ordinal()]) {
                 highest = party;
             }
@@ -47,7 +65,7 @@ public class ElectionData {
     public long getVotes(PoliticalParty party) {
         if (party == null) {
             long sum = 0;
-            for (PoliticalParty p: PoliticalParty.values()) {
+            for (PoliticalParty p : PoliticalParty.values()) {
                 sum += votesByParty[p.ordinal()];
             }
             return sum;
