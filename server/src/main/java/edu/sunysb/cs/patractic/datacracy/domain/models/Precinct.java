@@ -1,6 +1,7 @@
 package edu.sunysb.cs.patractic.datacracy.domain.models;
 
 import edu.sunysb.cs.patractic.datacracy.domain.enums.DemographicGroup;
+import edu.sunysb.cs.patractic.datacracy.domain.enums.PoliticalParty;
 import edu.sunysb.cs.patractic.datacracy.domain.interfaces.IJurisdiction;
 
 import javax.persistence.Column;
@@ -54,5 +55,23 @@ public class Precinct implements IJurisdiction {
     @Override
     public int hashCode() {
         return Objects.hash(precinctId, stateName);
+    }
+
+    public boolean isDemographicBloc(DemographicGroup demographic, Threshold blocPopPercentThresh) {
+        return blocPopPercentThresh.isWithin(((getPopulation(demographic) * 1.0)/(1.0 * getPopulation(null))), true);
+    }
+
+    public VotingBlockDTO getVotingBloc(DemographicGroup demographic, Threshold blocVotingPercentThresh, ElectionId electionId) {
+        ElectionData data = getElectionData(electionId);
+        PoliticalParty winningParty = data.getWinningParty();
+        long totalVotes = data.getVotes(null);
+        long votesByDemo = data.getVotes(winningParty);
+        double fractionVotedForWinner = (1.0 * votesByDemo) / totalVotes;
+
+        if (blocVotingPercentThresh.isWithin(fractionVotedForWinner, true)) {
+            return new VotingBlockDTO(precinctId, totalVotes, votesByDemo, winningParty);
+        } else {
+            return null;
+        }
     }
 }

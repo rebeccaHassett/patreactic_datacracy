@@ -1,8 +1,10 @@
 package edu.sunysb.cs.patractic.datacracy.domain.models;
 
+import edu.sunysb.cs.patractic.datacracy.domain.enums.Constraints;
 import edu.sunysb.cs.patractic.datacracy.domain.enums.DemographicGroup;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -29,7 +31,16 @@ public class State {
     }
 
     public Set<VotingBlockDTO> getEligibleDemographicVotingBlocs(DemographicGroup demographic, Properties config) {
-        return null;
+        Set<VotingBlockDTO> ret = new HashSet<>();
+        for (Precinct p: precincts) {
+            if (p.isDemographicBloc(demographic, config.thresholds[Constraints.BLOC_POP_PERCENTAGE.ordinal()])) {
+                VotingBlockDTO vbdto = p.getVotingBloc(demographic, config.thresholds[Constraints.BLOC_VOTING_PERCENTAGE.ordinal()], config.electionId);
+                if (vbdto != null) {
+                    ret.add(vbdto);
+                }
+            }
+        }
+        return ret;
     }
 
     @Override
