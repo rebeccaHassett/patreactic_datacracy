@@ -55,4 +55,9 @@ public class State {
         }
         return false;
     }
+
+    // TODO
+    public State clone() {
+        return null;
+    }
 }

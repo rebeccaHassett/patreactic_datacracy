@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.FileInputStream;
+import java.nio.charset.StandardCharsets;
 
 
 @RestController
@@ -29,7 +30,7 @@ public class BasicBorderController {
         }
         try {
             FileInputStream fis = new FileInputStream(fileName);
-            String data = IOUtils.toString(fis, "UTF-8");
+            String data = IOUtils.toString(fis, StandardCharsets.UTF_8);
             return data;
         } catch (Exception exception) {
             System.out.println("Reading JSON file Exception");
@@ -50,7 +51,7 @@ public class BasicBorderController {
         }
         try {
             FileInputStream fis = new FileInputStream(fileName);
-            String data = IOUtils.toString(fis, "UTF-8");
+            String data = IOUtils.toString(fis, StandardCharsets.UTF_8);
             return data;
         } catch (Exception exception) {
             System.out.println("Reading JSON file Exception");
@@ -71,7 +72,7 @@ public class BasicBorderController {
         }
         try {
             FileInputStream fis = new FileInputStream(fileName);
-            String data = IOUtils.toString(fis, "UTF-8");
+            String data = IOUtils.toString(fis, StandardCharsets.UTF_8);
             return data;
         } catch (Exception exception) {
             System.out.println("Reading JSON file Exception");
