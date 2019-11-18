@@ -2,11 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6588e9f0-9949-4d3b-836c-f81dcd41dd9e" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/../frontend/src/components/Precinct.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/Precinct.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../original_data/precinct_geographical data/Data_Source_Information.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../original_data/precinct_geographical data/Data_Source_Information.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../original_data/precinct_geographical data/Michigan/2016_Voting_Precincts.geojson" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../original_data/precinct_geographical data/North_Carolina/nc_precincts.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../original_data/precinct_geographical data/Rhode_Island/Voting_Precincts.geojson" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../preprocessing/.idea/encodings.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../preprocessing/.idea/misc.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../preprocessing/.idea/modules.xml" beforeDir="false" />
@@ -21,24 +17,16 @@
       <change beforePath="$PROJECT_DIR$/../preprocessing/clean_data/nc_precincts_CLEAN.json" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../preprocessing/clean_district_geographical_raw_data.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../preprocessing/clean_precinct_geographical_raw_data.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../preprocessing/clean_voting_data.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../preprocessing/map_demographic_census_block_geo_data.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../preprocessing/map_demographic_precinct_geo_data.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../preprocessing/mapped_data/2016_Voting_Precincts_NEW.geojson" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../preprocessing/mapped_data/Voting_Precincts_Rhode_Island_NEW.geojson" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../preprocessing/mapped_data/census_blocks_geographical_ri.json" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../preprocessing/mapped_data/nc_precincts_NEW.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../preprocessing/original_data/2016_Voting_Precincts.geojson" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../preprocessing/original_data/Michigan_U.S._Congressional_Districts_v17a.geojson" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../preprocessing/original_data/North_Carolina_U.S_Congressional_Districts_Geography.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../preprocessing/original_data/Rhode_Island_U.S_Congressional_Districts_Geography.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../preprocessing/original_data/Voting_Precincts_Rhode_Island.geojson" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../preprocessing/original_data/nc_precincts.json" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../preprocessing/preprocessing.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../server/src/main/java/edu/sunysb/cs/patractic/datacracy/controller/BasicBorderController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../server/src/main/java/edu/sunysb/cs/patractic/datacracy/controller/BasicBorderController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../server/src/main/resources/data/precinct_geographical_data/Michigan/2016_Voting_Precincts.geojson" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../server/src/main/resources/data/precinct_geographical_data/North_Carolina/nc_precincts.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../server/src/main/resources/data/precinct_geographical_data/Rhode_Island/Voting_Precincts.geojson" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../updated_preprocessing/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../updated_preprocessing/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../updated_preprocessing/clean_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/../updated_preprocessing/clean_data.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../updated_preprocessing/map_election_geographic_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/../updated_preprocessing/map_election_geographic_data.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -50,24 +38,12 @@
     <favorites_list name="preprocessing" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/clean_precinct_geographical_raw_data.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="187">
-              <caret line="11" column="13" selection-start-line="11" selection-start-column="13" selection-end-line="11" selection-end-column="13" />
-              <folding>
-                <element signature="e#0#11#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/map_demographic_precinct_geo_data.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="238">
-              <caret line="14" column="29" selection-start-line="14" selection-start-column="29" selection-end-line="14" selection-end-column="29" />
+            <state relative-caret-position="17">
+              <caret line="11" column="9" selection-start-line="11" selection-start-column="9" selection-end-line="11" selection-end-column="9" />
               <folding>
                 <element signature="e#0#54#0" expanded="true" />
               </folding>
@@ -154,6 +130,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -165,7 +142,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -460,8 +436,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/clean_precinct_geographical_raw_data.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
-          <caret line="11" column="13" selection-start-line="11" selection-start-column="13" selection-end-line="11" selection-end-column="13" />
+        <state relative-caret-position="102">
+          <caret line="7" column="62" selection-start-line="7" selection-start-column="62" selection-end-line="7" selection-end-column="62" />
           <folding>
             <element signature="e#0#11#0" expanded="true" />
           </folding>
@@ -470,8 +446,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/map_demographic_precinct_geo_data.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="238">
-          <caret line="14" column="29" selection-start-line="14" selection-start-column="29" selection-end-line="14" selection-end-column="29" />
+        <state relative-caret-position="17">
+          <caret line="11" column="9" selection-start-line="11" selection-start-column="9" selection-end-line="11" selection-end-column="9" />
           <folding>
             <element signature="e#0#54#0" expanded="true" />
           </folding>

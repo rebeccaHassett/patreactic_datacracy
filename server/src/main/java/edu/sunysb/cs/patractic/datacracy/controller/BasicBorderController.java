@@ -63,11 +63,11 @@ public class BasicBorderController {
     public String Precinct_Borders(@RequestParam String name) {
         String fileName;
         if (name.equals("Rhode_Island")) {
-            fileName = "src/main/resources/data/precinct_geographical_data/Rhode_Island/RI_Precincts.json";
+            fileName = "src/main/resources/data/precinct_geographical_data/Rhode_Island/RI_Precincts.geojson";
         } else if (name.equals("Michigan")) {
-            fileName = "src/main/resources/data/precinct_geographical_data/Michigan/MI_precincts.json";
+            fileName = "src/main/resources/data/precinct_geographical_data/Michigan/MI_precincts.geojson";
         } else {
-            fileName = "src/main/resources/data/precinct_geographical_data/North_Carolina/NC_VTD.json";
+            fileName = "src/main/resources/data/precinct_geographical_data/North_Carolina/NC_VTD.geojson";
         }
         try {
             FileInputStream fis = new FileInputStream(fileName);

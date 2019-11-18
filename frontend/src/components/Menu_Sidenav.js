@@ -1,10 +1,11 @@
 import React from 'react';
-import {bubble as Menu} from 'react-burger-menu'
+import {slide as Menu} from 'react-burger-menu'
 import {Button, Row, Tab, Tabs, Form} from "react-bootstrap";
-import {Link} from "react-router-dom";
+import {Link} from 'react-router-dom';
 import Controls from "./Controls";
 import styled from "styled-components";
 import Slider_Controls from "./Slider_Control";
+import '@trendmicro/react-sidenav/dist/react-sidenav.css';
 
 
 class Menu_Sidenav extends React.Component {
@@ -47,7 +48,7 @@ class Menu_Sidenav extends React.Component {
                                 </Form>
                             </Row>
                             <Row>
-                                <Button disabled>Toggle to Original Districts</Button>
+                                <Button>Toggle to Original Districts</Button>
                             </Row>
                         </Tab>
                         <Tab eventKey="phase0" title="Phase 0">
@@ -81,35 +82,39 @@ class Menu_Sidenav extends React.Component {
 }
 
 const Content_Style = styled.div`
-    * {
-        outline:none;
-    }
     Form {
-        color:lightblue;
+        color: black;
     }
     #incremental {
-        color:lightblue;
+        color:black;
+        padding-left: 2vw;
     }
     Button {
         width: 23vw;
         margin-top: 2vw;
-        background-color:lightblue;
+        background-color:darkgray;
         color:black;
         font-style:bold;
         border-color:black;
         margin-left: 2vw;
     }
-
+    
+    button:disabled {
+        background-color: red;
+    }
     Tabs {
         border-color:white;
         outline:none;
         width: 100%;
+        color: black;
     }
     #menu {
         width: 100%;
     }
 
 `;
+
+
 var styles = {
 
     bmBurgerButton: {
@@ -139,7 +144,7 @@ var styles = {
         height: '100%',
     },
     bmMenu: {
-        background: '#373a47',
+        background: 'darkseagreen',
         padding: '1.0em 1.0em 0',
         fontSize: '1.15em',
         outline: 'none',
@@ -149,7 +154,7 @@ var styles = {
         fill: '#373a47'
     },
     bmItemList: {
-        color: '#b8b7ad',
+        color: 'black',
         outline: 'none !important',
         padding: '0.8em'
     },
@@ -158,7 +163,7 @@ var styles = {
     },
 
     bmOverlay: {
-        background: 'rgba(0, 0, 0, 0.3)'
+        background: 'rgba(0, 0, 0, 0)'
     }
 }
 

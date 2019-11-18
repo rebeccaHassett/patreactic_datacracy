@@ -1,7 +1,11 @@
 import React, {Component} from 'react';
-import {Container} from "react-bootstrap";
+import {Container, Dropdown, DropdownItem} from "react-bootstrap";
 import styled from "styled-components";
 import L from "leaflet";
+import SideNav, { Toggle, Nav, NavItem, NavIcon, NavText } from '@trendmicro/react-sidenav';
+import '@trendmicro/react-sidenav/dist/react-sidenav.css';
+import {BrowserRouter as Router, Route} from 'react-router-dom';
+
 
 
 export default class Map extends Component {
@@ -18,6 +22,7 @@ export default class Map extends Component {
             zoom: 5,
             minZoom: 2.5,
             maxBounds: max_bounds,
+            zoomControl: false,
             layers: [
                 L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
                     attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ',
@@ -34,6 +39,49 @@ export default class Map extends Component {
     render() {
         return (
             <Map_Style>
+                <Router>
+                    <Route render={({ location, history }) => (
+                        <React.Fragment>
+                            <SideNav id = "sidenav"
+                                onSelect={(selected) => {
+                                    const to = '/' + selected;
+                                    if (location.pathname !== to) {
+                                        history.push(to);
+                                        window.location.reload();
+                                    }
+                                }}
+                            >
+                                <SideNav.Toggle />
+                                <SideNav.Nav>
+                                    <NavItem eventKey="map">
+                                        <NavIcon>
+                                            <i className="fa fa-fw fa-line-chart" style={{ fontSize: '1.75em' }} />
+                                        </NavIcon>
+                                        <NavText>
+                                            State
+                                        </NavText>
+                                        <NavItem eventKey="RhodeIsland">
+                                            <NavText>
+                                                Rhode Island
+                                            </NavText>
+                                        </NavItem>
+                                        <NavItem eventKey="Michigan">
+                                            <NavText>
+                                                Michigan
+                                            </NavText>
+                                        </NavItem>
+                                        <NavItem eventKey="NorthCarolina">
+                                            <NavText>
+                                                North Carolina
+                                            </NavText>
+                                        </NavItem>
+                                    </NavItem>
+                                </SideNav.Nav>
+                            </SideNav>
+                        </React.Fragment>
+                    )}
+                    />
+                </Router>
                 <Container>
                     <div id='map'></div>
                 </Container>
@@ -44,6 +92,10 @@ export default class Map extends Component {
 }
 
 const Map_Style = styled.div`
+    #sidenav {
+        width: 7vw;
+        background-color: darkseagreen
+    }
     #map {
       height: 600px;
     }

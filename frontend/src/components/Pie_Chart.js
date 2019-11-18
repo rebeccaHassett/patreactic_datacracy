@@ -15,6 +15,7 @@ export default class Pie_Chart extends React.Component {
     }
 }
 const option = {
+    fontSize: 2,
     tooltips: {
         callbacks: {
             label: function(tooltipItem, data) {

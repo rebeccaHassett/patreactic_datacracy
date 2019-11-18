@@ -14,6 +14,7 @@ class Results_Sidenav extends React.Component {
     }
 
     render () {
+
         return (
             <Menu styles={ styles } disableCloseOnEsc noOverlay right width={400}>
                 <Content_Style>
@@ -22,10 +23,10 @@ class Results_Sidenav extends React.Component {
                         <h4>State Election and Demographic Data</h4>
                     </Tab>
                     <Tab eventKey="District" title="District">
-                        <Statistics sign={this.props.sign}></Statistics>
                     </Tab>
                     <Tab eventKey="Precinct" title="Precinct">
                         <h4>Precinct Election and Demographic Data</h4>
+                        <Statistics data={this.props.precinct_data}></Statistics>
                     </Tab>
                 </Tabs>
                 </Content_Style>
