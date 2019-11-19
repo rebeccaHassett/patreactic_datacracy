@@ -173,8 +173,8 @@ export default class Statistics extends Component {
                 <h4>{name}</h4>
                 <h4>{this.state.electionType} {this.state.electionYear}</h4>
                 <h5>Voting Results Per Candidate</h5>
-                <p>{democraticCandidate}, DEM, {democraticVotes}</p>
-                <p>{republicanCandidate}, REP, {republicanVotes}</p>
+                <p>{democraticCandidate}, DEM , {democraticVotes}</p>
+                <p>{republicanCandidate}, REP , {republicanVotes}</p>
                 <h5>Voters Per Party</h5>
                 <Pie_Chart dataPie={dataPieParty}></Pie_Chart>
                 <h5>Voters Per Candidate</h5>

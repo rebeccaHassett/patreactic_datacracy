@@ -8,9 +8,16 @@ export default class Cluster {
         var layer;
         var selected;
 
-        var cluster_style = {
-            "color": "green"
-        };
+        function cluster_style(feature) {
+            return {
+                fillColor: feature.properties.COLOR,
+                weight: 2,
+                opacity: 1,
+                color: 'white',
+                dashArray: '3',
+                fillOpacity: 0.7
+            };
+        }
 
         var clusters = fetch(url).then(function(response) {
             if(response.status >= 400) {
