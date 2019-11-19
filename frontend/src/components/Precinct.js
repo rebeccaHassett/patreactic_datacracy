@@ -1,8 +1,6 @@
 import L from "leaflet";
 
     class Precinct {
-        constructor() {
-        }
 
         addPrecinctsToDistricts(url, map, district_bounds) {
             var layer;
@@ -11,7 +9,7 @@ import L from "leaflet";
                 "color": "black"
             };
 
-            var precinct_features = fetch(url).then(function (response) {
+            return fetch(url).then(function (response) {
                 if (response.status >= 400) {
                     throw new Error("Precinct geographic data not loaded from server successfully");
                 }
@@ -19,13 +17,7 @@ import L from "leaflet";
             }).then(function (data) {
                 /*layer = new L.GeoJSON(data, {style: district_style, filter: function(feature, layer) {
                     return (feature.properties.DISTRICT === "15")}}).addTo(map);*/
-                //layer.bringToFront()
-                /*layer = new L.GeoJSON(state.responseJSON, {style: district_style, filter: function(feature, latlng) {
-                    var polygon = new L.Polygon(feature.geometry.coordinates);
-                    console.log("Precinct" + polygon.getBounds());
-                    console.log(district_bounds);
-                    console.log(district_bounds.contains(polygon.getBounds()));
-                        return (district_bounds.contains(polygon.getBounds()));}}).addTo(map);*/
+
                 layer = L.geoJSON(data, {style: district_style}).addTo(map);
 
                 map.on("zoomend", function (event) {
@@ -37,21 +29,7 @@ import L from "leaflet";
                 layer.bringToFront();
                 return layer
             });
-
-            return precinct_features
-
         }
     }
-function countyFilter(feature) {
-    return false;
-    if(feature.properties.CountyFips === "163") {
-        console.log("FOUND");
-        return true;
-    }
-    else {
-        console.log("NOT FOUND");
-        return false;
-    }
-}
 
 export default Precinct;

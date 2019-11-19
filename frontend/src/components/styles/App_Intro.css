@@ -1,0 +1,20 @@
+#app {
+    background-color: #F8F8F8;
+}
+#details {
+    position: relative;
+    top: 13vw;
+    font-family: "Helvetica";
+}
+#about {
+    text-decoration: underline;
+}
+#eagle {
+    float: left;
+    width: 30%;
+    padding-top: 10vw;
+}
+#loginButton {
+    position: relative;
+    top: 2.5vw;
+}

@@ -1,61 +1,56 @@
 import React, {Component} from 'react';
-import {Container, Dropdown, DropdownItem} from "react-bootstrap";
+import {Container} from "react-bootstrap";
 import styled from "styled-components";
 import L from "leaflet";
-import SideNav, { Toggle, Nav, NavItem, NavIcon, NavText } from '@trendmicro/react-sidenav';
+import SideNav, {NavItem, NavIcon, NavText} from '@trendmicro/react-sidenav';
 import '@trendmicro/react-sidenav/dist/react-sidenav.css';
 import {BrowserRouter as Router, Route} from 'react-router-dom';
-
-
 
 export default class Map extends Component {
 
     componentDidMount() {
-        var max_bounds = [
+        var maxMapBounds = [
             [29, -122],
             [49, -70]
         ];
 
-        // create map
         this.map = L.map('map', {
             center: [0, 0],
             zoom: 5,
             minZoom: 2.5,
-            maxBounds: max_bounds,
+            maxBounds: maxMapBounds,
             zoomControl: false,
             layers: [
                 L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
                     attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ',
                 })
             ]
-        }).fitBounds(max_bounds);
+        }).fitBounds(maxMapBounds);
 
         addLayerToMap('http://localhost:8080/State_Borders?name=Rhode_Island', this.map, "Rhode Island");
         addLayerToMap('http://127.0.0.1:8080/State_Borders?name=Michigan', this.map, "Michigan");
         addLayerToMap('http://127.0.0.1:8080/State_Borders?name=North_Carolina', this.map, "North Carolina");
-
     }
 
     render() {
         return (
-            <Map_Style>
+            <MapStyle>
                 <Router>
-                    <Route render={({ location, history }) => (
+                    <Route render={({location, history}) => (
                         <React.Fragment>
-                            <SideNav id = "sidenav"
-                                onSelect={(selected) => {
-                                    const to = '/' + selected;
-                                    if (location.pathname !== to) {
-                                        history.push(to);
-                                        window.location.reload();
-                                    }
-                                }}
+                            <SideNav id="sidenav"
+                                     onSelect={(selected) => {
+                                         const to = '/' + selected;
+                                         if (location.pathname !== to) {
+                                             history.push(to);
+                                             window.location.reload();
+                                         }
+                                     }}
                             >
-                                <SideNav.Toggle />
+                                <SideNav.Toggle/>
                                 <SideNav.Nav>
-                                    <NavItem eventKey="map">
+                                    <NavItem eventKey="stateMenu">
                                         <NavIcon>
-                                            <i className="fa fa-fw fa-line-chart" style={{ fontSize: '1.75em' }} />
                                         </NavIcon>
                                         <NavText>
                                             State
@@ -85,37 +80,25 @@ export default class Map extends Component {
                 <Container>
                     <div id='map'></div>
                 </Container>
-            </Map_Style>
+            </MapStyle>
         );
     }
-
 }
-
-const Map_Style = styled.div`
-    #sidenav {
-        width: 7vw;
-        background-color: darkseagreen
-    }
-    #map {
-      height: 600px;
-    }
-`;
 
 function addLayerToMap(url, map, name) {
     var layer;
 
-    var map_style = {
-        "color": "green"
-    };
-
-    var state = fetch(url).then(function (response) {
+    fetch(url).then(function (response) {
         if (response.status >= 400) {
-            throw new Error("State geographicdata not loaded from server successfully");
+            throw new Error("State geographical data not loaded from server successfully");
         }
         return response.json();
     }).then(function (data) {
-        console.log(data);
-        layer = L.geoJSON(data, {style: map_style}).addTo(map);
+        layer = L.geoJSON(data).addTo(map);
+        layer.setStyle({
+            color: 'green'
+        })
+
         var tooltip_options = {maxWidth: 200, autoClose: false, permanent: false, opacity: 0.8, offset: [-10, 0]};
         layer.bindTooltip(name, tooltip_options);
 
@@ -125,16 +108,27 @@ function addLayerToMap(url, map, name) {
                 color: 'sienna'
             });
         });
+
         layer.on('mouseout', function (e) {
             var layer = e.target;
             layer.setStyle({
                 color: 'green'
             });
         });
+
         layer.on('click', function (e) {
             window.location.replace("/" + layer._tooltip._content.split(' ').join(''));
         });
-        layer.bringToFront();
     });
-
 }
+
+
+const MapStyle = styled.div`
+    #sidenav {
+        width: 7vw;
+        background-color: darkseagreen
+    }
+    #map {
+      height: 600px;
+    }
+`;

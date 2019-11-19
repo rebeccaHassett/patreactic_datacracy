@@ -3,7 +3,7 @@ import { Bar } from "react-chartjs-2";
 import { MDBContainer } from "mdbreact";
 import styled from "styled-components";
 
-export default class Bar_Chart extends Component {
+export default class BarChart extends Component {
     state = {
         barChartOptions: {
             responsive: true,

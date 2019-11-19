@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import {ButtonGroup, Button, Row, Col} from "react-bootstrap";
 import styled from "styled-components";
-import Bar_Chart from "./Bar_Chart";
-import Pie_Chart from "./Pie_Chart";
+import BarChart from "./BarChart";
+import PieChart from "./PieChart";
 
 
 export default class Statistics extends Component {
@@ -156,7 +156,7 @@ export default class Statistics extends Component {
             <Statistics_Style>
                 <Row>
                     <Col>
-                        <ButtonGroup aria-label="Basic example" id="btns">
+                        <ButtonGroup id="btns">
                             <Button onClick={this._onElectionTypeChange.bind(this, 'Presidential')} active={this.state.electionType === 'Presidential'}>Presidential</Button>
                             <Button onClick={this._onElectionTypeChange.bind(this, 'Congressional')} active={this.state.electionType === 'Congressional'}>Congressional</Button>
                         </ButtonGroup>
@@ -164,7 +164,7 @@ export default class Statistics extends Component {
                 </Row>
                 <Row>
                     <Col>
-                        <ButtonGroup aria-label="Basic example" id="btns2">
+                        <ButtonGroup id="btns2">
                             <Button onClick={this._onElectionYearChange.bind(this, '2016')} active={this.state.electionYear === '2016'}>2016</Button>
                             <Button onClick={this._onElectionYearChange.bind(this, '2018')} active={this.state.electionYear === '2018'} disabled={this.state.button2018}>2018</Button>
                         </ButtonGroup>
@@ -176,9 +176,9 @@ export default class Statistics extends Component {
                 <p>{democraticCandidate}, DEM , {democraticVotes}</p>
                 <p>{republicanCandidate}, REP , {republicanVotes}</p>
                 <h5>Voters Per Party</h5>
-                <Pie_Chart dataPie={dataPieParty}></Pie_Chart>
+                <PieChart dataPie={dataPieParty}></PieChart>
                 <h5>Voters Per Candidate</h5>
-                <Bar_Chart databar={databar}></Bar_Chart>
+                <BarChart databar={databar}></BarChart>
                 <h5>Demographic Data</h5>
                 <p>Total Population: {Math.round(totalPopulation)}</p>
                 <p>Hispanic Population: {Math.round(hispanicPopulation)}</p>
@@ -187,7 +187,7 @@ export default class Statistics extends Component {
                 <p>Native American Population: {Math.round(nativeAmericanPopulation)}</p>
                 <p>Asian Population: {Math.round(asianPopulation)}</p>
                 <p>Pacific Islander Population: {Math.round(pacificIslanderPopulation)}</p>
-                <Pie_Chart dataPie={dataPie}></Pie_Chart>
+                <PieChart dataPie={dataPie}></PieChart>
             </Statistics_Style>
 
         );
@@ -197,14 +197,5 @@ export default class Statistics extends Component {
 const Statistics_Style = styled.div`
     * {
         color: lightblue;
-    }
-    #btns, #btns2 {
-      width:4vw;
-    }
-    #btns2 {
-        margin-bottom: 2vw;
-    }
-    h4 {
-        margin-bottom: 2vw;
     }
 `;

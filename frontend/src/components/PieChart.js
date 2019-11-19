@@ -1,16 +1,13 @@
 import React from "react";
 import { Pie } from "react-chartjs-2";
 import { MDBContainer } from "mdbreact";
-import styled from "styled-components";
 
-export default class Pie_Chart extends React.Component {
+export default class PieChart extends React.Component {
     render() {
         return (
-            <Pie_Chart_Styles>
             <MDBContainer>
                 <Pie data={this.props.dataPie} options={option} id="pie"/>
             </MDBContainer>
-            </Pie_Chart_Styles>
         );
     }
 }
@@ -32,11 +29,3 @@ const option = {
         }
     }
 }
-
-const Pie_Chart_Styles = styled.div`
-    #pie {
-        width:20vw;
-        height:20vw;
-        float: left;
-    }
-`;

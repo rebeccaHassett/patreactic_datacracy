@@ -6,17 +6,17 @@ import flagpole from '../resources/images/Flag.jpg'
 
 const Banner = () => (
     <Banner_Style>
-        <Jumbotron className="banner">
+        <Jumbotron id="banner">
             <Container>
                 Patreactic Datacracy
-                <Image className="flagpole" src={flagpole} fluid/>
+                <Image id="flagpole" src={flagpole} fluid/>
             </Container>
         </Jumbotron>
     </Banner_Style>
 );
 
 const Banner_Style = styled.div`
-    .banner {
+    #banner {
       background: url(${sky}) no-repeat;
       background-size: cover;
       height: 12vw;
@@ -35,7 +35,7 @@ const Banner_Style = styled.div`
       text-align: center;
       line-height: 2.45em;
     }
-    .flagpole {
+    #flagpole {
       height: 15.5vw;
       width: 15.5vw;
       position: fixed;
