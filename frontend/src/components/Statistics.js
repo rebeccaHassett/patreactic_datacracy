@@ -42,7 +42,10 @@ export default class Statistics extends Component {
 
     render() {
         var data = this.props.data;
-        if(data !== "") {
+        if(data === "") {
+            return null;
+        }
+        else {
             var jsonData = JSON.parse(data);
             var name = jsonData.PRENAME;
             var totalPopulation = jsonData.VAP;
@@ -196,6 +199,6 @@ export default class Statistics extends Component {
 
 const Statistics_Style = styled.div`
     * {
-        color: lightblue;
+        color: white;
     }
 `;

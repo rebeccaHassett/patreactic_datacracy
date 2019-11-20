@@ -12,7 +12,9 @@ export default class State extends Component {
         super();
         this.state = {
             Sidebar: true,
-            precinctData: ""
+            precinctData: "",
+            districtData: "",
+            stateData: "",
         }
 
         this.toggleBox = this.toggleBox.bind(this);
@@ -60,6 +62,7 @@ export default class State extends Component {
             minZoom: minZoom,
             maxBounds: maxBounds,
             maxBoundsViscosity: 1.0,
+            preferCanvas: true,
             layers: [
                 L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
                     attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ',
@@ -108,7 +111,7 @@ export default class State extends Component {
                             </body>
                         </Container>
                     </Col>
-                    <ResultsSidenav precinctData={this.state.precinctData}></ResultsSidenav>
+                    <ResultsSidenav precinctData={this.state.precinctData} districtData={this.state.districtData} stateData={this.state.stateData}></ResultsSidenav>
                 </Row>
             </State_Style>
         );
@@ -116,7 +119,7 @@ export default class State extends Component {
 }
 
 const State_Style = styled.div`
-    overflow: hidden
+    overflow: hidden;
     #map {
       height: 600px;
     }

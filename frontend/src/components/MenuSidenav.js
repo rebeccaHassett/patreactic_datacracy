@@ -2,7 +2,8 @@ import React from 'react';
 import {slide as Menu} from 'react-burger-menu'
 import {Button, Row, Tab, Tabs, Form} from "react-bootstrap";
 import {Link} from 'react-router-dom';
-import Controls from "./Controls";
+import Phase1Controls from "./Phase1Controls";
+import Phase2Controls from "./Phase2Controls";
 import styled from "styled-components";
 import Slider_Controls from "./SliderControl";
 import '@trendmicro/react-sidenav/dist/react-sidenav.css';
@@ -21,27 +22,19 @@ class MenuSidenav extends React.Component {
         return (
             <Menu styles={menuStyles} disableCloseOnEsc noOverlay left isOpen={true}>
                 <ContentStyle>
-                    <Tabs  id="tabs" defaultActiveKey="menu">
-                        <Tab id="menu" eventKey="menu" title="Menu" disabled={this.state.menuTab}>
+                    <Tabs  className="tabs" defaultActiveKey="menu">
+                        <Tab eventKey="menu" title="Menu" disabled={this.state.menuTab}>
                             <Row>
                                 <Link to='/map'>
-                                    <Button>Back to US Map</Button>
+                                    <Button className="menuBtn">Back to US Map</Button>
                                 </Link>
                             </Row>
                             <Row>
-                                <Button>Start</Button>
-                                <Form>
-                                    <Form.Group id="incremental">
-                                        <Form.Label>Incremental Run:</Form.Label>
-                                        <Form.Check label="Incremental"/>
-                                    </Form.Group>
-                                </Form>
-                            </Row>
-                            <Row>
-                                <Button>Toggle to Original Districts</Button>
+                                <Button className="menuBtn">Toggle to Original Districts</Button>
                             </Row>
                         </Tab>
                         <Tab eventKey="phase0" title="Phase 0">
+                            <Form>
                             <Form.Group id="bloc-population-percentage">
                                 <Form.Label>Block Population Percentage Threshold:</Form.Label>
                                 <Slider_Controls></Slider_Controls>
@@ -56,13 +49,14 @@ class MenuSidenav extends React.Component {
                                 <Form.Check aria-label="option 2" label="Congressional 2018"/>
                                 <Form.Check aria-label="option 3" label="Presidential 2016"/>
                             </Form.Group>
+                            </Form>
                             <Button>Start Phase 0</Button>
                         </Tab>
                         <Tab eventKey="phase1" title="Phase 1" disabled={this.state.phase1Tab}>
-                            <Controls></Controls>
+                            <Phase1Controls></Phase1Controls>
                         </Tab>
                         <Tab eventKey="phase2" title="Phase 2" disabled={this.state.phase1Tab}>
-                            <Controls></Controls>
+                            <Phase2Controls></Phase2Controls>
                         </Tab>
                     </Tabs>
                 </ContentStyle>
@@ -72,35 +66,30 @@ class MenuSidenav extends React.Component {
 }
 
 const ContentStyle = styled.div`
+    .tabs {
+      font-size: 1.5vw;
+    }
     Form {
-        color: black;
+        color: white;
     }
     #incremental {
-        color:black;
+        color: white;
         padding-left: 2vw;
     }
     Button {
         width: 23vw;
         margin-top: 2vw;
-        background-color:darkgray;
-        color:black;
         font-style:bold;
         border-color:black;
+    }
+    .menuBtn {
         margin-left: 2vw;
     }
 `;
 
 var menuStyles = {
-    bmCrossButton: {
-        height: '3vw',
-        width: '3vw',
-        left: '1vw'
-    },
-    bmCross: {
-        background: '#bdc3c7'
-    },
     bmMenu: {
-        background: 'darkseagreen',
+        background: '#373a47',
         padding: '1.0em 1.0em 0',
         fontSize: '1.15em',
         width: '30vw'

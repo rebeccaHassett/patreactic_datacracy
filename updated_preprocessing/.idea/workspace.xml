@@ -2,11 +2,23 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="da7513d8-167f-45a0-92b8-c16a264abf58" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/../original_data/precinct_election_data/Michigan/20161108__mi__general__precinct.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../original_data/precinct_election_data/Michigan/20181106__mi__general__precinct.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../original_data/precinct_election_data/North_Carolina/2016.csv" beforeDir="false" afterPath="$PROJECT_DIR$/../original_data/precinct_election_data/North_Carolina/2016.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../original_data/precinct_election_data/North_Carolina/2018.csv" beforeDir="false" afterPath="$PROJECT_DIR$/../original_data/precinct_election_data/North_Carolina/2018.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../original_preprocessing/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../original_preprocessing/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../frontend/src/components/AppIntro.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/Sidebar.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/components/App_Intro.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/components/Banner.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/components/Bar_Chart.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/BarChart.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/components/Controls.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/Controls.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/components/Login.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/components/Map.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/Map.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/components/Menu_Sidenav.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/MenuSidenav.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/components/Results_Graphs.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/ResultsGraphs.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/components/Results_Sidenav.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/ResultsSidenav.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/components/Slider_Control.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/SliderControl.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/components/State.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/State.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/components/Statistics.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/Statistics.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/components/styles/Login.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -17,10 +29,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/clean_data.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1428">
+            <state relative-caret-position="481">
               <caret line="86" column="14" selection-start-line="86" selection-start-column="14" selection-end-line="86" selection-end-column="14" />
               <folding>
                 <element signature="e#0#11#0" expanded="true" />
@@ -37,51 +49,6 @@
               <folding>
                 <element signature="e#0#11#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/unmapped.txt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="169">
-              <caret line="536" column="19" selection-start-line="536" selection-start-column="19" selection-end-line="536" selection-end-column="28" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/mapped_data/NC_VDT_MAPPED.geojson">
-          <provider selected="true" editor-type-id="LargeFileEditor">
-            <state relative-caret-position="135">
-              <caret column="1038038" lean-forward="true" selection-start-column="1038038" selection-end-column="1038038" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/mapped_data/MI_Precincts_MAPPED.geojson">
-          <provider selected="true" editor-type-id="LargeFileEditor">
-            <state relative-caret-position="135">
-              <caret column="171267" selection-start-column="171267" selection-end-column="171267" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/mapped_data/RI_Precincts_MAPPED.geojson">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="228">
-              <caret column="35053" selection-start-column="35053" selection-end-column="35072" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/clean_data/NC_VTD_CLEAN.json">
-          <provider selected="true" editor-type-id="LargeFileEditor">
-            <state relative-caret-position="19669">
-              <caret column="1157803" selection-start-column="1157803" selection-end-column="1157803" />
             </state>
           </provider>
         </entry>
@@ -151,6 +118,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -167,11 +135,10 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="last_opened_file_path" value="$USER_HOME$/Downloads/nc_2016.json" />
+    <property name="last_opened_file_path" value="$USER_HOME$/CSE508_Crawling/research-project-f19-jjrv/code/crawler" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
@@ -298,23 +265,47 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$USER_HOME$/Downloads/nc_2016.json">
-      <provider selected="true" editor-type-id="LargeFileEditor">
-        <state relative-caret-position="133">
-          <caret line="1" column="1327" selection-start-line="1" selection-start-column="1327" selection-end-line="1" selection-end-column="1327" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$USER_HOME$/Downloads/nc_2016.json" />
     <entry file="file://$PROJECT_DIR$/temp.py" />
     <entry file="file://$PROJECT_DIR$/2016.csv" />
     <entry file="file://$PROJECT_DIR$/2018.csv" />
-    <entry file="file://$PROJECT_DIR$/clean_data.py">
+    <entry file="file://$PROJECT_DIR$/mapped_data/MI_Precincts_MAPPED.geojson">
+      <provider selected="true" editor-type-id="LargeFileEditor">
+        <state relative-caret-position="2907">
+          <caret column="171267" selection-start-column="171267" selection-end-column="171267" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/clean_data/NC_VTD_CLEAN.json">
+      <provider selected="true" editor-type-id="LargeFileEditor">
+        <state relative-caret-position="19669">
+          <caret column="1157803" selection-start-column="1157803" selection-end-column="1157803" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mapped_data/RI_Precincts_MAPPED.geojson">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1428">
-          <caret line="86" column="14" selection-start-line="86" selection-start-column="14" selection-end-line="86" selection-end-column="14" />
-          <folding>
-            <element signature="e#0#11#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="228">
+          <caret column="35053" selection-start-column="35053" selection-end-column="35072" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mapped_data/NC_VDT_MAPPED.geojson">
+      <provider editor-type-id="text-editor">
+        <state>
+          <caret column="9101" selection-start-column="9101" selection-end-column="9101" />
+        </state>
+      </provider>
+      <provider selected="true" editor-type-id="LargeFileEditor">
+        <state relative-caret-position="504">
+          <caret column="1038038" selection-start-column="1038038" selection-end-column="1038038" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/unmapped.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="504">
+          <caret line="536" column="19" selection-start-line="536" selection-start-column="19" selection-end-line="536" selection-end-column="28" />
         </state>
       </provider>
     </entry>
@@ -328,43 +319,13 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/clean_data/NC_VTD_CLEAN.json">
-      <provider selected="true" editor-type-id="LargeFileEditor">
-        <state relative-caret-position="19669">
-          <caret column="1157803" selection-start-column="1157803" selection-end-column="1157803" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/unmapped.txt">
+    <entry file="file://$PROJECT_DIR$/clean_data.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="169">
-          <caret line="536" column="19" selection-start-line="536" selection-start-column="19" selection-end-line="536" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mapped_data/NC_VDT_MAPPED.geojson">
-      <provider editor-type-id="text-editor">
-        <state>
-          <caret column="9101" selection-start-column="9101" selection-end-column="9101" />
-        </state>
-      </provider>
-      <provider selected="true" editor-type-id="LargeFileEditor">
-        <state relative-caret-position="135">
-          <caret column="1038038" lean-forward="true" selection-start-column="1038038" selection-end-column="1038038" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mapped_data/MI_Precincts_MAPPED.geojson">
-      <provider selected="true" editor-type-id="LargeFileEditor">
-        <state relative-caret-position="135">
-          <caret column="171267" selection-start-column="171267" selection-end-column="171267" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mapped_data/RI_Precincts_MAPPED.geojson">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="228">
-          <caret column="35053" selection-start-column="35053" selection-end-column="35072" />
+        <state relative-caret-position="481">
+          <caret line="86" column="14" selection-start-line="86" selection-start-column="14" selection-end-line="86" selection-end-column="14" />
+          <folding>
+            <element signature="e#0#11#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
