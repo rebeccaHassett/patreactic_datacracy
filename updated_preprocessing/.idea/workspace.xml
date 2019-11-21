@@ -1,26 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="da7513d8-167f-45a0-92b8-c16a264abf58" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../frontend/src/components/AppIntro.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/Sidebar.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/src/components/App_Intro.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/src/components/Banner.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/src/components/Bar_Chart.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/BarChart.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/src/components/Controls.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/Controls.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/src/components/Login.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/src/components/Map.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/Map.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/src/components/Menu_Sidenav.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/MenuSidenav.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/src/components/Results_Graphs.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/ResultsGraphs.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/src/components/Results_Sidenav.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/ResultsSidenav.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/src/components/Slider_Control.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/SliderControl.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/src/components/State.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/State.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/src/components/Statistics.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/Statistics.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/src/components/styles/Login.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/src/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="da7513d8-167f-45a0-92b8-c16a264abf58" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -29,11 +10,23 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/clean_data.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="481">
-              <caret line="86" column="14" selection-start-line="86" selection-start-column="14" selection-end-line="86" selection-end-column="14" />
+            <state relative-caret-position="-349">
+              <caret line="66" column="54" selection-start-line="66" selection-start-column="54" selection-end-line="66" selection-end-column="54" />
+              <folding>
+                <element signature="e#0#11#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/map_election_geographic_data.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="266">
+              <caret line="17" column="9" lean-forward="true" selection-start-line="17" selection-start-column="9" selection-end-line="17" selection-end-column="9" />
               <folding>
                 <element signature="e#0#11#0" expanded="true" />
               </folding>
@@ -42,10 +35,10 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/map_election_geographic_data.py">
+        <entry file="file://$PROJECT_DIR$/precinct_adjacency.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="119">
-              <caret line="10" column="37" selection-start-line="10" selection-start-column="37" selection-end-line="10" selection-end-column="37" />
+            <state relative-caret-position="542">
+              <caret line="236" lean-forward="true" selection-start-line="236" selection-end-line="236" />
               <folding>
                 <element signature="e#0#11#0" expanded="true" />
               </folding>
@@ -125,11 +118,6 @@
             <path>
               <item name="updated_preprocessing" type="b2602c69:ProjectViewProjectNode" />
               <item name="updated_preprocessing" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="updated_preprocessing" type="b2602c69:ProjectViewProjectNode" />
-              <item name="updated_preprocessing" type="462c0819:PsiDirectoryNode" />
-              <item name="mapped_data" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -223,9 +211,8 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-6" y="-6" width="1293" height="693" extended-state="6" />
-    <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.24980111" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.24980111" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -236,7 +223,7 @@
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Version Control" order="7" />
-      <window_info anchor="bottom" id="Terminal" order="8" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="8" visible="true" weight="0.3285968" />
       <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
       <window_info anchor="bottom" id="Python Console" order="10" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -291,14 +278,14 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/mapped_data/NC_VDT_MAPPED.geojson">
-      <provider editor-type-id="text-editor">
-        <state>
-          <caret column="9101" selection-start-column="9101" selection-end-column="9101" />
-        </state>
-      </provider>
       <provider selected="true" editor-type-id="LargeFileEditor">
         <state relative-caret-position="504">
           <caret column="1038038" selection-start-column="1038038" selection-end-column="1038038" />
+        </state>
+      </provider>
+      <provider editor-type-id="text-editor">
+        <state>
+          <caret column="9101" selection-start-column="9101" selection-end-column="9101" />
         </state>
       </provider>
     </entry>
@@ -309,20 +296,30 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/map_election_geographic_data.py">
+    <entry file="file://$PROJECT_DIR$/clean_data.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="119">
-          <caret line="10" column="37" selection-start-line="10" selection-start-column="37" selection-end-line="10" selection-end-column="37" />
+        <state relative-caret-position="-349">
+          <caret line="66" column="54" selection-start-line="66" selection-start-column="54" selection-end-line="66" selection-end-column="54" />
           <folding>
             <element signature="e#0#11#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/clean_data.py">
+    <entry file="file://$PROJECT_DIR$/precinct_adjacency.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="481">
-          <caret line="86" column="14" selection-start-line="86" selection-start-column="14" selection-end-line="86" selection-end-column="14" />
+        <state relative-caret-position="542">
+          <caret line="236" lean-forward="true" selection-start-line="236" selection-end-line="236" />
+          <folding>
+            <element signature="e#0#11#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/map_election_geographic_data.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="266">
+          <caret line="17" column="9" lean-forward="true" selection-start-line="17" selection-start-column="9" selection-end-line="17" selection-end-column="9" />
           <folding>
             <element signature="e#0#11#0" expanded="true" />
           </folding>
