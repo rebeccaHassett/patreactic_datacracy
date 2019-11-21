@@ -21,7 +21,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "serve": "cd ../server && mvn spring-boot:run",
+    "serve": "cd ../server && ./mvnw spring-boot:run",
     "dev": "run-p start serve"
   },
   "eslintConfig": {
