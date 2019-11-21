@@ -2,6 +2,7 @@ import React from 'react';
 import {slide as Menu} from 'react-burger-menu'
 import {Button, Row, Tab, Tabs, Form} from "react-bootstrap";
 import {Link} from 'react-router-dom';
+import Phase0Controls from "./Phase0Controls";
 import Phase1Controls from "./Phase1Controls";
 import Phase2Controls from "./Phase2Controls";
 import styled from "styled-components";
@@ -34,23 +35,7 @@ class MenuSidenav extends React.Component {
                             </Row>
                         </Tab>
                         <Tab eventKey="phase0" title="Phase 0">
-                            <Form>
-                            <Form.Group id="bloc-population-percentage">
-                                <Form.Label>Block Population Percentage Threshold:</Form.Label>
-                                <Slider_Controls></Slider_Controls>
-                            </Form.Group>
-                            <Form.Group id="bloc-voting-percentage">
-                                <Form.Label>Block Voting Percentage Threshold:</Form.Label>
-                                <Slider_Controls></Slider_Controls>
-                            </Form.Group>
-                            <Form.Group id="election-types">
-                                <Form.Label>Election Type</Form.Label>
-                                <Form.Check aria-label="option 1" label="Congressional 2016"/>
-                                <Form.Check aria-label="option 2" label="Congressional 2018"/>
-                                <Form.Check aria-label="option 3" label="Presidential 2016"/>
-                            </Form.Group>
-                            </Form>
-                            <Button>Start Phase 0</Button>
+                            <Phase0Controls></Phase0Controls>
                         </Tab>
                         <Tab eventKey="phase1" title="Phase 1" disabled={this.state.phase1Tab}>
                             <Phase1Controls></Phase1Controls>
@@ -71,6 +56,9 @@ const ContentStyle = styled.div`
     }
     Form {
         color: white;
+    }
+    .label {
+        margin-bottom: 2.5vw;
     }
     #incremental {
         color: white;

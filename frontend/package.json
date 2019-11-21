@@ -11,6 +11,7 @@
     "react-burger-menu": "^2.6.11",
     "react-chartjs-2": "^2.8.0",
     "react-dom": "^16.10.2",
+    "react-range": "^1.4.3",
     "react-rangeslider": "^2.2.0",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.2.0",
