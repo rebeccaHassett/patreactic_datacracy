@@ -14,17 +14,15 @@ import java.util.Set;
 @Controller
 public class Phase0Controller {
 
-    private Algorithm algorithm;
     private StateDao stateDao;
 
     @Autowired
-    public Phase0Controller(Algorithm algorithm, StateDao stateDao) {
-        this.algorithm = algorithm;
+    public Phase0Controller(StateDao stateDao) {
         this.stateDao = stateDao;
     }
 
     @PostMapping(path = "/runPhase0")
     public Set<VotingBlockDTO> runPhase0(@RequestBody RunPhase0Dto phase0Dto) {
-        return algorithm.runPhase0(stateDao.getBaseState(phase0Dto.state), phase0Dto.demographic, phase0Dto.config);
+        return Algorithm.runPhase0(stateDao.getBaseState(phase0Dto.state), phase0Dto.demographic, phase0Dto.config);
     }
 }

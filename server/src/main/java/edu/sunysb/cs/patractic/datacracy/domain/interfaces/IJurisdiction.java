@@ -1,8 +1,6 @@
 package edu.sunysb.cs.patractic.datacracy.domain.interfaces;
 
 import edu.sunysb.cs.patractic.datacracy.domain.enums.DemographicGroup;
-import edu.sunysb.cs.patractic.datacracy.domain.enums.ElectionType;
-import edu.sunysb.cs.patractic.datacracy.domain.enums.Year;
 import edu.sunysb.cs.patractic.datacracy.domain.models.ElectionData;
 import edu.sunysb.cs.patractic.datacracy.domain.models.ElectionId;
 

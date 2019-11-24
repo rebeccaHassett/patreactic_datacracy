@@ -1,23 +1,16 @@
 package edu.sunysb.cs.patractic.datacracy.domain.models;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
+import edu.stonybrook.politech.annealing.models.concrete.District;
+
 import java.util.Objects;
 
-@Entity
 public class Edge {
-    @ManyToMany
-    @JoinColumn(name = "c1Id")
-    public Cluster c1;
+    public District d1;
+    public District d2;
 
-    @ManyToMany
-    @JoinColumn(name = "c2Id")
-    public Cluster c2;
-
-    public Edge(Cluster c1, Cluster c2) {
-        this.c1 = c1;
-        this.c2 = c2;
+    public Edge(District d1, District d2) {
+        this.d1 = d1;
+        this.d2 = d2;
     }
 
     @Override
@@ -25,12 +18,12 @@ public class Edge {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Edge edge = (Edge) o;
-        return c1.equals(edge.c1) &&
-                c2.equals(edge.c2);
+        return d1.equals(edge.d1) &&
+                d2.equals(edge.d2);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(c1, c2);
+        return Objects.hash(d1, d2);
     }
 }

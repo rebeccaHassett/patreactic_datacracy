@@ -3,6 +3,7 @@ package edu.stonybrook.politech.annealing.algorithm;
 import edu.stonybrook.politech.annealing.models.concrete.District;
 import edu.stonybrook.politech.annealing.models.concrete.Precinct;
 import edu.stonybrook.politech.annealing.models.concrete.State;
+import edu.sunysb.cs.patractic.datacracy.domain.models.ElectionId;
 import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.MultiPolygon;
 
@@ -15,7 +16,8 @@ public enum Measure implements MeasureFunction<Precinct, District> {
          * underrepresented party's losing margin
          * (We want our underrepresented party to either win by a little or lose by a lot - fewer wasted votes)
          */
-        public double calculateMeasure(District d) {
+        @Override
+        public double calculateMeasure(District d, ElectionId electionId) {
             // Temporary section
             int totalVote = 0;
             int totalGOPvote = 0;
@@ -23,11 +25,11 @@ public enum Measure implements MeasureFunction<Precinct, District> {
             int totalGOPDistricts = 0;
             State state = d.getState();
             for (District sd : state.getDistricts()) {
-                totalVote += sd.getGOPVote();
-                totalVote += sd.getDEMVote();
-                totalGOPvote += sd.getGOPVote();
+                totalVote += sd.getGOPVote(electionId);
+                totalVote += sd.getDEMVote(electionId);
+                totalGOPvote += sd.getGOPVote(electionId);
                 totalDistricts += 1;
-                if (sd.getGOPVote() > sd.getDEMVote()) {
+                if (sd.getGOPVote(electionId) > sd.getDEMVote(electionId)) {
                     totalGOPDistricts += 1;
                 }
             }
@@ -36,8 +38,8 @@ public enum Measure implements MeasureFunction<Precinct, District> {
             if (idealDistrictChange == 0) {
                 return 1.0;
             }
-            int gv = d.getGOPVote();
-            int dv = d.getDEMVote();
+            int gv = d.getGOPVote(electionId);
+            int dv = d.getDEMVote(electionId);
             int tv = gv + dv;
             int margin = gv - dv;
             if (tv == 0) {
@@ -56,7 +58,7 @@ public enum Measure implements MeasureFunction<Precinct, District> {
     },
     REOCK_COMPACTNESS {
         @Override
-        public double calculateMeasure(District district) {
+        public double calculateMeasure(District district, ElectionId electionId) {
             MultiPolygon shape = district.getMulti();
             Geometry boundingCircle = district.getBoundingCircle();
             return shape.getArea() / boundingCircle.getArea();
@@ -64,7 +66,7 @@ public enum Measure implements MeasureFunction<Precinct, District> {
     },
     CONVEX_HULL_COMPACTNESS {
         @Override
-        public double calculateMeasure(District district) {
+        public double calculateMeasure(District district, ElectionId electionId) {
             MultiPolygon shape = district.getMulti();
             Geometry convexHull = district.getConvexHull();
             return shape.getArea() / convexHull.getArea();
@@ -75,7 +77,8 @@ public enum Measure implements MeasureFunction<Precinct, District> {
             Compactness:
             perimeter / (circle perimeter for same area)
         */
-        public double calculateMeasure(District d) {
+        @Override
+        public double calculateMeasure(District d, ElectionId electionId) {
             double internalEdges = d.getInternalEdges();
             double totalEdges = internalEdges + d.getExternalEdges();
             return internalEdges / totalEdges;
@@ -86,14 +89,15 @@ public enum Measure implements MeasureFunction<Precinct, District> {
          * Wasted votes:
          * Statewide: abs(Winning party margin - losing party votes)
          */
-        public double calculateMeasure(District d) {
+        @Override
+        public double calculateMeasure(District d, ElectionId electionId) {
             int iv_g = 0;
             int iv_d = 0;
             int tv = 0;
             State state = d.getState();
             for (District sd : state.getDistricts()) {
-                int gv = sd.getGOPVote();
-                int dv = sd.getDEMVote();
+                int gv = sd.getGOPVote(electionId);
+                int dv = sd.getDEMVote(electionId);
                 if (gv > dv) {
                     iv_d += dv;
                     iv_g += (gv - dv);
@@ -111,9 +115,9 @@ public enum Measure implements MeasureFunction<Precinct, District> {
          * Wasted votes:
          * abs(Winning party margin - losing party votes)
          */
-        public double rateEfficiencyGap(District d) {//TODO what is this
-            int gv = d.getGOPVote();
-            int dv = d.getDEMVote();
+        public double rateEfficiencyGap(District d, ElectionId electionId) {//TODO what is this
+            int gv = d.getGOPVote(electionId);
+            int dv = d.getDEMVote(electionId);
             int tv = gv + dv;
             if (tv == 0) {
                 return 1.0;
@@ -126,7 +130,8 @@ public enum Measure implements MeasureFunction<Precinct, District> {
 
     },
     POPULATION_EQUALITY {
-        public double calculateMeasure(District d) {
+        @Override
+        public double calculateMeasure(District d, ElectionId electionId) {
             //we will square before we return--this gives lower measure values
             // for greater error
             State state = d.getState();
@@ -147,9 +152,10 @@ public enum Measure implements MeasureFunction<Precinct, District> {
          * COMPETITIVENESS:
          * 1.0 - margin of victory
          */
-        public double calculateMeasure(District d) {
-            int gv = d.getGOPVote();
-            int dv = d.getDEMVote();
+        @Override
+        public double calculateMeasure(District d, ElectionId electionId) {
+            int gv = d.getGOPVote(electionId);
+            int dv = d.getDEMVote(electionId);
             return 1.0 - (((double) Math.abs(gv - dv)) / (gv + dv));
         }
     },
@@ -158,9 +164,10 @@ public enum Measure implements MeasureFunction<Precinct, District> {
          * GERRYMANDER_REPUBLICAN:
          * Partisan fairness, but always working in the GOP's favor
          */
-        public double calculateMeasure(District d) {
-            int gv = d.getGOPVote();
-            int dv = d.getDEMVote();
+        @Override
+        public double calculateMeasure(District d, ElectionId electionId) {
+            int gv = d.getGOPVote(electionId);
+            int dv = d.getDEMVote(electionId);
             int tv = gv + dv;
             int margin = gv - dv;
             if (tv == 0) {
@@ -183,7 +190,7 @@ public enum Measure implements MeasureFunction<Precinct, District> {
          * calculate square error of population, normalized to 0,1
          */
         @Override
-        public double calculateMeasure(District district) {
+        public double calculateMeasure(District district, ElectionId electionId) {
             if (district.getPrecincts().size() == 0)
                 return 0;
             double sum = district.getPrecincts().stream().mapToDouble(Precinct::getPopulationDensity).sum();
@@ -205,9 +212,10 @@ public enum Measure implements MeasureFunction<Precinct, District> {
          * GERRYMANDER_DEMOCRAT:
          * Partisan fairness, but always working in the DNC's favor
          */
-        public double calculateMeasure(District d) {
-            int gv = d.getGOPVote();
-            int dv = d.getDEMVote();
+        @Override
+        public double calculateMeasure(District d, ElectionId electionId) {
+            int gv = d.getGOPVote(electionId);
+            int dv = d.getDEMVote(electionId);
             int tv = gv + dv;
             int margin = dv - gv;
             if (tv == 0) {
@@ -225,5 +233,5 @@ public enum Measure implements MeasureFunction<Precinct, District> {
         }
     };
 
-    public abstract double calculateMeasure(District district);
+    public abstract double calculateMeasure(District district, ElectionId electionId);
 }

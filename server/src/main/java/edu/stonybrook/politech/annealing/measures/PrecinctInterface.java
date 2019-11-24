@@ -1,9 +1,11 @@
 package edu.stonybrook.politech.annealing.measures;
 
+import edu.sunysb.cs.patractic.datacracy.domain.models.ElectionId;
+
 import java.util.Set;
 
 public interface PrecinctInterface {
-    String getID();
+    String getPrecinctId();
 
     //Object getGeometry();
 
@@ -13,7 +15,7 @@ public interface PrecinctInterface {
 
     int getPopulation();
 
-    int getGOPVote();
+    long getGOPVote(ElectionId electionId);
 
-    int getDEMVote();
+    long getDEMVote(ElectionId electionId);
 }

@@ -25,9 +25,9 @@ public class Move<Precinct extends PrecinctInterface, District extends DistrictI
     }
 
     public String toString() {
-        String toID = to != null ? to.getID() : "NULL";
-        String fromID = from != null ? from.getID() : "NULL";
-        String precinctID = precinct != null ? precinct.getID() : "NULL";
+        String toID = to != null ? to.getDistrictId() : "NULL";
+        String fromID = from != null ? from.getDistrictId() : "NULL";
+        String precinctID = precinct != null ? precinct.getPrecinctId() : "NULL";
         return "{ " + "\"to\": \"" + toID + "\", \"from\": \"" + fromID + "\", \"precinct\": \"" + precinctID + "\" }";
     }
 

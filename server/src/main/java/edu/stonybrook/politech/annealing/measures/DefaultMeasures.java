@@ -4,6 +4,7 @@ import edu.stonybrook.politech.annealing.algorithm.Measure;
 import edu.stonybrook.politech.annealing.algorithm.MeasureFunction;
 import edu.stonybrook.politech.annealing.models.concrete.District;
 import edu.stonybrook.politech.annealing.models.concrete.Precinct;
+import edu.sunysb.cs.patractic.datacracy.domain.models.ElectionId;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -45,14 +46,14 @@ public class DefaultMeasures implements MeasureFunction<Precinct, District> {
     }
 
     @Override
-    public double calculateMeasure(District district) {
+    public double calculateMeasure(District district, ElectionId electionId) {
         double sum = 0;
         for (Map.Entry<Measure, Function<District, Double>> entry : weightGenerator.entrySet()) {
             Measure measure = entry.getKey();
             //the weight is applied as a seperate factor
             double weight = entry.getValue().apply(district);
             //calculate the measure, run it through the activation function, multiply it by the weight.
-            sum += defaultActivationFunction.apply(measure.calculateMeasure(district)) *
+            sum += defaultActivationFunction.apply(measure.calculateMeasure(district, electionId)) *
                     weight;
         }
         return sum;

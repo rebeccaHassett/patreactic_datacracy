@@ -5,23 +5,26 @@ import edu.stonybrook.politech.annealing.measures.DistrictInterface;
 import edu.stonybrook.politech.annealing.models.concrete.District;
 import edu.stonybrook.politech.annealing.models.concrete.Precinct;
 import edu.stonybrook.politech.annealing.models.concrete.State;
+import edu.sunysb.cs.patractic.datacracy.domain.models.ElectionId;
 
 import java.util.*;
 import java.util.Map.Entry;
 
 public class Algorithm {
-    private State state;
+    protected State state;
     private HashMap<String, String> precinctDistrictMap; //precinctID --> districtID
 
     //calculates an aggregate measure score (double) for a given district
     private MeasureFunction<Precinct, District> districtScoreFunction;
     private HashMap<District, Double> currentScores;
     private District currentDistrict = null;
-
+    protected ElectionId electionId;
 
     public Algorithm(State state,
-                     MeasureFunction<Precinct, District> districtScoreFunction) {
+                     MeasureFunction<Precinct, District> districtScoreFunction,
+                     ElectionId electionId) {
         this.state = state;
+        this.electionId = electionId;
         this.precinctDistrictMap = new HashMap<String, String>();
         this.districtScoreFunction = districtScoreFunction;
         allocatePrecincts(state);
@@ -77,7 +80,7 @@ public class Algorithm {
                         myDistricts.get((int) Math.ceil((curPop * 1.0) / state.getPopulation() * num_districts) - 1);
                 // Add the current precinct to the current district
                 System.out.println(ptp.size() + " " + unallocatedPrecincts.size());
-                precinctDistrictMap.put(curPrec.getID(), curDist.getID());
+                precinctDistrictMap.put(curPrec.getPrecinctId(), curDist.getDistrictId());
 
                 ptp.remove(0);
                 unallocatedPrecincts.remove(curPrec);
@@ -121,7 +124,7 @@ public class Algorithm {
                         }
                     }
                     d.addPrecinct(p);
-                    precinctDistrictMap.put(p.getID(), d.getID());
+                    precinctDistrictMap.put(p.getPrecinctId(), d.getDistrictId());
                 }
                 i++;
             }
@@ -151,7 +154,7 @@ public class Algorithm {
                         if (unallocatedPrecincts.contains(p)) {
                             unallocatedPrecincts.remove(p);
                             d.addPrecinct(p);
-                            precinctDistrictMap.put(p.getID(), d.getID());
+                            precinctDistrictMap.put(p.getPrecinctId(), d.getDistrictId());
                             outOfMoves = false;
                             if (d.getPopulation() >= highestPop) {
                                 highestPop = d.getPopulation();
@@ -176,7 +179,7 @@ public class Algorithm {
             } else {
                 // Set to default if all else fails.
                 for (Precinct p : unallocatedPrecincts) {
-                    precinctDistrictMap.put(p.getID(), p.getOriginalDistrictID());
+                    precinctDistrictMap.put(p.getPrecinctId(), p.getOriginalDistrictID());
                     state.getDistrict(p.getOriginalDistrictID()).addPrecinct(p);
                 }
                 unallocatedPrecincts.clear();
@@ -191,7 +194,7 @@ public class Algorithm {
                     }
                 }
                 if (myDistrict != null) {
-                    precinctDistrictMap.put(p.getID(), myDistrict);
+                    precinctDistrictMap.put(p.getPrecinctId(), myDistrict);
                     state.getDistrict(myDistrict).addPrecinct(p);
                     newlyAdded.add(p);
                 }
@@ -201,7 +204,7 @@ public class Algorithm {
     }
 
     public String getPrecinctDistrictID(Precinct p) {
-        return precinctDistrictMap.get(p.getID());
+        return precinctDistrictMap.get(p.getPrecinctId());
     }
 
     public Move<Precinct, District> makeMove() {
@@ -233,14 +236,14 @@ public class Algorithm {
                     }
                     move = testMove(startDistrict, neighborDistrict, neighborDistrict.getPrecinct(n));
                     if (move != null) {
-                        System.out.println("Moving n to Start district: " + startDistrict.getID());
+                        System.out.println("Moving n to Start district: " + startDistrict.getDistrictId());
                         currentDistrict = startDistrict;
                         return move;
                     }
                 }
             }
         }
-        System.out.println("Move not found for district " + startDistrict.getID());
+        System.out.println("Move not found for district " + startDistrict.getDistrictId());
         return null;
     }
 
@@ -263,7 +266,7 @@ public class Algorithm {
         }
         currentScores.put(to, to_score);
         currentScores.put(from, from_score);
-        precinctDistrictMap.put(p.getID(), to.getID());
+        precinctDistrictMap.put(p.getPrecinctId(), to.getDistrictId());
         return m;
     }
 
@@ -288,7 +291,7 @@ public class Algorithm {
         double from_score = rateDistrict(from);
         currentScores.put(to, to_score);
         currentScores.put(from, from_score);
-        precinctDistrictMap.put(p.getID(), to.getID());
+        precinctDistrictMap.put(p.getPrecinctId(), to.getDistrictId());
         return m;
     }
 
@@ -343,7 +346,7 @@ public class Algorithm {
     }
 
     public double rateDistrict(District d) {
-        return districtScoreFunction.calculateMeasure(d);
+        return districtScoreFunction.calculateMeasure(d, this.electionId);
     }
 
     public void updateScores() {
@@ -370,7 +373,7 @@ public class Algorithm {
         for (String p_id : p.getNeighborIDs()) {
             // If neighbor is in the district we're moving p out of
             if ((precinctDistrictMap.get(p_id) != null) &&
-                    (precinctDistrictMap.get(p_id)).equals(d.getID())) {
+                    (precinctDistrictMap.get(p_id)).equals(d.getDistrictId())) {
                 Precinct neighbor = d.getPrecinct(p_id);
                 precinctsToCheck.add(neighbor);
             }
@@ -390,7 +393,7 @@ public class Algorithm {
             Precinct precinctToExplore = neighborsToExplore.iterator().next();
             for (String p_id : precinctToExplore.getNeighborIDs()) {
                 // We only care about neighbors in our district, d.
-                if (precinctDistrictMap.get(p_id).equals(d.getID())) {
+                if (precinctDistrictMap.get(p_id).equals(d.getDistrictId())) {
                     Precinct neighbor = d.getPrecinct(p_id);
                     // If we've hit one of our needed precincts, check it off.
                     if (precinctsToCheck.contains(neighbor)) {

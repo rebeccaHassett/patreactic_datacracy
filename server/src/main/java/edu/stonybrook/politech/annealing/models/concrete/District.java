@@ -1,34 +1,39 @@
 package edu.stonybrook.politech.annealing.models.concrete;
 
 import edu.stonybrook.politech.annealing.measures.DistrictInterface;
+import edu.sunysb.cs.patractic.datacracy.domain.enums.DemographicGroup;
+import edu.sunysb.cs.patractic.datacracy.domain.enums.PoliticalParty;
+import edu.sunysb.cs.patractic.datacracy.domain.interfaces.IJurisdiction;
+import edu.sunysb.cs.patractic.datacracy.domain.models.ElectionData;
+import edu.sunysb.cs.patractic.datacracy.domain.models.ElectionId;
 import org.locationtech.jts.algorithm.MinimumBoundingCircle;
 import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.MultiPolygon;
 import org.locationtech.jts.geom.Polygon;
 
+import javax.persistence.*;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.stream.Collectors;
 
+@Entity
 public class District
-        implements DistrictInterface<Precinct> {
-    private static final int MAXX = 0;
-    private static final int MAXY = 1;
-    private static final int MINX = 2;
-    private static final int MINY = 3;
-    private String ID;
-    private State state;
-    private int population;
+        implements DistrictInterface<Precinct>, IJurisdiction {
 
-    private int gop_vote;
-    private int dem_vote;
+    private String districtId;
+
+
+    private State state;
 
     private int internalEdges = 0;
     private int externalEdges = 0;
 
     private HashMap<String, Precinct> precincts;
+
+
     private Set<Precinct> borderPrecincts;
 
     private MultiPolygon multiPolygon;
@@ -40,20 +45,15 @@ public class District
     private boolean multiPolygonUpdated = false;
     private boolean convexHullUpdated = false;
 
-    /*public ConcreteDistrict(String ID) {
-            this(ID, null);
-        }*/
-
-    public District(String ID, State state) {
-        this.ID = ID;
-        population = 0;
-        gop_vote = 0;
-        dem_vote = 0;
-        precincts = new HashMap<String, Precinct>();
-        borderPrecincts = new HashSet<Precinct>();
+    public District(String districtId, State state) {
+        this.districtId = districtId;
+        precincts = new HashMap<>();
+        borderPrecincts = new HashSet<>();
         this.state = state;
     }
 
+    @ManyToOne
+    @JoinColumn(name = "stateName")
     public State getState() {
         return state;
     }
@@ -62,20 +62,21 @@ public class District
         this.state = state;
     }
 
-    public String getID() {
-        return ID;
+    @Id
+    public String getDistrictId() {
+        return districtId;
     }
 
     public int getPopulation() {
-        return population;
+        return (int)getPopulation(null);
     }
 
-    public int getGOPVote() {
-        return gop_vote;
+    public int getGOPVote(ElectionId electionId) {
+        return (int)getElectionData(electionId).getVotes(PoliticalParty.REPUBLICAN);
     }
 
-    public int getDEMVote() {
-        return dem_vote;
+    public int getDEMVote(ElectionId electionId) {
+        return (int)getElectionData(electionId).getVotes(PoliticalParty.DEMOCRAT);
     }
 
     public int getInternalEdges() {
@@ -98,11 +99,7 @@ public class District
     }
 
     public Set<Precinct> getPrecincts() {
-        Set<Precinct> to_return = new HashSet<Precinct>();
-        for (Precinct p : precincts.values()) {
-            to_return.add(p);
-        }
-        return to_return;
+        return new HashSet<>(precincts.values());
     }
 
     public Set<Precinct> getBorderPrecincts() {
@@ -119,15 +116,12 @@ public class District
         return false;
     }
 
-    public Precinct getPrecinct(String PrecID) {
-        return precincts.get(PrecID);
+    public Precinct getPrecinct(String precinctID) {
+        return precincts.get(precinctID);
     }
 
     public void addPrecinct(Precinct p) {
-        precincts.put(p.getID(), p);
-        population += p.getPopulation();
-        gop_vote += p.getGOPVote();
-        dem_vote += p.getDEMVote();
+        precincts.put(p.getPrecinctId(), p);
         borderPrecincts.add(p);
         Set<Precinct> newInternalNeighbors = getInternalNeighbors(p);
         int newInternalEdges = newInternalNeighbors.size();
@@ -139,16 +133,15 @@ public class District
         );
         borderPrecincts.removeAll(newInternalNeighbors);
 
+        p.setDistrict(this);
+
         this.multiPolygonUpdated = false;
         this.convexHullUpdated = false;
         this.boundingCircleUpdated = false;
     }
 
     public void removePrecinct(Precinct p) {
-        precincts.remove(p.getID());
-        population -= p.getPopulation();
-        gop_vote -= p.getGOPVote();
-        dem_vote -= p.getDEMVote();
+        precincts.remove(p.getPrecinctId());
         Set<Precinct> lostInternalNeighbors = getInternalNeighbors(p);
         int lostInternalEdges = lostInternalNeighbors.size();
         internalEdges -= lostInternalEdges;
@@ -156,6 +149,8 @@ public class District
         externalEdges -= (p.getNeighborIDs().size() - lostInternalEdges);
         borderPrecincts.remove(p);
         borderPrecincts.addAll(lostInternalNeighbors);
+
+        p.setDistrict(null);
 
         this.multiPolygonUpdated = false;
         this.convexHullUpdated = false;
@@ -167,12 +162,12 @@ public class District
         Polygon[] polygons = new Polygon[getPrecincts().size()];
 
         Iterator<Precinct> piter = getPrecincts().iterator();
-        for (int ii = 0; ii < polygons.length; ii++) {
+        for (int i = 0; i < polygons.length; i++) {
             Geometry poly = piter.next().getGeometry();
             if (poly instanceof Polygon)
-                polygons[ii] = (Polygon) poly;
+                polygons[i] = (Polygon) poly;
             else
-                polygons[ii] = (Polygon) poly.convexHull();
+                polygons[i] = (Polygon) poly.convexHull();
         }
         MultiPolygon mp = new MultiPolygon(polygons, new GeometryFactory());
         this.multiPolygon = mp;
@@ -200,5 +195,19 @@ public class District
         boundingCircle = new MinimumBoundingCircle(getMulti()).getCircle();
         this.boundingCircleUpdated = true;
         return boundingCircle;
+    }
+
+    @Override
+    public ElectionData getElectionData(ElectionId electionId) {
+        return ElectionData.aggregateFromJurisdictions(getPrecinctsAsJurisdictions(), electionId);
+    }
+
+    private Set<IJurisdiction> getPrecinctsAsJurisdictions() {
+        return getPrecincts().stream().map(p -> (IJurisdiction)p).collect(Collectors.toSet());
+    }
+
+    @Override
+    public long getPopulation(DemographicGroup demographic) {
+        return getPrecincts().stream().map(p -> p.getPopulation(demographic)).reduce(0L, Long::sum);
     }
 }

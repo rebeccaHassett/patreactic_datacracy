@@ -3,7 +3,7 @@ package edu.stonybrook.politech.annealing.measures;
 import java.util.Set;
 
 public interface DistrictInterface<Precinct extends PrecinctInterface> {
-    String getID();
+    String getDistrictId();
 
     Set<Precinct> getPrecincts();
 

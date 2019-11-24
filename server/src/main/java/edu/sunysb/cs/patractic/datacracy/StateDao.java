@@ -1,6 +1,6 @@
 package edu.sunysb.cs.patractic.datacracy;
 
-import edu.sunysb.cs.patractic.datacracy.domain.models.State;
+import edu.stonybrook.politech.annealing.models.concrete.State;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
