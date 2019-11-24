@@ -6,7 +6,6 @@ import edu.sunysb.cs.patractic.datacracy.domain.enums.Constraints;
 import edu.sunysb.cs.patractic.datacracy.domain.enums.DemographicGroup;
 import edu.sunysb.cs.patractic.datacracy.domain.models.Properties;
 import edu.sunysb.cs.patractic.datacracy.domain.models.VotingBlockDTO;
-import org.apache.commons.lang3.NotImplementedException;
 
 import javax.persistence.*;
 import java.util.HashMap;
@@ -26,10 +25,12 @@ public class State
     private HashMap<String, District> districts;
     private HashMap<String, Precinct> precincts;
     private String stateBoundaries;
+    private final String laws;
 
-    public State(String name, Set<Precinct> inPrecincts, String boundaries) {
+    public State(String name, Set<Precinct> inPrecincts, String boundaries, String laws) {
         this.name = name;
         this.stateBoundaries = boundaries;
+        this.laws = laws;
         this.populationMap = new HashMap<>();
         this.districts = new HashMap<>();
         this.precincts = new HashMap<>();
@@ -118,8 +119,12 @@ public class State
     }
 
     public State clone() {
-        State clone = new State(name, precincts.values().stream().map(Precinct::clone).collect(Collectors.toSet()), stateBoundaries);
+        State clone = new State(name, precincts.values().stream().map(Precinct::clone).collect(Collectors.toSet()), stateBoundaries, laws);
         clone.getPrecincts().forEach(p -> p.setState(clone));
         return clone;
+    }
+    @Column(name = "laws")
+    public String getLaws() {
+        return laws;
     }
 }

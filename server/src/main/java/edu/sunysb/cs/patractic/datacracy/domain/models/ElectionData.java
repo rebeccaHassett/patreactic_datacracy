@@ -14,6 +14,9 @@ import java.util.Set;
 @Entity
 public class ElectionData {
 
+    @ManyToOne
+    @JoinColumn(table = "votesByParty", name = "dataId")
+    private final long[] votesByParty;
     @Id
     private int id;
     @ManyToOne
@@ -21,9 +24,6 @@ public class ElectionData {
     @Column
     @MapKey
     private ElectionId electionId;
-    @ManyToOne
-    @JoinColumn(table = "votesByParty", name = "dataId")
-    private final long[] votesByParty;
 
     public ElectionData(Year year, ElectionType type, long[] votesByParty) {
         this.electionId = new ElectionId(year, type);
