@@ -15,6 +15,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+
+@NamedQueries({
+        @NamedQuery(name = "Student_findByName",
+                query = "from State where name = :NAME")
+})
+
 @Entity
 @Table(name = "States")
 public class State
@@ -33,15 +39,17 @@ public class State
         this.populationMap = new HashMap<>();
         this.districts = new HashMap<>();
         this.precincts = new HashMap<>();
-        for (Precinct p : inPrecincts) {
-            String districtID = p.getOriginalDistrictID();
-            District d = districts.get(districtID);
-            if (d == null) {
-                d = new District(districtID, this);
-                districts.put(districtID, d);
+        if(inPrecincts != null) {
+            for (Precinct p : inPrecincts) {
+                String districtID = p.getOriginalDistrictID();
+                District d = districts.get(districtID);
+                if (d == null) {
+                    d = new District(districtID, this);
+                    districts.put(districtID, d);
+                }
+                d.addPrecinct(p);
+                this.precincts.put(p.getPrecinctId(), p);
             }
-            d.addPrecinct(p);
-            this.precincts.put(p.getPrecinctId(), p);
         }
         this.population = districts.values().stream().mapToInt(District::getPopulation).sum();
         for (DemographicGroup dg: DemographicGroup.values()) {
@@ -50,19 +58,30 @@ public class State
     }
 
     @Id
+    @Column(name = "name")
     public String getName() {
         return name;
+    }
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Column(name = "boundaries")
     public String getStateBoundaries() {
         return stateBoundaries;
     }
+    public void setStateBoundaries(String stateBoundaries) {
+        this.stateBoundaries = stateBoundaries;
+    }
 
+    @Column
+    @ElementCollection(targetClass=Precinct.class)
     public Set<Precinct> getPrecincts() {
         return new HashSet<>(precincts.values());
     }
 
+    @Column
+    @ElementCollection(targetClass=District.class)
     public Set<District> getDistricts() {
         return new HashSet<>(districts.values());
     }

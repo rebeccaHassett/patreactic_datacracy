@@ -17,6 +17,4 @@ public class RunPhase0Dto {
         this.state = state;
         this.demographic = DemographicGroup.valueOf(demographic);
     }
-
-
 }

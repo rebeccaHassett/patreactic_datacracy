@@ -8,6 +8,8 @@ export default class Phase1Controls extends Component {
         super();
         this.runPhase0 = this.runPhase0.bind(this);
         this.handleBlocPopulationUpdate =this.handleBlocPopulationUpdate.bind(this);
+        this.handleBlocVotingUpdate =this.handleBlocVotingUpdate.bind(this);
+
     }
 
     state = {
@@ -16,14 +18,27 @@ export default class Phase1Controls extends Component {
         blocVotingValues: [],
     }
 
-    runPhase0() {
-        alert(this.state.values);
+    async runPhase0() {
+        var phase0Dto = {config: {thresholds: [{name: "blocPopulationThreshold", lower: this.state.blocPopulationValues[0],
+                    upper: this.state.blocPopulationValues[1]}, {name: "blocVotingThreshold", lower: this.state.blocVotingValues[0],
+                    upper: this.state.blocVotingValues[1]}], weights: [], incremental: false, realtime: false,
+                numMajMinDistricts: 0, selectedMinorities: [], year: 2016, type: "congressional"}, state: this.props.state, demographic: ""};
+
+        const response = await fetch("http://127.0.0.1:8080/runPhase0", {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json' },
+            body: JSON.stringify(phase0Dto),
+        })
+        console.log(await response.json())
     }
 
     handleBlocPopulationUpdate(value) {
-        let blocPopulationValues = this.state.blocPopulationValues;
-        blocPopulationValues.push(value);
-        this.setState({ blocPopulationValues : blocPopulationValues })
+        this.setState({ blocPopulationValues : value })
+
+    }
+
+    handleBlocVotingUpdate(value) {
+        this.setState({ blocVotingValues : value })
     }
 
     render() {
@@ -36,7 +51,7 @@ export default class Phase1Controls extends Component {
                     </Form.Group>
                     <Form.Group>
                         <Form.Label className="label">Block Voting Percentage Threshold:</Form.Label>
-                        <Slider_Controls></Slider_Controls>
+                        <Slider_Controls exportState={this.handleBlocVotingUpdate}></Slider_Controls>
                     </Form.Group>
                     <Form.Group id="election-types">
                         <Form.Label>Election Type</Form.Label>

@@ -21,6 +21,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Entity
+@Table(name = "Districts")
 public class District
         implements DistrictInterface<Precinct>, IJurisdiction {
 

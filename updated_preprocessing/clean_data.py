@@ -82,6 +82,8 @@ def main():
             county = county_info[county_info.code == int(feature["properties"]["County"])]
             prename = county.name.values[0] + " " + feature["properties"]["VTD_Name"]
             feature["properties"]["PRENAME"] = prename.upper()
+            feature["properties"]["PRES16R"] = feature["properties"].pop("EL16G_PR_R")
+            feature["properties"]["PRES16D"] = feature["properties"].pop("EL16G_PR_D")
     else:
         print("Wrong Input")
         exit()

@@ -11,7 +11,7 @@ export default class State extends Component {
     constructor() {
         super();
         this.state = {
-            Sidebar: true,
+            sidebar: true,
             precinctData: "",
             districtData: "",
             stateData: "",
@@ -21,7 +21,7 @@ export default class State extends Component {
     }
 
     toggleBox() {
-        this.setState(oldState => ({Sidebar: !oldState.Sidebar}));
+        this.setState(oldState => ({sidebar: !oldState.sidebar}));
     }
 
     componentDidMount() {
@@ -103,7 +103,9 @@ export default class State extends Component {
         return (
             <State_Style>
                 <Row>
-                    <MenuSidenav side="left" id="menu"></MenuSidenav>
+                    <Col>
+                    <MenuSidenav side="left" id="menu" state={this.state.chosenState}></MenuSidenav>
+                    </Col>
                     <Col>
                         <Container>
                             <body>
@@ -111,7 +113,9 @@ export default class State extends Component {
                             </body>
                         </Container>
                     </Col>
+                    <Col>
                     <ResultsSidenav precinctData={this.state.precinctData} districtData={this.state.districtData} stateData={this.state.stateData}></ResultsSidenav>
+                    </Col>
                 </Row>
             </State_Style>
         );
@@ -121,6 +125,8 @@ export default class State extends Component {
 const State_Style = styled.div`
     overflow: hidden;
     #map {
-      height: 600px;
+      height: 47.5vw;
+      width: 100vw;
     }
 `;
+/* 600px */

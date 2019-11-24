@@ -35,7 +35,7 @@ class MenuSidenav extends React.Component {
                             </Row>
                         </Tab>
                         <Tab eventKey="phase0" title="Phase 0">
-                            <Phase0Controls></Phase0Controls>
+                            <Phase0Controls state={this.props.state}></Phase0Controls>
                         </Tab>
                         <Tab eventKey="phase1" title="Phase 1" disabled={this.state.phase1Tab}>
                             <Phase1Controls></Phase1Controls>
