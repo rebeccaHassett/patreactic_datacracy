@@ -33,7 +33,7 @@ public class BasicBorderController {
             String data = IOUtils.toString(fis, StandardCharsets.UTF_8);
             return data;
         } catch (Exception exception) {
-            System.out.println("Reading JSON file Exception");
+            System.out.println("Reading JSON file Exception: " + exception.getMessage());
         }
         return "";
     }
@@ -54,7 +54,7 @@ public class BasicBorderController {
             String data = IOUtils.toString(fis, StandardCharsets.UTF_8);
             return data;
         } catch (Exception exception) {
-            System.out.println("Reading JSON file Exception");
+            System.out.println("Reading JSON file Exception: " + exception.getMessage());
         }
         return "";
     }
@@ -75,7 +75,7 @@ public class BasicBorderController {
             String data = IOUtils.toString(fis, StandardCharsets.UTF_8);
             return data;
         } catch (Exception exception) {
-            System.out.println("Reading JSON file Exception");
+            System.out.println("Reading JSON file Exception: " + exception.getMessage());
         }
         return "";
     }
