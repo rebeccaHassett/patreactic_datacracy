@@ -11,6 +11,7 @@ import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.MultiPolygon;
 import org.locationtech.jts.geom.Polygon;
+import org.locationtech.jts.io.geojson.GeoJsonWriter;
 
 import javax.persistence.*;
 import java.util.HashMap;
@@ -25,6 +26,7 @@ public class District
 
     private String districtId;
 
+    private String origIncumbent;
 
     private State state;
 
@@ -189,6 +191,10 @@ public class District
         return convexHull;
     }
 
+    public String getBorders() {
+        return new GeoJsonWriter().write(getConvexHull());
+    }
+
     public Geometry getBoundingCircle() {
         if (boundingCircleUpdated && boundingCircle != null)
             return boundingCircle;
@@ -209,5 +215,14 @@ public class District
     @Override
     public long getPopulation(DemographicGroup demographic) {
         return getPrecincts().stream().map(p -> p.getPopulation(demographic)).reduce(0L, Long::sum);
+    }
+
+    @Column(name = "incumbent")
+    public String getOrigIncumbent() {
+        return origIncumbent;
+    }
+
+    public void setOrigIncumbent(String origIncumbent) {
+        this.origIncumbent = origIncumbent;
     }
 }

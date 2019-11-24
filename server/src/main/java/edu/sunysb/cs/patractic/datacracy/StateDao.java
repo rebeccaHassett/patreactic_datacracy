@@ -1,14 +1,17 @@
 package edu.sunysb.cs.patractic.datacracy;
 
 import edu.stonybrook.politech.annealing.models.concrete.State;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
 @Service
+@Scope("singleton")
 public class StateDao {
     private Map<String, State> states;
     private Map<String, State> sessions;
+
     // TODO
     private State loadState(String stateName) {
         return null;
@@ -19,7 +22,7 @@ public class StateDao {
             states.put(stateName, loadState(stateName));
         }
 
-        return states.get(stateName).clone();
+        return states.get(stateName);
     }
 
     public State getSession(String sessionId) {

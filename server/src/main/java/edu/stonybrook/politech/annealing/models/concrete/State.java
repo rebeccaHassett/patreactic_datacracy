@@ -22,18 +22,9 @@ public class State
 
     private final int population;
     private final Map<DemographicGroup, Long> populationMap;
-    @Id
     private String name;//name is saved for later storage into the database
-
-    @OneToMany(mappedBy = "stateName", cascade = CascadeType.ALL)
-    @MapKeyColumn(name = "districtId")
     private HashMap<String, District> districts;
-
-    @OneToMany(mappedBy = "stateName")
-    @MapKeyColumn(name = "precinctId")
     private HashMap<String, Precinct> precincts;
-
-    @Column(name = "boundaries")
     private String stateBoundaries;
 
     public State(String name, Set<Precinct> inPrecincts, String boundaries) {
@@ -58,6 +49,16 @@ public class State
         }
     }
 
+    @Id
+    public String getName() {
+        return name;
+    }
+
+    @Column(name = "boundaries")
+    public String getStateBoundaries() {
+        return stateBoundaries;
+    }
+
     public Set<Precinct> getPrecincts() {
         return new HashSet<>(precincts.values());
     }
@@ -66,10 +67,14 @@ public class State
         return new HashSet<>(districts.values());
     }
 
+    @OneToMany(mappedBy = "stateName", cascade = CascadeType.ALL)
+    @MapKeyColumn(name = "districtId")
     public District getDistrict(String distID) {
         return districts.get(distID);
     }
 
+    @OneToMany(mappedBy = "stateName")
+    @MapKeyColumn(name = "precinctId")
     public Precinct getPrecinct(String precID) {
         return precincts.get(precID);
     }
