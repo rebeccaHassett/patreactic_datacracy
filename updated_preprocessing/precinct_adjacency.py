@@ -1,9 +1,10 @@
 import json
-from shapely.geometry import shape, Polygon, LineString
+from shapely.geometry import shape, Polygon, LineString, GeometryCollection, MultiPolygon
 from shapely.ops import split, shared_paths
 import math
 from scipy.spatial import distance
 import matplotlib.pyplot as plt
+from pyproj import Geod
 
 
 """
@@ -98,6 +99,7 @@ def __create_grid(precincts):
     return grid
 
 
+
 """
 @param precincts: A list of all the precincts in the state.
 @return: A dictionary, where the keys are precincts (as a tuple) 
@@ -113,11 +115,10 @@ def __compute_search_spaces(precincts):
 
     b_precincts = dict() # dictionary containing each box's set of precincts; key = box
     p_boxes = dict() # dictionary containing each precinct's set of boxes; key = precinct
-
     for box in grid:
         for p in precincts:
             b = tuple(box.exterior.coords) # list of tuple coordinates
-            if box.overlaps(p): # box is a polygon; p is a polygon
+            if box.intersects(p): # box is a polygon; p is a polygon
                 # add p to box's set of precincts
                 val = b_precincts.get(b) # box's set of precincts
                 p_coords = tuple(p.exterior.coords)
@@ -164,12 +165,18 @@ Checks if two precincts share a border.
 @return: True if the precincts share a border. False, otherwise.
 """
 def share_border(precinct1, precinct2):
+    # ask group: does it matter how much overlap??? must be 100ft or just overlap is fine?
+    if precinct1.overlaps(precinct2):  # precincts intersect, but neither contains the other -- maybe not if intersection occurs at a corner???
+        return True
+    if not precinct1.intersects(precinct2): # boundary and interior doesn't intersect in any way
+        return False
+
     l1 = [] # all line segments in p1's border
     l2 = [] # al line segments in p2's border
     lines1 = tuple(precinct1.exterior.coords) # tuple of p1 coordinates
     lines2 = tuple(precinct2.exterior.coords) # tuple of p2 coordinates
 
-    # convert to LineString
+    # break precinct Polygon into individual LineString line segments
     for i in range(len(lines1)-1):
         line_segment = LineString([lines1[i], lines1[i+1]])
         l1.append(line_segment)
@@ -177,13 +184,17 @@ def share_border(precinct1, precinct2):
         line_segment = LineString([lines2[i], lines2[i+1]])
         l2.append(line_segment)
 
-    # check fo shared paths
+    # check for shared paths -- need to account for complete separation (no intersection) but within 100 ft?
+    # note: coordinates order is longitude latitude
+    geo = Geod(ellps='GRS80')
+    epsilon = 100*0.3048 # 100 ft = 30.48 meters
     for line1 in l1:
         for line2 in l2:
             sp = shared_paths(line1, line2)
             if len(sp) > 0:
-                return True
-
+                dst = geo.geometry_length(sp) # in meters -- should work
+                if dst >= epsilon: # or sp[0].length???
+                    return True
     return False
 
 
@@ -192,9 +203,9 @@ def share_border(precinct1, precinct2):
 @param precinct: The precinct whose neighbors you want to find.
 @return: The list of neighboring precincts.
 """
-def get_precinct_neighbors(precincts, precinct):
+def get_precinct_neighbors(precincts, precinct, grid):
     neighbors = []
-    search_space = __compute_search_spaces(precincts)[tuple(precinct.exterior.coords)]
+    search_space = grid[tuple(precinct.exterior.coords)]
 
     for p in search_space:
         # enclosed precincts -- merge the precincts and drop enclosed precinct
@@ -210,33 +221,86 @@ def get_precinct_neighbors(precincts, precinct):
     return neighbors
 
 
+"""
+Coverts a list that contains Polygons/Multipolgyons into a list that only contains Polygons.
+Note: there are currently some commented lines -- take them out in final product. Also, method needs tweaking b/c if we
+separate a multipolygon precinct into all its resulting polygons, there will be too many shapes and processing slows down.
+@param collection: List of geometric objects that include Polygons and MultiPolygons
+@return: A list of Polygons
+"""
+def __all_polygons(collection):
+    new_collection = []
+    for poly in collection:
+        if isinstance(poly, MultiPolygon):
+            pass
+            #for p in poly:
+            #    new_collection.append(p)
+        else:
+            new_collection.append(poly)
+    return new_collection
+
+
+"""
+Plots the polygons and labels them in order listed
+@param polygons: List of polygons to be plotted
+"""
+def plot_polygons(polygons):
+    count = 1
+    for p in polygons:
+        x,y = p.exterior.xy
+        plt.plot(x,y, 'r')
+        plt.text(sum(x)/len(x), sum(y)/len(y), s=str(count))
+        count += 1
+
+
 if __name__ == '__main__':
 
     with open('RI_Precincts_MAPPED.geojson') as file:
         data = json.load(file)
 
-    #features = data['features'] # list of dictionaries, with each dictionary containing info on geometry
-    #collection = GeometryCollection([shape(feature['geometry']).buffer(0) for feature in features]) # geometry of each precinct
-
-    # print(len(collection)) # 419 precincts
-    # print(features[0]['geometry'])
-    # print(shape(features[0]['geometry']))
-    # print(shape(features[0]['geometry']).bounds)
-
+    features = data['features'] # list of dictionaries, with each dictionary containing info on geometry
+    collection = GeometryCollection([shape(feature['geometry']).buffer(0) for feature in features]) # geometry of each precinct
     file.close()
+
+    collection = __all_polygons(collection)
+    # plot rhode island
+    plot_polygons(collection)
+
+    print(len(collection)) # 2845 polygons in RI, but only 419 precincts
+
+    grid = __compute_search_spaces(collection)
+    for poly in collection:
+        neighbors = get_precinct_neighbors(collection, poly, grid)
+        print(neighbors)
+        break
+
+    """
 
     pre = [Polygon([(0,0), (1,1), (2,0), (0,0)]),
            Polygon([(0,0), (0,1.75), (1,2), (1,1), (0,0)]),
            Polygon([(0,1.75), (0,2), (1,2), (0,1.75)]),
-           Polygon([(1,1), (1,2), (3,0), (2,0), (1,1)])]
+           Polygon([(1,1), (1,2), (3,0), (2,0), (1,1)]),
+           Polygon([(1,2),(3,2),(3,0),(2.5,0.25),(1,2)])
+           ]
 
+    plot_polygons(pre)
+    plt.show()
 
-    for p in pre:
-        x,y = p.exterior.xy
-        plt.plot(x,y, 'r')
-
-    for p in pre:
-        neighbors = get_precinct_neighbors(pre, p)
-        break
+    #grid = __compute_search_spaces(pre)
+    #for p in pre:
+    #    neighbors = get_precinct_neighbors(pre, p, grid)
+    #    break
 
     # note: multipolygon in collections -- no point.exterior.coords --> how to fix?
+
+    geo = Geod(ellps='GRS80')
+    geom = LineString([(-78.119956, 43.374880), (-78.119666, 43.374868)])
+    dst = geo.geometry_length(geom)
+    print(dst) # roughly 23.539 meters
+    
+    p = Polygon([(0,0), (1,0), (1,1), (0,0)], [[(0,0.2), (0.8,0.2), (0.8,0.8), (0,0.2)]]) # contains a hole -- no problem using exterior
+    print(p.exterior)
+
+    mp = MultiPolygon([p,
+                       Polygon([(0,0),(1,1),(0,1),(0,0)])])
+    """
