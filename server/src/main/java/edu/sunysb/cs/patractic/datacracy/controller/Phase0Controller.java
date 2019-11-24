@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.util.Map;
 import java.util.Set;
 
 @Controller
@@ -31,5 +32,10 @@ public class Phase0Controller {
     @GetMapping(path = "/laws/{state}")
     public String getLaws(@PathVariable("state") String stateName) {
         return stateDao.getBaseState(stateName).getLaws();
+    }
+
+    @GetMapping(path = "/incumbent/{state}")
+    public Map<String, String> getIncumbents(@PathVariable("state") String stateName) {
+        return stateDao.getBaseState(stateName).getIncumbents();
     }
 }

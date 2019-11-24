@@ -127,4 +127,10 @@ public class State
     public String getLaws() {
         return laws;
     }
+
+    public Map<String, String> getIncumbents() {
+        Map<String, String> incumbents = new HashMap<>();
+        districts.values().forEach(d -> incumbents.put(d.getDistrictId(), d.getOrigIncumbent()));
+        return incumbents;
+    }
 }
