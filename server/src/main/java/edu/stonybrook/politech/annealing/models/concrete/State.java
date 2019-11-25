@@ -25,13 +25,14 @@ import java.util.stream.Collectors;
 public class State
         implements StateInterface<Precinct, District> {
 
-    private final int population;
+    private int population;
     private final Map<DemographicGroup, Long> populationMap;
     private String name;//name is saved for later storage into the database
     private HashMap<String, District> districts;
     private HashMap<String, Precinct> precincts;
     private String stateBoundaries;
-    private final String laws;
+    private String laws;
+    private Map<String, String> incumbents;
 
     public State(String name, Set<Precinct> inPrecincts, String boundaries, String laws) {
         this.name = name;
@@ -75,20 +76,27 @@ public class State
         this.stateBoundaries = stateBoundaries;
     }
 
-    @Column
+    @Column(name="precincts")
     @ElementCollection(targetClass=Precinct.class)
     public Set<Precinct> getPrecincts() {
         return new HashSet<>(precincts.values());
     }
 
-    @Column
+    public void setPrecincts(HashMap<String, Precinct> precincts) {
+        this.precincts = precincts;
+    }
+
+    @OneToMany(mappedBy = "state", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @ElementCollection(targetClass=District.class)
     public Set<District> getDistricts() {
         return new HashSet<>(districts.values());
     }
+    public void setDistricts(HashMap<String, District> districts) {
+        this.districts = districts;
+    }
 
     @OneToMany(mappedBy = "stateName", cascade = CascadeType.ALL)
-    @MapKeyColumn(name = "districtId")
+    @JoinColumn(foreignKey = @ForeignKey(name = "districtId"))
     public District getDistrict(String distID) {
         return districts.get(distID);
     }
@@ -115,6 +123,9 @@ public class State
     @Override
     public int getPopulation() {
         return population;
+    }
+    public void setPopulation(int population) {
+        this.population = population;
     }
 
     public long getPopulation(DemographicGroup demographicGroup) {
@@ -146,12 +157,19 @@ public class State
     public String getLaws() {
         return laws;
     }
+    public void setLaws(String laws) {
+        this.laws = laws;
+    }
 
+    @Column(name="incumbents")
     @ElementCollection(targetClass=String.class)
     @MapKeyColumn(name="Incumbents")
     public Map<String, String> getIncumbents() {
         Map<String, String> incumbents = new HashMap<>();
         districts.values().forEach(d -> incumbents.put(d.getDistrictId(), d.getOrigIncumbent()));
         return incumbents;
+    }
+    public void setIncumbents(Map<String, String> incumbents) {
+        this.incumbents = incumbents;
     }
 }

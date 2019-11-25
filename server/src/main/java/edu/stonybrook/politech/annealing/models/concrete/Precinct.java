@@ -23,17 +23,19 @@ import java.util.stream.Collectors;
 @Table(name = "Precincts")
 public class Precinct
         implements PrecinctInterface, IJurisdiction {
-    private final String precinctId;
+    private String precinctId;
 
     private State state;
-    private final String stateName;
-    private final Geometry geometry;
-    private final String geometryJSON;
-    private final String originalDistrictID;
+    private String stateName;
+    private Geometry geometry;
+    private String geometryJSON;
+    private String originalDistrictID;
     private District district;
     private final Map<ElectionId, ElectionData> electionDataMap;
     private final Map<DemographicGroup, Long> populationMap;
-    private final Set<String> neighborIDs;
+    private Set<String> neighborIDs;
+    private int population;
+    private double populationDensity;
 
     public Precinct(
             String precinctId,
@@ -43,7 +45,6 @@ public class Precinct
             District district, Map<ElectionId, ElectionData> electionDataMap, Map<DemographicGroup, Long> populationMap, Set<String> neighborIDs) {
         this.precinctId = precinctId;
         this.state = state;
-        this.stateName = stateName;
         this.geometryJSON = geometryJSON;
         this.district = district;
         this.electionDataMap = electionDataMap;
@@ -68,15 +69,25 @@ public class Precinct
         return precinctId;
     }
 
+    public void setPrecinctId(String precinctId) {
+        this.precinctId = precinctId;
+    }
+
     @Column(name = "geojson")
     public String getGeometryJSON() {
         return geometryJSON;
     }
 
+    public void setGeometryJSON(String geometryJSON) {
+        this.geometryJSON = geometryJSON;
+    }
+
+    @Transient
     public Geometry getGeometry() {
         return geometry;
     }
 
+    @Transient
     public double getPopulationDensity() {
         if (geometry != null && geometry.getArea() != 0)
             return getPopulation() / geometry.getArea();
@@ -84,10 +95,15 @@ public class Precinct
     }
 
     @Override
-    @Column(name = "districtId")
+    @Column(name = "originalDistrictId")
     public String getOriginalDistrictID() {
         return originalDistrictID;
     }
+
+    public void setOriginalDistrictID(String originalDistrictID) {
+        this.originalDistrictID = originalDistrictID;
+    }
+
 
     @ManyToOne
     @JoinColumn(name = "districtId")
@@ -101,14 +117,22 @@ public class Precinct
 
     @Override
     @ElementCollection(targetClass=String.class)
-    @JoinColumn(table = "PrecinctNeighbors", name = "precinctId")
+    //@JoinColumn(table = "PrecinctNeighbors", name = "precinctId")
     public Set<String> getNeighborIDs() {
         return neighborIDs;
+    }
+
+    public void setNeighborIDs(Set<String> neighborIDs) {
+        this.neighborIDs = neighborIDs;
     }
 
     @Override
     public int getPopulation() {
         return (int) getPopulation(null);
+    }
+
+    public void setPopulation(int population) {
+        this.population = population;
     }
 
     @Override
@@ -137,11 +161,6 @@ public class Precinct
         } else {
             return populationMap.get(demographic);
         }
-    }
-
-    @Column(name = "stateName")
-    public String getStateName() {
-        return stateName;
     }
 
     @ManyToOne

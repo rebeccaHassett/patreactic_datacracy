@@ -1,5 +1,6 @@
 package edu.stonybrook.politech.annealing.models.concrete;
 
+import com.sun.istack.NotNull;
 import edu.stonybrook.politech.annealing.measures.DistrictInterface;
 import edu.sunysb.cs.patractic.datacracy.domain.enums.DemographicGroup;
 import edu.sunysb.cs.patractic.datacracy.domain.enums.PoliticalParty;
@@ -38,11 +39,15 @@ public class District
 
 
     private Set<Precinct> borderPrecincts;
+    private Set<Precinct> precinctsAsJurisdictions;
 
     private MultiPolygon multiPolygon;
 
     private Geometry boundingCircle;
     private Geometry convexHull;
+
+    private String borders;
+    private long population;
 
     private boolean boundingCircleUpdated = false;
     private boolean multiPolygonUpdated = false;
@@ -55,8 +60,11 @@ public class District
         this.state = state;
     }
 
-    @ManyToOne
-    @JoinColumn(name = "stateName")
+    //@ManyToOne(fetch = FetchType.LAZY)
+    //@JoinColumn (name="stateName",referencedColumnName="name",nullable=false,unique=true)
+    @ManyToOne(targetEntity = State.class, fetch=FetchType.EAGER, cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
+    @JoinColumn(name = "stateName", referencedColumnName = "name")
+    @NotNull
     public State getState() {
         return state;
     }
@@ -69,6 +77,11 @@ public class District
     public String getDistrictId() {
         return districtId;
     }
+
+    public void setDistrictId(String districtId) {
+        this.districtId = districtId;
+    }
+
 
     public int getPopulation() {
         return (int)getPopulation(null);
@@ -85,10 +98,17 @@ public class District
     public int getInternalEdges() {
         return internalEdges;
     }
+    public void setInternalEdges(int internalEdges) {
+        this.internalEdges = internalEdges;
+    }
 
     public int getExternalEdges() {
         return externalEdges;
     }
+    public void setExternalEdges(int externalEdges) {
+        this.externalEdges = externalEdges;
+    }
+
 
     private Set<Precinct> getInternalNeighbors(Precinct p) {
         Set<Precinct> neighborsInternal = new HashSet<>();
@@ -101,12 +121,21 @@ public class District
         return neighborsInternal;
     }
 
+    @ElementCollection(targetClass=Precinct.class)
     public Set<Precinct> getPrecincts() {
         return new HashSet<>(precincts.values());
     }
+    public void setPrecincts(HashMap<String, Precinct> precincts) {
+        this.precincts = precincts;
+    }
 
+
+    @ElementCollection(targetClass=Precinct.class)
     public Set<Precinct> getBorderPrecincts() {
         return new HashSet<>(borderPrecincts);
+    }
+    public void setBorderPrecincts(Set<Precinct> borderPrecincts) {
+        this.borderPrecincts = borderPrecincts;
     }
 
     public boolean isBorderPrecinct(Precinct precinct) {
@@ -178,12 +207,14 @@ public class District
         return mp;
     }
 
+    @Transient
     public MultiPolygon getMulti() {
         if (this.multiPolygonUpdated && this.multiPolygon != null)
             return this.multiPolygon;
         return computeMulti();
     }
 
+    @Transient
     public Geometry getConvexHull() {
         if (convexHullUpdated && convexHull != null)
             return convexHull;
@@ -195,7 +226,11 @@ public class District
     public String getBorders() {
         return new GeoJsonWriter().write(getConvexHull());
     }
+    public void setBorders(String borders) {
+        this.borders = borders;
+    }
 
+    @Transient
     public Geometry getBoundingCircle() {
         if (boundingCircleUpdated && boundingCircle != null)
             return boundingCircle;
@@ -209,13 +244,20 @@ public class District
         return ElectionData.aggregateFromJurisdictions(getPrecinctsAsJurisdictions(), electionId);
     }
 
+    @ElementCollection(targetClass=Precinct.class)
     private Set<IJurisdiction> getPrecinctsAsJurisdictions() {
         return getPrecincts().stream().map(p -> (IJurisdiction)p).collect(Collectors.toSet());
+    }
+    private void setPrecinctsAsJurisdictions(Set<Precinct> precinctsAsJurisdictions) {
+        this.precinctsAsJurisdictions = precinctsAsJurisdictions;
     }
 
     @Override
     public long getPopulation(DemographicGroup demographic) {
         return getPrecincts().stream().map(p -> p.getPopulation(demographic)).reduce(0L, Long::sum);
+    }
+    public void setPopulation(long population) {
+        this.population = population;
     }
 
     @Column(name = "incumbent")

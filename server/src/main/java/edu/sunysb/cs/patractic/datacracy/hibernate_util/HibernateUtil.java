@@ -11,6 +11,7 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.cfg.Environment;
 import org.hibernate.service.ServiceRegistry;
+import org.springframework.boot.autoconfigure.couchbase.CouchbaseProperties;
 
 public class HibernateUtil {
     private static SessionFactory sessionFactory;
@@ -27,6 +28,7 @@ public class HibernateUtil {
                 settings.put(Environment.PASS, "changeit");
                 settings.put(Environment.DIALECT, "org.hibernate.dialect.MySQL5Dialect");
                 settings.put(Environment.SHOW_SQL, "true");
+                settings.put(Environment.LOG_JDBC_WARNINGS, "true");
                 settings.put(Environment.CURRENT_SESSION_CONTEXT_CLASS, "thread");
 
 
