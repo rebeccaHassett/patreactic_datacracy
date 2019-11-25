@@ -111,6 +111,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -122,11 +123,10 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="last_opened_file_path" value="$USER_HOME$/CSE508_Crawling/research-project-f19-jjrv/code/crawler" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
@@ -278,14 +278,14 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/mapped_data/NC_VDT_MAPPED.geojson">
-      <provider editor-type-id="text-editor">
-        <state>
-          <caret column="9101" selection-start-column="9101" selection-end-column="9101" />
-        </state>
-      </provider>
       <provider selected="true" editor-type-id="LargeFileEditor">
         <state relative-caret-position="504">
           <caret column="1038038" selection-start-column="1038038" selection-end-column="1038038" />
+        </state>
+      </provider>
+      <provider editor-type-id="text-editor">
+        <state>
+          <caret column="9101" selection-start-column="9101" selection-end-column="9101" />
         </state>
       </provider>
     </entry>

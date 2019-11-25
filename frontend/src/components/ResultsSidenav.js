@@ -7,23 +7,23 @@ import L from "leaflet";
 
 class ResultsSidenav extends React.Component {
 
-   votingRightsAct = fetch('http://127.0.0.1:8080/laws/' + this.props.state).then(function (response) {
+   /*votingRightsAct = fetch('http://127.0.0.1:8080/laws/' + this.props.state).then(function (response) {
         if (response.status >= 400) {
             throw new Error("Voting Rights Act data not loaded from server successfully");
         }
         return response.json();
     }).then(function (data) {
         return data;
-    });
+    });*/
 
-    incumbents = fetch('http://127.0.0.1:8080/incumbent/' + this.props.state).then(function (response) {
+    /*incumbents = fetch('http://127.0.0.1:8080/incumbent/' + this.props.state).then(function (response) {
         if (response.status >= 400) {
-            throw new Error("Incumbent data not loaded from server successfully");
+            //throw new Error("Incumbent data not loaded from server successfully");
         }
         return response.json();
     }).then(function (data) {
         return data;
-    });
+    });*/
 
     render () {
         return (
@@ -33,9 +33,9 @@ class ResultsSidenav extends React.Component {
                     <Tab eventKey="State" title="State">
                         <h3>_____________________________</h3>
                         <h4>Voting Rights Act Information:</h4>
-                        <p>/*{this.votingRightsAct}*/</p>
+                        /*<p>{this.votingRightsAct}</p>*/
                         <h4>Voting Incumbents:</h4>
-                        <p>/*{this.incumbents}*/</p>
+                        /*<p>{this.incumbents}</p>*/
                         <h4>Election and Demographics</h4>
                         <Statistics data={this.props.stateData}></Statistics>
                     </Tab>
