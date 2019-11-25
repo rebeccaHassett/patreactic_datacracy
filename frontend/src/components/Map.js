@@ -16,7 +16,7 @@ export default class Map extends Component {
 
         this.map = L.map('map', {
             center: [0, 0],
-            zoom: 5,
+            zoom: 4,
             minZoom: 2.5,
             maxBounds: maxMapBounds,
             zoomControl: false,
@@ -126,9 +126,10 @@ function addLayerToMap(url, map, name) {
 const MapStyle = styled.div`
     #sidenav {
         width: 7vw;
-        background-color: darkseagreen
+        background-color: darkseagreen;
     }
     #map {
-      height: 600px;
+          height: 46vw;
+          width: 93vw;
     }
 `;

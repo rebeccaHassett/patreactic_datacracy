@@ -43,6 +43,8 @@ class MenuSidenav extends React.Component {
                         <Tab eventKey="phase2" title="Phase 2" disabled={this.state.phase1Tab}>
                             <Phase2Controls></Phase2Controls>
                         </Tab>
+                        <Tab eventKey="results" title="Results" disabled={true}>
+                        </Tab>
                     </Tabs>
                 </ContentStyle>
             </Menu>

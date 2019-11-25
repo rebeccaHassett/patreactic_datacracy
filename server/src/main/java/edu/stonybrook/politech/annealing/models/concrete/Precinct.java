@@ -100,6 +100,7 @@ public class Precinct
     }
 
     @Override
+    @ElementCollection(targetClass=String.class)
     @JoinColumn(table = "PrecinctNeighbors", name = "precinctId")
     public Set<String> getNeighborIDs() {
         return neighborIDs;

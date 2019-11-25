@@ -147,6 +147,8 @@ public class State
         return laws;
     }
 
+    @ElementCollection(targetClass=String.class)
+    @MapKeyColumn(name="Incumbents")
     public Map<String, String> getIncumbents() {
         Map<String, String> incumbents = new HashMap<>();
         districts.values().forEach(d -> incumbents.put(d.getDistrictId(), d.getOrigIncumbent()));

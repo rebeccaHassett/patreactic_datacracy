@@ -28,11 +28,11 @@ export default class State extends Component {
         var maxBounds;
         var minZoom;
         var clustersUrl;
-        var chosen_state = window.location.pathname.split("/").pop();
+        var chosenState = window.location.pathname.split("/").pop();
 
-        console.log(chosen_state);
+        console.log(chosenState);
 
-        if (chosen_state === "NorthCarolina") {
+        if (chosenState === "NorthCarolina") {
             clustersUrl = 'http://127.0.0.1:8080/District_Borders?name=North_Carolina';
 
             maxBounds = [
@@ -40,14 +40,14 @@ export default class State extends Component {
                 [33, -86]                /* South West */
             ];
             minZoom = 6;
-        } else if (chosen_state === "RhodeIsland") {
+        } else if (chosenState === "RhodeIsland") {
             clustersUrl = 'http://127.0.0.1:8080/District_Borders?name=Rhode_Island';
             maxBounds = [
                 [43, -70.75],
                 [40, -72]
             ];
             minZoom = 9;
-        } else if(chosen_state === "Michigan"){
+        } else if(chosenState === "Michigan"){
             clustersUrl = 'http://127.0.0.1:8080/District_Borders?name=Michigan';
             maxBounds = [
                 [49, -75],
@@ -75,9 +75,9 @@ export default class State extends Component {
             if (this.getZoom() >= 7) {
                 var precinctsUrl;
                 const precincts = new Precinct();
-                if (chosen_state === "RhodeIsland") {
+                if (chosenState === "RhodeIsland") {
                     precinctsUrl = 'http://127.0.0.1:8080/Precinct_Borders?name=Rhode_Island'
-                } else if (chosen_state === "NorthCarolina") {
+                } else if (chosenState === "NorthCarolina") {
                     precinctsUrl = 'http://127.0.0.1:8080/Precinct_Borders?name=North_Carolina'
                 } else {
                     precinctsUrl = 'http://127.0.0.1:8080/Precinct_Borders?name=Michigan'
@@ -114,7 +114,7 @@ export default class State extends Component {
                         </Container>
                     </Col>
                     <Col>
-                    <ResultsSidenav precinctData={this.state.precinctData} districtData={this.state.districtData} stateData={this.state.stateData}></ResultsSidenav>
+                    <ResultsSidenav precinctData={this.state.precinctData} districtData={this.state.districtData} stateData={this.state.stateData} state={this.state.chosenState}></ResultsSidenav>
                     </Col>
                 </Row>
             </State_Style>
@@ -129,4 +129,3 @@ const State_Style = styled.div`
       width: 100vw;
     }
 `;
-/* 600px */

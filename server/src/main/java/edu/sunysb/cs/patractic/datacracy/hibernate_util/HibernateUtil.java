@@ -3,6 +3,8 @@ package edu.sunysb.cs.patractic.datacracy.hibernate_util;
 
 import java.util.Properties;
 
+import edu.stonybrook.politech.annealing.models.concrete.District;
+import edu.stonybrook.politech.annealing.models.concrete.Precinct;
 import edu.stonybrook.politech.annealing.models.concrete.State;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
@@ -32,6 +34,8 @@ public class HibernateUtil {
                 settings.put(Environment.HBM2DDL_AUTO, "create-only");
 
                 configuration.setProperties(settings);
+                configuration.addAnnotatedClass(Precinct.class);
+                configuration.addAnnotatedClass(District.class);
                 configuration.addAnnotatedClass(State.class);
                 ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
                         .applySettings(configuration.getProperties()).build();
