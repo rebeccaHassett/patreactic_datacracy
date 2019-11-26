@@ -150,7 +150,7 @@ public class Precinct
         return electionDataMap.get(electionId);
     }
 
-    @OneToMany(mappedBy = "precinctId", targetEntity = ElectionData.class)
+    @OneToMany(mappedBy = "precinctId", targetEntity = ElectionData.class, fetch = FetchType.EAGER)
     @MapKeyClass(value = ElectionId.class)
     protected Map<ElectionId, ElectionData> getElectionDataMap() {
         return electionDataMap;
@@ -180,7 +180,7 @@ public class Precinct
         }
     }
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "stateName", referencedColumnName = "name")
     public State getState() {
         return state;

@@ -24,13 +24,16 @@ export default class Phase0Controls extends Component {
     async runPhase0() {
         var phase0Dto = {
             config: {
-                thresholds: [{
-                    name: "blocPopulationThreshold", lower: this.state.blocPopulationValues[0],
-                    upper: this.state.blocPopulationValues[1]
-                }, {
-                    name: "blocVotingThreshold", lower: this.state.blocVotingValues[0],
-                    upper: this.state.blocVotingValues[1]
-                }],
+                thresholds: {
+                    BLOC_POP_PERCENTAGE: {
+                        lower: this.state.blocPopulationValues[0],
+                        upper: this.state.blocPopulationValues[1]
+                    },
+                    BLOC_VOTING_PERCENTAGE: {
+                        lower: this.state.blocVotingValues[0],
+                        upper: this.state.blocVotingValues[1]
+                    }
+                },
                 weights: {},
                 incremental: false,
                 realtime: false,
@@ -39,7 +42,8 @@ export default class Phase0Controls extends Component {
                 selectedMinorities: [],
                 year: this.state.electionYear,
                 type: this.state.electionType
-            }, state: this.props.state
+            },
+            state: this.props.state
         };
 
         const response = await fetch("http://127.0.0.1:8080/runPhase0", {

@@ -23,7 +23,7 @@ class ResultsSidenav extends React.Component {
             }
             return response.json();
         }).then(function (data) {
-            return data;
+            return data.laws;
         });
 
         this.state.incumbents = fetch('http://127.0.0.1:8080/incumbent/' + this.props.chosenState).then(function (response) {

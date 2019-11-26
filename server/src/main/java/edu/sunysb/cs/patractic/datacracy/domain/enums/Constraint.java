@@ -3,7 +3,7 @@ package edu.sunysb.cs.patractic.datacracy.domain.enums;
 /**
  * Defines the different types of constraint used in this project.
  */
-public enum Constraints {
+public enum Constraint {
     /**
      * Graph compactness.
      */

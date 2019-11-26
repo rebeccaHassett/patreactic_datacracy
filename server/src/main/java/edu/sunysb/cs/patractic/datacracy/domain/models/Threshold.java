@@ -8,7 +8,7 @@ public class Threshold {
     public final double upper;
 
     @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
-    public Threshold(@JsonProperty("name") String name, @JsonProperty("lower") double lower, @JsonProperty("upper") double upper) {
+    public Threshold(@JsonProperty("lower") double lower, @JsonProperty("upper") double upper) {
         this.lower = lower;
         this.upper = upper;
     }

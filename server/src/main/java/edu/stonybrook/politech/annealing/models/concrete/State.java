@@ -2,17 +2,14 @@ package edu.stonybrook.politech.annealing.models.concrete;
 
 
 import edu.stonybrook.politech.annealing.measures.StateInterface;
-import edu.sunysb.cs.patractic.datacracy.domain.enums.Constraints;
+import edu.sunysb.cs.patractic.datacracy.domain.enums.Constraint;
 import edu.sunysb.cs.patractic.datacracy.domain.enums.DemographicGroup;
 import edu.sunysb.cs.patractic.datacracy.domain.models.Incumbent;
 import edu.sunysb.cs.patractic.datacracy.domain.models.Properties;
 import edu.sunysb.cs.patractic.datacracy.domain.models.VotingBlockDTO;
 
 import javax.persistence.*;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -97,7 +94,7 @@ public class State
         return new HashSet<>(precincts.values());
     }
 
-    @OneToMany(mappedBy = "stateName", targetEntity = Precinct.class)
+    @OneToMany(mappedBy = "stateName", targetEntity = Precinct.class, fetch = FetchType.EAGER)
     @MapKeyColumn(name = "precinctId")
     protected Map<String, Precinct> getPrecincts() {
         return precincts;
@@ -120,12 +117,12 @@ public class State
         return precincts.get(precinctId);
     }
 
-    public Set<VotingBlockDTO> getEligibleDemographicVotingBlocs(Properties config) {
-        Set<VotingBlockDTO> ret = new HashSet<>();
+    public List<VotingBlockDTO> getEligibleDemographicVotingBlocs(Properties config) {
+        List<VotingBlockDTO> ret = new ArrayList<>();
         for (Precinct p : precincts.values()) {
             for (DemographicGroup dg : DemographicGroup.values()) {
-                if (p.isDemographicBloc(dg, config.thresholds[Constraints.BLOC_POP_PERCENTAGE.ordinal()])) {
-                    VotingBlockDTO vbdto = p.getVotingBloc(dg, config.thresholds[Constraints.BLOC_VOTING_PERCENTAGE.ordinal()], config.electionId);
+                if (p.isDemographicBloc(dg, config.thresholds.get(Constraint.BLOC_POP_PERCENTAGE))) {
+                    VotingBlockDTO vbdto = p.getVotingBloc(dg, config.thresholds.get(Constraint.BLOC_VOTING_PERCENTAGE), config.electionId);
                     if (vbdto != null) {
                         ret.add(vbdto);
                     }
@@ -176,7 +173,7 @@ public class State
         this.laws = laws;
     }
 
-    @OneToMany(mappedBy = "stateName", targetEntity = Incumbent.class)
+    @OneToMany(mappedBy = "stateName", targetEntity = Incumbent.class, fetch = FetchType.EAGER)
     @MapKeyColumn(name = "districtId")
     public Map<String, Incumbent> getIncumbents() {
         return incumbents;

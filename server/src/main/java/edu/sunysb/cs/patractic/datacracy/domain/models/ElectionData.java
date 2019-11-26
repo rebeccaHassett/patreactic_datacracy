@@ -22,21 +22,19 @@ public class ElectionData {
     @CollectionTable(name = "VotesByParty", joinColumns = {@JoinColumn(name = "electionDataId")})
     @MapKeyClass(PoliticalParty.class)
     private Map<PoliticalParty, Long> votesByParty;
-
     @Id
     private int id;
-
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "precinctId")
     private Precinct precinct;
-
-
     @Column(name = "precinctId", insertable = false, updatable = false)
     private String precinctId;
-
     @Embedded
     @MapKey
     private ElectionId electionId;
+
+    public ElectionData() {
+    }
 
     public ElectionData(Year year, ElectionType type, Map<PoliticalParty, Long> votesByParty) {
         this.electionId = new ElectionId(year, type);

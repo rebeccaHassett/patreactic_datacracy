@@ -3,13 +3,15 @@ package edu.sunysb.cs.patractic.datacracy.domain.models;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import edu.stonybrook.politech.annealing.algorithm.Measure;
+import edu.sunysb.cs.patractic.datacracy.domain.enums.Constraint;
 import edu.sunysb.cs.patractic.datacracy.domain.enums.ElectionType;
 import edu.sunysb.cs.patractic.datacracy.domain.enums.Year;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class Properties {
-    public final Threshold[] thresholds;
+    public final Map<Constraint, Threshold> thresholds;
     public final Map<Measure, Double> weights;
     public final boolean incremental;
     public final boolean realtime;
@@ -20,7 +22,7 @@ public class Properties {
 
 
     @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
-    public Properties(@JsonProperty("thresholds") Threshold[] thresholds,
+    public Properties(@JsonProperty("thresholds") Map<String, Threshold> thresholds,
                       @JsonProperty("weights") Map<Measure, Double> weights,
                       @JsonProperty("incremental") boolean incremental,
                       @JsonProperty("realtime") boolean realtime,
@@ -29,7 +31,8 @@ public class Properties {
                       @JsonProperty("selectedMinorities") boolean[] selectedMinorities,
                       @JsonProperty("year") int year,
                       @JsonProperty("type") String type) {
-        this.thresholds = thresholds;
+        this.thresholds = new HashMap<>();
+        thresholds.forEach((constraint, thresh) -> this.thresholds.put(Constraint.valueOf(constraint), thresh));
         this.weights = weights;
         this.incremental = incremental;
         this.realtime = realtime;
@@ -45,12 +48,12 @@ public class Properties {
             throw new IllegalArgumentException("Year must be 2016 or 2018.");
         }
         ElectionType t;
-        if (type.equals("congressional")) {
+        if (type.equals("Congressional")) {
             t = ElectionType.CONGRESSIONAL;
-        } else if (type.equals("presidential")) {
+        } else if (type.equals("Presidential")) {
             t = ElectionType.PRESIDENTIAL;
         } else {
-            throw new IllegalArgumentException("Type must be \"congressional\" or \"presidential\".");
+            throw new IllegalArgumentException("Type must be \"Congressional\" or \"Presidential\".");
         }
         this.electionId = new ElectionId(y, t);
     }

@@ -23,7 +23,7 @@ public class Incumbent {
         this.id = id;
     }
 
-    @Column(name = "stateName")
+    @Column(name = "stateName", columnDefinition = "varchar(256)")
     public String getStateName() {
         return stateName;
     }
@@ -32,7 +32,7 @@ public class Incumbent {
         this.stateName = stateName;
     }
 
-    @Column(name = "districtId")
+    @Column(name = "districtId", columnDefinition = "varchar(256)")
     public String getDistrictId() {
         return districtId;
     }
