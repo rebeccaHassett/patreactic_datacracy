@@ -2,15 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="da7513d8-167f-45a0-92b8-c16a264abf58" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/../frontend/src/components/Phase0Controls.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/Phase0Controls.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../frontend/src/components/ResultsSidenav.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/ResultsSidenav.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../server/src/main/java/edu/stonybrook/politech/annealing/models/concrete/District.java" beforeDir="false" afterPath="$PROJECT_DIR$/../server/src/main/java/edu/stonybrook/politech/annealing/models/concrete/District.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../server/src/main/java/edu/stonybrook/politech/annealing/models/concrete/Precinct.java" beforeDir="false" afterPath="$PROJECT_DIR$/../server/src/main/java/edu/stonybrook/politech/annealing/models/concrete/Precinct.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../server/src/main/java/edu/stonybrook/politech/annealing/models/concrete/State.java" beforeDir="false" afterPath="$PROJECT_DIR$/../server/src/main/java/edu/stonybrook/politech/annealing/models/concrete/State.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../server/src/main/java/edu/sunysb/cs/patractic/datacracy/App.java" beforeDir="false" afterPath="$PROJECT_DIR$/../server/src/main/java/edu/sunysb/cs/patractic/datacracy/App.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../server/src/main/java/edu/sunysb/cs/patractic/datacracy/StateDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/../server/src/main/java/edu/sunysb/cs/patractic/datacracy/StateDao.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../server/src/main/java/edu/sunysb/cs/patractic/datacracy/hibernate_util/HibernateUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/../server/src/main/java/edu/sunysb/cs/patractic/datacracy/HibernateUtil.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/load_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/load_data.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -23,7 +17,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/clean_data.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1853">
+            <state relative-caret-position="1887">
               <caret line="111" selection-start-line="111" selection-end-line="112" selection-end-column="10" />
               <folding>
                 <element signature="e#0#11#0" expanded="true" />
@@ -35,8 +29,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/map_election_geographic_data.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1156">
-              <caret line="71" column="39" selection-start-line="71" selection-start-column="34" selection-end-line="71" selection-end-column="39" />
+            <state relative-caret-position="152">
+              <caret line="38" column="62" selection-start-line="38" selection-start-column="62" selection-end-line="38" selection-end-column="62" />
               <folding>
                 <element signature="e#0#11#0" expanded="true" />
               </folding>
@@ -47,11 +41,20 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/load_data.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="161">
-              <caret line="40" lean-forward="true" selection-start-line="40" selection-end-line="40" />
+            <state relative-caret-position="935">
+              <caret line="55" column="33" lean-forward="true" selection-start-line="55" selection-start-column="33" selection-end-line="55" selection-end-column="33" />
               <folding>
                 <element signature="e#0#22#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/mapped_data/RI_Precincts_MAPPED.geojson">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="262">
+              <caret column="35375" selection-start-column="35375" selection-end-column="35375" />
             </state>
           </provider>
         </entry>
@@ -189,6 +192,11 @@
               <item name="updated_preprocessing" type="462c0819:PsiDirectoryNode" />
               <item name="laws" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="updated_preprocessing" type="b2602c69:ProjectViewProjectNode" />
+              <item name="updated_preprocessing" type="462c0819:PsiDirectoryNode" />
+              <item name="mapped_data" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
@@ -310,7 +318,7 @@
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.3268206" />
+      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.3268206" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -363,13 +371,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/mapped_data/RI_Precincts_MAPPED.geojson">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="228">
-          <caret column="35053" selection-start-column="35053" selection-end-column="35072" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/mapped_data/NC_VDT_MAPPED.geojson">
       <provider editor-type-id="text-editor">
         <state>
@@ -383,26 +384,6 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/laws/rhode_island_laws" />
-    <entry file="file://$PROJECT_DIR$/clean_data.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1853">
-          <caret line="111" selection-start-line="111" selection-end-line="112" selection-end-column="10" />
-          <folding>
-            <element signature="e#0#11#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/map_election_geographic_data.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1156">
-          <caret line="71" column="39" selection-start-line="71" selection-start-column="34" selection-end-line="71" selection-end-column="39" />
-          <folding>
-            <element signature="e#0#11#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/laws/north_carolina_laws.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="119">
@@ -441,10 +422,37 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/mapped_data/RI_Precincts_MAPPED.geojson">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="262">
+          <caret column="35375" selection-start-column="35375" selection-end-column="35375" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/clean_data.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1887">
+          <caret line="111" selection-start-line="111" selection-end-line="112" selection-end-column="10" />
+          <folding>
+            <element signature="e#0#11#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/map_election_geographic_data.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="152">
+          <caret line="38" column="62" selection-start-line="38" selection-start-column="62" selection-end-line="38" selection-end-column="62" />
+          <folding>
+            <element signature="e#0#11#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/load_data.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="161">
-          <caret line="40" lean-forward="true" selection-start-line="40" selection-end-line="40" />
+        <state relative-caret-position="935">
+          <caret line="55" column="33" lean-forward="true" selection-start-line="55" selection-start-column="33" selection-end-line="55" selection-end-column="33" />
           <folding>
             <element signature="e#0#22#0" expanded="true" />
           </folding>

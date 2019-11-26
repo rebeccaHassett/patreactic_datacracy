@@ -6,9 +6,7 @@ import Phase0Controls from "./Phase0Controls";
 import Phase1Controls from "./Phase1Controls";
 import Phase2Controls from "./Phase2Controls";
 import styled from "styled-components";
-import SliderControlUpperLowerValues from "./controls/SliderControlUpperLowerValues";
 import '@trendmicro/react-sidenav/dist/react-sidenav.css';
-
 
 class MenuSidenav extends React.Component {
     constructor() {
@@ -23,7 +21,7 @@ class MenuSidenav extends React.Component {
         return (
             <Menu styles={menuStyles} disableCloseOnEsc noOverlay left isOpen={true}>
                 <ContentStyle>
-                    <Tabs  className="tabs" defaultActiveKey="menu">
+                    <Tabs className="tabs" defaultActiveKey="menu">
                         <Tab eventKey="menu" title="Menu" disabled={this.state.menuTab}>
                             <Row>
                                 <Link to='/map'>

@@ -47,7 +47,7 @@ export default class State extends Component {
                 [40, -72]
             ];
             minZoom = 9;
-        } else if(chosenState === "Michigan"){
+        } else if (chosenState === "Michigan") {
             clustersUrl = 'http://127.0.0.1:8080/District_Borders?name=Michigan';
             maxBounds = [
                 [49, -75],
@@ -104,7 +104,7 @@ export default class State extends Component {
             <State_Style>
                 <Row>
                     <Col>
-                    <MenuSidenav side="left" id="menu" state={this.state.chosenState}></MenuSidenav>
+                        <MenuSidenav side="left" id="menu" state={this.state.chosenState}></MenuSidenav>
                     </Col>
                     <Col>
                         <Container>
@@ -114,7 +114,9 @@ export default class State extends Component {
                         </Container>
                     </Col>
                     <Col>
-                    <ResultsSidenav precinctData={this.state.precinctData} districtData={this.state.districtData} stateData={this.state.stateData} state={this.state.chosenState}></ResultsSidenav>
+                        <ResultsSidenav precinctData={this.state.precinctData} districtData={this.state.districtData}
+                                        stateData={this.state.stateData}
+                                        state={this.state.chosenState}></ResultsSidenav>
                     </Col>
                 </Row>
             </State_Style>

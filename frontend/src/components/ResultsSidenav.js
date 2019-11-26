@@ -1,6 +1,6 @@
 import React from 'react';
-import { slide as Menu } from 'react-burger-menu'
-import { Tab, Tabs } from "react-bootstrap";
+import {slide as Menu} from 'react-burger-menu'
+import {Tab, Tabs} from "react-bootstrap";
 import Statistics from "./Statistics";
 import styled from "styled-components";
 import L from "leaflet";
@@ -27,7 +27,7 @@ class ResultsSidenav extends React.Component {
 
         this.state.incumbents = fetch('http://127.0.0.1:8080/incumbent/' + this.props.state).then(function (response) {
             if (response.status >= 400) {
-                //throw new Error("Incumbent data not loaded from server successfully");
+                console.log("Incumbent data not loaded from server successfully");
             }
             return response.json();
         }).then(function (data) {
@@ -35,31 +35,31 @@ class ResultsSidenav extends React.Component {
         });
     }
 
-    render () {
+    render() {
         return (
-            <Menu styles={ menuStyles } disableCloseOnEsc noOverlay right width={400}>
+            <Menu styles={menuStyles} disableCloseOnEsc noOverlay right width={400}>
                 <ContentStyle>
-                <Tabs className="tabs" defaultActiveKey="District" id="tabs">
-                    <Tab eventKey="State" title="State">
-                        <h3>_____________________________</h3>
-                        <h4>Laws</h4>
-                        <p>{this.laws}</p>
-                        <h4>Voting Incumbents</h4>
-                        <p>{this.incumbents}</p>
-                        <h4>Election and Demographics</h4>
-                        <Statistics data={this.props.stateData}></Statistics>
-                    </Tab>
-                    <Tab eventKey="District" title="District">
-                        <h3>_____________________________</h3>
-                        <h4>Election and Demographics</h4>
-                        <Statistics data={this.props.districtData}></Statistics>
-                    </Tab>
-                    <Tab eventKey="Precinct" title="Precinct">
-                        <h3>_____________________________</h3>
-                        <h4>Election and Demographics</h4>
-                        <Statistics data={this.props.precinctData}></Statistics>
-                    </Tab>
-                </Tabs>
+                    <Tabs className="tabs" defaultActiveKey="District" id="tabs">
+                        <Tab eventKey="State" title="State">
+                            <h3>_____________________________</h3>
+                            <h4>Voting Incumbents</h4>
+                            <p>{this.incumbents}</p>
+                            <h4>Election and Demographics</h4>
+                            <Statistics data={this.props.stateData}></Statistics>
+                            <h4>Laws</h4>
+                            <p>{this.laws}</p>
+                        </Tab>
+                        <Tab eventKey="District" title="District">
+                            <h3>_____________________________</h3>
+                            <h4>Election and Demographics</h4>
+                            <Statistics data={this.props.districtData}></Statistics>
+                        </Tab>
+                        <Tab eventKey="Precinct" title="Precinct">
+                            <h3>_____________________________</h3>
+                            <h4>Election and Demographics</h4>
+                            <Statistics data={this.props.precinctData}></Statistics>
+                        </Tab>
+                    </Tabs>
                 </ContentStyle>
             </Menu>
         );
@@ -96,7 +96,7 @@ var menuStyles = {
     bmItemList: {
         color: '#b8b7ad',
         padding: '0.8em',
-        overflowX:'hidden',
+        overflowX: 'hidden',
     },
     bmCrossButton: {
         height: '3vw',

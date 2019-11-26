@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Range, getTrackBackground } from 'react-range';
+import {Range, getTrackBackground} from 'react-range';
 
 const STEP = 0.1;
 const MIN = 0;
@@ -9,6 +9,7 @@ export default class SliderControlSingleValue extends React.Component {
     state = {
         values: [50]
     };
+
     render() {
         return (
             <div
@@ -28,7 +29,7 @@ export default class SliderControlSingleValue extends React.Component {
                         this.props.exportState(values)
                     }
                     }
-                    renderTrack={({ props, children }) => (
+                    renderTrack={({props, children}) => (
                         <div
                             onMouseDown={props.onMouseDown}
                             onTouchStart={props.onTouchStart}
@@ -58,7 +59,7 @@ export default class SliderControlSingleValue extends React.Component {
                             </div>
                         </div>
                     )}
-                    renderThumb={({ props, isDragged }) => (
+                    renderThumb={({props, isDragged}) => (
                         <div
                             {...props}
                             style={{
@@ -83,7 +84,7 @@ export default class SliderControlSingleValue extends React.Component {
                         </div>
                     )}
                 />
-                <output style={{ marginTop: '-5vw' }} id="output">
+                <output style={{marginTop: '-5vw'}} id="output">
                     {this.state.values[0].toFixed(0)}
                 </output>
             </div>

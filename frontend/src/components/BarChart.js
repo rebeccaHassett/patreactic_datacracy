@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
-import { Bar } from "react-chartjs-2";
-import { MDBContainer } from "mdbreact";
+import {Bar} from "react-chartjs-2";
+import {MDBContainer} from "mdbreact";
 import styled from "styled-components";
 
 export default class BarChart extends Component {
@@ -38,7 +38,7 @@ export default class BarChart extends Component {
             <Chart_Styles>
                 <MDBContainer id="chart">
                     <h3 className="mt-5"></h3>
-                    <Bar data={this.props.databar} options={this.state.barChartOptions} />
+                    <Bar data={this.props.databar} options={this.state.barChartOptions}/>
                 </MDBContainer>
             </Chart_Styles>
         );

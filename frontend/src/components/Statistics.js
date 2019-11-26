@@ -16,12 +16,11 @@ export default class Statistics extends Component {
     }
 
     _onElectionTypeChange(option) {
-        if(option === "Congressional") {
+        if (option === "Congressional") {
             this.setState({
-               button2018: false
+                button2018: false
             });
-        }
-        else {
+        } else {
             this.setState({
                 button2018: true
             });
@@ -42,10 +41,9 @@ export default class Statistics extends Component {
 
     render() {
         var data = this.props.data;
-        if(data === "") {
+        if (data === "") {
             return null;
-        }
-        else {
+        } else {
             var jsonData = JSON.parse(data);
             var name = jsonData.PRENAME;
             var totalPopulation = jsonData.VAP;
@@ -87,27 +85,24 @@ export default class Statistics extends Component {
             var republicanCandidate;
             var democraticVotes;
             var democraticCandidate;
-            if(this.state.electionType === "Presidential") {
+            if (this.state.electionType === "Presidential") {
                 republicanVotes = jsonData.PRES16R;
                 republicanCandidate = "Donald Trump";
                 democraticVotes = jsonData.PRES16D;
                 democraticCandidate = "Hillary Clinton";
-            }
-            else {
+            } else {
                 var voting_data;
-                if(this.state.electionYear === '2016') {
+                if (this.state.electionYear === '2016') {
                     voting_data = jsonData.HOUSE_ELECTION_16;
-                }
-                else {
+                } else {
                     voting_data = jsonData.HOUSE_ELECTION_18;
                 }
                 var republicanKey;
                 var democraticKey;
-                for(var key in voting_data) {
-                    if(key[key.length -1] === 'D') {
+                for (var key in voting_data) {
+                    if (key[key.length - 1] === 'D') {
                         democraticKey = key;
-                    }
-                    else if(key[key.length - 1] === 'R') {
+                    } else if (key[key.length - 1] === 'R') {
                         republicanKey = key;
                     }
                 }
@@ -118,7 +113,7 @@ export default class Statistics extends Component {
             }
 
             var dataPieParty = {
-                labels: ["Republican","Democrat"],
+                labels: ["Republican", "Democrat"],
                 datasets: [
                     {
                         data: [republicanVotes, democraticVotes],
@@ -160,16 +155,21 @@ export default class Statistics extends Component {
                 <Row>
                     <Col>
                         <ButtonGroup id="btns">
-                            <Button onClick={this._onElectionTypeChange.bind(this, 'Presidential')} active={this.state.electionType === 'Presidential'}>Presidential</Button>
-                            <Button onClick={this._onElectionTypeChange.bind(this, 'Congressional')} active={this.state.electionType === 'Congressional'}>Congressional</Button>
+                            <Button onClick={this._onElectionTypeChange.bind(this, 'Presidential')}
+                                    active={this.state.electionType === 'Presidential'}>Presidential</Button>
+                            <Button onClick={this._onElectionTypeChange.bind(this, 'Congressional')}
+                                    active={this.state.electionType === 'Congressional'}>Congressional</Button>
                         </ButtonGroup>
                     </Col>
                 </Row>
                 <Row>
                     <Col>
                         <ButtonGroup id="btns2">
-                            <Button onClick={this._onElectionYearChange.bind(this, '2016')} active={this.state.electionYear === '2016'}>2016</Button>
-                            <Button onClick={this._onElectionYearChange.bind(this, '2018')} active={this.state.electionYear === '2018'} disabled={this.state.button2018}>2018</Button>
+                            <Button onClick={this._onElectionYearChange.bind(this, '2016')}
+                                    active={this.state.electionYear === '2016'}>2016</Button>
+                            <Button onClick={this._onElectionYearChange.bind(this, '2018')}
+                                    active={this.state.electionYear === '2018'}
+                                    disabled={this.state.button2018}>2018</Button>
                         </ButtonGroup>
                     </Col>
                 </Row>

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Range, getTrackBackground } from 'react-range';
+import {Range, getTrackBackground} from 'react-range';
 
 const STEP = 0.1;
 const MIN = 0;
@@ -9,6 +9,7 @@ export default class SliderControlUpperLowerValues extends React.Component {
     state = {
         values: [20, 40]
     };
+
     render() {
         return (
             <div
@@ -24,10 +25,10 @@ export default class SliderControlUpperLowerValues extends React.Component {
                     min={MIN}
                     max={MAX}
                     onChange={values => {
-                        this.setState({ values });
+                        this.setState({values});
                         this.props.exportState(values)
                     }}
-                    renderTrack={({ props, children }) => (
+                    renderTrack={({props, children}) => (
                         <div
                             onMouseDown={props.onMouseDown}
                             onTouchStart={props.onTouchStart}
@@ -57,7 +58,7 @@ export default class SliderControlUpperLowerValues extends React.Component {
                             </div>
                         </div>
                     )}
-                    renderThumb={({ index, props, isDragged }) => (
+                    renderThumb={({index, props, isDragged}) => (
                         <div
                             {...props}
                             style={{

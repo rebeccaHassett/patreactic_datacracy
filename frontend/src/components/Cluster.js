@@ -16,12 +16,12 @@ export default class Cluster {
             };
         }
 
-        return fetch(url).then(function(response) {
-            if(response.status >= 400) {
+        return fetch(url).then(function (response) {
+            if (response.status >= 400) {
                 throw new Error("Failed to load cluster data from server");
             }
             return response.json();
-        }).then(function(data) {
+        }).then(function (data) {
             layer = L.geoJSON(data, {style: cluster_style}).addTo(map);
 
             layer.on('click', function (e) {
