@@ -9,13 +9,32 @@ import java.util.Objects;
 
 @Embeddable
 public class ElectionId {
-    @Column
-    public final Year year;
-    @Column
-    public final ElectionType electionType;
+    public Year year;
+    public ElectionType electionType;
 
     public ElectionId(Year year, ElectionType electionType) {
         this.year = year;
+        this.electionType = electionType;
+    }
+
+    public ElectionId() {
+    }
+
+    @Column
+    public Year getYear() {
+        return year;
+    }
+
+    public void setYear(Year year) {
+        this.year = year;
+    }
+
+    @Column
+    public ElectionType getElectionType() {
+        return electionType;
+    }
+
+    public void setElectionType(ElectionType electionType) {
         this.electionType = electionType;
     }
 

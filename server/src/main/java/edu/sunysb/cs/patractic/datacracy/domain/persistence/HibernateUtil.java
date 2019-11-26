@@ -1,10 +1,11 @@
-package edu.sunysb.cs.patractic.datacracy.hibernate_util;
+package edu.sunysb.cs.patractic.datacracy.domain.persistence;
 
 
 import edu.stonybrook.politech.annealing.models.concrete.Precinct;
 import edu.stonybrook.politech.annealing.models.concrete.State;
 import edu.sunysb.cs.patractic.datacracy.domain.models.ElectionData;
 import edu.sunysb.cs.patractic.datacracy.domain.models.ElectionId;
+import edu.sunysb.cs.patractic.datacracy.domain.models.Incumbent;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
@@ -39,6 +40,7 @@ public class HibernateUtil {
                 configuration.addAnnotatedClass(ElectionId.class);
                 configuration.addAnnotatedClass(ElectionData.class);
                 configuration.addAnnotatedClass(Precinct.class);
+                configuration.addAnnotatedClass(Incumbent.class);
                 configuration.addAnnotatedClass(State.class);
                 ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
                         .applySettings(configuration.getProperties()).build();

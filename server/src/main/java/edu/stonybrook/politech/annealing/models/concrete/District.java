@@ -50,6 +50,9 @@ public class District
         this.state = state;
     }
 
+    public District() {
+    }
+
     public State getState() {
         return state;
     }

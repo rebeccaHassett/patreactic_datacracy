@@ -4,6 +4,7 @@ package edu.stonybrook.politech.annealing.models.concrete;
 import edu.stonybrook.politech.annealing.measures.StateInterface;
 import edu.sunysb.cs.patractic.datacracy.domain.enums.Constraints;
 import edu.sunysb.cs.patractic.datacracy.domain.enums.DemographicGroup;
+import edu.sunysb.cs.patractic.datacracy.domain.models.Incumbent;
 import edu.sunysb.cs.patractic.datacracy.domain.models.Properties;
 import edu.sunysb.cs.patractic.datacracy.domain.models.VotingBlockDTO;
 
@@ -16,7 +17,7 @@ import java.util.stream.Collectors;
 
 
 @NamedQueries({
-        @NamedQuery(name = "Student_findByName",
+        @NamedQuery(name = "State_findByName",
                 query = "from State where name = :NAME")
 })
 
@@ -28,21 +29,35 @@ public class State
     private final Map<DemographicGroup, Long> populationMap;
     private int population;
     private String name;//name is saved for later storage into the database
-    private HashMap<String, District> districts;
-    private HashMap<String, Precinct> precincts;
+    private Map<String, District> districts;
+    private Map<String, Precinct> precincts;
     private String stateBoundaries;
     private String laws;
-    private Map<String, String> incumbents;
+    private Map<String, Incumbent> incumbents;
 
-    public State(String name, Set<Precinct> inPrecincts, String boundaries, String laws, Map<String, String> incumbents) {
+    public State(String name, Set<Precinct> inPrecincts, String boundaries, String laws, Map<String, Incumbent> incumbents) {
         this.name = name;
         this.stateBoundaries = boundaries;
         this.laws = laws;
         this.populationMap = new HashMap<>();
         this.districts = new HashMap<>();
         this.precincts = new HashMap<>();
-        if (inPrecincts != null) {
-            for (Precinct p : inPrecincts) {
+        this.incumbents = incumbents;
+        inPrecincts.forEach(p -> precincts.put(p.getPrecinctId(), p));
+        initialize();
+    }
+
+    public State() {
+        this.populationMap = new HashMap<>();
+        this.districts = new HashMap<>();
+        this.precincts = new HashMap<>();
+        this.incumbents = new HashMap<>();
+    }
+
+    @PostLoad
+    public void initialize() {
+        if (precincts != null) {
+            for (Precinct p : precincts.values()) {
                 String districtID = p.getOriginalDistrictID();
                 District d = this.districts.get(districtID);
                 if (d == null) {
@@ -50,13 +65,11 @@ public class State
                     this.districts.put(districtID, d);
                 }
                 d.addPrecinct(p);
-                this.precincts.put(p.getPrecinctId(), p);
             }
-        }
-        this.incumbents = incumbents;
-        this.population = this.districts.values().stream().mapToInt(District::getPopulation).sum();
-        for (DemographicGroup dg : DemographicGroup.values()) {
-            this.populationMap.put(dg, precincts.values().stream().map(p -> p.getPopulation(dg)).reduce(0L, Long::sum));
+            this.population = this.districts.values().stream().mapToInt(District::getPopulation).sum();
+            for (DemographicGroup dg : DemographicGroup.values()) {
+                this.populationMap.put(dg, precincts.values().stream().map(p -> p.getPopulation(dg)).reduce(0L, Long::sum));
+            }
         }
     }
 
@@ -70,7 +83,7 @@ public class State
         this.name = name;
     }
 
-    @Column(name = "boundaries")
+    @Column(name = "boundaries", columnDefinition = "longtext")
     public String getStateBoundaries() {
         return stateBoundaries;
     }
@@ -90,7 +103,7 @@ public class State
         return precincts;
     }
 
-    public void setPrecincts(HashMap<String, Precinct> precincts) {
+    public void setPrecincts(Map<String, Precinct> precincts) {
         this.precincts = precincts;
     }
 
@@ -152,7 +165,7 @@ public class State
         return clone;
     }
 
-    @Column(name = "laws")
+    @Column(name = "laws", columnDefinition = "text")
     public String getLaws() {
         return laws;
     }
@@ -161,14 +174,13 @@ public class State
         this.laws = laws;
     }
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "Incumbents", joinColumns = {@JoinColumn(name = "stateName")})
+    @OneToMany(mappedBy = "stateName", targetEntity = Incumbent.class)
     @MapKeyColumn(name = "districtId")
-    public Map<String, String> getIncumbents() {
+    public Map<String, Incumbent> getIncumbents() {
         return incumbents;
     }
 
-    public void setIncumbents(Map<String, String> incumbents) {
+    public void setIncumbents(Map<String, Incumbent> incumbents) {
         this.incumbents = incumbents;
     }
 }

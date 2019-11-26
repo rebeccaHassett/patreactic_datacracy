@@ -1,14 +1,15 @@
 package edu.sunysb.cs.patractic.datacracy.controller;
 
-import edu.sunysb.cs.patractic.datacracy.StateDao;
 import edu.sunysb.cs.patractic.datacracy.domain.Algorithm;
+import edu.sunysb.cs.patractic.datacracy.domain.models.Incumbent;
 import edu.sunysb.cs.patractic.datacracy.domain.models.RunPhase0Dto;
 import edu.sunysb.cs.patractic.datacracy.domain.models.VotingBlockDTO;
+import edu.sunysb.cs.patractic.datacracy.domain.persistence.StateDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
+import java.util.Collection;
 import java.util.Set;
 
 @Controller
@@ -33,7 +34,7 @@ public class Phase0Controller {
     }
 
     @GetMapping(path = "/incumbent/{state}")
-    public Map<String, String> getIncumbents(@PathVariable("state") String stateName) {
-        return stateDao.getBaseState(stateName).getIncumbents();
+    public Collection<Incumbent> getIncumbents(@PathVariable("state") String stateName) {
+        return stateDao.getBaseState(stateName).getIncumbents().values();
     }
 }
