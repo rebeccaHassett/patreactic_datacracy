@@ -2,8 +2,9 @@ import L from "leaflet";
 
 class Precinct {
 
-    addPrecinctsToDistricts(url, map, district_bounds) {
+    addPrecinctsToDistricts(url, map) {
         var layer;
+        var ZOOM = 7;
 
         var district_style = {
             "color": "black"
@@ -24,7 +25,7 @@ class Precinct {
             layer = L.geoJSON(data, {style: district_style}).addTo(map);
 
             map.on("zoomend", function (event) {
-                if (this.getZoom() < 7) {
+                if (this.getZoom() < ZOOM) {
                     layer.remove();
                 }
             });

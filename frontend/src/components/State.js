@@ -7,6 +7,8 @@ import Cluster from "./Cluster";
 import MenuSidenav from "./MenuSidenav";
 import ResultsSidenav from './ResultsSidenav';
 
+var ZOOM = 7;
+
 export default class State extends Component {
     constructor() {
         super();
@@ -71,7 +73,7 @@ export default class State extends Component {
 
         var that = this;
         this.map.on("zoomend", function (event) {
-            if (this.getZoom() >= 7) {
+            if (this.getZoom() >= ZOOM) {
                 var precinctsUrl;
                 const precincts = new Precinct();
                 if (chosenState === "RhodeIsland") {
@@ -103,7 +105,7 @@ export default class State extends Component {
             <State_Style>
                 <Row>
                     <Col>
-                        <MenuSidenav side="left" id="menu" state={this.state.chosenState}></MenuSidenav>
+                        <MenuSidenav side="left" id="menu" state={this.state.chosenState}/>
                     </Col>
                     <Col>
                         <Container>
@@ -115,7 +117,7 @@ export default class State extends Component {
                     <Col>
                         <ResultsSidenav precinctData={this.state.precinctData} districtData={this.state.districtData}
                                         stateData={this.state.stateData}
-                                        chosenState={this.state.chosenState}></ResultsSidenav>
+                                        chosenState={this.state.chosenState}/>
                     </Col>
                 </Row>
             </State_Style>

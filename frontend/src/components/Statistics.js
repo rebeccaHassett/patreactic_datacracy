@@ -179,9 +179,9 @@ export default class Statistics extends Component {
                 <p>{democraticCandidate}, DEM , {democraticVotes}</p>
                 <p>{republicanCandidate}, REP , {republicanVotes}</p>
                 <h5>Voters Per Party</h5>
-                <PieChart dataPie={dataPieParty}></PieChart>
+                <PieChart dataPie={dataPieParty}/>
                 <h5>Voters Per Candidate</h5>
-                <BarChart databar={databar}></BarChart>
+                <BarChart databar={databar}/>
                 <h5>Demographic Data</h5>
                 <p>Total Population: {Math.round(totalPopulation)}</p>
                 <p>Hispanic Population: {Math.round(hispanicPopulation)}</p>
@@ -190,7 +190,7 @@ export default class Statistics extends Component {
                 <p>Native American Population: {Math.round(nativeAmericanPopulation)}</p>
                 <p>Asian Population: {Math.round(asianPopulation)}</p>
                 <p>Pacific Islander Population: {Math.round(pacificIslanderPopulation)}</p>
-                <PieChart dataPie={dataPie}></PieChart>
+                <PieChart dataPie={dataPie}/>
             </Statistics_Style>
 
         );
