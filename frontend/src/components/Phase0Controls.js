@@ -1,7 +1,9 @@
 import React, {Component} from 'react';
 import {Button, Form, ButtonGroup} from "react-bootstrap";
 import SliderControlUpperLowerValues from "./controls/SliderControlUpperLowerValues";
+import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import styled from "styled-components";
+import ModalControl from './controls/ModalControl';
 
 export default class Phase0Controls extends Component {
 
@@ -11,6 +13,7 @@ export default class Phase0Controls extends Component {
         this.handleBlocPopulationUpdate = this.handleBlocPopulationUpdate.bind(this);
         this.handleBlocVotingUpdate = this.handleBlocVotingUpdate.bind(this);
     }
+
 
     state = {
         phase1Tab: false,
@@ -116,6 +119,7 @@ export default class Phase0Controls extends Component {
                         <Button onClick={this._onElectionYearChange.bind(this, '2018')}
                                 active={this.state.electionYear === '2018'} className="electionButton">2018</Button>
                     </ButtonGroup>
+                    <ModalControl></ModalControl>
                 </Form>
             </Phase0Styles>
         );
@@ -129,5 +133,12 @@ const Phase0Styles = styled.div`
     .electionButton {
         width: 10vw;
         background-color: #585858;
+    }
+    .vbdtoTable {
+        background-color: dodgerblue;
+        margin-top: 4vw;
+        font-size: 0.8vw;
+        padding-right: 0vw;
+        margin-right: 0vw;
     }
 `;

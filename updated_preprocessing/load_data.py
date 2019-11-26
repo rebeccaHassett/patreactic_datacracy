@@ -1,6 +1,7 @@
 import mysql.connector
 from mysql.connector import Error
 from mysql.connector import errorcode
+import json
 
 def get_connection():
     try:
@@ -47,6 +48,44 @@ def load_state_data(connection):
     connection.commit()
     return cursor
 
+
+def read_geojson_file(file_name):
+    with open('mapped_data/' + file_name) as f:
+        features = json.load(f)["features"]
+        return features
+
+def load_precinct_values(connection, cursor, features, query, stateName):
+    for feature in features:
+        precinctId = feature["properties"]["PRENAME"]
+        geojson = json.dumps(feature)
+        districtId = feature["properties"]["CD"]
+        data_tuple = (precinctId, geojson, districtId, stateName)
+
+        cursor.execute(query, data_tuple)
+
+
+
+
+def load_precinct_data(connection):
+    cursor = connection.cursor()
+
+    precinct_insert_query = """INSERT INTO Precinct (precinctId, geojson, districtId, stateName) 
+                           VALUES 
+                           (%s, %s, %s, %s) """
+
+    rhode_island_features = read_geojson_file('RI_Precincts_MAPPED.geojson')
+    #michigan_features = read_geojson_file('MI_Precincts_MAPPED.geojson')
+
+    load_precinct_values(connection, cursor, rhode_island_features, precinct_insert_query, "RhodeIsland")
+    #load_precinct_values(connection, cursor, michigan_features, precinct_insert_query, "Michigan")
+
+    connection.commit()
+
+    return cursor
+
+
+
+
 def close_connection(connection, cursor):
     cursor.close()
     connection.close()
@@ -55,6 +94,7 @@ def close_connection(connection, cursor):
 def load_data():
     connection = get_connection()
     cursor = load_state_data(connection)
+    cursor = load_precinct_data(connection)
     close_connection(connection, cursor)
 
 

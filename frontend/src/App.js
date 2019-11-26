@@ -16,6 +16,8 @@ function App() {
             <link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css"/>
             <script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"></script>
             <link rel="stylesheet" href="https://unpkg.com/react-rangeslider/umd/rangeslider.min.css"/>
+            <link rel="stylesheet" href="https://npmcdn.com/react-bootstrap-table/dist/react-bootstrap-table-all.min.css">
+            </link>
             <div className="App">
                 <Switch>
                     <Route exact path="/" component={AppIntro}/>

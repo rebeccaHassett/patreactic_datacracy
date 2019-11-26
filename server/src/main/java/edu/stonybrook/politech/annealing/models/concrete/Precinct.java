@@ -77,7 +77,7 @@ public class Precinct
         this.stateName = stateName;
     }
 
-    @Column(name = "geojson")
+    @Column(name = "geojson", columnDefinition = "longtext")
     public String getGeometryJSON() {
         return geometryJSON;
     }
