@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {ButtonGroup, Button, Row, Col} from "react-bootstrap";
 import styled from "styled-components";
 import BarChart from "./BarChart";
-import PieChart from "./PieChart";
+import PieChart from "./graphs/PieChart";
 
 
 export default class Statistics extends Component {

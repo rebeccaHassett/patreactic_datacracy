@@ -1,9 +1,41 @@
 import React, {Component} from 'react';
 import {Button, Form, Row, Tab} from "react-bootstrap";
-import Slider_Controls from "./SliderControl";
+import SliderControlUpperLowerValues from "./controls/SliderControlUpperLowerValues";
 import styled from "styled-components";
 
 export default class Phase2Controls extends Component {
+    constructor() {
+        super();
+        this.handleVotePercentage =this.handleVotePercentage.bind(this);
+        this.handleContiguity =this.handleContiguity.bind(this);
+        this.handleCompactness = this.handleCompactness.bind(this);
+        this.handleEqualPopulation = this.handleEqualPopulation.bind(this);
+        this.handlePartisanFairness = this.handlePartisanFairness.bind(this);
+    }
+    state = {
+        votePercentageValues: [],
+        compactnessValues: [],
+        contiguityValues: [],
+        equalPopulationValues: [],
+        partisanFairnessValues: []
+    }
+
+    handleVotePercentage(value) {
+        this.setState({ votePercentageValues : value })
+    }
+    handleContiguity(value) {
+        this.setState({ contiguityValues : value })
+    }
+    handleCompactness(value) {
+        this.setState({ compactnessValues : value })
+    }
+    handleEqualPopulation(value) {
+        this.setState({ equalPopulationValues : value })
+    }
+    handlePartisanFairness(value) {
+        this.setState({ partisanFairnessValues : value })
+    }
+
     render() {
         return (
             <Phase2Styles>
@@ -18,39 +50,25 @@ export default class Phase2Controls extends Component {
                     <Form.Check aria-label="option 1" label="Asian"/>
                     <Form.Check aria-label="option 1" label="Hispanic"/>
                 </Form.Group>
-                <Form.Group id="maxVotePercentage">
-                    <Form.Label className="label">Maximum Vote Percentage:</Form.Label>
-                    <Slider_Controls></Slider_Controls>
+                <Form.Group id="votePercentage">
+                    <Form.Label className="label">Vote Percentage:</Form.Label>
+                    <SliderControlUpperLowerValues exportState={this.handleVotePercentage}></SliderControlUpperLowerValues>
                 </Form.Group>
-                <Form.Group id="minVotePercentage">
-                    <Form.Label className="label">Minimum Vote Percentage:</Form.Label>
-                    <Slider_Controls></Slider_Controls>
-                </Form.Group>
-                <Form.Group id="Compactness">
+                <Form.Group id="compactness">
                     <Form.Label className="label">Compactness Measure:</Form.Label>
-                    <Slider_Controls></Slider_Controls>
+                    <SliderControlUpperLowerValues exportState={this.handleCompactness}></SliderControlUpperLowerValues>
                 </Form.Group>
-                <Form.Group id="Contiguity">
+                <Form.Group id="contiguity">
                     <Form.Label className="label">Contiguity Measure:</Form.Label>
-                    <Slider_Controls></Slider_Controls>
+                    <SliderControlUpperLowerValues exportState={this.handleContiguity}></SliderControlUpperLowerValues>
                 </Form.Group>
                 <Form.Group id="equalPopulation">
                     <Form.Label className="label">Equal Population Measure:</Form.Label>
-                    <Slider_Controls></Slider_Controls>
+                    <SliderControlUpperLowerValues exportState={this.handleEqualPopulation}></SliderControlUpperLowerValues>
                 </Form.Group>
                 <Form.Group id="partisanFairness">
                     <Form.Label className="label">Partisan Fairness Measure:</Form.Label>
-                    <Slider_Controls></Slider_Controls>
-                </Form.Group>
-                <Form.Group id="blockVoting">
-                    <Form.Label>Block Voting Measure:</Form.Label>
-                    <Form.Label className="label">Minority Group Percentage:</Form.Label>
-                    <Slider_Controls></Slider_Controls>
-                    <Form.Label className="label">Voting Percentage:</Form.Label>
-                    <Slider_Controls></Slider_Controls>
-                </Form.Group>
-                <Form.Group id="votingRightsAct">
-                    <Form.Label>Voting Rights Act Information:</Form.Label>
+                    <SliderControlUpperLowerValues exportState={this.handlePartisanFairness}></SliderControlUpperLowerValues>
                 </Form.Group>
             </Form>
             </Phase2Styles>

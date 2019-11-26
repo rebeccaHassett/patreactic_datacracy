@@ -6,7 +6,7 @@ import Phase0Controls from "./Phase0Controls";
 import Phase1Controls from "./Phase1Controls";
 import Phase2Controls from "./Phase2Controls";
 import styled from "styled-components";
-import Slider_Controls from "./SliderControl";
+import SliderControlUpperLowerValues from "./controls/SliderControlUpperLowerValues";
 import '@trendmicro/react-sidenav/dist/react-sidenav.css';
 
 

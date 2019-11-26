@@ -2,12 +2,15 @@ package edu.sunysb.cs.patractic.datacracy.domain.models;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import edu.stonybrook.politech.annealing.algorithm.Measure;
 import edu.sunysb.cs.patractic.datacracy.domain.enums.ElectionType;
 import edu.sunysb.cs.patractic.datacracy.domain.enums.Year;
 
+import java.util.Map;
+
 public class Properties {
     public final Threshold[] thresholds;
-    public final double[] weights;
+    public final Map<Measure, Double> weights;
     public final boolean incremental;
     public final boolean realtime;
     public final int numDistricts;
@@ -18,7 +21,7 @@ public class Properties {
 
     @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
     public Properties(@JsonProperty("thresholds") Threshold[] thresholds,
-                      @JsonProperty("weights") double[] weights,
+                      @JsonProperty("weights") Map<Measure, Double> weights,
                       @JsonProperty("incremental") boolean incremental,
                       @JsonProperty("realtime") boolean realtime,
                       @JsonProperty("numDistricts") int numDistricts,

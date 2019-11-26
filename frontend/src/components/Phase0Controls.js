@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
-import {Button, Form, Row, Tab} from "react-bootstrap";
-import Slider_Controls from "./SliderControl";
+import { Button, Form } from "react-bootstrap";
+import SliderControlUpperLowerValues from "./controls/SliderControlUpperLowerValues";
 import styled from "styled-components";
 
 export default class Phase1Controls extends Component {
+
     constructor() {
         super();
         this.runPhase0 = this.runPhase0.bind(this);
@@ -21,7 +22,7 @@ export default class Phase1Controls extends Component {
     async runPhase0() {
         var phase0Dto = {config: {thresholds: [{name: "blocPopulationThreshold", lower: this.state.blocPopulationValues[0],
                     upper: this.state.blocPopulationValues[1]}, {name: "blocVotingThreshold", lower: this.state.blocVotingValues[0],
-                    upper: this.state.blocVotingValues[1]}], weights: [], incremental: false, realtime: false,
+                    upper: this.state.blocVotingValues[1]}], weights: {}, incremental: false, realtime: false, numDistricts: 0,
                 numMajMinDistricts: 0, selectedMinorities: [], year: 2016, type: "congressional"}, state: this.props.state, demographic: ""};
 
         const response = await fetch("http://127.0.0.1:8080/runPhase0", {
@@ -47,11 +48,11 @@ export default class Phase1Controls extends Component {
                 <Form>
                     <Form.Group>
                         <Form.Label className="label">Block Population Percentage Threshold:</Form.Label>
-                        <Slider_Controls exportState={this.handleBlocPopulationUpdate}/>
+                        <SliderControlUpperLowerValues exportState={this.handleBlocPopulationUpdate}/>
                     </Form.Group>
                     <Form.Group>
                         <Form.Label className="label">Block Voting Percentage Threshold:</Form.Label>
-                        <Slider_Controls exportState={this.handleBlocVotingUpdate}></Slider_Controls>
+                        <SliderControlUpperLowerValues exportState={this.handleBlocVotingUpdate}></SliderControlUpperLowerValues>
                     </Form.Group>
                     <Form.Group id="election-types">
                         <Form.Label>Election Type</Form.Label>

@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 })
 
 @Entity
-@Table(name = "States")
+@Table(name = "State")
 public class State
         implements StateInterface<Precinct, District> {
 

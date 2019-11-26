@@ -5,9 +5,9 @@ const STEP = 0.1;
 const MIN = 0;
 const MAX = 100;
 
-export default class Slider_Controls extends React.Component {
+export default class SliderControlSingleValue extends React.Component {
     state = {
-        values: [20, 40]
+        values: [50]
     };
     render() {
         return (
@@ -24,9 +24,10 @@ export default class Slider_Controls extends React.Component {
                     min={MIN}
                     max={MAX}
                     onChange={values => {
-                        this.setState({ values });
+                        this.setState({values})
                         this.props.exportState(values)
-                    }}
+                    }
+                    }
                     renderTrack={({ props, children }) => (
                         <div
                             onMouseDown={props.onMouseDown}
@@ -46,7 +47,7 @@ export default class Slider_Controls extends React.Component {
                                     borderRadius: '4px',
                                     background: getTrackBackground({
                                         values: this.state.values,
-                                        colors: ['#ccc', '#548BF4', '#ccc'],
+                                        colors: ['#548BF4', '#ccc'],
                                         min: MIN,
                                         max: MAX
                                     }),
@@ -57,12 +58,12 @@ export default class Slider_Controls extends React.Component {
                             </div>
                         </div>
                     )}
-                    renderThumb={({ index, props, isDragged }) => (
+                    renderThumb={({ props, isDragged }) => (
                         <div
                             {...props}
                             style={{
                                 ...props.style,
-                                height: '20px',
+                                height: '42px',
                                 width: '42px',
                                 borderRadius: '4px',
                                 backgroundColor: '#FFF',
@@ -74,21 +75,6 @@ export default class Slider_Controls extends React.Component {
                         >
                             <div
                                 style={{
-                                    position: 'absolute',
-                                    top: '-28px',
-                                    color: '#fff',
-                                    fontWeight: 'bold',
-                                    fontSize: '14px',
-                                    fontFamily: 'Arial,Helvetica Neue,Helvetica,sans-serif',
-                                    padding: '4px',
-                                    borderRadius: '4px',
-                                    backgroundColor: '#548BF4',
-                                }}
-                            >
-                                {this.state.values[index].toFixed(1)}
-                            </div>
-                            <div
-                                style={{
                                     height: '16px',
                                     width: '5px',
                                     backgroundColor: isDragged ? '#548BF4' : '#CCC'
@@ -97,7 +83,11 @@ export default class Slider_Controls extends React.Component {
                         </div>
                     )}
                 />
+                <output style={{ marginTop: '-5vw' }} id="output">
+                    {this.state.values[0].toFixed(0)}
+                </output>
             </div>
         );
     }
 }
+

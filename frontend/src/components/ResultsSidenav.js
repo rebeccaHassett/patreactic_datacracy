@@ -6,24 +6,34 @@ import styled from "styled-components";
 import L from "leaflet";
 
 class ResultsSidenav extends React.Component {
+    constructor() {
+        super();
+    }
 
-   /*votingRightsAct = fetch('http://127.0.0.1:8080/laws/' + this.props.state).then(function (response) {
-        if (response.status >= 400) {
-            throw new Error("Voting Rights Act data not loaded from server successfully");
-        }
-        return response.json();
-    }).then(function (data) {
-        return data;
-    });*/
+    state = {
+        votingRightsAct: "",
+        incumbents: ""
+    }
 
-    /*incumbents = fetch('http://127.0.0.1:8080/incumbent/' + this.props.state).then(function (response) {
-        if (response.status >= 400) {
-            //throw new Error("Incumbent data not loaded from server successfully");
-        }
-        return response.json();
-    }).then(function (data) {
-        return data;
-    });*/
+    componentDidMount() {
+        this.state.votingRightsAct = fetch('http://127.0.0.1:8080/laws/' + this.props.state).then(function (response) {
+            if (response.status >= 400) {
+                //throw new Error("Voting Rights Act data not loaded from server successfully");
+            }
+            return response.json();
+        }).then(function (data) {
+            return data;
+        });
+
+        this.state.incumbents = fetch('http://127.0.0.1:8080/incumbent/' + this.props.state).then(function (response) {
+            if (response.status >= 400) {
+                //throw new Error("Incumbent data not loaded from server successfully");
+            }
+            return response.json();
+        }).then(function (data) {
+            return data;
+        });
+    }
 
     render () {
         return (
@@ -32,10 +42,10 @@ class ResultsSidenav extends React.Component {
                 <Tabs className="tabs" defaultActiveKey="District" id="tabs">
                     <Tab eventKey="State" title="State">
                         <h3>_____________________________</h3>
-                        <h4>Voting Rights Act Information:</h4>
-                        /*<p>{this.votingRightsAct}</p>*/
-                        <h4>Voting Incumbents:</h4>
-                        /*<p>{this.incumbents}</p>*/
+                        <h4>Voting Rights Act</h4>
+                        <p>{this.votingRightsAct}</p>
+                        <h4>Voting Incumbents</h4>
+                        <p>{this.incumbents}</p>
                         <h4>Election and Demographics</h4>
                         <Statistics data={this.props.stateData}></Statistics>
                     </Tab>

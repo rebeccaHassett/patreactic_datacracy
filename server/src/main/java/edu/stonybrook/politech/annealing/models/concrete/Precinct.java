@@ -20,7 +20,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Entity
-@Table(name = "Precincts")
+@Table(name = "Precinct")
 public class Precinct
         implements PrecinctInterface, IJurisdiction {
     private String precinctId;
