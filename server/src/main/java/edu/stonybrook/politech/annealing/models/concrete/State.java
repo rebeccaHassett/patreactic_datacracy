@@ -34,7 +34,7 @@ public class State
     private String laws;
     private Map<String, String> incumbents;
 
-    public State(String name, Set<Precinct> inPrecincts, String boundaries, String laws) {
+    public State(String name, Set<Precinct> inPrecincts, String boundaries, String laws, Map<String, String> incumbents) {
         this.name = name;
         this.stateBoundaries = boundaries;
         this.laws = laws;
@@ -44,16 +44,17 @@ public class State
         if(inPrecincts != null) {
             for (Precinct p : inPrecincts) {
                 String districtID = p.getOriginalDistrictID();
-                District d = districts.get(districtID);
+                District d = this.districts.get(districtID);
                 if (d == null) {
                     d = new District(districtID, this);
-                    districts.put(districtID, d);
+                    this.districts.put(districtID, d);
                 }
                 d.addPrecinct(p);
                 this.precincts.put(p.getPrecinctId(), p);
             }
         }
-        this.population = districts.values().stream().mapToInt(District::getPopulation).sum();
+        this.incumbents = incumbents;
+        this.population = this.districts.values().stream().mapToInt(District::getPopulation).sum();
         for (DemographicGroup dg: DemographicGroup.values()) {
             this.populationMap.put(dg, precincts.values().stream().map(p -> p.getPopulation(dg)).reduce(0L, Long::sum));
         }
@@ -76,35 +77,31 @@ public class State
         this.stateBoundaries = stateBoundaries;
     }
 
-    @Column(name="precincts")
-    @ElementCollection(targetClass=Precinct.class)
-    public Set<Precinct> getPrecincts() {
+    @Transient
+    public Set<Precinct> getPrecinctSet() {
         return new HashSet<>(precincts.values());
     }
 
+    @OneToMany(mappedBy = "stateName", targetEntity = Precinct.class)
+    @MapKeyColumn(name = "precinctId")
+    protected Map<String, Precinct> getPrecincts() {
+        return precincts;
+    }
     public void setPrecincts(HashMap<String, Precinct> precincts) {
         this.precincts = precincts;
     }
 
-    @OneToMany(mappedBy = "state", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @ElementCollection(targetClass=District.class)
+    @Transient
     public Set<District> getDistricts() {
         return new HashSet<>(districts.values());
     }
-    public void setDistricts(HashMap<String, District> districts) {
-        this.districts = districts;
-    }
 
-    @OneToMany(mappedBy = "stateName", cascade = CascadeType.ALL)
-    @JoinColumn(foreignKey = @ForeignKey(name = "districtId"))
     public District getDistrict(String distID) {
         return districts.get(distID);
     }
 
-    @OneToMany(mappedBy = "stateName")
-    @MapKeyColumn(name = "precinctId")
-    public Precinct getPrecinct(String precID) {
-        return precincts.get(precID);
+    public Precinct getPrecinct(String precinctId) {
+        return precincts.get(precinctId);
     }
 
     public Set<VotingBlockDTO> getEligibleDemographicVotingBlocs(DemographicGroup demographic, Properties config) {
@@ -121,11 +118,9 @@ public class State
     }
 
     @Override
+    @Transient
     public int getPopulation() {
         return population;
-    }
-    public void setPopulation(int population) {
-        this.population = population;
     }
 
     public long getPopulation(DemographicGroup demographicGroup) {
@@ -149,8 +144,8 @@ public class State
     }
 
     public State clone() {
-        State clone = new State(name, precincts.values().stream().map(Precinct::clone).collect(Collectors.toSet()), stateBoundaries, laws);
-        clone.getPrecincts().forEach(p -> p.setState(clone));
+        State clone = new State(name, precincts.values().stream().map(Precinct::clone).collect(Collectors.toSet()), stateBoundaries, laws, incumbents);
+        clone.getPrecinctSet().forEach(p -> p.setState(clone));
         return clone;
     }
     @Column(name = "laws")
@@ -161,12 +156,10 @@ public class State
         this.laws = laws;
     }
 
-    @Column(name="incumbents")
-    @ElementCollection(targetClass=String.class)
-    @MapKeyColumn(name="Incumbents")
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "Incumbents", joinColumns = {@JoinColumn(name = "stateName")})
+    @MapKeyColumn(name="districtId")
     public Map<String, String> getIncumbents() {
-        Map<String, String> incumbents = new HashMap<>();
-        districts.values().forEach(d -> incumbents.put(d.getDistrictId(), d.getOrigIncumbent()));
         return incumbents;
     }
     public void setIncumbents(Map<String, String> incumbents) {

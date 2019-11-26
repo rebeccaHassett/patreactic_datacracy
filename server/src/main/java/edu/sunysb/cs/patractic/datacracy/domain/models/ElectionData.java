@@ -1,31 +1,45 @@
 package edu.sunysb.cs.patractic.datacracy.domain.models;
 
+import edu.stonybrook.politech.annealing.models.concrete.Precinct;
+import edu.sunysb.cs.patractic.datacracy.domain.enums.DemographicGroup;
 import edu.sunysb.cs.patractic.datacracy.domain.enums.ElectionType;
 import edu.sunysb.cs.patractic.datacracy.domain.enums.PoliticalParty;
 import edu.sunysb.cs.patractic.datacracy.domain.enums.Year;
 import edu.sunysb.cs.patractic.datacracy.domain.interfaces.IJurisdiction;
 
 import javax.persistence.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 /**
  * Contains the election data for a jurisdiction
  */
 @Entity
+@Table(name = "ElectionData")
 public class ElectionData {
 
-    @ManyToOne
-    @JoinColumn(table = "votesByParty", name = "dataId")
-    private final long[] votesByParty;
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "VotesByParty", joinColumns = {@JoinColumn(name = "electionDataId")})
+    @MapKeyClass(PoliticalParty.class)
+    private Map<PoliticalParty, Long> votesByParty;
+
     @Id
     private int id;
+
     @ManyToOne
+    @JoinColumn(name = "precinctId")
+    private Precinct precinct;
+
+
+    @Column(name = "precinctId", insertable = false, updatable = false)
     private String precinctId;
-    @Column
+
+    @Embedded
     @MapKey
     private ElectionId electionId;
 
-    public ElectionData(Year year, ElectionType type, long[] votesByParty) {
+    public ElectionData(Year year, ElectionType type, Map<PoliticalParty, Long> votesByParty) {
         this.electionId = new ElectionId(year, type);
         this.votesByParty = votesByParty;
     }
@@ -34,11 +48,11 @@ public class ElectionData {
         if (jurisdictions == null || jurisdictions.size() == 0) {
             return null;
         }
-        long[] votes = new long[PoliticalParty.values().length];
-        jurisdictions.stream().forEach(j -> {
+        Map<PoliticalParty, Long> votes = new HashMap<>();
+        jurisdictions.forEach(j -> {
             ElectionData data = j.getElectionData(electionId);
             for (PoliticalParty party : PoliticalParty.values()) {
-                votes[party.ordinal()] = data.getVotes(party);
+                votes.put(party, data.getVotes(party));
             }
         });
         return new ElectionData(electionId.year, electionId.electionType, votes);
@@ -48,6 +62,14 @@ public class ElectionData {
         return electionId.year;
     }
 
+    public String getPrecinctId() {
+        return precinctId;
+    }
+
+    public void setPrecinctId(String precinctId) {
+        this.precinctId = precinctId;
+    }
+
     public ElectionType getType() {
         return electionId.electionType;
     }
@@ -55,21 +77,25 @@ public class ElectionData {
     public PoliticalParty getWinningParty() {
         PoliticalParty highest = PoliticalParty.DEMOCRAT;
         for (PoliticalParty party : PoliticalParty.values()) {
-            if (votesByParty[party.ordinal()] > votesByParty[highest.ordinal()]) {
+            if (votesByParty.get(party) > votesByParty.get(highest)) {
                 highest = party;
             }
         }
         return highest;
     }
 
+    public Precinct getPrecinct() {
+        return precinct;
+    }
+
+    public void setPrecinct(Precinct precinct) {
+        this.precinct = precinct;
+    }
+
     public long getVotes(PoliticalParty party) {
         if (party == null) {
-            long sum = 0;
-            for (PoliticalParty p : PoliticalParty.values()) {
-                sum += votesByParty[p.ordinal()];
-            }
-            return sum;
+            return votesByParty.values().stream().mapToLong(Long::longValue).sum();
         }
-        return votesByParty[party.ordinal()];
+        return votesByParty.get(party);
     }
 }

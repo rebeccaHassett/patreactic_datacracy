@@ -6,7 +6,7 @@ import java.util.Set;
 public interface StateInterface<
         Precinct extends PrecinctInterface,
         District extends DistrictInterface<Precinct>> {
-    Set<Precinct> getPrecincts();
+    Set<Precinct> getPrecinctSet();
 
     Set<District> getDistricts();
 

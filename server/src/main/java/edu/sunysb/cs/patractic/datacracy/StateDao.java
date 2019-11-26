@@ -34,19 +34,9 @@ public class StateDao {
 
 
     private State loadState(String stateName) {
-        return null;
-    }
-
-    public List<State> getStateByName(String name) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             return session.createNamedQuery("State_findByName",
-                    State.class).setParameter("NAME", name).getResultList();
-        }
-    }
-
-    public List getAddressOfStudent(long id) {
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            return session.createNamedQuery("Student_getAddressById").setParameter("ID", id).getResultList();
+                    State.class).setParameter("NAME", stateName).getResultList().get(0);
         }
     }
 

@@ -26,16 +26,15 @@ public class Precinct
     private String precinctId;
 
     private State state;
+
     private String stateName;
     private Geometry geometry;
     private String geometryJSON;
     private String originalDistrictID;
     private District district;
-    private final Map<ElectionId, ElectionData> electionDataMap;
-    private final Map<DemographicGroup, Long> populationMap;
+    private Map<ElectionId, ElectionData> electionDataMap;
+    private Map<DemographicGroup, Long> populationMap;
     private Set<String> neighborIDs;
-    private int population;
-    private double populationDensity;
 
     public Precinct(
             String precinctId,
@@ -65,12 +64,22 @@ public class Precinct
 
     @Override
     @Id
+    @MapKey
     public String getPrecinctId() {
         return precinctId;
     }
 
     public void setPrecinctId(String precinctId) {
         this.precinctId = precinctId;
+    }
+
+    @Column(name = "stateName", insertable = false, updatable = false)
+    public String getStateName() {
+        return stateName;
+    }
+
+    public void setStateName(String stateName) {
+        this.stateName = stateName;
     }
 
     @Column(name = "geojson")
@@ -95,7 +104,7 @@ public class Precinct
     }
 
     @Override
-    @Column(name = "originalDistrictId")
+    @Column(name = "districtId")
     public String getOriginalDistrictID() {
         return originalDistrictID;
     }
@@ -104,9 +113,7 @@ public class Precinct
         this.originalDistrictID = originalDistrictID;
     }
 
-
-    @ManyToOne
-    @JoinColumn(name = "districtId")
+    @Transient
     public District getDistrict() {
         return district;
     }
@@ -116,8 +123,9 @@ public class Precinct
     }
 
     @Override
-    @ElementCollection(targetClass=String.class)
-    //@JoinColumn(table = "PrecinctNeighbors", name = "precinctId")
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "PrecinctNeighbors", joinColumns = {@JoinColumn(name = "precinctId")})
     public Set<String> getNeighborIDs() {
         return neighborIDs;
     }
@@ -127,12 +135,9 @@ public class Precinct
     }
 
     @Override
+    @Transient
     public int getPopulation() {
         return (int) getPopulation(null);
-    }
-
-    public void setPopulation(int population) {
-        this.population = population;
     }
 
     @Override
@@ -146,15 +151,32 @@ public class Precinct
     }
 
     @Override
-    @OneToMany(mappedBy = "precinctId")
     public ElectionData getElectionData(ElectionId electionId) {
         return electionDataMap.get(electionId);
     }
 
+    @OneToMany(mappedBy = "precinctId", targetEntity = ElectionData.class)
+    @MapKeyClass(value = ElectionId.class)
+    protected Map<ElectionId, ElectionData> getElectionDataMap() {
+        return electionDataMap;
+    }
+
+    protected void setElectionDataMap(Map<ElectionId, ElectionData> electionDataMap) {
+        this.electionDataMap = electionDataMap;
+    }
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "PrecinctPopulations", joinColumns = {@JoinColumn(name = "precinctId")})
+    @MapKeyClass(DemographicGroup.class)
+    protected Map<DemographicGroup, Long> getPopulationMap() {
+        return populationMap;
+    }
+
+    protected void setPopulationMap(Map<DemographicGroup, Long> map) {
+        this.populationMap = map;
+    }
+
     @Override
-    @OneToMany
-    @JoinColumn(name = "precinctId", table = "population")
-    @MapKeyColumn(name = "demographic")
     public long getPopulation(DemographicGroup demographic) {
         if (demographic == null) {
             return populationMap.values().stream().reduce(0L, Long::sum);
@@ -164,6 +186,7 @@ public class Precinct
     }
 
     @ManyToOne
+    @JoinColumn(name = "stateName", referencedColumnName = "name")
     public State getState() {
         return state;
     }
