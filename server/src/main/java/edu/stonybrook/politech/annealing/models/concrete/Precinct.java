@@ -17,7 +17,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "Precinct")
@@ -56,10 +55,6 @@ public class Precinct
         }
         this.originalDistrictID = districtID;
         this.neighborIDs = neighborIDs;
-    }
-
-    public void setState(State state) {
-        this.state = state;
     }
 
     @Override
@@ -191,6 +186,10 @@ public class Precinct
         return state;
     }
 
+    public void setState(State state) {
+        this.state = state;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -208,7 +207,7 @@ public class Precinct
 
     // PHASE 0
     public boolean isDemographicBloc(DemographicGroup demographic, Threshold blocPopPercentThresh) {
-        return blocPopPercentThresh.isWithin(((getPopulation(demographic) * 1.0)/(1.0 * getPopulation(null))), true);
+        return blocPopPercentThresh.isWithin(((getPopulation(demographic) * 1.0) / (1.0 * getPopulation(null))), true);
     }
 
     public VotingBlockDTO getVotingBloc(DemographicGroup demographic, Threshold blocVotingPercentThresh, ElectionId electionId) {
@@ -224,6 +223,7 @@ public class Precinct
             return null;
         }
     }
+
     public Precinct clone() {
         return new Precinct(
                 precinctId,

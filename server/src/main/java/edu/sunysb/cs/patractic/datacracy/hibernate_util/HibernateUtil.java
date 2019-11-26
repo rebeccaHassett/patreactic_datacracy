@@ -1,12 +1,8 @@
 package edu.sunysb.cs.patractic.datacracy.hibernate_util;
 
 
-import java.util.Properties;
-
-import edu.stonybrook.politech.annealing.models.concrete.District;
 import edu.stonybrook.politech.annealing.models.concrete.Precinct;
 import edu.stonybrook.politech.annealing.models.concrete.State;
-import edu.sunysb.cs.patractic.datacracy.domain.models.Edge;
 import edu.sunysb.cs.patractic.datacracy.domain.models.ElectionData;
 import edu.sunysb.cs.patractic.datacracy.domain.models.ElectionId;
 import org.hibernate.SessionFactory;
@@ -14,7 +10,8 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.cfg.Environment;
 import org.hibernate.service.ServiceRegistry;
-import org.springframework.boot.autoconfigure.couchbase.CouchbaseProperties;
+
+import java.util.Properties;
 
 public class HibernateUtil {
     private static SessionFactory sessionFactory;

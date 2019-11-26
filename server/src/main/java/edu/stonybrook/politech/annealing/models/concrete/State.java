@@ -25,8 +25,8 @@ import java.util.stream.Collectors;
 public class State
         implements StateInterface<Precinct, District> {
 
-    private int population;
     private final Map<DemographicGroup, Long> populationMap;
+    private int population;
     private String name;//name is saved for later storage into the database
     private HashMap<String, District> districts;
     private HashMap<String, Precinct> precincts;
@@ -41,7 +41,7 @@ public class State
         this.populationMap = new HashMap<>();
         this.districts = new HashMap<>();
         this.precincts = new HashMap<>();
-        if(inPrecincts != null) {
+        if (inPrecincts != null) {
             for (Precinct p : inPrecincts) {
                 String districtID = p.getOriginalDistrictID();
                 District d = this.districts.get(districtID);
@@ -55,7 +55,7 @@ public class State
         }
         this.incumbents = incumbents;
         this.population = this.districts.values().stream().mapToInt(District::getPopulation).sum();
-        for (DemographicGroup dg: DemographicGroup.values()) {
+        for (DemographicGroup dg : DemographicGroup.values()) {
             this.populationMap.put(dg, precincts.values().stream().map(p -> p.getPopulation(dg)).reduce(0L, Long::sum));
         }
     }
@@ -65,6 +65,7 @@ public class State
     public String getName() {
         return name;
     }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -73,6 +74,7 @@ public class State
     public String getStateBoundaries() {
         return stateBoundaries;
     }
+
     public void setStateBoundaries(String stateBoundaries) {
         this.stateBoundaries = stateBoundaries;
     }
@@ -87,6 +89,7 @@ public class State
     protected Map<String, Precinct> getPrecincts() {
         return precincts;
     }
+
     public void setPrecincts(HashMap<String, Precinct> precincts) {
         this.precincts = precincts;
     }
@@ -106,7 +109,7 @@ public class State
 
     public Set<VotingBlockDTO> getEligibleDemographicVotingBlocs(DemographicGroup demographic, Properties config) {
         Set<VotingBlockDTO> ret = new HashSet<>();
-        for (Precinct p: precincts.values()) {
+        for (Precinct p : precincts.values()) {
             if (p.isDemographicBloc(demographic, config.thresholds[Constraints.BLOC_POP_PERCENTAGE.ordinal()])) {
                 VotingBlockDTO vbdto = p.getVotingBloc(demographic, config.thresholds[Constraints.BLOC_VOTING_PERCENTAGE.ordinal()], config.electionId);
                 if (vbdto != null) {
@@ -148,20 +151,23 @@ public class State
         clone.getPrecinctSet().forEach(p -> p.setState(clone));
         return clone;
     }
+
     @Column(name = "laws")
     public String getLaws() {
         return laws;
     }
+
     public void setLaws(String laws) {
         this.laws = laws;
     }
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "Incumbents", joinColumns = {@JoinColumn(name = "stateName")})
-    @MapKeyColumn(name="districtId")
+    @MapKeyColumn(name = "districtId")
     public Map<String, String> getIncumbents() {
         return incumbents;
     }
+
     public void setIncumbents(Map<String, String> incumbents) {
         this.incumbents = incumbents;
     }

@@ -1,8 +1,6 @@
 package edu.sunysb.cs.patractic.datacracy;
 
 import edu.stonybrook.politech.annealing.models.concrete.State;
-import edu.sunysb.cs.patractic.datacracy.hibernate_util.HibernateUtil;
-import org.hibernate.Session;
 
 public class App {
     public static void main(String[] args) {
@@ -12,8 +10,8 @@ public class App {
         // student object is persisted the address will be automatically saved.
 
         //session.save(address);
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        //State state = new State("Rhode Island", null, "");
+        State ri = stateDao.getBaseState("RhodeIsland");
+        System.out.println("RI laws: " + ri.getLaws());
         //stateDao.saveState(state);
     }
 }
