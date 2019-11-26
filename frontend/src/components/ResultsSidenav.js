@@ -11,14 +11,14 @@ class ResultsSidenav extends React.Component {
     }
 
     state = {
-        votingRightsAct: "",
+        laws: "",
         incumbents: ""
     }
 
     componentDidMount() {
-        this.state.votingRightsAct = fetch('http://127.0.0.1:8080/laws/' + this.props.state).then(function (response) {
+        this.state.laws = fetch('http://127.0.0.1:8080/laws/' + this.props.state).then(function (response) {
             if (response.status >= 400) {
-                //throw new Error("Voting Rights Act data not loaded from server successfully");
+                console.log("Law data not loaded from server successfully");
             }
             return response.json();
         }).then(function (data) {
@@ -42,8 +42,8 @@ class ResultsSidenav extends React.Component {
                 <Tabs className="tabs" defaultActiveKey="District" id="tabs">
                     <Tab eventKey="State" title="State">
                         <h3>_____________________________</h3>
-                        <h4>Voting Rights Act</h4>
-                        <p>{this.votingRightsAct}</p>
+                        <h4>Laws</h4>
+                        <p>{this.laws}</p>
                         <h4>Voting Incumbents</h4>
                         <p>{this.incumbents}</p>
                         <h4>Election and Demographics</h4>

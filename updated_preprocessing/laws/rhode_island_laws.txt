@@ -1,0 +1,6 @@
+(1) Congressional districts shall achieve population equality as nearly as is practicable
+(2) Districts shall comply with federal Voting Rights Act
+(3) Districts shall be geographically contiguous
+(4) Partisan fairness shall be maximized to the extent possible. A plan's partisan fairness is maximized when the expected partisan asymmetry is minimized. Partisan asymmetry shall be calculated uniformly using the proposed map, data from the last ten (10) years' of statewide elections, and the best available statistical methods
+(5) The geographic integrity of any city, town, county, village, local neighborhood, or local community of interest shall be respected in a manner that minimizes their division to the extent possible without violating the requirements of any of the preceding subsections. A community of interest is a contiguous population which shares common social and economic interests that should be included within a single district for purposes of effective and fair representation
+(6) To the extent practicable, and where this does not conflict with the criteria stated above, districts shall be drawn to encourage geographical compactness such that nearby areas of population are not bypassed for more distant population
