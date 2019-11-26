@@ -34,7 +34,6 @@ export default class Cluster {
                     'color': 'red'
                 })
                 map.fitBounds(e.layer.getBounds());
-                console.log(e.layer.feature.properties.NAME);
             })
 
             return layer;

@@ -47,7 +47,6 @@ export default class Phase0Controls extends Component {
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(phase0Dto),
         })
-        console.log(await response.json())
     }
 
     handleBlocPopulationUpdate(value) {
@@ -61,7 +60,6 @@ export default class Phase0Controls extends Component {
 
 
     _onElectionTypeChange(option) {
-        console.log(this.state.electionType);
         if (option === "Congressional") {
             this.setState({
                 button2018: false

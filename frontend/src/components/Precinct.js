@@ -15,13 +15,13 @@ class Precinct {
             }
             return response.json();
         }).then(function (data) {
-            layer = new L.GeoJSON(data, {
+            /*layer = new L.GeoJSON(data, {
                 style: district_style, filter: function (feature, layer) {
                     return (feature.properties.PRENAME === "PROVIDENCE 0731")
                 }
-            }).addTo(map);
+            }).addTo(map);*/
 
-            //layer = L.geoJSON(data, {style: district_style}).addTo(map);
+            layer = L.geoJSON(data, {style: district_style}).addTo(map);
 
             map.on("zoomend", function (event) {
                 if (this.getZoom() < 7) {

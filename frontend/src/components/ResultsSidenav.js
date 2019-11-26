@@ -16,7 +16,8 @@ class ResultsSidenav extends React.Component {
     }
 
     componentDidMount() {
-        this.state.laws = fetch('http://127.0.0.1:8080/laws/' + this.props.state).then(function (response) {
+        console.log(this.props.chosenState);
+        this.state.laws = fetch('http://127.0.0.1:8080/laws/' + this.props.chosenState).then(function (response) {
             if (response.status >= 400) {
                 console.log("Law data not loaded from server successfully");
             }
@@ -25,7 +26,7 @@ class ResultsSidenav extends React.Component {
             return data;
         });
 
-        this.state.incumbents = fetch('http://127.0.0.1:8080/incumbent/' + this.props.state).then(function (response) {
+        this.state.incumbents = fetch('http://127.0.0.1:8080/incumbent/' + this.props.chosenState).then(function (response) {
             if (response.status >= 400) {
                 console.log("Incumbent data not loaded from server successfully");
             }

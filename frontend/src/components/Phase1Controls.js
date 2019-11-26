@@ -44,7 +44,6 @@ export default class Phase1Controls extends Component {
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(phase1Dto),
         })
-        console.log(await response.json())
     }
 
     handleNumberCongressionalDistricts(value) {

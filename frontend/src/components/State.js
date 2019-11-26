@@ -15,6 +15,7 @@ export default class State extends Component {
             precinctData: "",
             districtData: "",
             stateData: "",
+            chosenState: window.location.pathname.split("/").pop()
         }
 
         this.toggleBox = this.toggleBox.bind(this);
@@ -29,8 +30,6 @@ export default class State extends Component {
         var minZoom;
         var clustersUrl;
         var chosenState = window.location.pathname.split("/").pop();
-
-        console.log(chosenState);
 
         if (chosenState === "NorthCarolina") {
             clustersUrl = 'http://127.0.0.1:8080/District_Borders?name=North_Carolina';
@@ -116,7 +115,7 @@ export default class State extends Component {
                     <Col>
                         <ResultsSidenav precinctData={this.state.precinctData} districtData={this.state.districtData}
                                         stateData={this.state.stateData}
-                                        state={this.state.chosenState}></ResultsSidenav>
+                                        chosenState={this.state.chosenState}></ResultsSidenav>
                     </Col>
                 </Row>
             </State_Style>
