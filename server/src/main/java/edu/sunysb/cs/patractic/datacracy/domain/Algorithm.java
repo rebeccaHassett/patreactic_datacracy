@@ -15,7 +15,7 @@ public class Algorithm extends MyAlgorithm {
         super(state, measures, electionId);
     }
 
-    public static Set<VotingBlockDTO> runPhase0(State state, DemographicGroup demographic, Properties config) {
-        return state.getEligibleDemographicVotingBlocs(demographic, config);
+    public static Set<VotingBlockDTO> runPhase0(State state, Properties config) {
+        return state.getEligibleDemographicVotingBlocs(config);
     }
 }

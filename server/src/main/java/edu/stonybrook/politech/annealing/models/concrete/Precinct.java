@@ -218,7 +218,7 @@ public class Precinct
         double fractionVotedForWinner = (1.0 * votesByDemo) / totalVotes;
 
         if (blocVotingPercentThresh.isWithin(fractionVotedForWinner, true)) {
-            return new VotingBlockDTO(precinctId, totalVotes, votesByDemo, winningParty);
+            return new VotingBlockDTO(precinctId, totalVotes, votesByDemo, winningParty, demographic);
         } else {
             return null;
         }

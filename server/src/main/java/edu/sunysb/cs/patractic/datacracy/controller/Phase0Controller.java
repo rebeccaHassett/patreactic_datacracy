@@ -25,7 +25,7 @@ public class Phase0Controller {
     @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping(path = "/runPhase0")
     public Set<VotingBlockDTO> runPhase0(@RequestBody RunPhase0Dto phase0Dto) {
-        return Algorithm.runPhase0(stateDao.getBaseState(phase0Dto.state), phase0Dto.demographic, phase0Dto.config);
+        return Algorithm.runPhase0(stateDao.getBaseState(phase0Dto.state), phase0Dto.config);
     }
 
     @GetMapping(path = "/laws/{state}")

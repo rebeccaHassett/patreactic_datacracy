@@ -120,13 +120,15 @@ public class State
         return precincts.get(precinctId);
     }
 
-    public Set<VotingBlockDTO> getEligibleDemographicVotingBlocs(DemographicGroup demographic, Properties config) {
+    public Set<VotingBlockDTO> getEligibleDemographicVotingBlocs(Properties config) {
         Set<VotingBlockDTO> ret = new HashSet<>();
         for (Precinct p : precincts.values()) {
-            if (p.isDemographicBloc(demographic, config.thresholds[Constraints.BLOC_POP_PERCENTAGE.ordinal()])) {
-                VotingBlockDTO vbdto = p.getVotingBloc(demographic, config.thresholds[Constraints.BLOC_VOTING_PERCENTAGE.ordinal()], config.electionId);
-                if (vbdto != null) {
-                    ret.add(vbdto);
+            for (DemographicGroup dg : DemographicGroup.values()) {
+                if (p.isDemographicBloc(dg, config.thresholds[Constraints.BLOC_POP_PERCENTAGE.ordinal()])) {
+                    VotingBlockDTO vbdto = p.getVotingBloc(dg, config.thresholds[Constraints.BLOC_VOTING_PERCENTAGE.ordinal()], config.electionId);
+                    if (vbdto != null) {
+                        ret.add(vbdto);
+                    }
                 }
             }
         }
