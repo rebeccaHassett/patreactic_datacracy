@@ -1,7 +1,6 @@
 package edu.sunysb.cs.patractic.datacracy.domain.models;
 
 import edu.stonybrook.politech.annealing.models.concrete.Precinct;
-import edu.sunysb.cs.patractic.datacracy.domain.enums.DemographicGroup;
 import edu.sunysb.cs.patractic.datacracy.domain.enums.ElectionType;
 import edu.sunysb.cs.patractic.datacracy.domain.enums.PoliticalParty;
 import edu.sunysb.cs.patractic.datacracy.domain.enums.Year;

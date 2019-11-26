@@ -12,13 +12,12 @@ import java.util.Map.Entry;
 
 public class Algorithm {
     protected State state;
+    protected ElectionId electionId;
     private HashMap<String, String> precinctDistrictMap; //precinctID --> districtID
-
     //calculates an aggregate measure score (double) for a given district
     private MeasureFunction<Precinct, District> districtScoreFunction;
     private HashMap<District, Double> currentScores;
     private District currentDistrict = null;
-    protected ElectionId electionId;
 
     public Algorithm(State state,
                      MeasureFunction<Precinct, District> districtScoreFunction,
