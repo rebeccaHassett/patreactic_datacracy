@@ -96,11 +96,11 @@ export default class Phase0Controls extends Component {
                 <Form>
                     <Button onClick={this.runPhase0}>Start Phase 0</Button>
                     <Form.Group>
-                        <Form.Label className="label">Block Population Percentage Threshold:</Form.Label>
+                        <Form.Label className="label">Bloc Population Thresholds:</Form.Label>
                         <SliderControlUpperLowerValues exportState={this.handleBlocPopulationUpdate}/>
                     </Form.Group>
                     <Form.Group>
-                        <Form.Label className="label">Block Voting Percentage Threshold:</Form.Label>
+                        <Form.Label className="label">Bloc Voting Thresholds:</Form.Label>
                         <SliderControlUpperLowerValues
                             exportState={this.handleBlocVotingUpdate}></SliderControlUpperLowerValues>
                     </Form.Group>
@@ -133,6 +133,15 @@ const Phase0Styles = styled.div`
     .electionButton {
         width: 10vw;
         background-color: #585858;
+        margin-top: 0vw;
+        margin-bottom: 0vw;
+    }
+
+    .electionButton:active {
+        background-color:olive;
+    }
+    Button:focus{
+        background:olive;
     }
     .vbdtoTable {
         background-color: dodgerblue;

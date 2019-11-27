@@ -76,14 +76,19 @@ export default class Phase1Controls extends Component {
                         <Form.Check onChange={this.handleRealTimeClick} label="RealTime"/>
                     </Form.Group>
                     <Form.Group id="numberDistricts">
-                        <Form.Label className="label">Number of Congressional Districts:</Form.Label>
+                        <Form.Label className="label">Congressional Districts:</Form.Label>
                         <SliderControlSingleValue
                             exportState={this.handleNumberCongressionalDistricts}></SliderControlSingleValue>
                     </Form.Group>
                     <Form.Group id="majorityMinorityDistricts">
-                        <Form.Label className="label">Number of Majority-Minority Districts</Form.Label>
+                        <Form.Label className="label">Majority-Minority Districts</Form.Label>
                         <SliderControlSingleValue
                             exportState={this.handleNumberMajorityMinorityDistricts}></SliderControlSingleValue>
+                    </Form.Group>
+                    <Form.Group id="minorityPopulationThreshold">
+                        <Form.Label className="label">Minority Population Thresholds:</Form.Label>
+                        <SliderControlUpperLowerValues
+                            exportState={this.handleMinorityPopulationThreshold}></SliderControlUpperLowerValues>
                     </Form.Group>
                     <Form.Group id="ethnicGroups">
                         <Form.Label>Ethnic/Racial Groups:</Form.Label>
@@ -93,11 +98,6 @@ export default class Phase1Controls extends Component {
                         <Form.Check label="White"/>
                         <Form.Check label="Native American"/>
                         <Form.Check label="Pacific Islander"/>
-                    </Form.Group>
-                    <Form.Group id="minorityPopulationThreshold">
-                        <Form.Label className="label">Minority Population Thresholds:</Form.Label>
-                        <SliderControlUpperLowerValues
-                            exportState={this.handleMinorityPopulationThreshold}></SliderControlUpperLowerValues>
                     </Form.Group>
                 </Form>
             </Phase1Styles>

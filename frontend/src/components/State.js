@@ -1,11 +1,12 @@
 import React, {Component} from 'react';
 import L from 'leaflet';
-import {Container, Row, Col} from "react-bootstrap";
+import {Container, Row, Col, Card} from "react-bootstrap";
 import styled from 'styled-components';
 import Precinct from "./Precinct";
 import Cluster from "./Cluster";
 import MenuSidenav from "./MenuSidenav";
 import ResultsSidenav from './ResultsSidenav';
+import Collapse from "react-collapse";
 
 var ZOOM = 7;
 
@@ -110,7 +111,9 @@ export default class State extends Component {
                     <Col>
                         <Container>
                             <body>
+                            <Card>
                             <div id='map'></div>
+                            </Card>
                             </body>
                         </Container>
                     </Col>
@@ -126,7 +129,6 @@ export default class State extends Component {
 }
 
 const State_Style = styled.div`
-    overflow: hidden;
     #map {
       height: 47.5vw;
       width: 100vw;

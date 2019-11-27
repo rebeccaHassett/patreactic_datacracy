@@ -1,6 +1,6 @@
 import React from 'react';
 import {slide as Menu} from 'react-burger-menu'
-import {Tab, Tabs} from "react-bootstrap";
+import {Tab, Tabs, Card} from "react-bootstrap";
 import Statistics from "./Statistics";
 import styled from "styled-components";
 import L from "leaflet";

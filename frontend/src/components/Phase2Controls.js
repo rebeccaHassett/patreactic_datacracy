@@ -49,12 +49,6 @@ export default class Phase2Controls extends Component {
                     <Form.Group id="incremental">
                         <Form.Check label="Incremental"/>
                     </Form.Group>
-                    <Form.Group id="ethnicGroups">
-                        <Form.Label>Ethnic/Racial Groups:</Form.Label>
-                        <Form.Check aria-label="option 1" label="African American"/>
-                        <Form.Check aria-label="option 1" label="Asian"/>
-                        <Form.Check aria-label="option 1" label="Hispanic"/>
-                    </Form.Group>
                     <Form.Group id="votePercentage">
                         <Form.Label className="label">Vote Percentage:</Form.Label>
                         <SliderControlUpperLowerValues
@@ -79,6 +73,12 @@ export default class Phase2Controls extends Component {
                         <Form.Label className="label">Partisan Fairness Measure:</Form.Label>
                         <SliderControlUpperLowerValues
                             exportState={this.handlePartisanFairness}></SliderControlUpperLowerValues>
+                    </Form.Group>
+                    <Form.Group id="ethnicGroups">
+                        <Form.Label>Ethnic/Racial Groups:</Form.Label>
+                        <Form.Check aria-label="option 1" label="African American"/>
+                        <Form.Check aria-label="option 1" label="Asian"/>
+                        <Form.Check aria-label="option 1" label="Hispanic"/>
                     </Form.Group>
                 </Form>
             </Phase2Styles>

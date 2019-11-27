@@ -47,7 +47,7 @@ export default class SliderControlUpperLowerValues extends React.Component {
                                     borderRadius: '4px',
                                     background: getTrackBackground({
                                         values: this.state.values,
-                                        colors: ['#ccc', '#548BF4', '#ccc'],
+                                        colors: ['#ccc', '#8fbc8f', '#ccc'],
                                         min: MIN,
                                         max: MAX
                                     }),
@@ -83,7 +83,7 @@ export default class SliderControlUpperLowerValues extends React.Component {
                                     fontFamily: 'Arial,Helvetica Neue,Helvetica,sans-serif',
                                     padding: '4px',
                                     borderRadius: '4px',
-                                    backgroundColor: '#548BF4',
+                                    backgroundColor: '#8fbc8f',
                                 }}
                             >
                                 {this.state.values[index].toFixed(1)}
@@ -92,7 +92,7 @@ export default class SliderControlUpperLowerValues extends React.Component {
                                 style={{
                                     height: '16px',
                                     width: '5px',
-                                    backgroundColor: isDragged ? '#548BF4' : '#CCC'
+                                    backgroundColor: isDragged ? '#8fbc8f' : '#CCC'
                                 }}
                             />
                         </div>

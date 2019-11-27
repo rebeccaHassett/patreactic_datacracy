@@ -48,7 +48,7 @@ export default class SliderControlSingleValue extends React.Component {
                                     borderRadius: '4px',
                                     background: getTrackBackground({
                                         values: this.state.values,
-                                        colors: ['#548BF4', '#ccc'],
+                                        colors: ['#8fbc8f', '#ccc'],
                                         min: MIN,
                                         max: MAX
                                     }),
@@ -78,7 +78,7 @@ export default class SliderControlSingleValue extends React.Component {
                                 style={{
                                     height: '16px',
                                     width: '5px',
-                                    backgroundColor: isDragged ? '#548BF4' : '#CCC'
+                                    backgroundColor: isDragged ? '#8fbc8f' : '#CCC'
                                 }}
                             />
                         </div>
