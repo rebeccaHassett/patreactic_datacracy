@@ -1,7 +1,6 @@
 import React from 'react';
 import {Button, Form, Modal} from "react-bootstrap";
 import {BootstrapTable, TableHeaderColumn} from "react-bootstrap-table";
-import styled from "styled-components";
 
 export default function ModalControl() {
     const [show, setShow] = React.useState(false);
@@ -11,7 +10,7 @@ export default function ModalControl() {
 
     return (
         <>
-            <Button variant="primary" onClick={handleShow}>
+            <Button variant="primary" onClick={handleShow} style={{width: '20vw', marginBottom: '2vw', backgroundColor: '#1E90FF'}}>
                 Voting Bloc Table Display
             </Button>
             <Modal show={show} onHide={handleClose}>

@@ -1,8 +1,10 @@
 import React, {Component} from 'react';
-import {ButtonGroup, Button, Row, Col} from "react-bootstrap";
-import styled from "styled-components";
+import {Container} from '@material-ui/core';
 import BarChart from "./BarChart";
 import PieChart from "./graphs/PieChart";
+import ElectionButtonsControl from "./controls/ElectionButtonsControl";
+import {Form} from "react-bootstrap";
+import styled from "styled-components";
 
 
 export default class Statistics extends Component {
@@ -11,32 +13,46 @@ export default class Statistics extends Component {
         this.state = {
             electionType: 'Presidential',
             electionYear: '2016',
-            button2018: true
+            election: 'Presidential 2016',
         }
+        this.handleElectionChanges = this.handleElectionChanges.bind(this);
     }
 
-    _onElectionTypeChange(option) {
-        if (option === "Congressional") {
+
+    handleElectionChanges(event) {
+        if(event.target.value  === "Congressional 2016") {
             this.setState({
-                button2018: false
-            });
-        } else {
-            this.setState({
-                button2018: true
-            });
+                election: 'Congressional 2016'
+            })
             this.setState({
                 electionYear: '2016'
             })
+            this.setState({
+                electionType: 'Congressional'
+            })
         }
-        this.setState({
-            electionType: option
-        });
-    }
-
-    _onElectionYearChange(option) {
-        this.setState({
-            electionYear: option
-        });
+        else if(event.target.value  === "Congressional 2018") {
+            this.setState({
+                election: 'Congressional 2018'
+            })
+            this.setState({
+                electionYear: '2018'
+            })
+            this.setState({
+                electionType: 'Congressional'
+            })
+        }
+        else if(event.target.value  === "Presidential 2016") {
+            this.setState({
+                election: 'Presidential 2016'
+            })
+            this.setState({
+                electionYear: '2016'
+            })
+            this.setState({
+                electionType: 'Presidential'
+            })
+        }
     }
 
     render() {
@@ -118,12 +134,12 @@ export default class Statistics extends Component {
                     {
                         data: [republicanVotes, democraticVotes],
                         backgroundColor: [
-                            "#FF0000",
-                            "#0000FF",
+                            "rgba(30, 144,255,1)",
+                            "rgba(245,  0, 87, 1)",
                         ],
                         hoverBackgroundColor: [
-                            "#FF5A5E",
-                            "#5AD3D1",
+                            "rgba(30, 144,255,0.5)",
+                            "rgba(245,  0, 87, 0.5)",
                         ]
                     }
                 ]
@@ -136,52 +152,43 @@ export default class Statistics extends Component {
                         label: "Number of Votes",
                         data: [republicanVotes, democraticVotes],
                         backgroundColor: [
-                            "rgba(255, 134,159,0.4)",
-                            "rgba(98,  182, 239,0.4)",
+                            "rgba(30, 144,255,0.5)",
+                            "rgba(245,  0, 87, 1)",
                         ],
                         borderWidth: 2,
                         borderColor: [
-                            "rgba(255, 134, 159, 1)",
-                            "rgba(98,  182, 239, 1)",
+                            "rgba(30, 144,255,0.5)",
+                            "rgba(245,  0, 87, 1)",
                         ]
                     }
                 ]
             }
-
-
         }
+
+        function wordCase(str) {
+            var splitStr = str.toLowerCase().split(' ');
+            for (var i = 0; i < splitStr.length; i++) {
+
+                splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
+            }
+            return splitStr.join(' ');
+        }
+
         return (
-            <Statistics_Style>
-                <Row>
-                    <Col>
-                        <ButtonGroup id="btns">
-                            <Button onClick={this._onElectionTypeChange.bind(this, 'Presidential')}
-                                    active={this.state.electionType === 'Presidential'}>Presidential</Button>
-                            <Button onClick={this._onElectionTypeChange.bind(this, 'Congressional')}
-                                    active={this.state.electionType === 'Congressional'}>Congressional</Button>
-                        </ButtonGroup>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col>
-                        <ButtonGroup id="btns2">
-                            <Button onClick={this._onElectionYearChange.bind(this, '2016')}
-                                    active={this.state.electionYear === '2016'}>2016</Button>
-                            <Button onClick={this._onElectionYearChange.bind(this, '2018')}
-                                    active={this.state.electionYear === '2018'}
-                                    disabled={this.state.button2018}>2018</Button>
-                        </ButtonGroup>
-                    </Col>
-                </Row>
-                <h4>{name}</h4>
-                <h4>{this.state.electionType} {this.state.electionYear}</h4>
-                <h5>Voting Results Per Candidate</h5>
-                <p>{democraticCandidate}, DEM , {democraticVotes}</p>
-                <p>{republicanCandidate}, REP , {republicanVotes}</p>
-                <h5>Voters Per Party</h5>
+            <StatisticsStyles>
+                <Form>
+                    <Form.Group>
+                        <Form.Label className="bolden">Election Data</Form.Label>
+                <ElectionButtonsControl exportState={this.handleElectionChanges}/>
+                    </Form.Group>
+                    <Form.Label className="bolden"> {wordCase(name)}</Form.Label>
+                    <Form.Label className="label">{wordCase(this.state.electionType)} {this.state.electionYear}</Form.Label>
+                <p>{democraticCandidate}, DEM, {democraticVotes}</p>
+                <p>{republicanCandidate}, REP, {republicanVotes}</p>
+                <h5>Votes Per Party</h5>
                 <PieChart dataPie={dataPieParty}/>
-                <h5>Voters Per Candidate</h5>
-                <BarChart databar={databar}/>
+                <h5>Votes Per Candidate</h5>
+                    <BarChart databar={databar}/>
                 <h5>Demographic Data</h5>
                 <p>Total Population: {Math.round(totalPopulation)}</p>
                 <p>Hispanic Population: {Math.round(hispanicPopulation)}</p>
@@ -191,14 +198,23 @@ export default class Statistics extends Component {
                 <p>Asian Population: {Math.round(asianPopulation)}</p>
                 <p>Pacific Islander Population: {Math.round(pacificIslanderPopulation)}</p>
                 <PieChart dataPie={dataPie}/>
-            </Statistics_Style>
-
+            </Form>
+            </StatisticsStyles>
         );
     };
 }
 
-const Statistics_Style = styled.div`
-    * {
-        color: white;
+const StatisticsStyles = styled.div`
+    h5 {
+        margin-bottom: 1vw;
     }
-`;
+
+    .bolden {
+      font-weight: bold;
+      text-decoration: underline;
+    }   
+    .prename {
+        font-weight: bold;
+    }
+
+ `;

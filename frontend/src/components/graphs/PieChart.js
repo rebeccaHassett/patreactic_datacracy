@@ -12,6 +12,8 @@ export default class PieChart extends React.Component {
     }
 }
 const option = {
+    width: 20,
+    height: 20,
     fontSize: 2,
     tooltips: {
         callbacks: {

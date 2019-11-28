@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
-import {Button, Form, ButtonGroup} from "react-bootstrap";
+import {Form} from "react-bootstrap";
 import SliderControlUpperLowerValues from "./controls/SliderControlUpperLowerValues";
-import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import styled from "styled-components";
 import ModalControl from './controls/ModalControl';
+import Button from '@material-ui/core/Button';
+import ElectionButtonsControl from "./controls/ElectionButtonsControl";
 
 export default class Phase0Controls extends Component {
 
@@ -12,6 +13,7 @@ export default class Phase0Controls extends Component {
         this.runPhase0 = this.runPhase0.bind(this);
         this.handleBlocPopulationUpdate = this.handleBlocPopulationUpdate.bind(this);
         this.handleBlocVotingUpdate = this.handleBlocVotingUpdate.bind(this);
+        this.handleElectionChanges = this.handleElectionChanges.bind(this);
     }
 
 
@@ -65,60 +67,58 @@ export default class Phase0Controls extends Component {
         this.setState({blocVotingValues: value})
     }
 
-
-    _onElectionTypeChange(option) {
-        if (option === "Congressional") {
+    handleElectionChanges(event) {
+        if(event.target.value  === "Congressional 2016") {
             this.setState({
-                button2018: false
-            });
-        } else {
-            this.setState({
-                button2018: true
-            });
+                election: 'Congressional 2016'
+            })
             this.setState({
                 electionYear: '2016'
             })
+            this.setState({
+                electionType: 'Congressional'
+            })
         }
-        this.setState({
-            electionType: option
-        });
+        else if(event.target.value  === "Congressional 2018") {
+            this.setState({
+                election: 'Congressional 2018'
+            })
+            this.setState({
+                electionYear: '2018'
+            })
+            this.setState({
+                electionType: 'Congressional'
+            })
+        }
+        else if(event.target.value  === "Presidential 2016") {
+            this.setState({
+                election: 'Presidential 2016'
+            })
+            this.setState({
+                electionYear: '2016'
+            })
+            this.setState({
+                electionType: 'Presidential'
+            })
+        }
     }
-
-    _onElectionYearChange(option) {
-        this.setState({
-            electionYear: option
-        });
-    }
-
-    render() {
+        render() {
         return (
             <Phase0Styles>
                 <Form>
-                    <Button onClick={this.runPhase0}>Start Phase 0</Button>
+                    <Button variant="contained" color="primary" onClick={this.runPhase0} style={{width: '20vw', marginBottom: '2vw'}}>Start Phase 0</Button>
                     <Form.Group>
                         <Form.Label className="label">Bloc Population Thresholds:</Form.Label>
                         <SliderControlUpperLowerValues exportState={this.handleBlocPopulationUpdate}/>
                     </Form.Group>
                     <Form.Group>
                         <Form.Label className="label">Bloc Voting Thresholds:</Form.Label>
-                        <SliderControlUpperLowerValues
-                            exportState={this.handleBlocVotingUpdate}></SliderControlUpperLowerValues>
+                        <SliderControlUpperLowerValues exportState={this.handleBlocVotingUpdate}/>
                     </Form.Group>
-                    <h3>Election Type</h3>
-                    <ButtonGroup>
-                        <Button onClick={this._onElectionTypeChange.bind(this, 'Congressional')}
-                                active={this.state.electionType === 'Congressional'}
-                                className="electionButton">Congressional</Button>
-                        <Button onClick={this._onElectionTypeChange.bind(this, 'Presidential')}
-                                active={this.state.electionType === 'Presidential'}
-                                className="electionButton">Presidential</Button>
-                    </ButtonGroup>
-                    <ButtonGroup>
-                        <Button onClick={this._onElectionYearChange.bind(this, '2016')}
-                                active={this.state.electionYear === '2016'} className="electionButton">2016</Button>
-                        <Button onClick={this._onElectionYearChange.bind(this, '2018')}
-                                active={this.state.electionYear === '2018'} className="electionButton">2018</Button>
-                    </ButtonGroup>
+                    <Form.Group>
+                        <Form.Label className="electionLabel">Election Type:</Form.Label>
+                    <ElectionButtonsControl exportState={this.handleElectionChanges}/>
+                    </Form.Group>
                     <ModalControl></ModalControl>
                 </Form>
             </Phase0Styles>
@@ -127,21 +127,14 @@ export default class Phase0Controls extends Component {
 }
 
 const Phase0Styles = styled.div`
+    position: relative;
+    left: 2vw;
     .label {
       margin-bottom: 2.5vw;
+      font-weight: bold;
     }
-    .electionButton {
-        width: 10vw;
-        background-color: #585858;
-        margin-top: 0vw;
-        margin-bottom: 0vw;
-    }
-
-    .electionButton:active {
-        background-color:olive;
-    }
-    Button:focus{
-        background:olive;
+    .electionLabel {
+      font-weight: bold;
     }
     .vbdtoTable {
         background-color: dodgerblue;

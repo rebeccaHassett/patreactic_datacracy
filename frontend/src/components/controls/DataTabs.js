@@ -6,12 +6,9 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
-import Phase0Controls from "./Phase0Controls";
-import Phase1Controls from "./Phase1Controls";
-import Phase2Controls from "./Phase2Controls";
-import DataDisplay from "./DataDisplay";
+import Statistics from "../Statistics";
 
-function TabPanel(props) {
+function TabPane(props) {
     const { children, value, index, ...other } = props;
 
     return (
@@ -28,19 +25,19 @@ function TabPanel(props) {
     );
 }
 
-TabPanel.propTypes = {
+TabPane.propTypes = {
     children: PropTypes.node,
     index: PropTypes.any.isRequired,
     value: PropTypes.any.isRequired,
 };
 
-const useStyles = makeStyles(theme => ({
+const useDataStyles = makeStyles(theme => ({
     root: {
         backgroundColor: theme.palette.background.paper,
     },
 }));
 
-const StyledTab = withStyles(theme => ({
+const StyledDataTab = withStyles(theme => ({
     root: {
         textTransform: 'none',
         fontWeight: theme.typography.fontWeightRegular,
@@ -48,12 +45,12 @@ const StyledTab = withStyles(theme => ({
         width: '6.5vw',
         minWidth: '6.5vw',
         justifyContent: 'center',
-        itemAlign: 'center'
+        itemAlign: 'center',
     },
 }))(props => <Tab {...props} />);
 
-export default function MenuSidenav(props) {
-    const classes = useStyles();
+export default function DataTabs(props) {
+    const classes = useDataStyles();
     const [value, setValue] = React.useState(0);
 
     const handleChange = (event, newValue) => {
@@ -62,36 +59,37 @@ export default function MenuSidenav(props) {
 
     return (
         <div className={classes.root}>
-            <AppBar position="static" style={{width:'29vw'}} color="default">
+            <AppBar position="static" style={{width:'24vw'}} color="primary">
                 <Tabs
                     value={value}
                     onChange={handleChange}
-                    indicatorColor="primary"
-                    textColor="primary"
+                    indicatorColor="secondary"
                     tabItemContainerStyle={{width: '5%'}}
                     contentContainerStyle={{  display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center', right: '10vw'}}
                     centered={true}
                 >
-                    <StyledTab label="Phase 0"></StyledTab>
-                    <StyledTab label="Phase 1" />
-                    <StyledTab label="Phase 2"/>
-                    <StyledTab label="Data"/>
+                    <StyledDataTab label="State"/>
+                    <StyledDataTab label="District" />
+                    <StyledDataTab label="Precinct"/>
                 </Tabs>
             </AppBar>
-            <TabPanel value={value} index={0}>
-                <Phase0Controls state={props.state}></Phase0Controls>
-            </TabPanel>
-            <TabPanel value={value} index={1}>
-                <Phase1Controls chosenState={props.chosenState}></Phase1Controls>
-            </TabPanel>
-            <TabPanel value={value} index={2}>
-                <Phase2Controls></Phase2Controls>
-            </TabPanel>
-            <TabPanel value={value} index={3}>
-                <DataDisplay stateData={props.stateData} precinctData={props.precinctData} districtData={props.districtData}></DataDisplay>
-            </TabPanel>
+            <TabPane value={value} index={0}>
+                <h4>Voting Incumbents</h4>
+                <p>{props.incumbents}</p>
+                <h4>Election and Demographics</h4>
+                <Statistics data={props.stateData}></Statistics>
+                <h4>Laws</h4>
+                <p>{props.laws}</p>
+            </TabPane>
+            <TabPane value={value} index={1}>
+                <h4>Election and Demographics</h4>
+                <Statistics data={props.districtData}></Statistics>
+            </TabPane>
+            <TabPane value={value} index={2}>
+                <Statistics data={props.precinctData}></Statistics>
+            </TabPane>
         </div>
     );
 }

@@ -1,12 +1,18 @@
 import React, {Component} from 'react';
 import L from 'leaflet';
-import {Container, Row, Col, Card} from "react-bootstrap";
+import {Row, Col, Card} from "react-bootstrap";
 import styled from 'styled-components';
 import Precinct from "./Precinct";
 import Cluster from "./Cluster";
 import MenuSidenav from "./MenuSidenav";
-import ResultsSidenav from './ResultsSidenav';
+import DataDisplay from './DataDisplay';
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import Collapse from "react-collapse";
+import Divider from "@material-ui/core/Divider";
+import Box from "@material-ui/core/Box";
+import { borders } from '@material-ui/system';
+import BoxMenu from './controls/BoxMenu';
+
 
 var ZOOM = 7;
 
@@ -23,6 +29,8 @@ export default class State extends Component {
 
         this.toggleBox = this.toggleBox.bind(this);
     }
+
+
 
     toggleBox() {
         this.setState(oldState => ({sidebar: !oldState.sidebar}));
@@ -102,35 +110,62 @@ export default class State extends Component {
     }
 
     render() {
+
+        const theme = createMuiTheme({
+                palette: {
+                    primary: {
+                        main: '#1E90FF'
+                    }
+                }
+            },
+        )
         return (
+            <MuiThemeProvider theme={theme}>
             <State_Style>
                 <Row>
-                    <Col>
-                        <MenuSidenav side="left" id="menu" state={this.state.chosenState}/>
+                    <Col className="menu">
+                        <Box style={{maxHeight: '47.5vw', overflowY: 'scroll', overflowX: 'hidden'}}>
+                                    <MenuSidenav chosenState={this.state.chosenState} precinctData={this.state.precinctData}
+                                                 districtData={this.state.districtData} stateData={this.state.stateData}/>
+                        </Box>
                     </Col>
-                    <Col>
-                        <Container>
+                    <Col className="mapContainer">
+                        <Box>
                             <body>
-                            <Card>
                             <div id='map'></div>
-                            </Card>
                             </body>
-                        </Container>
-                    </Col>
-                    <Col>
-                        <ResultsSidenav precinctData={this.state.precinctData} districtData={this.state.districtData}
-                                        stateData={this.state.stateData}
-                                        chosenState={this.state.chosenState}/>
+                        </Box>
                     </Col>
                 </Row>
             </State_Style>
+            </MuiThemeProvider>
         );
     }
 }
 
 const State_Style = styled.div`
+    Col {
+        margin-left: 0vw;
+        margin-right: 0vw;
+        padding-left: 0vw;
+        padding-right: 0vw;
+    }
+    overflow: hidden;
     #map {
       height: 47.5vw;
-      width: 100vw;
+      width: 71vw;
+      zIndex: 0vw;
+    }
+    .menu {
+        width: 20%;
+        height: 47vw;
+        zIndex: 5vw;
+        margin-right: 0vw;
+        padding-left: 1vw;
+        padding-right: 0vw;
+    }
+    .mapContainer {
+                    margin-left: 0vw;
+        padding-left: 0vw;
     }
 `;
