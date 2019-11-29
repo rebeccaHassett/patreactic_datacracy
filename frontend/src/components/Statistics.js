@@ -183,20 +183,20 @@ export default class Statistics extends Component {
                     </Form.Group>
                     <Form.Label className="bolden"> {wordCase(name)}</Form.Label>
                     <Form.Label className="label">{wordCase(this.state.electionType)} {this.state.electionYear}</Form.Label>
-                <p>{democraticCandidate}, DEM, {democraticVotes}</p>
-                <p>{republicanCandidate}, REP, {republicanVotes}</p>
+                <p>{democraticCandidate}, Dem, {democraticVotes.toLocaleString()}</p>
+                <p>{republicanCandidate}, Rep, {republicanVotes.toLocaleString()}</p>
                 <h5>Votes Per Party</h5>
                 <PieChart dataPie={dataPieParty}/>
                 <h5>Votes Per Candidate</h5>
                     <BarChart databar={databar}/>
                 <h5>Demographic Data</h5>
-                <p>Total Population: {Math.round(totalPopulation)}</p>
-                <p>Hispanic Population: {Math.round(hispanicPopulation)}</p>
-                <p>White Population: {Math.round(whitePopulation)}</p>
-                <p>African American Population: {Math.round(africanAmericanPopulation)}</p>
-                <p>Native American Population: {Math.round(nativeAmericanPopulation)}</p>
-                <p>Asian Population: {Math.round(asianPopulation)}</p>
-                <p>Pacific Islander Population: {Math.round(pacificIslanderPopulation)}</p>
+                <p>Total Population: {Math.round(totalPopulation).toLocaleString()}</p>
+                <p>Hispanic Population: {Math.round(hispanicPopulation).toLocaleString()}</p>
+                <p>White Population: {Math.round(whitePopulation).toLocaleString()}</p>
+                <p>African American Population: {Math.round(africanAmericanPopulation).toLocaleString()}</p>
+                <p>Native American Population: {Math.round(nativeAmericanPopulation).toLocaleString()}</p>
+                <p>Asian Population: {Math.round(asianPopulation).toLocaleString()}</p>
+                <p>Pacific Islander Population: {Math.round(pacificIslanderPopulation).toLocaleString()}</p>
                 <PieChart dataPie={dataPie}/>
             </Form>
             </StatisticsStyles>
@@ -212,6 +212,7 @@ const StatisticsStyles = styled.div`
     .bolden {
       font-weight: bold;
       text-decoration: underline;
+      
     }   
     .prename {
         font-weight: bold;
