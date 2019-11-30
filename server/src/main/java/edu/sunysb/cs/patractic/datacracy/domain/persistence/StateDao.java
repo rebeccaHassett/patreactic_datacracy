@@ -46,7 +46,7 @@ public class StateDao {
         }
     }
 
-    public State getBaseState(String stateName) {
+    public synchronized State getBaseState(String stateName) {
         if (!states.containsKey(stateName)) {
             states.put(stateName, loadState(stateName));
         }
