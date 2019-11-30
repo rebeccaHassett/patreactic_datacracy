@@ -23,7 +23,7 @@ function TabPanel(props) {
             aria-labelledby={`scrollable-auto-tab-${index}`}
             {...other}
         >
-            <Box p={3}>{children}</Box>
+            <Box p={3} style={{ paddingLeft: '0', paddingRight: '0', }}>{children}</Box>
         </Typography>
     );
 }
