@@ -35,6 +35,9 @@ public class Precinct
     private Map<DemographicGroup, Long> populationMap;
     private Set<String> neighborIDs;
 
+    public Precinct() {
+    }
+
     public Precinct(
             String precinctId,
             State state, String stateName,
@@ -55,6 +58,16 @@ public class Precinct
         }
         this.originalDistrictID = districtID;
         this.neighborIDs = neighborIDs;
+    }
+
+    @PostLoad
+    public void postLoad() {
+//        try {
+//            this.geometry = new GeoJsonReader().read(geometryJSON);
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//            throw new RuntimeException(e);
+//        }
     }
 
     @Override
@@ -202,7 +215,7 @@ public class Precinct
 
     @Override
     public int hashCode() {
-        return Objects.hash(precinctId, stateName, district.getDistrictId());
+        return Objects.hash(precinctId, stateName);
     }
 
     // PHASE 0
