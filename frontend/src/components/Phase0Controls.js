@@ -1,10 +1,11 @@
 import React, {Component} from 'react';
-import {Form} from "react-bootstrap";
+import {Form, Container} from "react-bootstrap";
 import SliderControlUpperLowerValues from "./controls/SliderControlUpperLowerValues";
 import styled from "styled-components";
-import ModalControl from './controls/ModalControl';
 import Button from '@material-ui/core/Button';
 import ElectionButtonsControl from "./controls/ElectionButtonsControl";
+import TableDisplay from "./controls/TableDisplay";
+
 
 export default class Phase0Controls extends Component {
 
@@ -14,6 +15,8 @@ export default class Phase0Controls extends Component {
         this.handleBlocPopulationUpdate = this.handleBlocPopulationUpdate.bind(this);
         this.handleBlocVotingUpdate = this.handleBlocVotingUpdate.bind(this);
         this.handleElectionChanges = this.handleElectionChanges.bind(this);
+        this.resultsViewOn = this.resultsViewOn.bind(this);
+        this.resultsViewOff = this.resultsViewOff.bind(this);
     }
 
 
@@ -23,7 +26,9 @@ export default class Phase0Controls extends Component {
         blocVotingValues: [],
         electionType: 'Presidential',
         electionYear: '2016',
-        button2018: true
+        button2018: true,
+        resultsUnavailable: true,
+        resultsInView: false
     }
 
     async runPhase0() {
@@ -56,6 +61,17 @@ export default class Phase0Controls extends Component {
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(phase0Dto),
         })
+
+        this.setState({resultsUnavailable: false});
+        this.setState({resultsInView: true});
+    }
+
+    resultsViewOn() {
+        this.setState({resultsInView: true});
+    }
+
+    resultsViewOff() {
+        this.setState({resultsInView: false});
     }
 
     handleBlocPopulationUpdate(value) {
@@ -68,7 +84,7 @@ export default class Phase0Controls extends Component {
     }
 
     handleElectionChanges(event) {
-        if(event.target.value  === "Congressional 2016") {
+        if (event.target.value === "Congressional 2016") {
             this.setState({
                 election: 'Congressional 2016'
             })
@@ -78,8 +94,7 @@ export default class Phase0Controls extends Component {
             this.setState({
                 electionType: 'Congressional'
             })
-        }
-        else if(event.target.value  === "Congressional 2018") {
+        } else if (event.target.value === "Congressional 2018") {
             this.setState({
                 election: 'Congressional 2018'
             })
@@ -89,8 +104,7 @@ export default class Phase0Controls extends Component {
             this.setState({
                 electionType: 'Congressional'
             })
-        }
-        else if(event.target.value  === "Presidential 2016") {
+        } else if (event.target.value === "Presidential 2016") {
             this.setState({
                 election: 'Presidential 2016'
             })
@@ -102,28 +116,44 @@ export default class Phase0Controls extends Component {
             })
         }
     }
-        render() {
-        return (
-            <Phase0Styles>
-                <Form>
-                    <Button variant="contained" color="primary" onClick={this.runPhase0} style={{width: '20vw', marginBottom: '2vw'}}>Start Phase 0</Button>
-                    <Form.Group>
-                        <Form.Label className="label">Bloc Population Thresholds:</Form.Label>
-                        <SliderControlUpperLowerValues exportState={this.handleBlocPopulationUpdate}/>
-                    </Form.Group>
-                    <Form.Group>
-                        <Form.Label className="label">Bloc Voting Thresholds:</Form.Label>
-                        <SliderControlUpperLowerValues exportState={this.handleBlocVotingUpdate}/>
-                    </Form.Group>
-                    <Form.Group>
-                        <Form.Label className="electionLabel">Election Type:</Form.Label>
-                    <ElectionButtonsControl exportState={this.handleElectionChanges}/>
-                    </Form.Group>
-                    <ModalControl></ModalControl>
-                </Form>
-            </Phase0Styles>
-        );
-    };
+
+
+
+    render() {
+        if (this.state.resultsUnavailable === true || this.state.resultsInView === false) {
+            return (
+                <Phase0Styles>
+                    <Form>
+                        <Button variant="contained" color="primary" onClick={this.runPhase0}
+                                style={{width: '20vw', marginBottom: '2vw'}}>Start Phase 0</Button>
+                        <Form.Group>
+                            <Form.Label className="label">Bloc Population Thresholds:</Form.Label>
+                            <SliderControlUpperLowerValues exportState={this.handleBlocPopulationUpdate}/>
+                        </Form.Group>
+                        <Form.Group>
+                            <Form.Label className="label">Bloc Voting Thresholds:</Form.Label>
+                            <SliderControlUpperLowerValues exportState={this.handleBlocVotingUpdate}/>
+                        </Form.Group>
+                        <Form.Group>
+                            <Form.Label className="electionLabel">Election Type:</Form.Label>
+                            <ElectionButtonsControl exportState={this.handleElectionChanges}/>
+                        </Form.Group>
+                        <Button variant="contained" color="primary" style={{width: '20vw', marginBottom: '2vw'}}
+                                disabled={this.state.resultsUnavailable} onClick={this.resultsViewOn}>View Results</Button>
+                    </Form>
+                </Phase0Styles>
+            );
+        } else {
+            return (
+                <Container style={{marginRight: '0vw', marginLeft: '0vw'}}>
+                    <Button variant="contained" color="primary" style={{width: '20vw', marginBottom: '2vw'}}
+                            onClick={this.resultsViewOff}>View Results</Button>
+                <h3>Voting Bloc Precincts</h3>
+                <TableDisplay columns={columns} rows={rows} createData={createData}/>
+                </Container>
+            );
+        }
+    }
 }
 
 const Phase0Styles = styled.div`
@@ -136,11 +166,39 @@ const Phase0Styles = styled.div`
     .electionLabel {
       font-weight: bold;
     }
-    .vbdtoTable {
-        background-color: dodgerblue;
-        margin-top: 4vw;
-        font-size: 0.8vw;
-        padding-right: 0vw;
-        margin-right: 0vw;
-    }
 `;
+
+
+const columns = [
+    { id: 'precinctName', label: 'Name', minWidth: 100 },
+    { id: 'demographic', label: 'Demographic', minWidth: 100 },
+    {
+        id: 'population',
+        label: 'Population',
+        minWidth: 100,
+        align: 'right',
+        format: value => value.toLocaleString(),
+    },
+    {
+        id: 'winningParty',
+        label: 'Winning Party',
+        minWidth: 100,
+        align: 'right',
+        format: value => value.toLocaleString(),
+    },
+    {
+        id: 'votes',
+        label: 'Votes',
+        minWidth: 100,
+        align: 'right',
+        format: value => value.toLocaleString(),
+    }
+];
+
+function createData(precinctName, demographic, population, winningParty, votes) {
+    return { precinctName, demographic, population, winningParty, votes};
+}
+
+const rows = [
+    createData('Kingstown 1', 'White', 1324171354, 'REP', 123),
+];

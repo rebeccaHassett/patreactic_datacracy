@@ -48,7 +48,7 @@ const StyledTab = withStyles(theme => ({
         width: '6.5vw',
         minWidth: '6.5vw',
         justifyContent: 'center',
-        itemAlign: 'center'
+        itemAlign: 'center',
     },
 }))(props => <Tab {...props} />);
 
@@ -59,6 +59,7 @@ export default function MenuSidenav(props) {
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
+
 
     return (
         <div className={classes.root}>
@@ -80,7 +81,7 @@ export default function MenuSidenav(props) {
                     <StyledTab label="Data"/>
                 </Tabs>
             </AppBar>
-            <TabPanel value={value} index={0}>
+            <TabPanel value={value} index={0} style={{marginLeft: '0px', paddingLeft: '0px', marginRight: '0px', paddingRight: '0px'}}>
                 <Phase0Controls state={props.state}></Phase0Controls>
             </TabPanel>
             <TabPanel value={value} index={1}>

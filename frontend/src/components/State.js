@@ -8,7 +8,6 @@ import MenuSidenav from "./MenuSidenav";
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import Box from "@material-ui/core/Box";
 
-
 var ZOOM = 7;
 
 export default class State extends Component {
@@ -70,6 +69,7 @@ export default class State extends Component {
             maxBounds: maxBounds,
             maxBoundsViscosity: 1.0,
             preferCanvas: true,
+            zIndex: -1,
             layers: [
                 L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
                     attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ',
@@ -127,11 +127,8 @@ export default class State extends Component {
                         </Box>
                     </Col>
                     <Col className="mapContainer">
-                        <Box>
-                            <body>
+                        <Box style={{zIndex: '-1'}}>
                             <div id='map'></div>
-                            </body>
-                            <Card id="results_box">Hello</Card>
                         </Box>
                     </Col>
                 </Row>
@@ -152,7 +149,8 @@ const State_Style = styled.div`
     #map {
       height: 47.5vw;
       width: 71vw;
-      z-index: 0vw;
+      z-index: -1vw;
+      position: relative;
     }
     .menu {
         width: 20%;
@@ -163,7 +161,7 @@ const State_Style = styled.div`
         padding-right: 0vw;
     }
     .mapContainer {
-                    margin-left: 0vw;
+        margin-left: 0vw;
         padding-left: 0vw;
     }
     #results_box {
@@ -171,6 +169,6 @@ const State_Style = styled.div`
         bottom: 20vw;
         width: 20vw;
         height: 20vw;
-        z-index: 10vw;
+        z-index: 299vw;
     }
 `;
