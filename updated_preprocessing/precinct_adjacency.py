@@ -1,11 +1,12 @@
 import json
 from shapely.geometry import shape, Polygon, LineString, GeometryCollection, MultiPolygon
-from shapely.ops import split, shared_paths
+from shapely.ops import split, shared_paths, cascaded_union
 import math
+import numpy as np
+import pandas as pd
 from scipy.spatial import distance
 import matplotlib.pyplot as plt
 from pyproj import Geod
-
 
 """
 Create a grid G that divides a set of precincts into a reasonable number of sections.
@@ -21,15 +22,11 @@ def __create_grid(precincts):
         # p.bounds returns (minx, miny, maxx, maxy) tuple that bounds precinct
         b_min = p.bounds[:2]
         b_max = p.bounds[2:]
-        #print('b_min: ', b_min, '\tb_max: ', b_max)
-        #print('bound_min: ', bounds_min, '\tbound_max: ', bounds_max)
-
         for i in range(len(bounds_min)):
             if b_min[i] < bounds_min[i]:
                 bounds_min[i] = b_min[i]
             if b_max[i] > bounds_max[i]:
                 bounds_max[i] = b_max[i]
-        #print('new bound_min: ', bounds_min, '\tnew bound_max: ', bounds_max)
 
     bounds = bounds_min
     bounds.extend(bounds_max) # bounds -- 4 coordinates of a rectangle that encompasses the entire state
@@ -191,7 +188,7 @@ def share_border(precinct1, precinct2):
             sp = shared_paths(line1, line2)
             if sp: # check sp is not empty
                 dst = geo.geometry_length(sp) # in meters
-                if dst >= epsilon: # or sp[0].length???
+                if dst >= epsilon:
                     return True
             else: # segments intersects but don't share border -- should be 100 ft
                 pt = line1.intersection(line2) # should be point
@@ -203,6 +200,7 @@ def share_border(precinct1, precinct2):
     if len(intersection_pts) > 1:
         line = LineString(list(intersection_pts))
         dst = geo.geometry_length(line)
+        #print('dst: ', dst)
         if dst >= epsilon:
             return True
 
@@ -214,7 +212,7 @@ def share_border(precinct1, precinct2):
 @param precinct: The precinct whose neighbors you want to find.
 @return: The list of neighboring precincts.
 """
-def get_precinct_neighbors(precincts, precinct, grid):
+def get_precinct_neighbors(precinct, grid):
     neighbors = []
     search_space = grid[tuple(precinct.exterior.coords)]
 
@@ -233,6 +231,15 @@ def get_precinct_neighbors(precincts, precinct, grid):
 
 
 """
+Use case 18: Determine if adjoining precincts are in different counties.
+Note: 5 counties of RI
+@param precinct1
+@param precinct2
+"""
+def different_counties(precinct1, precinct2):
+    pass
+
+"""
 Coverts a list that contains Polygons/Multipolgyons into a list that only contains Polygons.
 @param collection: List of geometric objects that include Polygons and MultiPolygons
 @return: A list of Polygons
@@ -248,31 +255,39 @@ def __all_polygons(collection):
     return new_collection
 
 
+# need to use all small polygons for multipolgyons -- need a mapping btw multipolgyons and res polgons
+# then merge their resulting search space?
+
+
 """
 Plots the polygons and labels them in order listed
 @param polygons: List of polygons to be plotted
 """
 def plot_polygons(polygons):
-    count = 1
-    for p in polygons:
-        x,y = p.exterior.xy
-        plt.plot(x,y)
-        c = p.centroid.coords
-        plt.text(c[0][0], c[0][1], s=str(count))
-        count += 1
+    if len(polygons)>1:
+        count = 1
+        for p in polygons:
+            plot(p)
+            c = p.centroid.coords
+            plt.text(c[0][0], c[0][1], s=str(count))
+            count += 1
+    else:
+        plot(polygons[0])
 
 
-if __name__ == '__main__':
+def plot(poly, color='r'):
+    x, y = poly.exterior.xy
+    plt.plot(x, y, color)
 
-    with open('RI_Precincts_MAPPED.geojson') as file:
+
+def __run(filename):
+    with open(filename) as file:
         data = json.load(file)
 
     features = data['features'] # list of dictionaries, with each dictionary containing info on geometry
     collection = GeometryCollection([shape(feature['geometry']).buffer(0) for feature in features]) # geometry of each precinct
-    file.close()
-
-    # plot rhode island
     collection = __all_polygons(collection)
+    # plot rhode island
     plot_polygons(collection)
     grid = __compute_search_spaces(collection)
     for poly in collection:
@@ -280,28 +295,184 @@ if __name__ == '__main__':
         for n in neighbors:
             print(n)
         print()
-        break
+
+
+def __get_county(data, county_name):
+    county_data = []
+    geometries = []
+    for feature in data['features']:
+        name = feature['properties']['PRENAME']
+        if county_name in name:
+            county_data.append(feature)
+            geometries.append(shape(feature['geometry']))
+    return county_data, geometries
+
+"""
+Merges the precincts together.
+@param county_data: The data pertaining to the county
+@param precinct_names: The names of the precincts to be merged
+@return: The merged precinct data, which contains the new 
+        geometry and the updated voting data.
+"""
+def merge_precincts(county_data, precinct_names):
+    house16 = []
+    house18 = []
+    pres16d = 0
+    pres16r = 0
+    geometries = []
+    for p in precinct_names:
+        for feature in county_data:
+            properties = feature['properties']
+            if p in properties['PRENAME']:
+                geometries.append(shape(feature['geometry']))
+                #house16.append(properties['HOUSE_ELECTION_16'])
+                #house18.append(properties['HOUSE_ELECTION_18'])
+                #pres16d += properties['PRES16D']
+                #pres16r += properties['PRES16R']
+
+    #house16 = __update_votes(house16)
+    #house18 = __update_votes(house18)
+    merged_precinct = cascaded_union(geometries)
+    plot(merged_precinct, 'blue')
+    return merged_precinct, [house16, house18, pres16d, pres16r]
+
+
+def __update_votes(data):
+    votes = dict()
+    for elem in data:
+        for key in elem.keys():
+            if votes.get(key) == None:
+                votes.update({key: elem[key]})
+            else:
+                votes.update({key: votes[key]+elem[key]})
+    return votes
+
+
+def update_NC(file, data, votes16, votes18):
+    # CHEROKEE
+    name = 'CHEROKEE'
+    precincts = ['CHEROKEE BEAV', 'CHEROKEE NOTL']
+    comp = [['UNKA', 'GCRK'], ['CSON', 'RGER']]
+    data = update_all(name, data, votes16, votes18, precincts, comp)
+
+    # DAVIDSON
+    name = 'DAVIDSON'
+    precincts = ['DAVIDSON 02']
+    comp = [['86A', '88']]
+    data = update_all(name, data, votes16, votes18, precincts, comp)
+
+    # HOKE
+    name = 'HOKE'
+    precincts = ['HOKE 06']
+    comp = [['14', '15', '6B']]
+    data = update_all(name, data, votes16, votes18, precincts, comp)
+
+    # JACKSON
+    name = 'JACKSON'
+    precincts = ['JACKSON SYLDIL']
+    comp = [['SSW', 'SND']]
+    data = update_all(name, data, votes16, votes18, precincts, comp)
+
+    # JOHNSTON
+    name = 'JOHNSTON'
+    precincts = ['JOHNSTON PR27', 'JOHNSTON PR10', 'JOHNSTON P12', 'JOHNSTON PR23']
+    comp = [['PR27A', 'PR27B'], ['PR10A', 'PR10B'], ['PR12A', 'PR12B'], ['PR23A', 'PR23B']]
+    data = update_all(name, data, votes16, votes18, precincts, comp)
+
+    # LEE
+    name = 'LEE'
+    precincts = ['LEE B', 'LEE D', 'LEE E', 'LEE A', 'LEE C']
+    comp = [['B1', 'B2'], ['D1', 'D2'], ['E1', 'E2'], ['A1', 'A2'], ['C1', 'C2']]
+    data = update_all(name, data, votes16, votes18, precincts, comp)
+
+
+    #with open('NC_temp2.geojson', 'w') as f:
+        #    json.dump(data, f)
+
+
+def update_precinct(data, votes, precinct, comp, election_type):
+    candidates = set(votes['candidate'].values) # list of candidates
+    house_data = {}
+    for c in candidates:
+        d = votes[votes.candidate == c] # rows related to candidate
+        tot = 0 # votes for candidate c
+        for p_name in comp:
+            if p_name in d[['jurisdiction']].to_numpy():
+                tot += int(d[d.jurisdiction == p_name]['votes'].values[0])
+        house_data.update({c: tot})
+
+    for f in data['features']:
+        prop = f['properties']
+        if precinct == prop['PRENAME']:
+            prop[election_type] = house_data
+    return data
+
+def update_all(name, data, votes16, votes18, precincts, comp):
+    house16 = 'HOUSE_ELECTION_16'
+    house18 = 'HOUSE_ELECTION_18'
+    v16 = votes16[votes16.parent_jurisdiction == name]
+    v18 = votes18[votes18.parent_jurisdiction == name]
+    for i in range(len(precincts)):
+        data = update_precinct(data, v16, precincts[i], comp[i], house16)
+        data = update_precinct(data, v18, precincts[i], comp[i], house18)
+    return data
+
+
+if __name__ == '__main__':
+    #__run('RI_Precincts_MAPPED.geojson')
+
+    """
+    with open('NC_VDT_MAPPED.geojson') as f:
+        data = json.load(f)
+    with open('NC_temp.geojson', 'w') as f:
+        json.dump(data, f)
+    """
+
+    file = 'NC_temp.geojson'
+    with open(file) as f:
+        data = json.load(f)
+
+    voting16 = pd.read_csv('nc_2016.csv', dtype=str)
+    votes16 = voting16[voting16.office == 'U.S. House'].drop(columns=['district'])
+    voting18 = pd.read_csv('nc_2018.csv', dtype=str)
+    votes18 = voting18[voting18.office == 'U.S. House'].drop(columns=['district'])
+
+    """
+    features = data['features'] # list of dictionaries, with each dictionary containing info on geometry
+    collection = []
+    i = 0
+    labels = []
+    map = dict()
+    for f in features:
+        d = f['properties']['PRENAME']
+        name = 'CALDWELL'
+        if name in d:
+            collection.append(shape(f['geometry']))
+            i += 1
+            map.update({i:d})
+        if name + ' H07' == d:
+            p = shape(f['geometry'])
+    print(map)
+    collection = __all_polygons(collection)
+    plot_polygons(collection)
+    """
+
+    update_NC(file, data, votes16, votes18)
 
     """
     pre = [
-        Polygon([(1,2),(3,2),(3,0),(2.5,0.25),(1,2)]),
+        Polygon([(1,2),(3,2),(3,0),(2.5,0.25),(2.75,0.5),(2.4,0.6),(1.7,0.8),(1,2)]),
         Polygon([(0,0), (1,1), (2,0), (0,0)]),
         Polygon([(0,0), (0,1.75), (1,2), (1,1), (0,0)]),
         Polygon([(0,1.75), (0,2), (1,2), (0,1.75)]),
         Polygon([(1,1), (1,2), (3,0), (2,0), (1,1)]),
-        ]
-
+    ]
     plot_polygons(pre)
-
+    
     grid = __compute_search_spaces(pre)
     for p in pre:
-        neighbors = get_precinct_neighbors(pre, p, grid)
+        neighbors = get_precinct_neighbors(p, grid)
         for n in neighbors:
             print(n)
         print()
-
-    geo = Geod(ellps='GRS80')
-    geom = LineString([(-78.119956, 43.374880), (-78.119666, 43.374868)])
-    dst = geo.geometry_length(geom)
-    print(dst) # roughly 23.539 meters
     """

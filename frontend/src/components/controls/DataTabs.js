@@ -77,7 +77,7 @@ export default function DataTabs(props) {
             </AppBar>
             <TabPane value={value} index={0}>
                 <h4 style={{fontWeight: 'bold', textDecoration: 'underline'}}>Voting Incumbents:</h4>
-                <p>{props.incumbents}</p>
+                {/* <p>{props.incumbents}</p> */}
                 <h4 style={{fontWeight: 'bold', textDecoration: 'underline'}}>Laws:</h4>
                 <p>{props.laws}</p>
                 <Statistics data={props.stateData}></Statistics>

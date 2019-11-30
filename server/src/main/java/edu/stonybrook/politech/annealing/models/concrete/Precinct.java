@@ -13,10 +13,7 @@ import org.locationtech.jts.io.ParseException;
 import org.locationtech.jts.io.geojson.GeoJsonReader;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "Precinct")
@@ -189,7 +186,7 @@ public class Precinct
         if (demographic == null) {
             return populationMap.values().stream().reduce(0L, Long::sum);
         } else {
-            return populationMap.get(demographic);
+            return populationMap.getOrDefault(demographic, 0L);
         }
     }
 
