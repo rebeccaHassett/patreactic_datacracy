@@ -72,26 +72,24 @@ export default class Statistics extends Component {
 
 
             var dataPie = {
-                labels: ["African American", "Asian", "Hispanic", "White", "Native American", "Pacific Islander"],
+                labels: ["African American", "Asian", "Hispanic", "White", "Native American"],
                 datasets: [
                     {
-                        data: [africanAmericanPopulation, asianPopulation, hispanicPopulation, whitePopulation, nativeAmericanPopulation, pacificIslanderPopulation],
+                        data: [africanAmericanPopulation, asianPopulation, hispanicPopulation, whitePopulation, nativeAmericanPopulation],
                         backgroundColor: [
-                            "#F7464A",
-                            "#46BFBD",
-                            "#FDB45C",
-                            "#949FB1",
-                            '#00A6B4',
-                            '#6800B4'
+                            "#e3c878",
+                            "#ed9a73",
+                            "#88A1E6",
+                            '#bbeaa6',
+                            "#e688a1",
 
                         ],
                         hoverBackgroundColor: [
-                            "#FF5A5E",
-                            "#5AD3D1",
-                            "#FFC870",
-                            "#A8B3C5",
-                            '#00A6B4',
-                            '#6800B4'
+                            "#e3c878",
+                            "#ed9a73",
+                            "#88A1E6",
+                            '#bbeaa6',
+                            "#e688a1",
                         ]
                     }
                 ]
@@ -124,8 +122,8 @@ export default class Statistics extends Component {
                 }
                 republicanCandidate = republicanKey.substring(0, republicanKey.length - 1);
                 democraticCandidate = democraticKey.substring(0, democraticKey.length - 1);
-                republicanVotes = voting_data.republicanKey;
-                democraticVotes = voting_data.democraticKey;
+                republicanVotes = voting_data[republicanKey];
+                democraticVotes = voting_data[democraticKey];
             }
 
             var dataPieParty = {
@@ -134,12 +132,12 @@ export default class Statistics extends Component {
                     {
                         data: [republicanVotes, democraticVotes],
                         backgroundColor: [
-                            "rgba(30, 144,255,1)",
                             "rgba(245,  0, 87, 1)",
+                            "rgba(30, 144,255,1)",
                         ],
                         hoverBackgroundColor: [
-                            "rgba(30, 144,255,0.5)",
                             "rgba(245,  0, 87, 0.5)",
+                            "rgba(30, 144,255,0.5)",
                         ]
                     }
                 ]
@@ -152,13 +150,13 @@ export default class Statistics extends Component {
                         label: "Number of Votes",
                         data: [republicanVotes, democraticVotes],
                         backgroundColor: [
-                            "rgba(30, 144,255,0.5)",
                             "rgba(245,  0, 87, 1)",
+                            "rgba(30, 144,255,0.5)",
                         ],
                         borderWidth: 2,
                         borderColor: [
-                            "rgba(30, 144,255,0.5)",
                             "rgba(245,  0, 87, 1)",
+                            "rgba(30, 144,255,0.5)",
                         ]
                     }
                 ]
@@ -178,25 +176,24 @@ export default class Statistics extends Component {
             <StatisticsStyles>
                 <Form>
                     <Form.Group>
-                        <Form.Label className="bolden">Election Data</Form.Label>
+                        <h3 className="bolden">Election Data</h3>
                 <ElectionButtonsControl exportState={this.handleElectionChanges}/>
                     </Form.Group>
-                    <Form.Label className="bolden"> {wordCase(name)}</Form.Label>
-                    <Form.Label className="label">{wordCase(this.state.electionType)} {this.state.electionYear}</Form.Label>
-                <p>{democraticCandidate}, Dem, {democraticVotes.toLocaleString()}</p>
-                <p>{republicanCandidate}, Rep, {republicanVotes.toLocaleString()}</p>
-                <h5>Votes Per Party</h5>
+                    <h4 className="bolden"> {wordCase(name)}</h4>
+                    <h4 className="label">{wordCase(this.state.electionType)} {this.state.electionYear}</h4>
+                <h5>{democraticCandidate}, Dem, {democraticVotes.toLocaleString()}</h5>
+                <h5>{republicanCandidate}, Rep, {republicanVotes.toLocaleString()}</h5>
+                <h4>Votes Per Party</h4>
                 <PieChart dataPie={dataPieParty}/>
-                <h5>Votes Per Candidate</h5>
+                <h4>Votes Per Candidate</h4>
                     <BarChart databar={databar}/>
-                <h5>Demographic Data</h5>
+                <h4>Demographic Data</h4>
                 <p>Total Population: {Math.round(totalPopulation).toLocaleString()}</p>
                 <p>Hispanic Population: {Math.round(hispanicPopulation).toLocaleString()}</p>
                 <p>White Population: {Math.round(whitePopulation).toLocaleString()}</p>
                 <p>African American Population: {Math.round(africanAmericanPopulation).toLocaleString()}</p>
                 <p>Native American Population: {Math.round(nativeAmericanPopulation).toLocaleString()}</p>
                 <p>Asian Population: {Math.round(asianPopulation).toLocaleString()}</p>
-                <p>Pacific Islander Population: {Math.round(pacificIslanderPopulation).toLocaleString()}</p>
                 <PieChart dataPie={dataPie}/>
             </Form>
             </StatisticsStyles>
@@ -205,7 +202,8 @@ export default class Statistics extends Component {
 }
 
 const StatisticsStyles = styled.div`
-    h5 {
+    h4 {
+        margin-top: 2vw;
         margin-bottom: 1vw;
     }
 

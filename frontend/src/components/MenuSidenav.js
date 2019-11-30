@@ -90,7 +90,7 @@ export default function MenuSidenav(props) {
                 <Phase2Controls></Phase2Controls>
             </TabPanel>
             <TabPanel value={value} index={3}>
-                <DataDisplay stateData={props.stateData} precinctData={props.precinctData} districtData={props.districtData}></DataDisplay>
+                <DataDisplay stateData={props.stateData} precinctData={props.precinctData} districtData={props.districtData} chosenState={props.chosenState}></DataDisplay>
             </TabPanel>
         </div>
     );

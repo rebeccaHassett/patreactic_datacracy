@@ -5,13 +5,8 @@ import styled from 'styled-components';
 import Precinct from "./Precinct";
 import Cluster from "./Cluster";
 import MenuSidenav from "./MenuSidenav";
-import DataDisplay from './DataDisplay';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import Collapse from "react-collapse";
-import Divider from "@material-ui/core/Divider";
 import Box from "@material-ui/core/Box";
-import { borders } from '@material-ui/system';
-import BoxMenu from './controls/BoxMenu';
 
 
 var ZOOM = 7;
@@ -41,6 +36,8 @@ export default class State extends Component {
         var minZoom;
         var clustersUrl;
         var chosenState = window.location.pathname.split("/").pop();
+
+        this.setState({chosenState: chosenState});
 
         if (chosenState === "NorthCarolina") {
             clustersUrl = 'http://127.0.0.1:8080/District_Borders?name=North_Carolina';
@@ -134,6 +131,7 @@ export default class State extends Component {
                             <body>
                             <div id='map'></div>
                             </body>
+                            <Card id="results_box">Hello</Card>
                         </Box>
                     </Col>
                 </Row>
@@ -154,7 +152,7 @@ const State_Style = styled.div`
     #map {
       height: 47.5vw;
       width: 71vw;
-      zIndex: 0vw;
+      z-index: 0vw;
     }
     .menu {
         width: 20%;
@@ -167,5 +165,12 @@ const State_Style = styled.div`
     .mapContainer {
                     margin-left: 0vw;
         padding-left: 0vw;
+    }
+    #results_box {
+        position: relative;
+        bottom: 20vw;
+        width: 20vw;
+        height: 20vw;
+        z-index: 10vw;
     }
 `;

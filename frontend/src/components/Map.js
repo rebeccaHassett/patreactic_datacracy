@@ -5,19 +5,22 @@ import L from "leaflet";
 import SideNav, {NavItem, NavIcon, NavText} from '@trendmicro/react-sidenav';
 import '@trendmicro/react-sidenav/dist/react-sidenav.css';
 import {BrowserRouter as Router, Route} from 'react-router-dom';
+import { Place } from '@material-ui/icons';
+
+
 
 export default class Map extends Component {
 
     componentDidMount() {
         var maxMapBounds = [
-            [29, -122],
+            [29, -127],
             [49, -70]
         ];
 
         this.map = L.map('map', {
             center: [0, 0],
-            zoom: 4,
-            minZoom: 2.5,
+            zoom: 0,
+            minZoom: 0,
             maxBounds: maxMapBounds,
             zoomControl: false,
             layers: [
@@ -51,6 +54,7 @@ export default class Map extends Component {
                                 <SideNav.Nav>
                                     <NavItem eventKey="stateMenu">
                                         <NavIcon>
+                                            <Place></Place>
                                         </NavIcon>
                                         <NavText>
                                             State
@@ -77,9 +81,7 @@ export default class Map extends Component {
                     )}
                     />
                 </Router>
-                <Container>
                     <div id='map'></div>
-                </Container>
             </MapStyle>
         );
     }
@@ -96,7 +98,7 @@ function addLayerToMap(url, map, name) {
     }).then(function (data) {
         layer = L.geoJSON(data).addTo(map);
         layer.setStyle({
-            color: 'green'
+            color: 'dodgerblue'
         })
 
         var tooltip_options = {maxWidth: 200, autoClose: false, permanent: false, opacity: 0.8, offset: [-10, 0]};
@@ -112,7 +114,7 @@ function addLayerToMap(url, map, name) {
         layer.on('mouseout', function (e) {
             var layer = e.target;
             layer.setStyle({
-                color: 'green'
+                color: 'dodgerblue'
             });
         });
 
@@ -125,11 +127,14 @@ function addLayerToMap(url, map, name) {
 
 const MapStyle = styled.div`
     #sidenav {
-        width: 7vw;
-        background-color: darkseagreen;
+        width: 5vw;
+        background-color: dodgerblue;
+        font-weight: bold;
+        font-size: 10vw;
+        color: white;
     }
     #map {
-          height: 46vw;
-          width: 93vw;
+          height: 49vw;
+          width: 100vw;
     }
 `;
