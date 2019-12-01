@@ -22,6 +22,8 @@ export default class State extends Component {
             stateData: "",
             chosenState: window.location.pathname.split("/").pop(),
             originalDistrictLayer: null,
+            precinctLayer: null,
+            precinctLayerExists: false
         }
 
         this.toggleBox = this.toggleBox.bind(this);
@@ -87,7 +89,7 @@ export default class State extends Component {
 
         var that = this;
         this.map.on("zoomend", function (event) {
-            if (this.getZoom() >= ZOOM) {
+            if (this.getZoom() >= ZOOM && that.state.precinctLayerExists === false) {
                 var precinctsUrl;
                 const precincts = new Precinct();
                 if (chosenState === "RhodeIsland") {
@@ -98,6 +100,8 @@ export default class State extends Component {
                     precinctsUrl = 'http://127.0.0.1:8080/Precinct_Borders?name=Michigan'
                 }
 
+                that.setState({precinctLayerExists: true});
+
                 precincts.addPrecinctsToDistricts(precinctsUrl, this)
                     .then(precinct_layer => precincts.addPrecinctsToDistricts(precinctsUrl, this))
                     .then(precinct_layer => {
@@ -107,6 +111,7 @@ export default class State extends Component {
                         return true;
                     })
                     .catch(err => console.log(err));
+                that.setState({precinctLayerExists : true});
             }
         })
 

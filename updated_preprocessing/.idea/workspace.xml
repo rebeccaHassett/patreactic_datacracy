@@ -1,14 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="da7513d8-167f-45a0-92b8-c16a264abf58" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/../frontend/src/components/MenuSidenav.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/MenuSidenav.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/src/components/Phase0Controls.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/Phase0Controls.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/src/components/State.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/State.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/src/components/controls/DataTabs.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/controls/DataTabs.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/src/components/controls/TableDisplay.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/controls/TableDisplay.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="da7513d8-167f-45a0-92b8-c16a264abf58" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -175,7 +168,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1573675887062</updated>
-      <workItem from="1575154293575" duration="1694000" />
+      <workItem from="1575154293575" duration="1877000" />
     </task>
     <servers />
   </component>
