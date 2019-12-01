@@ -1,5 +1,4 @@
-import React, {Component} from 'react';
-import {Form} from "react-bootstrap";
+import React, { Component } from 'react';
 import SliderControlUpperLowerValues from "./controls/SliderControlUpperLowerValues";
 import SliderControlSingleValue from "./controls/SliderControlSingleValue";
 import SwitchControl from "./controls/SwitchControl";
@@ -30,7 +29,7 @@ export default class Phase1Controls extends Component {
     }
 
     async runPhase1() {
-        if(this.state.selectedMinorities.length === 0) {
+        if (this.state.selectedMinorities.length === 0) {
             /*error*/
         }
         var phase1Dto = {
@@ -50,42 +49,42 @@ export default class Phase1Controls extends Component {
 
         const response = await fetch("http://127.0.0.1:8080/runPhase1", {
             method: 'POST',
-            headers: {'Content-Type': 'application/json'},
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(phase1Dto),
         })
     }
 
     handleNumberCongressionalDistricts(value) {
-        this.setState({numCongressionalDistricts: value})
+        this.setState({ numCongressionalDistricts: value })
     }
 
     handleNumberMajorityMinorityDistricts(value) {
-        this.setState({numMajorityMinorityDistricts: value})
+        this.setState({ numMajorityMinorityDistricts: value })
     }
 
     handleMinorityPopulationThreshold(value) {
-        this.setState({minorityPopulationThresholdValues: value})
+        this.setState({ minorityPopulationThresholdValues: value })
     }
 
     handleIncrementalClick(evt) {
-        this.setState({incremental: evt.target.checked})
+        this.setState({ incremental: evt.target.checked })
     }
 
     handleRealTimeClick(evt) {
-        this.setState({realtime: evt.target.checked})
+        this.setState({ realtime: evt.target.checked })
     }
 
     handleSelectedDemographics(event) {
         let updatedDemographics = Array.from(this.state.selectedMinorities);
-        if(event.target.checked === true && !updatedDemographics.includes(event.target.value)) {
+        if (event.target.checked === true && !updatedDemographics.includes(event.target.value)) {
             updatedDemographics.push(event.target.value);
-            this.setState({selectedMinorities: updatedDemographics});
+            this.setState({ selectedMinorities: updatedDemographics });
         }
-        else if(event.target.checked === false && updatedDemographics.includes(event.target.value)) {
-            let demographicsUnchecked = updatedDemographics.filter(function(val){
+        else if (event.target.checked === false && updatedDemographics.includes(event.target.value)) {
+            let demographicsUnchecked = updatedDemographics.filter(function (val) {
                 return val !== event.target.value; // keep values that do not equal the deselected demographic
             });
-            this.setState({selectedMinorities: demographicsUnchecked});
+            this.setState({ selectedMinorities: demographicsUnchecked });
         }
     }
 
@@ -93,17 +92,17 @@ export default class Phase1Controls extends Component {
         let marks;
         let min;
         let max;
-        if(this.props.chosenState === "RhodeIsland") {
+        if (this.props.chosenState === "RhodeIsland") {
             marks = rhodeIslandMarks;
             min = 1;
             max = 2;
         }
-        else if(this.props.chosenState === "Michigan") {
+        else if (this.props.chosenState === "Michigan") {
             marks = michiganMarks;
             min = 1;
             max = 14;
         }
-        else if(this.props.chosenState === "NorthCarolina") {
+        else if (this.props.chosenState === "NorthCarolina") {
             marks = northCarolinaMarks;
             min = 1;
             max = 14;
@@ -111,29 +110,27 @@ export default class Phase1Controls extends Component {
 
         return (
             <Phase1Styles>
-                <Form>
-                    <Button variant="contained" color="primary" onClick={this.runPhase1} style={{width: '20vw', marginBottom: '2vw'}}>Start Phase 1</Button>
-                    <SwitchControl name="Incremental" exportIncremental={this.handleIncrementalClick} exportRealTime={this.handleRealTimeClick}/>
-                    <Form.Group id="numberDistricts">
-                        <Form.Label className="label">Congressional Districts:</Form.Label>
-                        <SliderControlSingleValue
-                            exportState={this.handleNumberCongressionalDistricts} marks={marks} min={min} max={max}></SliderControlSingleValue>
-                    </Form.Group>
-                    <Form.Group id="majorityMinorityDistricts">
-                        <Form.Label className="label">Majority-Minority Districts</Form.Label>
-                        <SliderControlSingleValue
-                            exportState={this.handleNumberMajorityMinorityDistricts} marks={marks} min={min} max={max}></SliderControlSingleValue>
-                    </Form.Group>
-                    <Form.Group id="minorityPopulationThreshold">
-                        <Form.Label className="label">Minority Population Thresholds:</Form.Label>
-                        <SliderControlUpperLowerValues
-                            exportState={this.handleMinorityPopulationThreshold}></SliderControlUpperLowerValues>
-                    </Form.Group>
-                    <Form.Group id="minorityPopulationThreshold">
-                        <Form.Label className="ethnicLabel">Ethnic/Racial Groups:</Form.Label>
+                <Button variant="contained" color="primary" onClick={this.runPhase1} style={{ width: '20vw', marginBottom: '2vw' }}>Start Phase 1</Button>
+                <SwitchControl name="Incremental" exportIncremental={this.handleIncrementalClick} exportRealTime={this.handleRealTimeClick} />
+                <ControlGroup id="numberDistricts">
+                    <label className="label">Congressional Districts:</label>
+                    <SliderControlSingleValue
+                        exportState={this.handleNumberCongressionalDistricts} marks={marks} min={min} max={max}></SliderControlSingleValue>
+                </ControlGroup>
+                <ControlGroup id="majorityMinorityDistricts">
+                    <label className="label">Majority-Minority Districts</label>
+                    <SliderControlSingleValue
+                        exportState={this.handleNumberMajorityMinorityDistricts} marks={marks} min={min} max={max}></SliderControlSingleValue>
+                </ControlGroup>
+                <ControlGroup id="minorityPopulationThreshold">
+                    <label className="label">Minority Population Thresholds:</label>
+                    <SliderControlUpperLowerValues
+                        exportState={this.handleMinorityPopulationThreshold}></SliderControlUpperLowerValues>
+                </ControlGroup>
+                <ControlGroup id="minorityPopulationThreshold">
+                    <label className="ethnicLabel">Ethnic/Racial Groups:</label>
                     <CheckboxControl exportState={this.handleSelectedDemographics}></CheckboxControl>
-                    </Form.Group>
-                </Form>
+                </ControlGroup>
             </Phase1Styles>
         );
     };
@@ -141,7 +138,10 @@ export default class Phase1Controls extends Component {
 
 const Phase1Styles = styled.div`
     position: relative;
-    left: 2vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
     .label {
       margin-bottom: 2.5vw;
       font-weight: bold;
@@ -149,6 +149,10 @@ const Phase1Styles = styled.div`
     .ethnicLabel {
       font-weight: bold;
     }
+`;
+
+const ControlGroup = styled.div`
+    width: 80%;
 `;
 
 const rhodeIslandMarks = [

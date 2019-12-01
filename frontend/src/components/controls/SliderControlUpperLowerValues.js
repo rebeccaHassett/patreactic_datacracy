@@ -5,7 +5,7 @@ import Slider from '@material-ui/core/Slider';
 
 const useStyles = makeStyles({
     root: {
-        width: 300,
+        width: "100%",
     },
 });
 
@@ -28,7 +28,6 @@ export default function SliderControlUpperLowerValues(props) {
                 valueLabelDisplay="auto"
                 aria-labelledby="range-slider"
                 getAriaValueText={valuetext}
-                style={{width: '18vw'}}
                 marks={blocMarks}
             />
         </div>

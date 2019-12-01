@@ -1,6 +1,6 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import L from 'leaflet';
-import {Row, Col, Card} from "react-bootstrap";
+import { Row, Col, Card } from "react-bootstrap";
 import styled from 'styled-components';
 import Precinct from "./Precinct";
 import Cluster from "./Cluster";
@@ -27,7 +27,7 @@ export default class State extends Component {
 
 
     toggleBox() {
-        this.setState(oldState => ({sidebar: !oldState.sidebar}));
+        this.setState(oldState => ({ sidebar: !oldState.sidebar }));
     }
 
     componentDidMount() {
@@ -36,7 +36,7 @@ export default class State extends Component {
         var clustersUrl;
         var chosenState = window.location.pathname.split("/").pop();
 
-        this.setState({chosenState: chosenState});
+        this.setState({ chosenState: chosenState });
 
         if (chosenState === "NorthCarolina") {
             clustersUrl = 'http://127.0.0.1:8080/District_Borders?name=North_Carolina';
@@ -69,7 +69,6 @@ export default class State extends Component {
             maxBounds: maxBounds,
             maxBoundsViscosity: 1.0,
             preferCanvas: true,
-            zIndex: -1,
             layers: [
                 L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
                     attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ',
@@ -94,7 +93,7 @@ export default class State extends Component {
                     .then(precinct_layer => precincts.addPrecinctsToDistricts(precinctsUrl, this))
                     .then(precinct_layer => {
                         precinct_layer.on('mouseover', function (event) {
-                            that.setState({precinctData: JSON.stringify(event.layer.feature.properties)})
+                            that.setState({ precinctData: JSON.stringify(event.layer.feature.properties) })
                         });
                         return true;
                     })
@@ -109,30 +108,26 @@ export default class State extends Component {
     render() {
 
         const theme = createMuiTheme({
-                palette: {
-                    primary: {
-                        main: '#1E90FF'
-                    }
+            palette: {
+                primary: {
+                    main: '#1E90FF'
                 }
-            },
+            }
+        },
         )
         return (
             <MuiThemeProvider theme={theme}>
-            <State_Style>
-                <Row>
-                    <Col className="menu">
-                        <Box style={{maxHeight: '47.5vw', overflowY: 'scroll', overflowX: 'hidden'}}>
-                                    <MenuSidenav chosenState={this.state.chosenState} precinctData={this.state.precinctData}
-                                                 districtData={this.state.districtData} stateData={this.state.stateData}/>
-                        </Box>
-                    </Col>
-                    <Col className="mapContainer">
-                        <Box style={{zIndex: '-1'}}>
+                <State_Style>
+                    <Row>
+                        <Col className="menu" xs={4}>
+                            <MenuSidenav chosenState={this.state.chosenState} precinctData={this.state.precinctData}
+                                districtData={this.state.districtData} stateData={this.state.stateData} />
+                        </Col>
+                        <Col className="mapContainer" xs={8}>
                             <div id='map'></div>
-                        </Box>
-                    </Col>
-                </Row>
-            </State_Style>
+                        </Col>
+                    </Row>
+                </State_Style>
             </MuiThemeProvider>
         );
     }
@@ -144,25 +139,23 @@ const State_Style = styled.div`
         margin-right: 0vw;
         padding-left: 0vw;
         padding-right: 0vw;
+        height: 100vh;
     }
     overflow: hidden;
     #map {
-      height: 47.5vw;
-      width: 71vw;
-      z-index: -1vw;
+      height: 100vh;
       position: relative;
     }
     .menu {
-        width: 20%;
-        height: 47vw;
-        zIndex: 5vw;
         margin-right: 0vw;
         padding-left: 1vw;
         padding-right: 0vw;
+        height: 100vh;
     }
     .mapContainer {
         margin-left: 0vw;
         padding-left: 0vw;
+        height: 100vh;
     }
     #results_box {
         position: relative;

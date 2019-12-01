@@ -1,5 +1,5 @@
-import React, {Component} from 'react';
-import {Form, Container} from "react-bootstrap";
+import React, { Component } from 'react';
+import { Form, Container } from "react-bootstrap";
 import SliderControlUpperLowerValues from "./controls/SliderControlUpperLowerValues";
 import styled from "styled-components";
 import Button from '@material-ui/core/Button';
@@ -58,29 +58,29 @@ export default class Phase0Controls extends Component {
 
         const response = await fetch("http://127.0.0.1:8080/runPhase0", {
             method: 'POST',
-            headers: {'Content-Type': 'application/json'},
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(phase0Dto),
         })
 
-        this.setState({resultsUnavailable: false});
-        this.setState({resultsInView: true});
+        this.setState({ resultsUnavailable: false });
+        this.setState({ resultsInView: true });
     }
 
     resultsViewOn() {
-        this.setState({resultsInView: true});
+        this.setState({ resultsInView: true });
     }
 
     resultsViewOff() {
-        this.setState({resultsInView: false});
+        this.setState({ resultsInView: false });
     }
 
     handleBlocPopulationUpdate(value) {
-        this.setState({blocPopulationValues: value})
+        this.setState({ blocPopulationValues: value })
 
     }
 
     handleBlocVotingUpdate(value) {
-        this.setState({blocVotingValues: value})
+        this.setState({ blocVotingValues: value })
     }
 
     handleElectionChanges(event) {
@@ -123,33 +123,31 @@ export default class Phase0Controls extends Component {
         if (this.state.resultsUnavailable === true || this.state.resultsInView === false) {
             return (
                 <Phase0Styles>
-                    <Form>
-                        <Button variant="contained" color="primary" onClick={this.runPhase0}
-                                style={{width: '20vw', marginBottom: '2vw'}}>Start Phase 0</Button>
-                        <Form.Group>
-                            <Form.Label className="label">Bloc Population Thresholds:</Form.Label>
-                            <SliderControlUpperLowerValues exportState={this.handleBlocPopulationUpdate}/>
-                        </Form.Group>
-                        <Form.Group>
-                            <Form.Label className="label">Bloc Voting Thresholds:</Form.Label>
-                            <SliderControlUpperLowerValues exportState={this.handleBlocVotingUpdate}/>
-                        </Form.Group>
-                        <Form.Group>
-                            <Form.Label className="electionLabel">Election Type:</Form.Label>
-                            <ElectionButtonsControl exportState={this.handleElectionChanges}/>
-                        </Form.Group>
-                        <Button variant="contained" color="primary" style={{width: '20vw', marginBottom: '2vw'}}
-                                disabled={this.state.resultsUnavailable} onClick={this.resultsViewOn}>View Results</Button>
-                    </Form>
+                    <Button variant="contained" color="primary" onClick={this.runPhase0}
+                        style={{ width: '20vw', marginBottom: '2vw' }}>Start Phase 0</Button>
+                    <ControlGroup>
+                        <label className="label">Bloc Population Thresholds:</label>
+                        <SliderControlUpperLowerValues exportState={this.handleBlocPopulationUpdate} />
+                    </ControlGroup>
+                    <ControlGroup>
+                        <label className="label">Bloc Voting Thresholds:</label>
+                        <SliderControlUpperLowerValues exportState={this.handleBlocVotingUpdate} />
+                    </ControlGroup>
+                    <ControlGroup>
+                        <label className="electionLabel">Election Type:</label>
+                        <ElectionButtonsControl exportState={this.handleElectionChanges} />
+                    </ControlGroup>
+                    <Button variant="contained" color="primary" style={{ width: '20vw', marginBottom: '2vw' }}
+                        disabled={this.state.resultsUnavailable} onClick={this.resultsViewOn}>View Results</Button>
                 </Phase0Styles>
             );
         } else {
             return (
-                <Container style={{marginRight: '0vw', marginLeft: '0vw'}}>
-                    <Button variant="contained" color="primary" style={{width: '20vw', marginBottom: '2vw'}}
-                            onClick={this.resultsViewOff}>View Results</Button>
-                <h3>Voting Bloc Precincts</h3>
-                <TableDisplay columns={columns} rows={rows} createData={createData}/>
+                <Container style={{ marginRight: '0vw', marginLeft: '0vw' }}>
+                    <Button variant="contained" color="primary" style={{ width: '20vw', marginBottom: '2vw' }}
+                        onClick={this.resultsViewOff}>View Results</Button>
+                    <h3>Voting Bloc Precincts</h3>
+                    <TableDisplay columns={columns} rows={rows} createData={createData} />
                 </Container>
             );
         }
@@ -157,8 +155,10 @@ export default class Phase0Controls extends Component {
 }
 
 const Phase0Styles = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     position: relative;
-    left: 2vw;
     .label {
       margin-bottom: 2.5vw;
       font-weight: bold;
@@ -168,35 +168,35 @@ const Phase0Styles = styled.div`
     }
 `;
 
+const ControlGroup = styled.div`
+    width: 80%;
+`;
 
 const columns = [
-    { id: 'precinctName', label: 'Name', minWidth: 100 },
-    { id: 'demographic', label: 'Demographic', minWidth: 100 },
+    { id: 'precinctName', label: 'Name', },
+    { id: 'demographic', label: 'Demographic', },
     {
         id: 'population',
         label: 'Population',
-        minWidth: 100,
         align: 'right',
         format: value => value.toLocaleString(),
     },
     {
         id: 'winningParty',
         label: 'Winning Party',
-        minWidth: 100,
         align: 'right',
         format: value => value.toLocaleString(),
     },
     {
         id: 'votes',
         label: 'Votes',
-        minWidth: 100,
         align: 'right',
         format: value => value.toLocaleString(),
     }
 ];
 
 function createData(precinctName, demographic, population, winningParty, votes) {
-    return { precinctName, demographic, population, winningParty, votes};
+    return { precinctName, demographic, population, winningParty, votes };
 }
 
 const rows = [

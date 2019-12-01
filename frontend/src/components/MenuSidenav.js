@@ -63,19 +63,19 @@ export default function MenuSidenav(props) {
 
     return (
         <div className={classes.root}>
-            <AppBar position="static" style={{width:'29vw'}} color="default">
+            <AppBar position="static" color="default">
                 <Tabs
                     value={value}
                     onChange={handleChange}
                     indicatorColor="primary"
                     textColor="primary"
-                    tabItemContainerStyle={{width: '5%'}}
                     contentContainerStyle={{  display: 'flex',
                         alignItems: 'center',
-                        justifyContent: 'center', right: '10vw'}}
+                        justifyContent: 'center',
+                    }}
                     centered={true}
                 >
-                    <StyledTab label="Phase 0"></StyledTab>
+                    <StyledTab label="Phase 0" />
                     <StyledTab label="Phase 1" />
                     <StyledTab label="Phase 2"/>
                     <StyledTab label="Data"/>

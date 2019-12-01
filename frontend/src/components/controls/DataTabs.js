@@ -34,6 +34,9 @@ TabPane.propTypes = {
 const useDataStyles = makeStyles(theme => ({
     root: {
         backgroundColor: theme.palette.background.paper,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
     },
 }));
 
@@ -59,26 +62,28 @@ export default function DataTabs(props) {
 
     return (
         <div className={classes.root}>
-            <AppBar position="static" style={{width:'24vw'}} color="primary">
+            <AppBar position="static" style={{ width: '24vw' }} color="primary">
                 <Tabs
                     value={value}
                     onChange={handleChange}
                     indicatorColor="secondary"
-                    tabItemContainerStyle={{width: '5%'}}
-                    contentContainerStyle={{  display: 'flex',
+                    tabItemContainerStyle={{ width: '5%' }}
+                    contentContainerStyle={{
+                        display: 'flex',
                         alignItems: 'center',
-                        justifyContent: 'center', right: '10vw'}}
+                        justifyContent: 'center', right: '10vw'
+                    }}
                     centered={true}
                 >
-                    <StyledDataTab label="State"/>
+                    <StyledDataTab label="State" />
                     <StyledDataTab label="District" />
-                    <StyledDataTab label="Precinct"/>
+                    <StyledDataTab label="Precinct" />
                 </Tabs>
             </AppBar>
             <TabPane value={value} index={0}>
-                <h4 style={{fontWeight: 'bold', textDecoration: 'underline'}}>Voting Incumbents:</h4>
+                <h4 style={{ fontWeight: 'bold', textDecoration: 'underline' }}>Voting Incumbents:</h4>
                 {/* <p>{props.incumbents}</p> */}
-                <h4 style={{fontWeight: 'bold', textDecoration: 'underline'}}>Laws:</h4>
+                <h4 style={{ fontWeight: 'bold', textDecoration: 'underline' }}>Laws:</h4>
                 <p>{props.laws}</p>
                 <Statistics data={props.stateData}></Statistics>
             </TabPane>

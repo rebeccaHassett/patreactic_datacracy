@@ -1,7 +1,7 @@
 import React from 'react';
-import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
+import styled from 'styled-components';
 
 export default function SwitchLabels(props) {
     const [state, setState] = React.useState({
@@ -14,7 +14,7 @@ export default function SwitchLabels(props) {
     };
 
     return (
-        <FormGroup row>
+        <Row>
             <FormControlLabel
                 control={
                     <Switch
@@ -39,6 +39,12 @@ export default function SwitchLabels(props) {
                 }
                 label="Real-Time"
             />
-        </FormGroup>
+        </Row>
     );
 }
+
+const Row = styled.div`
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+`;
