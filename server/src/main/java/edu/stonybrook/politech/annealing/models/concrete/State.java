@@ -67,8 +67,6 @@ public class State
             for (DemographicGroup dg : DemographicGroup.values()) {
                 this.populationMap.put(dg, precincts.values().stream().map(p -> p.getPopulation(dg)).reduce(0L, Long::sum));
             }
-
-            districts.values().forEach(District::initEdges);
         }
     }
 
@@ -183,5 +181,16 @@ public class State
 
     public void setIncumbents(Map<String, Incumbent> incumbents) {
         this.incumbents = incumbents;
+    }
+
+    public void initPhase1() {
+        districts.clear();
+        int counter = 0;
+        for (Precinct p : precincts.values()) {
+            District newDistrict = new District(String.valueOf(counter++), this);
+            newDistrict.addPrecinct(p);
+            districts.put(newDistrict.getDistrictId(), newDistrict);
+        }
+        districts.values().forEach(District::initEdges);
     }
 }

@@ -1,5 +1,6 @@
 package edu.sunysb.cs.patractic.datacracy.domain.models;
 
+import com.google.common.collect.ImmutableMap;
 import edu.stonybrook.politech.annealing.models.concrete.Precinct;
 import edu.sunysb.cs.patractic.datacracy.domain.enums.ElectionType;
 import edu.sunysb.cs.patractic.datacracy.domain.enums.PoliticalParty;
@@ -94,5 +95,9 @@ public class ElectionData {
             return votesByParty.values().stream().mapToLong(Long::longValue).sum();
         }
         return votesByParty.get(party);
+    }
+
+    public Map<PoliticalParty, Long> getVotesMap() {
+        return ImmutableMap.copyOf(votesByParty);
     }
 }

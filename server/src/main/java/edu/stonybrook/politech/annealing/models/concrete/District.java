@@ -4,6 +4,7 @@ import edu.stonybrook.politech.annealing.measures.DistrictInterface;
 import edu.sunysb.cs.patractic.datacracy.domain.enums.DemographicGroup;
 import edu.sunysb.cs.patractic.datacracy.domain.enums.PoliticalParty;
 import edu.sunysb.cs.patractic.datacracy.domain.interfaces.IJurisdiction;
+import edu.sunysb.cs.patractic.datacracy.domain.models.DistrictDataDto;
 import edu.sunysb.cs.patractic.datacracy.domain.models.Edge;
 import edu.sunysb.cs.patractic.datacracy.domain.models.ElectionData;
 import edu.sunysb.cs.patractic.datacracy.domain.models.ElectionId;
@@ -14,10 +15,7 @@ import org.locationtech.jts.geom.MultiPolygon;
 import org.locationtech.jts.geom.Polygon;
 import org.locationtech.jts.io.geojson.GeoJsonWriter;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class District
@@ -238,5 +236,13 @@ public class District
             edges.add(edge);
             d.edges.add(edge);
         });
+    }
+
+    public DistrictDataDto dto(ElectionId electionId) {
+        Map<String, Long> popMap = new HashMap<>();
+        for (DemographicGroup dg : DemographicGroup.values()) {
+            popMap.put(dg.toString(), getPopulation(dg));
+        }
+        return new DistrictDataDto(this.districtId, new ArrayList<>(this.precincts.keySet()), popMap, this.getElectionData(electionId).getVotesMap());
     }
 }
