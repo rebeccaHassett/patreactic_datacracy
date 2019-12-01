@@ -4,8 +4,6 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import edu.stonybrook.politech.annealing.algorithm.Measure;
 import edu.sunysb.cs.patractic.datacracy.domain.enums.Constraint;
-import edu.sunysb.cs.patractic.datacracy.domain.enums.ElectionType;
-import edu.sunysb.cs.patractic.datacracy.domain.enums.Year;
 
 import java.util.HashMap;
 import java.util.Map;
