@@ -144,7 +144,7 @@ export default class Phase0Controls extends Component {
             return (
                 <Phase0Styles style={{paddingLeft: "10px", paddingRight: "10px"}}>
                     <Button variant="contained" color="primary" style={{ width: '20vw', marginBottom: '2vw' }}
-                        onClick={this.resultsViewOff}>View Results</Button>
+                        onClick={this.resultsViewOff}>Back</Button>
                     <h3>Voting Bloc Precincts</h3>
                     <TableDisplay columns={columns} rows={rows} createData={createData} />
                 </Phase0Styles>

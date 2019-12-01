@@ -82,7 +82,7 @@ export default function MenuSidenav(props) {
                 </Tabs>
             </AppBar>
             <TabPanel value={value} index={0} style={{marginLeft: '0px', paddingLeft: '0px', marginRight: '0px', paddingRight: '0px'}}>
-                <Phase0Controls state={props.state}></Phase0Controls>
+                <Phase0Controls state={props.chosenState}></Phase0Controls>
             </TabPanel>
             <TabPanel value={value} index={1}>
                 <Phase1Controls chosenState={props.chosenState}></Phase1Controls>
