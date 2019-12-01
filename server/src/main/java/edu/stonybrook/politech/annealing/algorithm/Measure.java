@@ -231,12 +231,6 @@ public enum Measure implements MeasureFunction<Precinct, District> {
             }
             return 1.0 - ((inefficient_V * 1.0) / tv);
         }
-    },
-    MAJ_MIN_POP {
-        @Override
-        public double calculateMeasure(District district, ElectionId electionId) {
-            return 0;
-        }
     };
 
     public abstract double calculateMeasure(District district, ElectionId electionId);

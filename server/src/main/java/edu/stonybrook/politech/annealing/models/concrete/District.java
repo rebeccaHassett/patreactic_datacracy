@@ -8,10 +8,8 @@ import edu.sunysb.cs.patractic.datacracy.domain.enums.ElectionType;
 import edu.sunysb.cs.patractic.datacracy.domain.enums.PoliticalParty;
 import edu.sunysb.cs.patractic.datacracy.domain.enums.Year;
 import edu.sunysb.cs.patractic.datacracy.domain.interfaces.IJurisdiction;
-import edu.sunysb.cs.patractic.datacracy.domain.models.JurisdictionDataDto;
-import edu.sunysb.cs.patractic.datacracy.domain.models.Edge;
-import edu.sunysb.cs.patractic.datacracy.domain.models.ElectionData;
-import edu.sunysb.cs.patractic.datacracy.domain.models.ElectionId;
+import edu.sunysb.cs.patractic.datacracy.domain.models.Properties;
+import edu.sunysb.cs.patractic.datacracy.domain.models.*;
 import org.locationtech.jts.algorithm.MinimumBoundingCircle;
 import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.GeometryFactory;
@@ -230,10 +228,10 @@ public class District
         Set<District> neighbors = new HashSet<>();
         this.borderPrecincts.forEach(p ->
                 neighbors.addAll(getState().getPrecinctSet().stream()
-                .filter(pre -> p.getNeighborIDs().contains(pre.getPrecinctId()))
-                .map(Precinct::getDistrict)
-                .collect(Collectors.toSet())
-        ));
+                        .filter(pre -> p.getNeighborIDs().contains(pre.getPrecinctId()))
+                        .map(Precinct::getDistrict)
+                        .collect(Collectors.toSet())
+                ));
         neighbors.forEach(d -> {
             Edge edge = new Edge(this, d);
             edges.add(edge);
@@ -254,5 +252,11 @@ public class District
         ImmutableMap.Builder<ElectionId, ElectionData> builder = new ImmutableMap.Builder<>();
         electionIds.forEach(eId -> builder.put(eId, this.getElectionData(eId)));
         return new JurisdictionDataDto(this.districtId, new ArrayList<>(this.precincts.keySet()), popMap, builder.build());
+    }
+
+    public Set<Edge> getMMEdges(Properties config) {
+        return edges.stream()
+                .filter(e -> e.wouldImproveMM(config))
+                .collect(Collectors.toSet());
     }
 }

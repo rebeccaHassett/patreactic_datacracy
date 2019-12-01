@@ -27,7 +27,9 @@ export default function CheckboxControl(props) {
     });
 
     const handleChange = name => event => {
-        setState({ ...state, [name]: event.target.checked });
+        const newState = { ...state, [name]: event.target.checked };
+        setState(newState);
+        props.exportState(newState);
     };
 
     const { BLACK, ASIAN, HISPANIC, WHITE, NATIVE_AMERICAN} = state;

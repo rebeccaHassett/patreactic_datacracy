@@ -9,8 +9,8 @@ import edu.sunysb.cs.patractic.datacracy.domain.enums.DemographicGroup;
 import edu.sunysb.cs.patractic.datacracy.domain.enums.ElectionType;
 import edu.sunysb.cs.patractic.datacracy.domain.enums.Year;
 import edu.sunysb.cs.patractic.datacracy.domain.interfaces.IJurisdiction;
-import edu.sunysb.cs.patractic.datacracy.domain.models.*;
 import edu.sunysb.cs.patractic.datacracy.domain.models.Properties;
+import edu.sunysb.cs.patractic.datacracy.domain.models.*;
 
 import javax.persistence.*;
 import java.util.*;
@@ -211,5 +211,18 @@ public class State
         ImmutableMap.Builder<ElectionId, ElectionData> builder = new ImmutableMap.Builder<>();
         electionIds.forEach(eId -> builder.put(eId, ElectionData.aggregateFromJurisdictions(this.getPrecinctSet().stream().map(p -> (IJurisdiction) p).collect(Collectors.toSet()), eId)));
         return new JurisdictionDataDto(this.name, new ArrayList<>(this.precincts.keySet()), popMap, builder.build());
+    }
+
+    public Set<Edge> getMMEdges(Properties config) {
+        Set<Edge> mmEdges = new HashSet<>();
+        for (District d : districts.values()) {
+            mmEdges.addAll(d.getMMEdges(config));
+        }
+        if (mmEdges.isEmpty()) {
+            for (District d : districts.values()) {
+                mmEdges.addAll(d.getEdges());
+            }
+        }
+        return mmEdges;
     }
 }

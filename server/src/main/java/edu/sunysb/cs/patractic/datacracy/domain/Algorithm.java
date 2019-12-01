@@ -4,14 +4,16 @@ import edu.stonybrook.politech.annealing.algorithm.MyAlgorithm;
 import edu.stonybrook.politech.annealing.measures.DefaultMeasures;
 import edu.stonybrook.politech.annealing.models.concrete.District;
 import edu.stonybrook.politech.annealing.models.concrete.State;
-import edu.sunysb.cs.patractic.datacracy.domain.models.JurisdictionDataDto;
-import edu.sunysb.cs.patractic.datacracy.domain.models.Phase1UpdateDto;
 import edu.sunysb.cs.patractic.datacracy.domain.models.Properties;
-import edu.sunysb.cs.patractic.datacracy.domain.models.VotingBlockDTO;
+import edu.sunysb.cs.patractic.datacracy.domain.models.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
 public class Algorithm extends MyAlgorithm {
+
+    private static Logger logger = LoggerFactory.getLogger(Algorithm.class);
 
     private static Map<String, Algorithm> sessions = new HashMap<>();
     // PHASE 1
@@ -34,6 +36,19 @@ public class Algorithm extends MyAlgorithm {
         Algorithm newSession = new Algorithm(state, config);
         sessions.put(sessionId, newSession);
         return sessionId;
+    }
+
+    // UTILITY
+    public static double getMajMinScore(Long minPop, Long totalPop, Threshold majMinThresh) {
+
+        double percent = (double) minPop / (double) totalPop;
+        if (majMinThresh.isWithin(percent, true)) {
+            return 1;
+        } else if (percent > majMinThresh.upper) {
+            return 1 - (percent - majMinThresh.upper);
+        } else {
+            return 1 - (majMinThresh.lower - percent);
+        }
     }
 
     // PHASE 0
@@ -82,5 +97,16 @@ public class Algorithm extends MyAlgorithm {
             }
         }
         return ret;
+    }
+
+    public void runStep() {
+        Set<Edge> mmEdges = this.state.getMMEdges(config);
+        StringBuilder edgeList = new StringBuilder();
+        mmEdges.stream().map(Edge::toString).forEach(s -> edgeList.append(s).append(","));
+        logger.info("Got MM Edges: [{}]", edgeList);
+    }
+
+    public Properties getConfig() {
+        return config;
     }
 }

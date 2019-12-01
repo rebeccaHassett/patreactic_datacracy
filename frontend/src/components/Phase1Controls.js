@@ -63,7 +63,7 @@ export default class Phase1Controls extends Component {
                 realtime: this.state.realtime,
                 numDistricts: this.state.numCongressionalDistricts,
                 numMajMinDistricts: this.state.numMajorityMinorityDistricts,
-                selectedMinorities: [], // list of each selected demographic
+                selectedMinorities: this.state.selectedMinorities,
                 year: this.state.electionYear,
                 type: this.state.electionType
             },
@@ -103,18 +103,8 @@ export default class Phase1Controls extends Component {
         this.setState({ realtime: evt.target.checked })
     }
 
-    handleSelectedDemographics(event) {
-        let updatedDemographics = Array.from(this.state.selectedMinorities);
-        if (event.target.checked === true && !updatedDemographics.includes(event.target.value)) {
-            updatedDemographics.push(event.target.value);
-            this.setState({ selectedMinorities: updatedDemographics });
-        }
-        else if (event.target.checked === false && updatedDemographics.includes(event.target.value)) {
-            let demographicsUnchecked = updatedDemographics.filter(function (val) {
-                return val !== event.target.value; // keep values that do not equal the deselected demographic
-            });
-            this.setState({ selectedMinorities: demographicsUnchecked });
-        }
+    handleSelectedDemographics(updatedDemographics) {
+        this.setState({ selectedMinorities: Object.entries(updatedDemographics).filter(([d, chosen]) => chosen).map(([d, chosen]) => d) })
     }
 
     render() {

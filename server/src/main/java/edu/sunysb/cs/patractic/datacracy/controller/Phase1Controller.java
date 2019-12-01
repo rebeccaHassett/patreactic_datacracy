@@ -50,6 +50,10 @@ public class Phase1Controller {
         if (id == null) {
             return ResponseEntity.badRequest().build();
         }
-        return ResponseEntity.ok(Algorithm.getInstance(id).getPhase1Update());
+        Algorithm myAlg = Algorithm.getInstance(id);
+        if (myAlg.getConfig().incremental) {
+            myAlg.runStep();
+        }
+        return ResponseEntity.ok(myAlg.getPhase1Update());
     }
 }
