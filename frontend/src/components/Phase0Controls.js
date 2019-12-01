@@ -35,12 +35,12 @@ export default class Phase0Controls extends Component {
             config: {
                 thresholds: {
                     BLOC_POP_PERCENTAGE: {
-                        lower: this.state.blocPopulationValues[0],
-                        upper: this.state.blocPopulationValues[1]
+                        lower: this.state.blocPopulationValues[0]/100.0,
+                        upper: this.state.blocPopulationValues[1]/100.0
                     },
                     BLOC_VOTING_PERCENTAGE: {
-                        lower: this.state.blocVotingValues[0],
-                        upper: this.state.blocVotingValues[1]
+                        lower: this.state.blocVotingValues[0]/100.0,
+                        upper: this.state.blocVotingValues[1]/100.0
                     }
                 },
                 weights: {},

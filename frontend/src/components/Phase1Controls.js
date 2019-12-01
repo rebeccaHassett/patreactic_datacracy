@@ -53,9 +53,9 @@ export default class Phase1Controls extends Component {
         var phase1Dto = {
             config: {
                 thresholds: [{
-                    name: "minorityPopulationThresholds",
-                    lower: this.state.minorityPopulationThresholdValues[0],
-                    upper: this.state.minorityPopulationThresholdValues[1]
+                    name: "MAJ_MIN_POP",
+                    lower: this.state.minorityPopulationThresholdValues[0]/100.0,
+                    upper: this.state.minorityPopulationThresholdValues[1]/100.0
                 }], weights: {},
                 incremental: this.state.incremental, realtime: this.state.realtime,
                 numDistricts: this.state.numCongressionalDistricts,
