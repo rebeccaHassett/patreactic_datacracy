@@ -58,7 +58,7 @@ public class Algorithm extends MyAlgorithm {
         synchronized (lock) {
             currentUpdates.remove(districtRemoved);
             currentDistrictsToRemove.add(districtRemoved);
-            currentUpdates.put(updated.getDistrictId(), updated.dto(this.config.electionId));
+            currentUpdates.put(updated.getDistrictId(), updated.dto());
         }
         lock.notify();
     }
@@ -76,7 +76,7 @@ public class Algorithm extends MyAlgorithm {
             if (ret == null) {
                 try {
                     lock.wait(500);
-                } catch(InterruptedException ignored) {
+                } catch (InterruptedException ignored) {
 
                 }
             }

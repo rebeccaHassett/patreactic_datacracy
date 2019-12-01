@@ -39,7 +39,7 @@ public class Phase1Controller {
                 .map(District::getDistrictId)
                 .collect(Collectors.toList());
         List<DistrictDataDto> newDistricts = copy.getDistricts().stream()
-                .map(d -> d.dto(runPhase1Dto.config.electionId))
+                .map(District::dto)
                 .collect(Collectors.toList());
         return new Phase1UpdateDto(newDistricts, oldDistricts);
     }

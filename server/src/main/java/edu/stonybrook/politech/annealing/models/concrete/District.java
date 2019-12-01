@@ -1,8 +1,12 @@
 package edu.stonybrook.politech.annealing.models.concrete;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import edu.stonybrook.politech.annealing.measures.DistrictInterface;
 import edu.sunysb.cs.patractic.datacracy.domain.enums.DemographicGroup;
+import edu.sunysb.cs.patractic.datacracy.domain.enums.ElectionType;
 import edu.sunysb.cs.patractic.datacracy.domain.enums.PoliticalParty;
+import edu.sunysb.cs.patractic.datacracy.domain.enums.Year;
 import edu.sunysb.cs.patractic.datacracy.domain.interfaces.IJurisdiction;
 import edu.sunysb.cs.patractic.datacracy.domain.models.DistrictDataDto;
 import edu.sunysb.cs.patractic.datacracy.domain.models.Edge;
@@ -224,13 +228,12 @@ public class District
 
     public void initEdges() {
         Set<District> neighbors = new HashSet<>();
-        this.borderPrecincts.forEach(p -> {
-            neighbors.addAll(getState().getPrecinctSet().stream()
-                    .filter(pre -> p.getNeighborIDs().contains(pre.getPrecinctId()))
-                    .map(Precinct::getDistrict)
-                    .collect(Collectors.toSet())
-            );
-        });
+        this.borderPrecincts.forEach(p ->
+                neighbors.addAll(getState().getPrecinctSet().stream()
+                .filter(pre -> p.getNeighborIDs().contains(pre.getPrecinctId()))
+                .map(Precinct::getDistrict)
+                .collect(Collectors.toSet())
+        ));
         neighbors.forEach(d -> {
             Edge edge = new Edge(this, d);
             edges.add(edge);
@@ -238,11 +241,18 @@ public class District
         });
     }
 
-    public DistrictDataDto dto(ElectionId electionId) {
-        Map<String, Long> popMap = new HashMap<>();
+    public DistrictDataDto dto() {
+        Map<DemographicGroup, Long> popMap = new HashMap<>();
         for (DemographicGroup dg : DemographicGroup.values()) {
-            popMap.put(dg.toString(), getPopulation(dg));
+            popMap.put(dg, getPopulation(dg));
         }
-        return new DistrictDataDto(this.districtId, new ArrayList<>(this.precincts.keySet()), popMap, this.getElectionData(electionId).getVotesMap());
+        List<ElectionId> electionIds = ImmutableList.of(
+                new ElectionId(Year.Y2016, ElectionType.PRESIDENTIAL),
+                new ElectionId(Year.Y2016, ElectionType.CONGRESSIONAL),
+                new ElectionId(Year.Y2018, ElectionType.CONGRESSIONAL)
+        );
+        ImmutableMap.Builder<ElectionId, ElectionData> builder = new ImmutableMap.Builder<>();
+        electionIds.forEach(eId -> builder.put(eId, this.getElectionData(eId)));
+        return new DistrictDataDto(this.districtId, new ArrayList<>(this.precincts.keySet()), popMap, builder.build());
     }
 }
