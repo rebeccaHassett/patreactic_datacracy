@@ -86,7 +86,8 @@ export default function MenuSidenav(props) {
                 <Phase0Controls state={props.chosenState}></Phase0Controls>
             </TabPanel>
             <TabPanel value={value} index={1}>
-                <Phase1Controls chosenState={props.chosenState} removeOGDisrtricts={props.removeOGDisrtricts}></Phase1Controls>
+                <Phase1Controls chosenState={props.chosenState} removeOGDisrtricts={props.removeOGDisrtricts} removePrecinctLayer={props.removePrecinctLayer} precinctLayer={props.precinctLayer}
+                handlePrecinctFeatures={props.handlePrecinctFeatures}></Phase1Controls>
             </TabPanel>
             <TabPanel value={value} index={2}>
                 <Phase2Controls></Phase2Controls>

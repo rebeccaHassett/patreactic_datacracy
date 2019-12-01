@@ -5,6 +5,7 @@ import PieChart from "./graphs/PieChart";
 import ElectionButtonsControl from "./controls/ElectionButtonsControl";
 import {Form} from "react-bootstrap";
 import styled from "styled-components";
+import Button from '@material-ui/core/Button'
 
 
 export default class Statistics extends Component {
@@ -181,6 +182,7 @@ export default class Statistics extends Component {
                     </Form.Group>
                     <h4 className="bolden"> {wordCase(name)}</h4>
                     <h4 className="label">{wordCase(this.state.electionType)} {this.state.electionYear}</h4>
+                    <Button></Button>
                 <h5>{democraticCandidate}, Dem, {democraticVotes.toLocaleString()}</h5>
                 <h5>{republicanCandidate}, Rep, {republicanVotes.toLocaleString()}</h5>
                 <h4>Votes Per Party</h4>

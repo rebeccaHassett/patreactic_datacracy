@@ -1,8 +1,15 @@
-(1) House of representatives districts shall be areas of convenient territory contiguous by land. Areas that meet only at the points of adjoining corners are not contiguous
-(2) House of representatives districts shall have a population not exceeding 105% and not less than 95% of the ideal district size for the senate or the house of representatives unless and until the United States supreme court establishes a different range of allowable population divergence for state legislative districts
-(3) House of representatives district lines shall preserve county lines with the least cost to the principle of equality of population provided for in subdivision
-(4) If it is necessary to break county lines to stay within the range of allowable population divergence, the fewest whole cities or whole townships necessary shall be shifted. The city or township with the lesser population shall be shifted
-(5) Within those counties to which there is apportioned more than 1 house of representatives district, district lines shall be drawn on city and township lines with the least cost to the principle of equality of population between election districts consistent with the maximum preservation of city and township lines
-(6) If it is necessary to break city or township lines, the number of people necessary to achieve population equality shall be shifted between the 2 districts affected by the shift, except that in lieu of absolute equality the lines may be drawn along the closest street or comparable boundary
-(7) Within a city or township to which there is apportioned more than 1 house of representatives district, district lines shall be drawn to achieve the maximum compactness possible within a population range of 98% to 102% of absolute equality between districts within that city or township. Compactness shall be determined by circumscribing each district within a circle of minimum radius and measuring the area, not part of the Great Lakes and not part of another state, inside the circle but not inside the district.
-(8) House of representatives districts should not violate Voting Rights Acts
+1. House of representatives districts shall be areas of convenient territory contiguous by land. Areas that meet only at the points of adjoining corners are not contiguous
+
+2. House of representatives districts shall have a population not exceeding 105% and not less than 95% of the ideal district size for the senate or the house of representatives unless and until the United States supreme court establishes a different range of allowable population divergence for state legislative districts
+
+3. House of representatives district lines shall preserve county lines with the least cost to the principle of equality of population provided for in subdivision
+
+4. If it is necessary to break county lines to stay within the range of allowable population divergence, the fewest whole cities or whole townships necessary shall be shifted. The city or township with the lesser population shall be shifted
+
+5. Within those counties to which there is apportioned more than 1 house of representatives district, district lines shall be drawn on city and township lines with the least cost to the principle of equality of population between election districts consistent with the maximum preservation of city and township lines
+
+6. If it is necessary to break city or township lines, the number of people necessary to achieve population equality shall be shifted between the 2 districts affected by the shift, except that in lieu of absolute equality the lines may be drawn along the closest street or comparable boundary
+
+7. Within a city or township to which there is apportioned more than 1 house of representatives district, district lines shall be drawn to achieve the maximum compactness possible within a population range of 98% to 102% of absolute equality between districts within that city or township. Compactness shall be determined by circumscribing each district within a circle of minimum radius and measuring the area, not part of the Great Lakes and not part of another state, inside the circle but not inside the district.
+
+8. House of representatives districts should not violate Voting Rights Acts

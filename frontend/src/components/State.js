@@ -15,6 +15,9 @@ export default class State extends Component {
         super();
         this.handleOriginalDistrictLayer = this.handleOriginalDistrictLayer.bind(this);
         this.removeOriginalDistrictLayer = this.removeOriginalDistrictLayer.bind(this);
+        this.addPrecinctsToDistricts = this.addPrecinctsToDistricts.bind(this);
+        this.handlePrecinctExists = this.handlePrecinctExists.bind(this);
+
         this.state = {
             sidebar: true,
             precinctData: "",
@@ -22,8 +25,8 @@ export default class State extends Component {
             stateData: "",
             chosenState: window.location.pathname.split("/").pop(),
             originalDistrictLayer: null,
+            precinctLayerExists: false,
             precinctLayer: null,
-            precinctLayerExists: false
         }
 
         this.toggleBox = this.toggleBox.bind(this);
@@ -35,6 +38,45 @@ export default class State extends Component {
 
     handleOriginalDistrictLayer(layer) {
         this.setState({originalDistrictLayer:layer});
+    }
+
+    handlePrecinctExists() {
+        this.setState({precinctLayerExists: false});
+    }
+
+    addPrecinctsToDistricts(url, map, that) {
+        var layer;
+        var ZOOM = 7;
+
+        var district_style = {
+            "color": "black"
+        };
+        return fetch(url).then(function (response) {
+            if (response.status >= 400) {
+                throw new Error("Precinct geographic data not loaded from server successfully");
+            }
+            return response.json();
+        }).then(function (data) {
+            /*layer = new L.GeoJSON(data, {
+                style: district_style, filter: function (feature, layer) {
+                    return (feature.properties.PRENAME === "PROVIDENCE 0731")
+                }
+            }).addTo(map);*/
+
+            layer = L.geoJSON(data, {style: district_style}).addTo(map);
+
+            that.setState({precinctLayer: layer});
+
+            map.on("zoomend", function (event) {
+                if (this.getZoom() < ZOOM) {
+                    layer.remove();
+                    that.handlePrecinctExists();
+                }
+            });
+
+            layer.bringToFront();
+            return layer
+        });
     }
 
     toggleBox() {
@@ -54,21 +96,21 @@ export default class State extends Component {
 
             maxBounds = [
                 [37, -71],               /* North East */
-                [33, -86]                /* South West */
+                [33, -84]                /* South West */
             ];
             minZoom = 6;
         } else if (chosenState === "RhodeIsland") {
             clustersUrl = 'http://127.0.0.1:8080/District_Borders?name=Rhode_Island';
             maxBounds = [
                 [43, -70.75],
-                [40, -72]
+                [40, -71]
             ];
             minZoom = 9;
         } else if (chosenState === "Michigan") {
             clustersUrl = 'http://127.0.0.1:8080/District_Borders?name=Michigan';
             maxBounds = [
-                [49, -75],
-                [40, -93]
+                [49, -70],
+                [40, -90]
             ];
             minZoom = 6;
 
@@ -91,7 +133,6 @@ export default class State extends Component {
         this.map.on("zoomend", function (event) {
             if (this.getZoom() >= ZOOM && that.state.precinctLayerExists === false) {
                 var precinctsUrl;
-                const precincts = new Precinct();
                 if (chosenState === "RhodeIsland") {
                     precinctsUrl = 'http://127.0.0.1:8080/Precinct_Borders?name=Rhode_Island'
                 } else if (chosenState === "NorthCarolina") {
@@ -102,8 +143,8 @@ export default class State extends Component {
 
                 that.setState({precinctLayerExists: true});
 
-                precincts.addPrecinctsToDistricts(precinctsUrl, this)
-                    .then(precinct_layer => precincts.addPrecinctsToDistricts(precinctsUrl, this))
+                that.addPrecinctsToDistricts(precinctsUrl, this, that)
+                    .then(precinct_layer => that.addPrecinctsToDistricts(precinctsUrl, this, that))
                     .then(precinct_layer => {
                         precinct_layer.on('mouseover', function (event) {
                             that.setState({ precinctData: JSON.stringify(event.layer.feature.properties) })
@@ -136,7 +177,7 @@ export default class State extends Component {
                         <Col className="menu" xs={4}>
                             <MenuSidenav chosenState={this.state.chosenState} precinctData={this.state.precinctData}
                                 districtData={this.state.districtData} stateData={this.state.stateData} 
-                                removeOGDisrtricts={this.removeOriginalDistrictLayer}/>
+                                removeOGDisrtricts={this.removeOriginalDistrictLayer} precinctLayer={this.state.precinctLayer}/>
                         </Col>
                         <Col className="mapContainer" xs={8}>
                             <div id='map'></div>

@@ -5,6 +5,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "Incumbent", uniqueConstraints = {@UniqueConstraint(columnNames = {"stateName", "districtId"})})
 public class Incumbent {
+    private String party;
     private String stateName;
     private String districtId;
     private String incumbent;
@@ -31,6 +32,16 @@ public class Incumbent {
     public void setStateName(String stateName) {
         this.stateName = stateName;
     }
+
+    @Column(name = "party", columnDefinition = "varchar(256)")
+    public String getParty() {
+        return party;
+    }
+
+    public void setParty(String party) {
+        this.party = party;
+    }
+
 
     @Column(name = "districtId", columnDefinition = "varchar(256)")
     public String getDistrictId() {

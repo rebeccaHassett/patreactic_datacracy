@@ -17,6 +17,7 @@ export default class Phase1Controls extends Component {
         this.handleRealTimeClick = this.handleRealTimeClick.bind(this);
         this.runPhase1 = this.runPhase1.bind(this);
         this.handleSelectedDemographics = this.handleSelectedDemographics.bind(this);
+        this.initializeClusters = this.initializeClusters.bind(this);
     }
 
     state = {
@@ -28,10 +29,27 @@ export default class Phase1Controls extends Component {
         selectedMinorities: []
     }
 
+    initializeClusters() {
+        this.props.precinctLayer.eachLayer(function (layer) {
+            if(layer.feature.properties.OBJECTID % 2 === 0) {
+                layer.setStyle({fillColor: 'blue'})
+            }
+            else {
+                layer.setStyle({fillColor: 'red'})
+            }
+        })
+    }
+
     async runPhase1() {
         if (this.state.selectedMinorities.length === 0) {
             /*error*/
         }
+
+        this.props.removeOGDisrtricts();
+
+        this.initializeClusters();
+
+
         var phase1Dto = {
             config: {
                 thresholds: [{
@@ -53,7 +71,11 @@ export default class Phase1Controls extends Component {
             body: JSON.stringify(phase1Dto),
         })
 
-        this.props.removeOGDisrtricts();
+        //var updatedPrecinctFeatures = []
+
+
+
+        //this.props.handlePrecinctFeatures(updatedPrecinctFeatures);
     }
 
     handleNumberCongressionalDistricts(value) {
