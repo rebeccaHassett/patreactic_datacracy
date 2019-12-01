@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Form, Container } from "react-bootstrap";
 import SliderControlUpperLowerValues from "./controls/SliderControlUpperLowerValues";
 import styled from "styled-components";
 import Button from '@material-ui/core/Button';
@@ -143,12 +142,12 @@ export default class Phase0Controls extends Component {
             );
         } else {
             return (
-                <Container style={{ marginRight: '0vw', marginLeft: '0vw' }}>
+                <Phase0Styles style={{paddingLeft: "10px", paddingRight: "10px"}}>
                     <Button variant="contained" color="primary" style={{ width: '20vw', marginBottom: '2vw' }}
                         onClick={this.resultsViewOff}>View Results</Button>
                     <h3>Voting Bloc Precincts</h3>
                     <TableDisplay columns={columns} rows={rows} createData={createData} />
-                </Container>
+                </Phase0Styles>
             );
         }
     }
