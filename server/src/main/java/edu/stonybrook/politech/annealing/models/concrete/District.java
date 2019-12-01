@@ -8,7 +8,7 @@ import edu.sunysb.cs.patractic.datacracy.domain.enums.ElectionType;
 import edu.sunysb.cs.patractic.datacracy.domain.enums.PoliticalParty;
 import edu.sunysb.cs.patractic.datacracy.domain.enums.Year;
 import edu.sunysb.cs.patractic.datacracy.domain.interfaces.IJurisdiction;
-import edu.sunysb.cs.patractic.datacracy.domain.models.DistrictDataDto;
+import edu.sunysb.cs.patractic.datacracy.domain.models.JurisdictionDataDto;
 import edu.sunysb.cs.patractic.datacracy.domain.models.Edge;
 import edu.sunysb.cs.patractic.datacracy.domain.models.ElectionData;
 import edu.sunysb.cs.patractic.datacracy.domain.models.ElectionId;
@@ -241,7 +241,7 @@ public class District
         });
     }
 
-    public DistrictDataDto dto() {
+    public JurisdictionDataDto dto() {
         Map<DemographicGroup, Long> popMap = new HashMap<>();
         for (DemographicGroup dg : DemographicGroup.values()) {
             popMap.put(dg, getPopulation(dg));
@@ -253,6 +253,6 @@ public class District
         );
         ImmutableMap.Builder<ElectionId, ElectionData> builder = new ImmutableMap.Builder<>();
         electionIds.forEach(eId -> builder.put(eId, this.getElectionData(eId)));
-        return new DistrictDataDto(this.districtId, new ArrayList<>(this.precincts.keySet()), popMap, builder.build());
+        return new JurisdictionDataDto(this.districtId, new ArrayList<>(this.precincts.keySet()), popMap, builder.build());
     }
 }

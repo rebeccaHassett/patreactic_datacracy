@@ -1,7 +1,7 @@
 package edu.sunysb.cs.patractic.datacracy.controller;
 
 import edu.stonybrook.politech.annealing.models.concrete.District;
-import edu.sunysb.cs.patractic.datacracy.domain.models.DistrictDataDto;
+import edu.sunysb.cs.patractic.datacracy.domain.models.JurisdictionDataDto;
 import edu.sunysb.cs.patractic.datacracy.domain.persistence.StateDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,17 +12,17 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-public class DistrictDataController {
+public class OriginalDataController {
     private final StateDao stateDao;
 
     @Autowired
-    public DistrictDataController(StateDao stateDao) {
+    public OriginalDataController(StateDao stateDao) {
         this.stateDao = stateDao;
     }
 
     @GetMapping(path = "/district/original/{state}/{district}")
-    public DistrictDataDto getOriginalDistrictData(@PathVariable("state") String stateName,
-                                                   @PathVariable("district") String districtId) {
+    public JurisdictionDataDto getOriginalDistrictData(@PathVariable("state") String stateName,
+                                                       @PathVariable("district") String districtId) {
         return stateDao.getBaseState(stateName).getDistrict(districtId).dto();
     }
 
@@ -31,5 +31,10 @@ public class DistrictDataController {
         return stateDao.getBaseState(stateName).getDistricts().stream()
                 .map(District::getDistrictId)
                 .collect(Collectors.toList());
+    }
+
+    @GetMapping(path = "/state/original/{state}")
+    public JurisdictionDataDto getOriginalStateData(@PathVariable("state") String stateName) {
+        return stateDao.getBaseState(stateName).dto();
     }
 }

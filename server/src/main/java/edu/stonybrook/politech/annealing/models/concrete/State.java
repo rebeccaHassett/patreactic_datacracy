@@ -1,12 +1,16 @@
 package edu.stonybrook.politech.annealing.models.concrete;
 
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import edu.stonybrook.politech.annealing.measures.StateInterface;
 import edu.sunysb.cs.patractic.datacracy.domain.enums.Constraint;
 import edu.sunysb.cs.patractic.datacracy.domain.enums.DemographicGroup;
-import edu.sunysb.cs.patractic.datacracy.domain.models.Incumbent;
+import edu.sunysb.cs.patractic.datacracy.domain.enums.ElectionType;
+import edu.sunysb.cs.patractic.datacracy.domain.enums.Year;
+import edu.sunysb.cs.patractic.datacracy.domain.interfaces.IJurisdiction;
+import edu.sunysb.cs.patractic.datacracy.domain.models.*;
 import edu.sunysb.cs.patractic.datacracy.domain.models.Properties;
-import edu.sunysb.cs.patractic.datacracy.domain.models.VotingBlockDTO;
 
 import javax.persistence.*;
 import java.util.*;
@@ -192,5 +196,20 @@ public class State
             districts.put(newDistrict.getDistrictId(), newDistrict);
         }
         districts.values().forEach(District::initEdges);
+    }
+
+    public JurisdictionDataDto dto() {
+        Map<DemographicGroup, Long> popMap = new HashMap<>();
+        for (DemographicGroup dg : DemographicGroup.values()) {
+            popMap.put(dg, getPopulation(dg));
+        }
+        List<ElectionId> electionIds = ImmutableList.of(
+                new ElectionId(Year.Y2016, ElectionType.PRESIDENTIAL),
+                new ElectionId(Year.Y2016, ElectionType.CONGRESSIONAL),
+                new ElectionId(Year.Y2018, ElectionType.CONGRESSIONAL)
+        );
+        ImmutableMap.Builder<ElectionId, ElectionData> builder = new ImmutableMap.Builder<>();
+        electionIds.forEach(eId -> builder.put(eId, ElectionData.aggregateFromJurisdictions(this.getPrecinctSet().stream().map(p -> (IJurisdiction) p).collect(Collectors.toSet()), eId)));
+        return new JurisdictionDataDto(this.name, new ArrayList<>(this.precincts.keySet()), popMap, builder.build());
     }
 }

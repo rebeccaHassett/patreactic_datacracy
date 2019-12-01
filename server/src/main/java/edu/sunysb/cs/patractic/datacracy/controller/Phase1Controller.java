@@ -3,7 +3,7 @@ package edu.sunysb.cs.patractic.datacracy.controller;
 import edu.stonybrook.politech.annealing.models.concrete.District;
 import edu.stonybrook.politech.annealing.models.concrete.State;
 import edu.sunysb.cs.patractic.datacracy.domain.Algorithm;
-import edu.sunysb.cs.patractic.datacracy.domain.models.DistrictDataDto;
+import edu.sunysb.cs.patractic.datacracy.domain.models.JurisdictionDataDto;
 import edu.sunysb.cs.patractic.datacracy.domain.models.Phase1UpdateDto;
 import edu.sunysb.cs.patractic.datacracy.domain.models.RunPhase1Dto;
 import edu.sunysb.cs.patractic.datacracy.domain.persistence.StateDao;
@@ -38,7 +38,7 @@ public class Phase1Controller {
                 .stream()
                 .map(District::getDistrictId)
                 .collect(Collectors.toList());
-        List<DistrictDataDto> newDistricts = copy.getDistricts().stream()
+        List<JurisdictionDataDto> newDistricts = copy.getDistricts().stream()
                 .map(District::dto)
                 .collect(Collectors.toList());
         return new Phase1UpdateDto(newDistricts, oldDistricts);

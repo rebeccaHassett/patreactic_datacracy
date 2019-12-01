@@ -9,8 +9,8 @@ import edu.sunysb.cs.patractic.datacracy.domain.enums.Year;
 import java.util.List;
 import java.util.Map;
 
-public class DistrictDataDto {
-    public final String PRENAME; // district id, named this way for compatibility with precinct-level data in geojson
+public class JurisdictionDataDto {
+    public final String PRENAME; // district id / state name, named this way for compatibility with precinct-level data in geojson
     public final Long PRES16D;
     public final Long PRES16R;
     public final Map<Character, Long> HOUSE_ELECTION_16;
@@ -23,8 +23,8 @@ public class DistrictDataDto {
     public final Long ASIANVAP;
     public final List<String> precinctIds;
 
-    public DistrictDataDto(String districtId, List<String> precinctIds, Map<DemographicGroup, Long> populations, Map<ElectionId, ElectionData> electionDataMap) {
-        this.PRENAME = districtId;
+    public JurisdictionDataDto(String jurisdictionId, List<String> precinctIds, Map<DemographicGroup, Long> populations, Map<ElectionId, ElectionData> electionDataMap) {
+        this.PRENAME = jurisdictionId;
         this.precinctIds = precinctIds;
         PRES16D = electionDataMap.get(new ElectionId(Year.Y2016, ElectionType.PRESIDENTIAL)).getVotes(PoliticalParty.DEMOCRAT);
         PRES16R = electionDataMap.get(new ElectionId(Year.Y2016, ElectionType.PRESIDENTIAL)).getVotes(PoliticalParty.REPUBLICAN);

@@ -4,7 +4,7 @@ import edu.stonybrook.politech.annealing.algorithm.MyAlgorithm;
 import edu.stonybrook.politech.annealing.measures.DefaultMeasures;
 import edu.stonybrook.politech.annealing.models.concrete.District;
 import edu.stonybrook.politech.annealing.models.concrete.State;
-import edu.sunysb.cs.patractic.datacracy.domain.models.DistrictDataDto;
+import edu.sunysb.cs.patractic.datacracy.domain.models.JurisdictionDataDto;
 import edu.sunysb.cs.patractic.datacracy.domain.models.Phase1UpdateDto;
 import edu.sunysb.cs.patractic.datacracy.domain.models.Properties;
 import edu.sunysb.cs.patractic.datacracy.domain.models.VotingBlockDTO;
@@ -17,7 +17,7 @@ public class Algorithm extends MyAlgorithm {
     // PHASE 1
     private final Object lock = new Object();
     private Properties config;
-    private Map<String, DistrictDataDto> currentUpdates;
+    private Map<String, JurisdictionDataDto> currentUpdates;
     private Set<String> currentDistrictsToRemove;
 
     private Algorithm(State state, Properties config) {
