@@ -75,7 +75,7 @@ public class ElectionData {
     public PoliticalParty getWinningParty() {
         PoliticalParty highest = PoliticalParty.DEMOCRAT;
         for (PoliticalParty party : PoliticalParty.values()) {
-            if (votesByParty.get(party) > votesByParty.get(highest)) {
+            if (votesByParty.getOrDefault(party, 0L) > votesByParty.getOrDefault(highest, 0L)) {
                 highest = party;
             }
         }
@@ -94,7 +94,7 @@ public class ElectionData {
         if (party == null) {
             return votesByParty.values().stream().mapToLong(Long::longValue).sum();
         }
-        return votesByParty.get(party);
+        return votesByParty.getOrDefault(party, 0L);
     }
 
     public Map<PoliticalParty, Long> getVotesMap() {

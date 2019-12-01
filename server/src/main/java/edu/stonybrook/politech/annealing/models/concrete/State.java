@@ -142,7 +142,7 @@ public class State
         if (demographicGroup == null) {
             return getPopulation();
         }
-        return populationMap.get(demographicGroup);
+        return populationMap.getOrDefault(demographicGroup, 0L);
     }
 
     @Override
