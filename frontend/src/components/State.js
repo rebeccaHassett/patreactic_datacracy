@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { CachedTileLayer } from '@yaga/leaflet-cached-tile-layer';
 import L from 'leaflet';
 import { Row, Col, Card } from "react-bootstrap";
 import styled from 'styled-components';
@@ -37,11 +38,11 @@ export default class State extends Component {
     }
 
     handleOriginalDistrictLayer(layer) {
-        this.setState({originalDistrictLayer:layer});
+        this.setState({ originalDistrictLayer: layer });
     }
 
     handlePrecinctExists() {
-        this.setState({precinctLayerExists: false});
+        this.setState({ precinctLayerExists: false });
     }
 
     addPrecinctsToDistricts(url, map, that) {
@@ -57,15 +58,9 @@ export default class State extends Component {
             }
             return response.json();
         }).then(function (data) {
-            /*layer = new L.GeoJSON(data, {
-                style: district_style, filter: function (feature, layer) {
-                    return (feature.properties.PRENAME === "PROVIDENCE 0731")
-                }
-            }).addTo(map);*/
+            layer = L.geoJSON(data, { style: district_style }).addTo(map);
 
-            layer = L.geoJSON(data, {style: district_style}).addTo(map);
-
-            that.setState({precinctLayer: layer});
+            that.setState({ precinctLayer: layer });
 
             map.on("zoomend", function (event) {
                 if (this.getZoom() < ZOOM) {
@@ -119,13 +114,13 @@ export default class State extends Component {
         this.map = L.map('map', {
             maxZoom: 20,
             minZoom: minZoom,
-            maxBounds: maxBounds,
+            //maxBounds: maxBounds,
             maxBoundsViscosity: 1.0,
             preferCanvas: true,
             layers: [
-                L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
+                new CachedTileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
                     attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ',
-                })
+                }),
             ]
         }).fitBounds(maxBounds);
 
@@ -141,10 +136,9 @@ export default class State extends Component {
                     precinctsUrl = 'http://127.0.0.1:8080/Precinct_Borders?name=Michigan'
                 }
 
-                that.setState({precinctLayerExists: true});
+                that.setState({ precinctLayerExists: true });
 
                 that.addPrecinctsToDistricts(precinctsUrl, this, that)
-                    .then(precinct_layer => that.addPrecinctsToDistricts(precinctsUrl, this, that))
                     .then(precinct_layer => {
                         precinct_layer.on('mouseover', function (event) {
                             that.setState({ precinctData: JSON.stringify(event.layer.feature.properties) })
@@ -152,7 +146,7 @@ export default class State extends Component {
                         return true;
                     })
                     .catch(err => console.log(err));
-                that.setState({precinctLayerExists : true});
+                that.setState({ precinctLayerExists: true });
             }
         })
 
@@ -176,8 +170,8 @@ export default class State extends Component {
                     <Row>
                         <Col className="menu" xs={4}>
                             <MenuSidenav chosenState={this.state.chosenState} precinctData={this.state.precinctData}
-                                districtData={this.state.districtData} stateData={this.state.stateData} 
-                                removeOGDisrtricts={this.removeOriginalDistrictLayer} precinctLayer={this.state.precinctLayer}/>
+                                districtData={this.state.districtData} stateData={this.state.stateData}
+                                removeOGDisrtricts={this.removeOriginalDistrictLayer} precinctLayer={this.state.precinctLayer} />
                         </Col>
                         <Col className="mapContainer" xs={8}>
                             <div id='map'></div>
