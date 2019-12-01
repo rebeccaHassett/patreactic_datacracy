@@ -8,6 +8,8 @@ import edu.sunysb.cs.patractic.datacracy.domain.models.Phase1UpdateDto;
 import edu.sunysb.cs.patractic.datacracy.domain.models.RunPhase1Dto;
 import edu.sunysb.cs.patractic.datacracy.domain.persistence.StateDao;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -40,5 +42,14 @@ public class Phase1Controller {
                 .map(d -> d.dto(runPhase1Dto.config.electionId))
                 .collect(Collectors.toList());
         return new Phase1UpdateDto(newDistricts, oldDistricts);
+    }
+
+    @GetMapping(path = "/phase1/poll")
+    public ResponseEntity<Phase1UpdateDto> pollPhase1(@Autowired HttpSession httpSession) {
+        String id = (String) httpSession.getAttribute("sessionId");
+        if (id == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(Algorithm.getInstance(id).getPhase1Update());
     }
 }
