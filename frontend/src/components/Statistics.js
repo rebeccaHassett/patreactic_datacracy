@@ -69,7 +69,6 @@ export default class Statistics extends Component {
             var africanAmericanPopulation = jsonData.BVAP;
             var nativeAmericanPopulation = jsonData.AMINVAP;
             var asianPopulation = jsonData.ASIANVAP;
-            var pacificIslanderPopulation = jsonData.NHPIVAP;
 
 
             var dataPie = {
