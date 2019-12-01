@@ -1,5 +1,5 @@
 import json
-from shapely.geometry import shape, Polygon, LineString, GeometryCollection, MultiPolygon
+from shapely.geometry import shape, Polygon, LineString, GeometryCollection, MultiPolygon, mapping
 from shapely.ops import split, shared_paths, cascaded_union
 import math
 import numpy as np
@@ -308,13 +308,109 @@ def __get_county(data, county_name):
     return county_data, geometries
 
 
+def merge_precincts(data, votes16, votes18, county_name, precinct_names, new_name):
+    """
+    :param data: Geojson data
+    :param votes16: Voting data related to 2016
+    :param votes18: Voting data related to 2018
+    :param county_name: The name of the county
+    :param precinct_names: The names of the 'precincts' to be merged
+    :param new_name: The name of the newly merged precinct
+    :return: The merged precinct data, which contains the new
+        geometry and the updated voting data.
+    """
+
+    VAP = 0
+    HVAP = 0
+    WVAP = 0
+    BVAP = 0
+    AMINVAP = 0
+    ASIANVAP = 0
+    NHPIVAP = 0
+    OTHERVAP = 0
+    geometries = []
+    new_data = []
+    for p in precinct_names: # YAN2, YAN4
+        for feature in data['features']:
+            name = feature['properties']['PRENAME'] # CASWELL YAN2
+            if county_name + ' ' + p == name:
+                geometries.append(shape(feature['geometry']))
+                VAP += feature['properties']['VAP']
+                HVAP += feature['properties']['HVAP']
+                WVAP += feature['properties']['WVAP']
+                BVAP += feature['properties']['BVAP']
+                AMINVAP += feature['properties']['AMINVAP']
+                ASIANVAP += feature['properties']['ASIANVAP']
+                NHPIVAP += feature['properties']['NHPIVAP']
+                OTHERVAP += feature['properties']['OTHERVAP']
+
+    for feature in data['features']:
+        name = feature['properties']['PRENAME']
+        same = any([p in name for p in precinct_names])
+        if not same:
+            new_data.append(feature)
+
+    HOUSE_ELECTION_16 = __get_votes(votes16, county_name, new_name)
+    HOUSE_ELECTION_18 = __get_votes(votes18, county_name, new_name)
+    merged_precinct = cascaded_union(geometries)
+    p = {'type': 'Feature',
+         'geometry': mapping(merged_precinct),
+         'properties': {
+                'VAP': VAP,
+                'HVAP': HVAP,
+                'WVAP': WVAP,
+                'BVAP': BVAP,
+                'PRENAME': county_name + ' ' + new_name,
+                'HOUSE_ELECTION_16': HOUSE_ELECTION_16,
+                'HOUSE_ELECTION_18': HOUSE_ELECTION_18
+            }
+         }
+    new_data.append(p)
+    data['features'] = new_data
+    #plot(merged_precinct,'blue')
+    return data
+
+
+def merge(data, votes16, votes18, county_name, precincts, new_precinct_names):
+    for i in range(len(precincts)):
+        data = merge_precincts(data, votes16, votes18, county_name, precincts[i], new_precinct_names[i])
+    return data
+
+def __get_votes(votes_df, county_name, precinct_name):
+    df = votes_df[votes_df.parent_jurisdiction == county_name]
+    candidates = set(df['candidate'].values)
+    house_data = {}
+    for c in candidates:
+        d = df[df.candidate == c]
+        #print(d[d.jurisdiction == precinct_name], precinct_name)
+        votes = int(d[d.jurisdiction == precinct_name]['votes'].values[0])
+        house_data.update({c: votes})
+    return house_data
+
+
 def update_NC(file, data, votes16, votes18):
-    
+
+    # CALDWELL
+    name = 'CALDWELL'
+    precincts = [['PR05', 'PR06'], ['PR23', 'PR27']]
+    new_names = ['PR33', 'PR32']
+    data = merge(data, votes16, votes18, name, precincts, new_names)
+
     # CARTERET
     name = 'CARTERET'
+    precincts = [['WILL', 'DAVI', 'STAC'], ['ATLN', 'SLVL'], ['WIRE', 'HARL'],
+                 ['BETT', 'OTST'], ['SMYR', 'MARS']]
+    new_names = ['DASW', 'ATSL', 'WIHA', 'OTBE', 'MASM']
+    data = merge(data, votes16, votes18, name, precincts, new_names)
     precincts = ['CARTERET CDIS']
     comp = [['CISL']]
     data = update_all(name, data, votes16, votes18, precincts, comp)
+
+    # CASWELL
+    name = 'CASWELL'
+    precincts = [['YAN2', 'YAN4'], ['HIGH', 'PROS']]
+    new_names = ['YANC', 'PH']
+    data = merge(data, votes16, votes18, name, precincts, new_names)
 
     # CHEROKEE
     name = 'CHEROKEE'
@@ -324,6 +420,10 @@ def update_NC(file, data, votes16, votes18):
 
     # CLEVELAND
     name = 'CLEVELAND'
+    precincts = [['S4', 'S8'], ['S7', 'S6'], ['KM3', 'KM4'],
+                 ['KM2', 'KM1'], ['BSPGS', 'H-SPGS']]
+    new_names = ['S 4A', 'S S', 'KM S', 'KM N', 'BR']
+    data = merge(data, votes16, votes18, name, precincts, new_names)
     precincts = ['CLEVELAND S5', 'CLEVELAND OAKGR']
     comp = [['S 5'], ['OAKGRV']]
     data = update_all(name, data, votes16, votes18, precincts, comp)
@@ -336,6 +436,12 @@ def update_NC(file, data, votes16, votes18):
     comp = [['P16B'], ['P01A'], ['P26B'], ['P20A'], ['P22A'], ['P25B'], ['P02B']]
     data = update_all(name, data, votes16, votes18, precincts, comp)
     """
+
+    # CRAVEN
+    name = 'CRAVEN'
+    precincts = [['22', '18']]
+    new_names = ['2']
+    data = merge(data, votes16, votes18, name, precincts, new_names)
 
     # DAVIDSON
     name = 'DAVIDSON'
@@ -372,12 +478,16 @@ def update_NC(file, data, votes16, votes18):
 
     # HALIFAX
     name = 'HALIFAX'
+    precincts = [['ENF 1', 'ENF 3'], ['HOB', 'PAL', 'ROSEN'],
+                 ['RR 1', 'RR 2'], ['RR 6', 'RR 8'], ['WEL 1', 'WEL 2']]
+    new_names = ['ENF1', 'HPR', 'RR 1-2', 'RRC', 'WEL 1-2']
+    data = update_all(name, data, votes16, votes18, precincts, comp)
     precincts = ['HALIFAX ENF 2', 'HALIFAX LIT 1', 'HALIFAX LIT 2', 'HALIFAX RR 10',
                  'HALIFAX RR 11', 'HALIFAX RR 3', 'HALIFAX RR 4', 'HALIFAX RR 5',
                  'HALIFAX RR 7', 'HALIFAX RR 9', 'HALIFAX WEL 3']
     comp = [[p[len(name)+1:]] for p in precincts]
     data = update_all(name, data, votes16, votes18, precincts, comp)
-    
+ 
     # HARNETT
     name = 'HARNETT'
     precincts = ['HARNETT PR17', 'HARNETT PR27']
@@ -396,11 +506,17 @@ def update_NC(file, data, votes16, votes18):
     comp = [['GLV'], ['SCC'], ['SSW', 'SND']]
     data = update_all(name, data, votes16, votes18, precincts, comp)
 
-    # JOHNSTON
+    """
+    # JOHNSTON -- problem with merge
     name = 'JOHNSTON'
+    precincts = [['PR01', 'PR02', 'PR03'], ['PR06', 'PR05'], ['PR16', 'PR15'],
+                 ['PR17', 'PR18']]
+    new_names = ['PR35', 'PR36', 'PR37', 'PR38']
+    data = merge(data, votes16, votes18, name, precincts, new_names)
     precincts = ['JOHNSTON PR27', 'JOHNSTON PR10', 'JOHNSTON P12', 'JOHNSTON PR23']
     comp = [['PR27A', 'PR27B'], ['PR10A', 'PR10B'], ['PR12A', 'PR12B'], ['PR23A', 'PR23B']]
     data = update_all(name, data, votes16, votes18, precincts, comp)
+    """
 
     # LEE
     name = 'LEE'
@@ -408,11 +524,18 @@ def update_NC(file, data, votes16, votes18):
     comp = [['B1', 'B2'], ['D1', 'D2'], ['E1', 'E2'], ['A1', 'A2'], ['C1', 'C2']]
     data = update_all(name, data, votes16, votes18, precincts, comp)
 
+    # LINCOLN
+    name = 'LINCOLN'
+    precincts = [['LS15', 'LM16'], ['CR06', 'HV07'], ['NB09', 'NB03'],
+                 ['TR30', 'TE27'], ['HG17', 'OG10']]
+    new_names = ['LB34', 'HC33', 'NB35', 'TA37', 'ST36']
+    data = merge(data, votes16, votes18, name, precincts, new_names)
+
     # MCDOWELL
     name = 'MCDOWELL'
     precincts = ['MCDOWELL MAR-5', 'MCDOWELL FORT-1', 'MCDOWELL MAR-1', 'MCDOWELL MAR-4',
                  'MCDOWELL MAR-3', 'MCDOWELL WEST-M', 'MCDOWELL FORT-2', 'MCDOWELL MAR-2']
-    comp = [['5-MAR'], ['FORT 1'], ['1-MAR'], ['4-MAR'], ['3-MAR'], ['WEST M'], ['FORT 2'], ['2-MAR']]
+    comp = [['5-Mar'], ['FORT 1'], ['1-Mar'], ['4-Mar'], ['3-Mar'], ['WEST M'], ['FORT 2'], ['2-Mar']]
     data = update_all(name, data, votes16, votes18, precincts, comp)
     
     # MADISON
@@ -429,6 +552,9 @@ def update_NC(file, data, votes16, votes18):
 
     # NASH
     name = 'NASH'
+    precincts = [['0039', '0037'], ['0031', '0032']]
+    new_names = ['P19A', 'P21A']
+    data = merge(data, votes16, votes18, name, precincts, new_names)
     precincts = ['NASH 0007', 'NASH 0022', 'NASH 0041', 'NASH 0021', 'NASH 0026',
                  'NASH 0036', 'NASH 0003', 'NASH 0038', 'NASH 0015', 'NASH 0035',
                  'NASH 0025', 'NASH 0012', 'NASH 0004', 'NASH 0008', 'NASH 0033',
@@ -438,7 +564,8 @@ def update_NC(file, data, votes16, votes18):
             ['P04A'], ['P22A'], ['P23A'], ['P06A'], ['P03A'], ['P01A']]
     data = update_all(name, data, votes16, votes18, precincts, comp)
 
-    # NEW HANOVER
+    """
+    # NEW HANOVER -- problem with NaN
     name = 'NEW HANOVER'
     precincts = ['NEW HANOVER CF02', 'NEW HANOVER FP03', 'NEW HANOVER CF01', 'NEW HANOVER W30',
                  'NEW HANOVER M03', 'NEW HANOVER H07', 'NEW HANOVER H09', 'NEW HANOVER WB', 'NEW HANOVER FP01',
@@ -451,8 +578,9 @@ def update_NC(file, data, votes16, votes18):
     comp = [['CF02'], ['FP03'], ['CF01'], ['W30'], ['M03'], ['H10', 'H11'], ['H12', 'H13'], ['WB'],
             ['FP06', 'FP07'], ['M04'], ['FP04'], ['W17'], ['CF05', 'CF06'], ['H06'], ['W25'], ['W08'], ['W15'], ['W29'],
             ['W03'], ['W26'], ['31'], ['NH01'], ['04'], ['W12'], ['H08'], ['W28'], ['H02'], ['W13'],
-            ['H05'], ['W24'], ['W18'], ['21'], ['NH03'], ['W16']]
+            ['H05'], ['W24'], ['W18'], ['W21'], ['NH03'], ['W16']]
     data = update_all(name, data, votes16, votes18, precincts, comp)
+    """
 
     # NORTHAMPTON
     name = 'NORTHAMPTON'
@@ -472,11 +600,23 @@ def update_NC(file, data, votes16, votes18):
     comp = [['4VM A', '4MSIC'], ['1GB']]
     data = update_all(name, data, votes16, votes18, precincts, comp)
 
+    # PASQUOTANK
+    name = 'PASQUOTANK'
+    precincts = [['1-A', '1-B'], ['2-A', '2-B'], ['3-A', '3-B'], ['4-A', '4-B']]
+    new_names = ['EAST', 'NORTH', 'WEST', 'SOUTH']
+    data = merge(data, votes16, votes18, name, precincts, new_names)
+
     # PERQUIMANS
     name = 'PERQUIMANS'
     precincts = ['PERQUIMANS EAST H', 'PERQUIMANS WEST H', 'PERQUIMANS NEW HO']
     comp = [['EAST H'], ['WEST H'], ['NEW HO']]
     data = update_all(name, data, votes16, votes18, precincts, comp)
+
+    # PERSON
+    name = 'PERSON'
+    precincts = [['ROX3', 'ROX2'], ['RX1A', 'ROX1'], ['HUML', 'BFRK']]
+    new_names = ['PNTH', 'RCTL', 'SWST']
+    data = merge(data, votes16, votes18, name, precincts, new_names)
 
     # PITT
     name = 'PITT'
@@ -486,9 +626,42 @@ def update_NC(file, data, votes16, votes18):
 
     # RANDOLPH
     name = 'RANDOLPH'
+    precincts = [['14', '13'], ['17', '27'], ['07', '08', '12'], ['05', '06'],
+                 ['24', '18'], ['20', '19'], ['40', '16', '15'], ['10','09'],
+                 ['37', '39', '28'], ['33', '32'], ['11', '04'], ['25', '26'],
+                 ['01', '03', '02'], ['29', '30']]
+    new_names = ['SO', 'SE', 'AW', 'AE', 'SW', 'DR', 'UG', 'AN', 'TR', 'RN', 'AS', 'NM', 'AR', 'PR']
+    data = merge(data, votes16, votes18, name, precincts, new_names)
     precincts = ['RANDOLPH 22', 'RANDOLPH 31', 'RANDOLPH 36', 'RANDOLPH 13',
                  'RANDOLPH 35', 'RANDOLPH 23', 'RANDOLPH 38']
     comp = [['LC'], ['RM'], ['TB'], ['BC'], ['ST'], ['LB'], ['TT']]
+    data = update_all(name, data, votes16, votes18, precincts, comp)
+
+    # ROBESON
+    name = 'ROBESON'
+    precincts = [['05', '06'], ['26', '27'], ['32', '31']]
+    new_names = ['5A', '26A', '32A']
+    data = merge(data, votes16, votes18, name, precincts, new_names)
+
+    # ROCKINGHAM
+    name = 'ROCKINGHAM'
+    precincts = [['CO', 'VA'], ['WM', 'RD-1'], ['MD', 'AV']]
+    new_names = ['MS', 'SE', 'WS']
+    data = merge(data, votes16, votes18, name, precincts, new_names)
+
+    """
+    # ROWAN -- problem with index 0 MERGE
+    name = 'ROWAN'
+    precincts = [['14', '46'], ['19', '20'], ['05', '06']]
+    new_names = ['14A', '19A', '5A']
+    data = merge(data, votes16, votes18, name, precincts, new_names)
+    """
+
+    # TRANSYLVANIA
+    name = 'TRANSYLVANIA'
+    precincts = [['SW', 'LT', 'QB'], ['GL', 'BG']]
+    new_names = ['TC7', 'TC1']
+    data = merge(data, votes16, votes18, name, precincts, new_names)
 
     # UNION
     name = 'UNION'
@@ -496,6 +669,12 @@ def update_NC(file, data, votes16, votes18):
     comp = [['28A', '28B', '28C', '28D']]
     data = update_all(name, data, votes16, votes18, precincts, comp)
 
+    # VANCE
+    name = 'VANCE'
+    precincts = [['WATK', 'DABN'], ['WH1', 'WH2'], ['TWNS', 'WMSB'], ['NH2', 'EH2']]
+    new_names = ['CC', 'WH', 'NH', 'NV']
+    data = merge(data, votes16, votes18, name, precincts, new_names)
+    
     # YANCEY
     name = 'YANCEY'
     precincts = ['YANCEY 05 GRE', 'YANCEY 03 EGY', 'YANCEY 07 BRU', 'YANCEY 06 JAC', 'YANCEY 02 CAN', 'YANCEY 08 CRA',
@@ -504,7 +683,7 @@ def update_NC(file, data, votes16, votes18):
             ['8 CRA'], ['1 BUR'], ['11 PRI'], ['10 PEN'], ['9 SOU'],['4 RAM']]
     data = update_all(name, data, votes16, votes18, precincts, comp)
 
-    with open('NC_temp2.geojson', 'w') as f:
+    with open('NC_temp.geojson', 'w') as f:
         json.dump(data, f)
 
 
@@ -556,8 +735,32 @@ if __name__ == '__main__':
     votes16 = voting16[voting16.office == 'U.S. House'].drop(columns=['district'])
     voting18 = pd.read_csv('nc_2018.csv', dtype=str)
     votes18 = voting18[voting18.office == 'U.S. House'].drop(columns=['district'])
-
     update_NC(file, data, votes16, votes18)
+
+    """
+    with open('RI_Precincts_MAPPED.geojson') as file:
+        data = json.load(file)
+
+    features = data['features'] # list of dictionaries, with each dictionary containing info on geometry
+    collection = []
+    i = 0
+    labels = []
+    map = dict()
+    for f in features:
+        d = f['properties']['PRENAME']
+        name = 'CRANSTON'
+        if name in d:
+            collection.append(shape(f['geometry']))
+            i += 1
+            map.update({i:d})
+        if name + ' 0728' == d:
+            p = shape(f['geometry'])
+    print(map)
+    collection = __all_polygons(collection)
+    plot_polygons(collection)
+    plot(p, 'blue')
+    plt.show()
+    """
 
     """
     pre = [
