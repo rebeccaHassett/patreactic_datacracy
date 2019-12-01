@@ -21,8 +21,8 @@ export default class Phase0Controls extends Component {
 
     state = {
         phase1Tab: false,
-        blocPopulationValues: [],
-        blocVotingValues: [],
+        blocPopulationValues: [80,90],
+        blocVotingValues: [80,90],
         electionType: 'Presidential',
         electionYear: '2016',
         button2018: true,
@@ -145,6 +145,10 @@ export default class Phase0Controls extends Component {
                 <Phase0Styles style={{paddingLeft: "10px", paddingRight: "10px"}}>
                     <Button variant="contained" color="primary" style={{ width: '20vw', marginBottom: '2vw' }}
                         onClick={this.resultsViewOff}>Back</Button>
+                                        <h3>Election Type:</h3>
+                    <h4>{this.state.electionType} {this.state.electionYear}</h4>
+                    <p>Population Thresholds: {this.state.blocPopulationValues[0]}% - {this.state.blocPopulationValues[1]}%</p>
+                    <p>Voting Thresholds: {this.state.blocVotingValues[0]}% - {this.state.blocVotingValues[1]}%</p>
                     <h3>Voting Bloc Precincts</h3>
                     <TableDisplay columns={columns} rows={rows} createData={createData} />
                 </Phase0Styles>
@@ -164,6 +168,13 @@ const Phase0Styles = styled.div`
     }
     .electionLabel {
       font-weight: bold;
+    }
+    h4 {
+        margin-bottom: 2vw;
+    }
+    p {
+        font-weight: bold;
+        margin-bottom: 2vw;
     }
 `;
 

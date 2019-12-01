@@ -1,7 +1,7 @@
 import L from "leaflet";
 
 export default class Cluster {
-    addClustersToState(url, map) {
+    addOriginalDistrictsToState(url, map, originalDistrictUpdate) {
         var layer;
         var selected;
 
@@ -35,7 +35,7 @@ export default class Cluster {
                 })
                 map.fitBounds(e.layer.getBounds());
             })
-
+            originalDistrictUpdate(layer);
             return layer;
         });
     }

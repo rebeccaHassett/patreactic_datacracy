@@ -10,6 +10,7 @@ import Phase0Controls from "./Phase0Controls";
 import Phase1Controls from "./Phase1Controls";
 import Phase2Controls from "./Phase2Controls";
 import DataDisplay from "./DataDisplay";
+import { spacing } from '@material-ui/system';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -23,7 +24,7 @@ function TabPanel(props) {
             aria-labelledby={`scrollable-auto-tab-${index}`}
             {...other}
         >
-            <Box p={3} style={{ paddingLeft: '0', paddingRight: '0', }}>{children}</Box>
+            <Box p={3} style={{ paddingLeft: '0', paddingRight: '0'}}>{children}</Box>
         </Typography>
     );
 }
@@ -85,7 +86,7 @@ export default function MenuSidenav(props) {
                 <Phase0Controls state={props.chosenState}></Phase0Controls>
             </TabPanel>
             <TabPanel value={value} index={1}>
-                <Phase1Controls chosenState={props.chosenState}></Phase1Controls>
+                <Phase1Controls chosenState={props.chosenState} removeOGDisrtricts={props.removeOGDisrtricts}></Phase1Controls>
             </TabPanel>
             <TabPanel value={value} index={2}>
                 <Phase2Controls></Phase2Controls>

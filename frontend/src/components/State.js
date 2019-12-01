@@ -13,18 +13,27 @@ var ZOOM = 7;
 export default class State extends Component {
     constructor() {
         super();
+        this.handleOriginalDistrictLayer = this.handleOriginalDistrictLayer.bind(this);
+        this.removeOriginalDistrictLayer = this.removeOriginalDistrictLayer.bind(this);
         this.state = {
             sidebar: true,
             precinctData: "",
             districtData: "",
             stateData: "",
-            chosenState: window.location.pathname.split("/").pop()
+            chosenState: window.location.pathname.split("/").pop(),
+            originalDistrictLayer: null,
         }
 
         this.toggleBox = this.toggleBox.bind(this);
     }
 
+    removeOriginalDistrictLayer() {
+        this.map.removeLayer(this.state.originalDistrictLayer);
+    }
 
+    handleOriginalDistrictLayer(layer) {
+        this.setState({originalDistrictLayer:layer});
+    }
 
     toggleBox() {
         this.setState(oldState => ({ sidebar: !oldState.sidebar }));
@@ -102,7 +111,7 @@ export default class State extends Component {
         })
 
         const clusters = new Cluster();
-        clusters.addClustersToState(clustersUrl, this.map);
+        clusters.addOriginalDistrictsToState(clustersUrl, this.map, this.handleOriginalDistrictLayer);
     }
 
     render() {
@@ -121,7 +130,8 @@ export default class State extends Component {
                     <Row>
                         <Col className="menu" xs={4}>
                             <MenuSidenav chosenState={this.state.chosenState} precinctData={this.state.precinctData}
-                                districtData={this.state.districtData} stateData={this.state.stateData} />
+                                districtData={this.state.districtData} stateData={this.state.stateData} 
+                                removeOGDisrtricts={this.removeOriginalDistrictLayer}/>
                         </Col>
                         <Col className="mapContainer" xs={8}>
                             <div id='map'></div>
