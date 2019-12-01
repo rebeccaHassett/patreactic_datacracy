@@ -1,20 +1,18 @@
 import React, { Component } from 'react';
 import { CachedTileLayer } from '@yaga/leaflet-cached-tile-layer';
 import L from 'leaflet';
-import { Row, Col, Card } from "react-bootstrap";
+import easyButton from 'leaflet-easybutton';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import { Row, Col} from "react-bootstrap";
 import styled from 'styled-components';
-import Precinct from "./Precinct";
-import Cluster from "./Cluster";
 import MenuSidenav from "./MenuSidenav";
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import Box from "@material-ui/core/Box";
 
 var ZOOM = 7;
 
 export default class State extends Component {
     constructor() {
         super();
-        this.handleOriginalDistrictLayer = this.handleOriginalDistrictLayer.bind(this);
         this.removeOriginalDistrictLayer = this.removeOriginalDistrictLayer.bind(this);
         this.addPrecinctsToDistricts = this.addPrecinctsToDistricts.bind(this);
         this.handlePrecinctExists = this.handlePrecinctExists.bind(this);
@@ -37,12 +35,75 @@ export default class State extends Component {
         this.map.removeLayer(this.state.originalDistrictLayer);
     }
 
-    handleOriginalDistrictLayer(layer) {
-        this.setState({ originalDistrictLayer: layer });
-    }
-
     handlePrecinctExists() {
         this.setState({ precinctLayerExists: false });
+    }
+
+    loadOriginalDistrictData(districtId) {
+        let district_data_url = 'http://127.0.0.1:8080/district/original/' + this.state.chosenState + '/' + districtId;
+        return fetch(district_data_url).then(function (response) {
+            if (response.status >= 400) {
+                throw new Error("Failed to load original district number from server");
+            }
+            return response.json();
+        }).then(function (data) {
+            console.log(data);
+            this.setState({districtData: data});
+        });
+    }
+
+    addOriginalDistrictsToState(url, map, that) {
+        var layer;
+        var selected;
+
+        function cluster_style(feature) {
+            return {
+                fillColor: feature.properties.COLOR,
+                weight: 2,
+                opacity: 1,
+                color: 'white',
+                dashArray: '3',
+                fillOpacity: 0.7
+            };
+        }
+
+        return fetch(url).then(function (response) {
+            if (response.status >= 400) {
+                throw new Error("Failed to load cluster data from server");
+            }
+            return response.json();
+        }).then(function (data) {
+            layer = L.geoJSON(data, {style: cluster_style}).addTo(map);
+
+            layer.on('click', function (e) {
+                if (selected) {
+                    e.target.resetStyle(selected)
+                }
+                selected = e.layer
+                selected.bringToFront()
+                selected.setStyle({
+                    'color': 'red'
+                })
+                map.fitBounds(e.layer.getBounds());
+            });
+
+            layer.on('mouseover', function (event) {
+                let districtId = "";
+                if(that.state.chosenState === "RhodeIsland") {
+                    districtId = event.layer.feature.properties.CD115FP;
+                }
+                else if(that.state.chosenState === "NorthCarolina") {
+                    districtId = event.layer.feature.properties.CD116FP;
+                }
+                else if(that.state.chosenState === "Michigan") {
+                    districtId = event.layer.feature.properties.NAME;
+                }
+                that.loadOriginalDistrictData(districtId);
+            });
+
+            that.setState({originalDistrictLayer: layer});
+            return layer;
+        });
     }
 
     addPrecinctsToDistricts(url, map, that) {
@@ -70,6 +131,8 @@ export default class State extends Component {
             });
 
             layer.bringToFront();
+
+
             return layer
         });
     }
@@ -124,6 +187,10 @@ export default class State extends Component {
             ]
         }).fitBounds(maxBounds);
 
+        L.easyButton('<h5>Back US to Map</h5>', function() {
+            window.location.replace("/map");
+        },  {position: 'topright'}).addTo(this.map);
+
         var that = this;
         this.map.on("zoomend", function (event) {
             if (this.getZoom() >= ZOOM && that.state.precinctLayerExists === false) {
@@ -150,8 +217,7 @@ export default class State extends Component {
             }
         })
 
-        const clusters = new Cluster();
-        clusters.addOriginalDistrictsToState(clustersUrl, this.map, this.handleOriginalDistrictLayer);
+        this.addOriginalDistrictsToState(clustersUrl, this.map, that);
     }
 
     render() {

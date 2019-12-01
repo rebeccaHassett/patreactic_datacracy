@@ -101,9 +101,9 @@ export default class Statistics extends Component {
             var democraticCandidate;
             if (this.state.electionType === "Presidential") {
                 republicanVotes = jsonData.PRES16R;
-                republicanCandidate = "Donald Trump";
+                republicanCandidate = "Republican Donald Trump";
                 democraticVotes = jsonData.PRES16D;
-                democraticCandidate = "Hillary Clinton";
+                democraticCandidate = "Democrat Hillary Clinton";
             } else {
                 var voting_data;
                 if (this.state.electionYear === '2016') {
@@ -120,27 +120,10 @@ export default class Statistics extends Component {
                         republicanKey = key;
                     }
                 }
-                republicanCandidate = republicanKey.substring(0, republicanKey.length - 1);
-                democraticCandidate = democraticKey.substring(0, democraticKey.length - 1);
                 republicanVotes = voting_data[republicanKey];
                 democraticVotes = voting_data[democraticKey];
-            }
-
-            var dataPieParty = {
-                labels: ["Republican", "Democrat"],
-                datasets: [
-                    {
-                        data: [republicanVotes, democraticVotes],
-                        backgroundColor: [
-                            "rgba(245,  0, 87, 1)",
-                            "rgba(30, 144,255,1)",
-                        ],
-                        hoverBackgroundColor: [
-                            "rgba(245,  0, 87, 0.5)",
-                            "rgba(30, 144,255,0.5)",
-                        ]
-                    }
-                ]
+                democraticCandidate = "Democratic Candidate";
+                republicanCandidate = "Republican Candidate";
             }
 
             var databar = {
@@ -185,8 +168,6 @@ export default class Statistics extends Component {
                 <h5>{democraticCandidate}, Dem, {democraticVotes.toLocaleString()}</h5>
                 <h5>{republicanCandidate}, Rep, {republicanVotes.toLocaleString()}</h5>
                 <h4>Votes Per Party</h4>
-                <PieChart dataPie={dataPieParty}/>
-                <h4>Votes Per Candidate</h4>
                     <BarChart databar={databar}/>
                 <h4>Demographic Data</h4>
                 <p>Total Population: {Math.round(totalPopulation).toLocaleString()}</p>

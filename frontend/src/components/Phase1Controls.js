@@ -30,14 +30,15 @@ export default class Phase1Controls extends Component {
     }
 
     initializeClusters() {
-        this.props.precinctLayer.eachLayer(function (layer) {
-            if(layer.feature.properties.OBJECTID % 2 === 0) {
-                layer.setStyle({fillColor: 'blue'})
-            }
-            else {
-                layer.setStyle({fillColor: 'red'})
-            }
-        })
+        if(this.props.precinctLayer !== null) {
+            this.props.precinctLayer.eachLayer(function (layer) {
+                if (layer.feature.properties.OBJECTID % 2 === 0) {
+                    layer.setStyle({fillColor: 'blue'})
+                } else {
+                    layer.setStyle({fillColor: 'red'})
+                }
+            })
+        }
     }
 
     async runPhase1() {

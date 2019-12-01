@@ -11,15 +11,20 @@ class DataDisplay extends React.Component {
 
     state = {
         laws: "",
-        incumbents: ""
+        incumbents: [['-', '-']]
+    }
+
+    createData(districtId, incumbent) {
+        return { districtId, incumbent };
     }
 
     setIncumbents(data) {
-        let map = {};
+        let map = [];
         data.forEach(incumbent => {
-            map[incumbent.districtId] = incumbent.incumbent;
+            map.push(this.createData(incumbent.districtId, incumbent.incumbent))
         });
-        this.setState({ incumbents: map, });
+
+        this.setState({ incumbents: map });
     }
 
     setLaws(data) {

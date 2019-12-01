@@ -7,6 +7,8 @@ import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import Statistics from "../Statistics";
+import TableDisplay from "./TableDisplay";
+
 
 function TabPane(props) {
     const { children, value, index, ...other } = props;
@@ -55,10 +57,20 @@ const StyledDataTab = withStyles(theme => ({
 export default function DataTabs(props) {
     const classes = useDataStyles();
     const [value, setValue] = React.useState(0);
+    let  [,setState]=React.useState();
+    const incumbent_columns = [
+        { id: 'districtId', label: 'District', format: value => value.toLocaleString(),},
+        { id: 'incumbent', label: 'Incumbent', format: value => value.toLocaleString(),},
+    ];
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
+
+    console.log(props.incumbents);
+    if(props.incumbents[0][0] !== '-') {
+       console.log("Found data: " + props.incumbents);
+    }
 
     return (
         <div className={classes.root}>
@@ -82,7 +94,7 @@ export default function DataTabs(props) {
             </AppBar>
             <TabPane value={value} index={0}>
                 <h4 style={{ fontWeight: 'bold', textDecoration: 'underline' }}>Voting Incumbents:</h4>
-                {/* <p>{props.incumbents}</p> */}
+                <TableDisplay columns={incumbent_columns} rows={props.incumbents}/>
                 <h4 style={{ fontWeight: 'bold', textDecoration: 'underline' }}>Laws:</h4>
                 <p>{props.laws}</p>
                 <Statistics data={props.stateData}></Statistics>
