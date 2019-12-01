@@ -21,8 +21,8 @@ export default class Phase0Controls extends Component {
 
     state = {
         phase1Tab: false,
-        blocPopulationValues: [80,90],
-        blocVotingValues: [80,90],
+        blocPopulationValues: [80, 90],
+        blocVotingValues: [80, 90],
         electionType: 'Presidential',
         electionYear: '2016',
         button2018: true,
@@ -35,12 +35,12 @@ export default class Phase0Controls extends Component {
             config: {
                 thresholds: {
                     BLOC_POP_PERCENTAGE: {
-                        lower: this.state.blocPopulationValues[0]/100.0,
-                        upper: this.state.blocPopulationValues[1]/100.0
+                        lower: this.state.blocPopulationValues[0] / 100.0,
+                        upper: this.state.blocPopulationValues[1] / 100.0
                     },
                     BLOC_VOTING_PERCENTAGE: {
-                        lower: this.state.blocVotingValues[0]/100.0,
-                        upper: this.state.blocVotingValues[1]/100.0
+                        lower: this.state.blocVotingValues[0] / 100.0,
+                        upper: this.state.blocVotingValues[1] / 100.0
                     }
                 },
                 weights: {},
@@ -142,14 +142,13 @@ export default class Phase0Controls extends Component {
             );
         } else {
             return (
-                <Phase0Styles style={{paddingLeft: "10px", paddingRight: "10px"}}>
+                <Phase0Styles style={{ paddingLeft: "10px", paddingRight: "10px" }}>
                     <Button variant="contained" color="primary" style={{ width: '20vw', marginBottom: '2vw' }}
                         onClick={this.resultsViewOff}>Back</Button>
-                                        <h3>Election Type:</h3>
-                    <h4>{this.state.electionType} {this.state.electionYear}</h4>
-                    <p>Population Thresholds: {this.state.blocPopulationValues[0]}% - {this.state.blocPopulationValues[1]}%</p>
-                    <p>Voting Thresholds: {this.state.blocVotingValues[0]}% - {this.state.blocVotingValues[1]}%</p>
-                    <h3>Voting Bloc Precincts</h3>
+                    <h5>Election Type: {this.state.electionType} {this.state.electionYear}</h5>
+                    <p>Population Thresholds: {this.state.blocPopulationValues[0]}% - {this.state.blocPopulationValues[1]}%<br/>
+                    Voting Thresholds: {this.state.blocVotingValues[0]}% - {this.state.blocVotingValues[1]}%</p>
+                    <h4>Voting Bloc Precincts</h4>
                     <TableDisplay columns={columns} rows={rows} createData={createData} />
                 </Phase0Styles>
             );
