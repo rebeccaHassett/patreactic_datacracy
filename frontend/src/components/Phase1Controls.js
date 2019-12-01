@@ -30,12 +30,12 @@ export default class Phase1Controls extends Component {
     }
 
     initializeClusters() {
-        if(this.props.precinctLayer !== null) {
+        if (this.props.precinctLayer !== null) {
             this.props.precinctLayer.eachLayer(function (layer) {
                 if (layer.feature.properties.OBJECTID % 2 === 0) {
-                    layer.setStyle({fillColor: 'blue'})
+                    layer.setStyle({ fillColor: 'blue' })
                 } else {
-                    layer.setStyle({fillColor: 'red'})
+                    layer.setStyle({ fillColor: 'red' })
                 }
             })
         }
@@ -54,16 +54,20 @@ export default class Phase1Controls extends Component {
         var phase1Dto = {
             config: {
                 thresholds: [{
-                    name: "MAJ_MIN_POP",
-                    lower: this.state.minorityPopulationThresholdValues[0]/100.0,
-                    upper: this.state.minorityPopulationThresholdValues[1]/100.0
-                }], weights: {},
-                incremental: this.state.incremental, realtime: this.state.realtime,
+                    name: "MINORITY_PERCENTAGE",
+                    lower: this.state.minorityPopulationThresholdValues[0] / 100.0,
+                    upper: this.state.minorityPopulationThresholdValues[1] / 100.0
+                }],
+                weights: {},
+                incremental: this.state.incremental,
+                realtime: this.state.realtime,
                 numDistricts: this.state.numCongressionalDistricts,
-                numMajMinDistricts: this.state.numMajorityMinorityDistricts, selectedMinorities: [],
-                year: this.state.electionYear, type: this.state.electionType
-            }, state: this.props.state,
-            demographic: ""
+                numMajMinDistricts: this.state.numMajorityMinorityDistricts,
+                selectedMinorities: [], // list of each selected demographic
+                year: this.state.electionYear,
+                type: this.state.electionType
+            },
+            state: this.props.state,
         };
 
         const response = await fetch("http://127.0.0.1:8080/runPhase1", {
