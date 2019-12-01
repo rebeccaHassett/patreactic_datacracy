@@ -1,8 +1,6 @@
 package edu.sunysb.cs.patractic.datacracy;
 
-import edu.stonybrook.politech.annealing.models.concrete.State;
 import edu.sunysb.cs.patractic.datacracy.domain.persistence.HibernateUtil;
-import edu.sunysb.cs.patractic.datacracy.domain.persistence.StateDao;
 import org.hibernate.Session;
 
 public class App {

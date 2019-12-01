@@ -67,6 +67,8 @@ public class State
             for (DemographicGroup dg : DemographicGroup.values()) {
                 this.populationMap.put(dg, precincts.values().stream().map(p -> p.getPopulation(dg)).reduce(0L, Long::sum));
             }
+
+            districts.values().forEach(District::initEdges);
         }
     }
 

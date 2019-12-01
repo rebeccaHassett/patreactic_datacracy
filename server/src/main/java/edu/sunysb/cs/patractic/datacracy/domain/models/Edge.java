@@ -18,12 +18,15 @@ public class Edge {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Edge edge = (Edge) o;
-        return d1.equals(edge.d1) &&
-                d2.equals(edge.d2);
+        return (d1.equals(edge.d1) && d2.equals(edge.d2)) || (d1.equals(edge.d2) && d2.equals(edge.d1));
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(d1, d2);
+        return Objects.hash(d1, d2) + Objects.hash(d2, d1);
+    }
+
+    public boolean hasDistrict(String districtId) {
+        return d1.getDistrictId().equals(districtId) || d2.getDistrictId().equals(districtId);
     }
 }

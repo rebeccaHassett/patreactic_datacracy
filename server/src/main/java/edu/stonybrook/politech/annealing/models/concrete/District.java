@@ -4,6 +4,7 @@ import edu.stonybrook.politech.annealing.measures.DistrictInterface;
 import edu.sunysb.cs.patractic.datacracy.domain.enums.DemographicGroup;
 import edu.sunysb.cs.patractic.datacracy.domain.enums.PoliticalParty;
 import edu.sunysb.cs.patractic.datacracy.domain.interfaces.IJurisdiction;
+import edu.sunysb.cs.patractic.datacracy.domain.models.Edge;
 import edu.sunysb.cs.patractic.datacracy.domain.models.ElectionData;
 import edu.sunysb.cs.patractic.datacracy.domain.models.ElectionId;
 import org.locationtech.jts.algorithm.MinimumBoundingCircle;
@@ -31,6 +32,7 @@ public class District
 
     private HashMap<String, Precinct> precincts;
 
+    private Set<Edge> edges;
 
     private Set<Precinct> borderPrecincts;
 
@@ -48,6 +50,7 @@ public class District
         precincts = new HashMap<>();
         borderPrecincts = new HashSet<>();
         this.state = state;
+        edges = new HashSet<>();
     }
 
     public District() {
@@ -211,5 +214,29 @@ public class District
     @Override
     public long getPopulation(DemographicGroup demographic) {
         return getPrecincts().stream().map(p -> p.getPopulation(demographic)).reduce(0L, Long::sum);
+    }
+
+    public Set<Edge> getEdges() {
+        return new HashSet<>(edges);
+    }
+
+    public Edge getEdge(String districtId) {
+        return edges.stream().filter(e -> e.hasDistrict(districtId)).findFirst().orElse(null);
+    }
+
+    public void initEdges() {
+        Set<District> neighbors = new HashSet<>();
+        this.borderPrecincts.forEach(p -> {
+            neighbors.addAll(getState().getPrecinctSet().stream()
+                    .filter(pre -> p.getNeighborIDs().contains(pre.getPrecinctId()))
+                    .map(Precinct::getDistrict)
+                    .collect(Collectors.toSet())
+            );
+        });
+        neighbors.forEach(d -> {
+            Edge edge = new Edge(this, d);
+            edges.add(edge);
+            d.edges.add(edge);
+        });
     }
 }
