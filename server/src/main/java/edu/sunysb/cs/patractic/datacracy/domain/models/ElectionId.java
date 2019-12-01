@@ -18,19 +18,17 @@ public class ElectionId {
     }
 
     public ElectionId(int year, String type) {
-        Year y;
         if (year == 2018) {
-            y = Year.Y2018;
+            this.year = Year.Y2018;
         } else if (year == 2016) {
-            y = Year.Y2016;
+            this.year = Year.Y2016;
         } else {
             throw new IllegalArgumentException("Year must be 2016 or 2018.");
         }
-        ElectionType t;
         if (type.equals("Congressional")) {
-            t = ElectionType.CONGRESSIONAL;
+            this.electionType = ElectionType.CONGRESSIONAL;
         } else if (type.equals("Presidential")) {
-            t = ElectionType.PRESIDENTIAL;
+            this.electionType = ElectionType.PRESIDENTIAL;
         } else {
             throw new IllegalArgumentException("Type must be \"Congressional\" or \"Presidential\".");
         }
