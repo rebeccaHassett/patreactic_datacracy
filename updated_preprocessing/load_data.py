@@ -212,20 +212,45 @@ def load_election_data(connection, features):
         id = id + 1
 
     connection.commit()
-    return cursor
 
 
-def close_connection(connection, cursor):
-    cursor.close()
-    connection.close()
+def load_district_borders(connection):
+    query = "INSERT INTO OriginalDistrictBorders (stateName, districtId, borders) VALUES (%s, %s, %s);"
+
+    folder_path = "../original_data/district_geographical_data/"
+    states = [{
+        "name": "RhodeIsland",
+        "filename": "Rhode_Island/Rhode_Island_U.S_Congressional_Districts_Geography.json",
+        "district_id_key": "CD115FP"
+    },{
+        "name": "Michigan",
+        "filename": "Michigan/Michigan_U.S._Congressional_Districts_v17a.geojson",
+        "district_id_key": "NAME"
+    },{
+        "name": "NorthCarolina",
+        "filename": "North_Carolina/North_Carolina_U.S_Congressional_Districts_Geography.json",
+        "district_id_key": "CD116FP"
+    }]
+
+    for state in states:
+        with open(folder_path + state["filename"], "r+") as f:
+            state["features"] = json.load(f)["features"]
+    for state in states:
+        cursor = connection.cursor()
+        for district in state["features"]:
+            cursor.execute(query, (state["name"], district["properties"][state["district_id_key"]], json.dumps(district)))
+    connection.commit()
 
 
 def load_data():
     connection = get_connection()
-    cursor = load_state_data(connection)
-    cursor = load_precinct_data(connection)
-    cursor = load_incumbent_data(connection)
-    close_connection(connection, cursor)
+    try:
+        load_state_data(connection)
+        load_precinct_data(connection)
+        load_incumbent_data(connection)
+        load_district_borders(connection)
+    finally:
+        connection.close()
 
 
 if __name__ == '__main__':
