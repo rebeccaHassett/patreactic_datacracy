@@ -183,8 +183,12 @@ public class District
     }
 
     public Geometry getConvexHull() {
-        if (convexHullUpdated && convexHull != null)
+        if (convexHullUpdated && convexHull != null) {
             return convexHull;
+        }
+        if (!multiPolygonUpdated || multiPolygon == null) {
+            computeMulti();
+        }
         convexHull = multiPolygon.convexHull();
         this.convexHullUpdated = true;
         return convexHull;

@@ -1,5 +1,7 @@
 package edu.stonybrook.politech.annealing.models.concrete;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.stonybrook.politech.annealing.measures.PrecinctInterface;
 import edu.sunysb.cs.patractic.datacracy.domain.enums.DemographicGroup;
 import edu.sunysb.cs.patractic.datacracy.domain.enums.PoliticalParty;
@@ -13,6 +15,7 @@ import org.locationtech.jts.io.ParseException;
 import org.locationtech.jts.io.geojson.GeoJsonReader;
 
 import javax.persistence.*;
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
@@ -22,6 +25,9 @@ import java.util.Set;
 @Table(name = "Precinct")
 public class Precinct
         implements PrecinctInterface, IJurisdiction {
+
+    private static ObjectMapper jsonMapper = new ObjectMapper();
+
     private String precinctId;
 
     private State state;
@@ -62,12 +68,13 @@ public class Precinct
 
     @PostLoad
     public void postLoad() {
-//        try {
-//            this.geometry = new GeoJsonReader().read(geometryJSON);
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//            throw new RuntimeException(e);
-//        }
+        try {
+            JsonNode parsed = jsonMapper.readTree(geometryJSON);
+            this.geometry = new GeoJsonReader().read(jsonMapper.writeValueAsString(parsed.get("geometry")));
+        } catch (ParseException | IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
