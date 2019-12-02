@@ -90,7 +90,7 @@ def load_precinct_data(connection):
                            VALUES 
                            (%s, %s, %s, %s) """
 
-    rhode_island_features = read_geojson_file('RI_Precincts_MAPPED.geojson')
+    rhode_island_features = read_geojson_file('RI_Precincts_MAPPED_ManualUpdates.geojson')
     michigan_features = read_geojson_file('MI_Precincts_MAPPED.geojson')
     north_carolina_features = read_geojson_file('NC_VDT_MAPPED.geojson')
 

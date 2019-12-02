@@ -20,17 +20,19 @@ export default class State extends Component {
             districtData: "",
             stateData: "",
             chosenState: window.location.pathname.split("/").pop(),
-            originalDistrictLayer: null,
             precinctLayer: null,
             precinctIds: null,
-            individualPrecinctLayers: []
+            individualPrecinctLayers: [],
+            originalDistrictLayer: null,
+            districtIds: null,
+            individualDistrictLayers: []
         }
 
         this.toggleBox = this.toggleBox.bind(this);
     }
 
     removeOriginalDistrictLayer() {
-        this.map.removeLayer(this.state.originalDistrictLayer);
+        this.map.remove(this.state.originalDistrictLayer);
     }
 
     loadOriginalDistrictData(districtId, that) {
@@ -42,6 +44,138 @@ export default class State extends Component {
             return response.json();
         }).then(function (data) {
             that.setState({districtData: data});
+        });
+    }
+
+    loadDistrictNumber() {
+        var that = this;
+        let district_number_url = 'http://127.0.0.1:8080/district/original/' + this.state.chosenState;
+        return fetch(district_number_url).then(function (response) {
+            if (response.status >= 400) {
+                throw new Error("Failed to load cluster data from server");
+            }
+            return response.json();
+        }).then(function (data) {
+            console.log(data);
+            that.setState({districtIds: data});
+        })
+    }
+
+
+
+    async loadDistrictsIncrementally(map, that) {
+        var selected;
+
+        function districtStyle(feature) {
+            return {
+                fillColor: feature.properties.COLOR,
+                weight: 2,
+                opacity: 1,
+                color: 'white',
+                dashArray: '3',
+                fillOpacity: 0.7
+            };
+        }
+
+        let districtUrl = 'http://127.0.0.1:8080/borders/district/' + this.state.chosenState + '/';
+        let districtLayerArr = [];
+
+        let districtPromises = this.state.districtIds.map(districtId => fetch(districtUrl + districtId).then(function (response) {
+                if (response.status >= 400) {
+                    throw new Error("District geographic data not incrementally loaded from server successfully");
+                }
+                return response.json();
+            }).then(function (data) {
+                console.log(data);
+                let layers = L.geoJSON(data, {style: districtStyle});
+                layers.eachLayer(function(layer) {
+                    console.log(layer);
+                    layer.feature.properties.districtId = districtId;
+                })
+                districtLayerArr.push(layers);
+            }))
+
+
+        await Promise.all(districtPromises).then(() => {
+            that.setState({individualDistrictLayers: districtLayerArr});
+            let layerGroup = L.featureGroup(districtLayerArr).addTo(map);
+            console.log(districtLayerArr);
+            that.setState({originalDistrictLayer: layerGroup});
+
+            layerGroup.eachLayer(function (layer) {
+                layer.on('click', function (e) {
+                    if (selected) {
+                        e.target.resetStyle(selected)
+                    }
+                    selected = e.layer
+                    selected.bringToFront()
+                    selected.setStyle({
+                        'color': 'red'
+                    })
+                    map.fitBounds(e.layer.getBounds());
+                });
+
+                layer.on('mouseover', function (event) {
+                    let districtId = "";
+                    /*if(that.state.chosenState === "RhodeIsland") {
+                        districtId = event.layer.feature.properties.CD115FP;
+                    }
+                    else if(that.state.chosenState === "NorthCarolina") {
+                        districtId = event.layer.feature.properties.CD116FP;
+                    }
+                    else if(that.state.chosenState === "Michigan") {
+                        districtId = event.layer.feature.properties.NAME;
+                    }*/
+                    districtId = event.layer.feature.properties.districtId;
+                    that.loadOriginalDistrictData(districtId, that);
+                });
+            });
+        });
+    }
+
+    async loadPrecinctsIncrementally(that) {
+        var precinctStyle = {
+            "color": "black"
+        };
+        var precinctLayerArr = [];
+        var precinctUrl = 'http://127.0.0.1:8080/borders/precinct/' + that.state.chosenState + '/';
+
+        let precinctPromises = this.state.precinctIds.map(precinctId => fetch(precinctUrl + precinctId).then(function (response) {
+            if (response.status >= 400) {
+                throw new Error("Precinct geographic data not incrementally loaded from server successfully");
+            }
+            return response.json();
+        }).then(function (data) {
+            let layer = L.geoJSON(data, {style: precinctStyle});
+            precinctLayerArr.push(layer);
+        }))
+
+        await Promise.all(precinctPromises).then(() => {
+            this.map.on("zoomend", function (event) {
+                if (this.getZoom() >= ZOOM && that.state.precinctLayer === null) {
+                    console.log(this.getZoom());
+                    that.setState({individualPrecinctLayers: precinctLayerArr});
+                    let layerGroup = L.featureGroup(precinctLayerArr).addTo(that.map);
+                    that.setState({precinctLayer: layerGroup});
+                    layerGroup.bringToFront();
+                    layerGroup.eachLayer(function (layer) {
+                        layer.on('mouseover', function (event) {
+                            that.loadOriginalDistrictData(event.layer.feature.properties.CD, that);
+                            that.setState({precinctData: JSON.stringify(event.layer.feature.properties)})
+                        });
+                    });
+
+                    return true;
+                }
+                else {
+                    console.log(that.map.getZoom());
+                    if (this.getZoom() < ZOOM && that.state.precinctLayer !== null) {
+                        console.log(that.state.precinctLayer);
+                        that.state.precinctLayer.remove();
+                        that.setState({precinctLayer: null});
+                    }
+                }
+            })
         });
     }
 
@@ -99,52 +233,6 @@ export default class State extends Component {
         });
     }
 
-    async loadPrecinctsIncrementally(that) {
-        var precinctStyle = {
-            "color": "black"
-        };
-        var precinctLayerArr = [];
-        var precinctUrl = 'http://127.0.0.1:8080/borders/precinct/' + that.state.chosenState + '/';
-
-        let precinctPromises = this.state.precinctIds.map(precinctId => fetch(precinctUrl + precinctId).then(function (response) {
-            if (response.status >= 400) {
-                throw new Error("Precinct geographic data not incrementally loaded from server successfully");
-            }
-            return response.json();
-        }).then(function (data) {
-            let layer = L.geoJSON(data, {style: precinctStyle});
-            precinctLayerArr.push(layer);
-        }))
-
-        await Promise.all(precinctPromises).then(() => {
-            this.map.on("zoomend", function (event) {
-                if (this.getZoom() >= ZOOM && that.state.precinctLayer === null) {
-                    console.log(this.getZoom());
-                    that.setState({individualPrecinctLayers: precinctLayerArr});
-                    let layerGroup = L.featureGroup(precinctLayerArr).addTo(that.map);
-                    that.setState({precinctLayer: layerGroup});
-                    layerGroup.bringToFront();
-                    layerGroup.eachLayer(function (layer) {
-                        layer.on('mouseover', function (event) {
-                            that.loadOriginalDistrictData(event.layer.feature.properties.CD, that);
-                            that.setState({precinctData: JSON.stringify(event.layer.feature.properties)})
-                        });
-                    });
-
-                    return true;
-                }
-                else {
-                    console.log(that.map.getZoom());
-                    if (this.getZoom() < ZOOM && that.state.precinctLayer !== null) {
-                        console.log(that.state.precinctLayer);
-                        that.state.precinctLayer.remove();
-                        that.setState({precinctLayer: null});
-                    }
-                }
-            })
-        });
-    }
-
     loadStateData() {
         var that = this;
         let state_data_url = 'http://127.0.0.1:8080/state/original/' + this.state.chosenState;
@@ -166,14 +254,13 @@ export default class State extends Component {
     componentDidMount() {
         var maxBounds;
         var minZoom;
-        var clustersUrl;
         var chosenState = window.location.pathname.split("/").pop();
+        var clustersUrl;
 
         this.setState({ chosenState: chosenState });
 
         if (chosenState === "NorthCarolina") {
             clustersUrl = 'http://127.0.0.1:8080/District_Borders?name=North_Carolina';
-
             maxBounds = [
                 [37, -71],               /* North East */
                 [33, -84]                /* South West */
@@ -201,7 +288,6 @@ export default class State extends Component {
         this.map = L.map('map', {
             maxZoom: 20,
             minZoom: minZoom,
-            //maxBounds: maxBounds,
             maxBoundsViscosity: 1.0,
             preferCanvas: true,
             layers: [
@@ -217,12 +303,16 @@ export default class State extends Component {
 
         var that = this;
 
-        this.addOriginalDistrictsToState(clustersUrl, this.map, that);
+        this.loadDistrictNumber().then(data =>
+        {
+            this.loadDistrictsIncrementally(this.map, that)
+        });
 
         this.loadStateData().then(data =>
         {
             this.loadPrecinctsIncrementally(that);
-        })
+        });
+
     }
 
     render() {

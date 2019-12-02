@@ -12,7 +12,7 @@ function valuetext(value) {
     return `${value}°C`;
 }
 
-export default function SliderControlUpperLowerValues(props) {
+export default function SliderControlSingleValue(props) {
     const classes = useStyles();
     const [value, setValue] = React.useState(80);
 
@@ -30,6 +30,7 @@ export default function SliderControlUpperLowerValues(props) {
                 marks={props.marks}
                 min={props.min}
                 max={props.max}
+                step={props.step}
                 defaultValue={props.max}
             />
         </div>

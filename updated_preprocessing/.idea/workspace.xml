@@ -2,14 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="da7513d8-167f-45a0-92b8-c16a264abf58" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/../frontend/src/components/Precinct.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/Precinct.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/components/Map.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/Map.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/components/Phase1Controls.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/Phase1Controls.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/components/Phase2Controls.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/Phase2Controls.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../frontend/src/components/State.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/State.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/updated_preprocessing.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/updated_preprocessing.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/components/controls/SliderControlSingleValue.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/controls/SliderControlSingleValue.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../original_data/precinct_geographical data/Rhode_Island/RI_Precincts.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../server/src/main/resources/data/precinct_geographical_data/Rhode_Island/RI_Precincts.geojson" beforeDir="false" afterPath="$PROJECT_DIR$/../server/src/main/resources/data/precinct_geographical_data/Rhode_Island/RI_Precincts.geojson" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/laws/michigan_laws.txt" beforeDir="false" afterPath="$PROJECT_DIR$/laws/michigan_laws.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/laws/north_carolina_laws.txt" beforeDir="false" afterPath="$PROJECT_DIR$/laws/north_carolina_laws.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/laws/rhode_island_laws.txt" beforeDir="false" afterPath="$PROJECT_DIR$/laws/rhode_island_laws.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/load_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/load_data.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -19,12 +19,12 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
-      <file pinned="false" current-in-tab="true">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/load_data.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="279">
-              <caret line="210" column="31" selection-start-line="210" selection-start-column="31" selection-end-line="210" selection-end-column="31" />
+            <state relative-caret-position="65">
+              <caret line="83" selection-start-line="83" selection-end-line="83" />
               <folding>
                 <element signature="e#0#22#0" expanded="true" />
               </folding>
@@ -33,10 +33,18 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/mapped_data/RI_Precincts_MAPPED.geojson">
+        <entry file="file://$PROJECT_DIR$/mapped_data/RI_Precincts_MAPPED_ManualUpdates.geojson">
+          <provider selected="true" editor-type-id="text-editor" />
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/precinct_adjacency.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="228">
-              <caret column="35053" lean-forward="true" selection-start-column="35053" selection-end-column="35075" />
+            <state relative-caret-position="27">
+              <caret line="770" column="26" selection-start-line="770" selection-start-column="26" selection-end-line="770" selection-end-column="26" />
+              <folding>
+                <element signature="e#0#11#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -45,7 +53,7 @@
         <entry file="file://$PROJECT_DIR$/incumbents.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="119">
-              <caret line="7" column="18" lean-forward="true" selection-start-line="7" selection-start-column="18" selection-end-line="7" selection-end-column="18" />
+              <caret line="7" column="18" selection-start-line="7" selection-start-column="18" selection-end-line="7" selection-end-column="18" />
             </state>
           </provider>
         </entry>
@@ -61,12 +69,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>M</find>
-      <find>MECKLENBURG 21</find>
-      <find>meckl</find>
-      <find>DURHAM</find>
-      <find>HOUSE_ELECTION_16&quot;: {}</find>
-      <find>HOUSE_ELECTION_18&quot;: {}</find>
       <find>&quot;HOUSE_ELECTION_16&quot;: {</find>
       <find>SURRY</find>
       <find>PROPERTIES</find>
@@ -91,6 +93,12 @@
       <find>South Kingstown 3206</find>
       <find>%d</find>
       <find>properties</find>
+      <find>geojson</find>
+      <find>boundar</find>
+      <find>precinct</find>
+      <find>read_</find>
+      <find>borders</find>
+      <find>precin</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -147,7 +155,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$USER_HOME$/CSE508_Crawling/research-project-f19-jjrv/code/crawler" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -267,13 +275,9 @@
     <frame x="-6" y="-6" width="1293" height="693" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info id="Favorites" side_tool="true" />
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.24980111" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info anchor="bottom" id="Version Control" />
-      <window_info anchor="bottom" id="Python Console" />
-      <window_info anchor="bottom" id="Terminal" />
-      <window_info anchor="bottom" id="Event Log" side_tool="true" />
+      <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
       <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.3285968" />
@@ -281,6 +285,10 @@
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="Version Control" order="7" />
+      <window_info anchor="bottom" id="Terminal" order="8" />
+      <window_info anchor="bottom" id="Python Console" order="9" />
+      <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -356,23 +364,43 @@
     <entry file="file://$PROJECT_DIR$/incumbents.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="119">
-          <caret line="7" column="18" lean-forward="true" selection-start-line="7" selection-start-column="18" selection-end-line="7" selection-end-column="18" />
+          <caret line="7" column="18" selection-start-line="7" selection-start-column="18" selection-end-line="7" selection-end-column="18" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/mapped_data/RI_Precincts_MAPPED.geojson">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="228">
-          <caret column="35053" lean-forward="true" selection-start-column="35053" selection-end-column="35075" />
+        <state relative-caret-position="54">
+          <caret column="10145458" selection-start-column="10145458" selection-end-column="10145458" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mapped_data/NC_VDT_MAPPED.geojson">
+      <provider selected="true" editor-type-id="LargeFileEditor">
+        <state relative-caret-position="124">
+          <caret column="8886" selection-start-column="8886" selection-end-column="8886" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/load_data.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="279">
-          <caret line="210" column="31" selection-start-line="210" selection-start-column="31" selection-end-line="210" selection-end-column="31" />
+        <state relative-caret-position="65">
+          <caret line="83" selection-start-line="83" selection-end-line="83" />
           <folding>
             <element signature="e#0#22#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mapped_data/RI_Precincts_MAPPED_ManualUpdates.geojson">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/precinct_adjacency.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="27">
+          <caret line="770" column="26" selection-start-line="770" selection-start-column="26" selection-end-line="770" selection-end-column="26" />
+          <folding>
+            <element signature="e#0#11#0" expanded="true" />
           </folding>
         </state>
       </provider>
