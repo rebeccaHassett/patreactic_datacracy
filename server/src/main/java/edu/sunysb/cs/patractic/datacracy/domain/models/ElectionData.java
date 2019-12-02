@@ -50,7 +50,7 @@ public class ElectionData {
         jurisdictions.forEach(j -> {
             ElectionData data = j.getElectionData(electionId);
             for (PoliticalParty party : PoliticalParty.values()) {
-                votes.put(party, votes.get(party) + data.getVotes(party));
+                votes.put(party, votes.getOrDefault(party, 0L) + data.getVotes(party));
             }
         });
         return new ElectionData(electionId.year, electionId.electionType, votes);
