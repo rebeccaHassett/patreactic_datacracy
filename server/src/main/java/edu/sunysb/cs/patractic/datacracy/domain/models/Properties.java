@@ -16,7 +16,6 @@ public class Properties {
     public final Map<Constraint, Threshold> thresholds;
     public final Map<Measure, Double> weights;
     public final boolean incremental;
-    public final boolean realtime;
     public final int numDistricts;
     public final int numMajMinDistricts;
     public final Set<DemographicGroup> selectedMinorities;
@@ -27,7 +26,6 @@ public class Properties {
     public Properties(@JsonProperty("thresholds") Map<String, Threshold> thresholds,
                       @JsonProperty("weights") Map<String, Double> weights,
                       @JsonProperty("incremental") boolean incremental,
-                      @JsonProperty("realtime") boolean realtime,
                       @JsonProperty("numDistricts") int numDistricts,
                       @JsonProperty("numMajMinDistricts") int numMajMinDistricts,
                       @JsonProperty("selectedMinorities") List<String> selectedMinorities,
@@ -38,7 +36,6 @@ public class Properties {
         this.weights = new HashMap<>();
         weights.forEach((measure, weight) -> this.weights.put(Measure.valueOf(measure), weight));
         this.incremental = incremental;
-        this.realtime = realtime;
         this.numDistricts = numDistricts;
         this.numMajMinDistricts = numMajMinDistricts;
         this.selectedMinorities = selectedMinorities.stream().map(DemographicGroup::valueOf).collect(Collectors.toUnmodifiableSet());

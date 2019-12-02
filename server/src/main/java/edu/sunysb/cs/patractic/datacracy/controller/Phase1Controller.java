@@ -38,7 +38,7 @@ public class Phase1Controller {
                 .map(District::getDistrictId)
                 .collect(Collectors.toList());
         List<JurisdictionDataDto> newDistricts;
-        if (runPhase1Dto.incremental) {
+        if (runPhase1Dto.config.incremental) {
             newDistricts = myAlg.start();
         } else {
             newDistricts = myAlg.startAsync();
