@@ -5,6 +5,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -51,5 +52,12 @@ public class StateDao {
             states.put(stateName, loadState(stateName));
         }
         return states.get(stateName);
+    }
+
+    @PostConstruct
+    public void preloadStates() {
+        getBaseState("RhodeIsland");
+//        getBaseState("Michigan");
+//        getBaseState("NorthCarolina");
     }
 }

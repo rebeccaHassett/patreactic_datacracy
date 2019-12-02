@@ -35,6 +35,7 @@ public class State
     private String stateBoundaries;
     private String laws;
     private Map<String, Incumbent> incumbents;
+    private Map<String, String> originalDistrictBordersMap;
 
     public State(String name, Set<Precinct> inPrecincts, String boundaries, String laws, Map<String, Incumbent> incumbents) {
         this.name = name;
@@ -232,5 +233,21 @@ public class State
 
     public void removeDistrict(District other) {
         districts.remove(other.getDistrictId());
+    }
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "OriginalDistrictBorders", joinColumns = {@JoinColumn(name = "stateName", columnDefinition = "varchar(50)")})
+    @MapKeyColumn(name = "districtId", columnDefinition = "varchar(50)")
+    @Column(name = "borders", columnDefinition = "longtext")
+    public Map<String, String> getOriginalDistrictBordersMap() {
+        return originalDistrictBordersMap;
+    }
+
+    public void setOriginalDistrictBordersMap(Map<String, String> originalDistrictBordersMap) {
+        this.originalDistrictBordersMap = originalDistrictBordersMap;
+    }
+
+    public String getOriginalDistrictBorders(String districtId) {
+        return originalDistrictBordersMap.get(districtId);
     }
 }

@@ -15,7 +15,6 @@ import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.MultiPolygon;
 import org.locationtech.jts.geom.Polygon;
-import org.locationtech.jts.io.geojson.GeoJsonWriter;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -192,10 +191,6 @@ public class District
         convexHull = multiPolygon.convexHull();
         this.convexHullUpdated = true;
         return convexHull;
-    }
-
-    public String getBorders() {
-        return new GeoJsonWriter().write(getConvexHull());
     }
 
     public Geometry getBoundingCircle() {

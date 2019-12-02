@@ -24,7 +24,7 @@ public class GeometryController {
 
     @RequestMapping("/borders/district/{state}/{district}")
     public String districtBorders(@PathVariable("state") String stateName, @PathVariable("district") String districtId) {
-        return stateDao.getBaseState(stateName).getDistrict(districtId).getBorders();
+        return stateDao.getBaseState(stateName).getOriginalDistrictBorders(districtId);
     }
 
     @RequestMapping("/borders/precinct/{state}/{precinct}")
