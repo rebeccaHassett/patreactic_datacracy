@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Algorithm extends MyAlgorithm {
 
@@ -21,6 +22,7 @@ public class Algorithm extends MyAlgorithm {
     private Properties config;
     private Map<String, JurisdictionDataDto> currentUpdates;
     private Set<String> currentDistrictsToRemove;
+    private Thread thread;
     private boolean phase1Complete;
     private boolean phase1Started;
 
@@ -61,11 +63,28 @@ public class Algorithm extends MyAlgorithm {
     }
 
     // PHASE 1
-    public void startIncremental() {
+    public List<JurisdictionDataDto> start() {
         state.initPhase1();
         this.currentDistrictsToRemove = new HashSet<>();
         this.currentUpdates = new HashMap<>();
         this.phase1Started = true;
+        return state.getDistricts().stream()
+                .map(District::dto)
+                .collect(Collectors.toList());
+    }
+
+    public List<JurisdictionDataDto> startAsync() {
+        if (phase1Started && !phase1Complete) {
+            return null;
+        }
+        List<JurisdictionDataDto> ret = start();
+        thread = new Thread(() -> {
+            while (!phase1Complete) {
+                runStep();
+            }
+        });
+        thread.start();
+        return ret;
     }
 
     /**

@@ -33,14 +33,16 @@ public class Phase1Controller {
         String myAlgId = Algorithm.createInstance(copy, runPhase1Dto.config);
         httpSession.setAttribute("sessionId", myAlgId);
         Algorithm myAlg = Algorithm.getInstance(myAlgId);
-        myAlg.startIncremental();
         List<String> oldDistricts = stateDao.getBaseState(runPhase1Dto.stateName).getDistricts()
                 .stream()
                 .map(District::getDistrictId)
                 .collect(Collectors.toList());
-        List<JurisdictionDataDto> newDistricts = copy.getDistricts().stream()
-                .map(District::dto)
-                .collect(Collectors.toList());
+        List<JurisdictionDataDto> newDistricts;
+        if (runPhase1Dto.incremental) {
+            newDistricts = myAlg.start();
+        } else {
+            newDistricts = myAlg.startAsync();
+        }
         return new Phase1UpdateDto(newDistricts, oldDistricts);
     }
 
