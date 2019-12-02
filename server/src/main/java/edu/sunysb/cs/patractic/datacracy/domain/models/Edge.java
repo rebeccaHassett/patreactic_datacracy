@@ -60,6 +60,18 @@ public class Edge {
         return combined;
     }
 
+    public long combinedPopulation() {
+        return d1.getPopulation(null) + d2.getPopulation(null);
+    }
+
+    public void replaceDistrict(District toReplace, District replacement) {
+        if (d1.equals(toReplace)) {
+            d1 = replacement;
+        } else if (d2.equals(toReplace)) {
+            d2 = replacement;
+        }
+    }
+
     @Override
     public String toString() {
         return String.format("(%s, %s)", d1.getDistrictId(), d2.getDistrictId());

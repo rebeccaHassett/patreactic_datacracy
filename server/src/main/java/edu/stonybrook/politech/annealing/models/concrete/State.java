@@ -113,6 +113,10 @@ public class State
         return new HashSet<>(districts.values());
     }
 
+    public int numDistricts() {
+        return districts.size();
+    }
+
     public District getDistrict(String distID) {
         return districts.get(distID);
     }
@@ -224,5 +228,9 @@ public class State
             }
         }
         return mmEdges;
+    }
+
+    public void removeDistrict(District other) {
+        districts.remove(other.getDistrictId());
     }
 }

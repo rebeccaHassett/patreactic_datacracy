@@ -234,6 +234,7 @@ public class District
                 neighbors.addAll(getState().getPrecinctSet().stream()
                         .filter(pre -> p.getNeighborIDs().contains(pre.getPrecinctId()))
                         .map(Precinct::getDistrict)
+                        .filter(other -> !other.equals(this))
                         .collect(Collectors.toSet())
                 ));
         neighbors.forEach(d -> {
@@ -262,5 +263,32 @@ public class District
         return edges.stream()
                 .filter(e -> e.wouldImproveMM(config))
                 .collect(Collectors.toSet());
+    }
+
+    /**
+     * This method does the following:
+     * - add all precincts from other to this district.
+     * - remove the edge between the districts from this district.
+     * - replace the other district with this one in all of its edges
+     * - add other's edges to this district
+     * - remove the other district from the state
+     *
+     * @param other the district to absorb
+     */
+    public MergeResult merge(District other) {
+        other.getPrecincts().forEach(this::addPrecinct);
+        this.edges.remove(getEdge(other.getDistrictId()));
+        for (Edge e : other.getEdges()) {
+            e.replaceDistrict(other, this);
+            if (e.d1 != e.d2) {
+                this.edges.add(e);
+            }
+        }
+        getState().removeDistrict(other);
+        return new MergeResult(this, other.getDistrictId());
+    }
+
+    public int numPrecincts() {
+        return precincts.size();
     }
 }
