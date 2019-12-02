@@ -25,7 +25,7 @@ public class Properties {
 
     @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
     public Properties(@JsonProperty("thresholds") Map<String, Threshold> thresholds,
-                      @JsonProperty("weights") Map<Measure, Double> weights,
+                      @JsonProperty("weights") Map<String, Double> weights,
                       @JsonProperty("incremental") boolean incremental,
                       @JsonProperty("realtime") boolean realtime,
                       @JsonProperty("numDistricts") int numDistricts,
@@ -35,7 +35,8 @@ public class Properties {
                       @JsonProperty("type") String type) {
         this.thresholds = new HashMap<>();
         thresholds.forEach((constraint, thresh) -> this.thresholds.put(Constraint.valueOf(constraint), thresh));
-        this.weights = weights;
+        this.weights = new HashMap<>();
+        weights.forEach((measure, weight) -> this.weights.put(Measure.valueOf(measure), weight));
         this.incremental = incremental;
         this.realtime = realtime;
         this.numDistricts = numDistricts;
