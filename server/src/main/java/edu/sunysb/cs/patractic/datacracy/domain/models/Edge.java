@@ -1,10 +1,13 @@
 package edu.sunysb.cs.patractic.datacracy.domain.models;
 
 import edu.stonybrook.politech.annealing.models.concrete.District;
+import edu.stonybrook.politech.annealing.models.concrete.Precinct;
 import edu.sunysb.cs.patractic.datacracy.domain.Algorithm;
 import edu.sunysb.cs.patractic.datacracy.domain.enums.Constraint;
 
 import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class Edge {
     public District d1;
@@ -47,6 +50,14 @@ public class Edge {
                 d1.getPopulation(null) + d1.getPopulation(null),
                 config.thresholds.get(Constraint.MINORITY_PERCENTAGE));
         return combinedScore >= avgScore;
+    }
+
+    public District peekCombined() {
+        District combined = new District(d1.getDistrictId(), d1.getState());
+        Set<Precinct> precincts = d1.getPrecincts().stream().map(Precinct::clone).collect(Collectors.toSet());
+        precincts.addAll(d2.getPrecincts().stream().map(Precinct::clone).collect(Collectors.toSet()));
+        precincts.forEach(combined::addPrecinct);
+        return combined;
     }
 
     @Override

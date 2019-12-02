@@ -100,13 +100,35 @@ public class Algorithm extends MyAlgorithm {
     }
 
     public void runStep() {
+        // Get edges that would improve overall majority-minority scores
         Set<Edge> mmEdges = this.state.getMMEdges(config);
+
         StringBuilder edgeList = new StringBuilder();
         mmEdges.stream().map(Edge::toString).forEach(s -> edgeList.append(s).append(","));
         logger.info("Got MM Edges: [{}]", edgeList);
+
+        // Sort using objective function
+        List<Edge> sortedEdges = new ArrayList<>(mmEdges);
+        sortedEdges.sort(new ObjectiveFunctionComparator(this));
+
+        // Remove edges that duplicate districts
+        Set<District> districtsIncluded = new HashSet<>();
+        for (Edge e : sortedEdges) {
+            if (districtsIncluded.contains(e.d1) || districtsIncluded.contains(e.d2)) {
+                sortedEdges.remove(e);
+            } else {
+                districtsIncluded.add(e.d1);
+                districtsIncluded.add(e.d2);
+            }
+        }
+
     }
 
     public Properties getConfig() {
         return config;
+    }
+
+    public void setConfig(Properties config) {
+        this.config = config;
     }
 }

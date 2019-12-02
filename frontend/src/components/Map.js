@@ -134,7 +134,7 @@ const MapStyle = styled.div`
         color: white;
     }
     #map {
-          height: 49vw;
+          height: 100vh;
           width: 100vw;
     }
 `;
