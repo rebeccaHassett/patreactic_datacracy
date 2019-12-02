@@ -24,7 +24,7 @@ function TabPanel(props) {
             aria-labelledby={`scrollable-auto-tab-${index}`}
             {...other}
         >
-            <Box p={3} style={{ paddingLeft: '0', paddingRight: '0'}}>{children}</Box>
+            <Box p={3} style={{ paddingLeft: '0', paddingRight: '0', overflow: 'scroll', height: '100vh'}}>{children}</Box>
         </Typography>
     );
 }
@@ -60,7 +60,6 @@ export default function MenuSidenav(props) {
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
-
 
     return (
         <div className={classes.root}>

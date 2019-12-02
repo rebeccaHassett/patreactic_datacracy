@@ -67,11 +67,6 @@ export default function DataTabs(props) {
         setValue(newValue);
     };
 
-    console.log(props.incumbents);
-    if(props.incumbents[0][0] !== '-') {
-       console.log("Found data: " + props.incumbents);
-    }
-
     return (
         <div className={classes.root}>
             <AppBar position="static" style={{ width: '24vw' }} color="primary">
@@ -97,13 +92,13 @@ export default function DataTabs(props) {
                 <TableDisplay columns={incumbent_columns} rows={props.incumbents}/>
                 <h4 style={{ fontWeight: 'bold', textDecoration: 'underline' }}>Laws:</h4>
                 <p>{props.laws}</p>
-                <Statistics data={props.stateData}></Statistics>
+                <Statistics data={props.stateData} type="state"></Statistics>
             </TabPane>
             <TabPane value={value} index={1}>
-                <Statistics data={props.districtData}></Statistics>
+                <Statistics data={props.districtData} type="district"></Statistics>
             </TabPane>
             <TabPane value={value} index={2}>
-                <Statistics data={props.precinctData}></Statistics>
+                <Statistics data={props.precinctData} type="precinct"></Statistics>
             </TabPane>
         </div>
     );

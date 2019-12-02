@@ -1,9 +1,7 @@
 import React, {Component} from 'react';
-import {Container} from '@material-ui/core';
 import BarChart from "./BarChart";
 import PieChart from "./graphs/PieChart";
 import ElectionButtonsControl from "./controls/ElectionButtonsControl";
-import {Form} from "react-bootstrap";
 import styled from "styled-components";
 import Button from '@material-ui/core/Button'
 
@@ -21,7 +19,7 @@ export default class Statistics extends Component {
 
 
     handleElectionChanges(event) {
-        if(event.target.value  === "Congressional 2016") {
+        if (event.target.value === "Congressional 2016") {
             this.setState({
                 election: 'Congressional 2016'
             })
@@ -31,8 +29,7 @@ export default class Statistics extends Component {
             this.setState({
                 electionType: 'Congressional'
             })
-        }
-        else if(event.target.value  === "Congressional 2018") {
+        } else if (event.target.value === "Congressional 2018") {
             this.setState({
                 election: 'Congressional 2018'
             })
@@ -42,8 +39,7 @@ export default class Statistics extends Component {
             this.setState({
                 electionType: 'Congressional'
             })
-        }
-        else if(event.target.value  === "Presidential 2016") {
+        } else if (event.target.value === "Presidential 2016") {
             this.setState({
                 election: 'Presidential 2016'
             })
@@ -61,8 +57,18 @@ export default class Statistics extends Component {
         if (data === "") {
             return null;
         } else {
-            var jsonData = JSON.parse(data);
-            var name = jsonData.PRENAME;
+            let jsonData;
+            if (typeof (data) === 'string') {
+                jsonData = JSON.parse(data);
+            } else {
+                jsonData = data;
+            }
+            var name;
+            if (this.props.type === "district") {
+                name = "Congressional District " + jsonData.PRENAME;
+            } else {
+                name = jsonData.PRENAME;
+            }
             var totalPopulation = jsonData.VAP;
             var hispanicPopulation = jsonData.HVAP;
             var whitePopulation = jsonData.WVAP;
@@ -127,7 +133,7 @@ export default class Statistics extends Component {
             }
 
             var databar = {
-                labels: [republicanCandidate, democraticCandidate],
+                labels: ["Republican", "Democrat"],
                 datasets: [
                     {
                         label: "Number of Votes",
@@ -157,19 +163,15 @@ export default class Statistics extends Component {
 
         return (
             <StatisticsStyles>
-                <Form>
-                    <Form.Group>
-                        <h3 className="bolden">Election Data</h3>
+                <h3 className="bolden">Election Data</h3>
                 <ElectionButtonsControl exportState={this.handleElectionChanges}/>
-                    </Form.Group>
-                    <h4 className="bolden"> {wordCase(name)}</h4>
-                    <h4 className="label">{wordCase(this.state.electionType)} {this.state.electionYear}</h4>
-                    <Button></Button>
-                <h5>{democraticCandidate}, Dem, {democraticVotes.toLocaleString()}</h5>
-                <h5>{republicanCandidate}, Rep, {republicanVotes.toLocaleString()}</h5>
-                <h4>Votes Per Party</h4>
-                    <BarChart databar={databar}/>
-                <h4>Demographic Data</h4>
+                <h4 className="bolden"> {wordCase(name)}</h4>
+                <h4 className="label">{wordCase(this.state.electionType)} {this.state.electionYear}</h4>
+                <h4 className="bolden">Votes Per Party</h4>
+                <h5>{democraticCandidate}: {democraticVotes.toLocaleString()} votes</h5>
+                <h5>{republicanCandidate}: {republicanVotes.toLocaleString()} votes</h5>
+                <BarChart databar={databar}/>
+                <h4 className="bolden">Demographic Data</h4>
                 <p>Total Population: {Math.round(totalPopulation).toLocaleString()}</p>
                 <p>Hispanic Population: {Math.round(hispanicPopulation).toLocaleString()}</p>
                 <p>White Population: {Math.round(whitePopulation).toLocaleString()}</p>
@@ -177,15 +179,18 @@ export default class Statistics extends Component {
                 <p>Native American Population: {Math.round(nativeAmericanPopulation).toLocaleString()}</p>
                 <p>Asian Population: {Math.round(asianPopulation).toLocaleString()}</p>
                 <PieChart dataPie={dataPie}/>
-            </Form>
             </StatisticsStyles>
         );
     };
 }
 
 const StatisticsStyles = styled.div`
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     h4 {
-        margin-top: 2vw;
+        margin-top: 1vw;
         margin-bottom: 1vw;
     }
 

@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { CachedTileLayer } from '@yaga/leaflet-cached-tile-layer';
 import L from 'leaflet';
 import easyButton from 'leaflet-easybutton';
-import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import { Row, Col} from "react-bootstrap";
 import styled from 'styled-components';
 import MenuSidenav from "./MenuSidenav";
@@ -14,8 +13,6 @@ export default class State extends Component {
     constructor() {
         super();
         this.removeOriginalDistrictLayer = this.removeOriginalDistrictLayer.bind(this);
-        this.addPrecinctsToDistricts = this.addPrecinctsToDistricts.bind(this);
-        this.handlePrecinctExists = this.handlePrecinctExists.bind(this);
 
         this.state = {
             sidebar: true,
@@ -24,8 +21,9 @@ export default class State extends Component {
             stateData: "",
             chosenState: window.location.pathname.split("/").pop(),
             originalDistrictLayer: null,
-            precinctLayerExists: false,
             precinctLayer: null,
+            precinctIds: null,
+            individualPrecinctLayers: []
         }
 
         this.toggleBox = this.toggleBox.bind(this);
@@ -35,11 +33,7 @@ export default class State extends Component {
         this.map.removeLayer(this.state.originalDistrictLayer);
     }
 
-    handlePrecinctExists() {
-        this.setState({ precinctLayerExists: false });
-    }
-
-    loadOriginalDistrictData(districtId) {
+    loadOriginalDistrictData(districtId, that) {
         let district_data_url = 'http://127.0.0.1:8080/district/original/' + this.state.chosenState + '/' + districtId;
         return fetch(district_data_url).then(function (response) {
             if (response.status >= 400) {
@@ -47,8 +41,7 @@ export default class State extends Component {
             }
             return response.json();
         }).then(function (data) {
-            console.log(data);
-            this.setState({districtData: data});
+            that.setState({districtData: data});
         });
     }
 
@@ -98,7 +91,7 @@ export default class State extends Component {
                 else if(that.state.chosenState === "Michigan") {
                     districtId = event.layer.feature.properties.NAME;
                 }
-                that.loadOriginalDistrictData(districtId);
+                that.loadOriginalDistrictData(districtId, that);
             });
 
             that.setState({originalDistrictLayer: layer});
@@ -106,34 +99,63 @@ export default class State extends Component {
         });
     }
 
-    addPrecinctsToDistricts(url, map, that) {
-        var layer;
-        var ZOOM = 7;
-
-        var district_style = {
+    async loadPrecinctsIncrementally(that) {
+        var precinctStyle = {
             "color": "black"
         };
-        return fetch(url).then(function (response) {
+        var precinctLayerArr = [];
+        var precinctUrl = 'http://127.0.0.1:8080/borders/precinct/' + that.state.chosenState + '/';
+
+        let precinctPromises = this.state.precinctIds.map(precinctId => fetch(precinctUrl + precinctId).then(function (response) {
             if (response.status >= 400) {
-                throw new Error("Precinct geographic data not loaded from server successfully");
+                throw new Error("Precinct geographic data not incrementally loaded from server successfully");
             }
             return response.json();
         }).then(function (data) {
-            layer = L.geoJSON(data, { style: district_style }).addTo(map);
+            let layer = L.geoJSON(data, {style: precinctStyle});
+            precinctLayerArr.push(layer);
+        }))
 
-            that.setState({ precinctLayer: layer });
+        await Promise.all(precinctPromises).then(() => {
+            this.map.on("zoomend", function (event) {
+                if (this.getZoom() >= ZOOM && that.state.precinctLayer === null) {
+                    console.log(this.getZoom());
+                    that.setState({individualPrecinctLayers: precinctLayerArr});
+                    let layerGroup = L.featureGroup(precinctLayerArr).addTo(that.map);
+                    that.setState({precinctLayer: layerGroup});
+                    layerGroup.bringToFront();
+                    layerGroup.eachLayer(function (layer) {
+                        layer.on('mouseover', function (event) {
+                            that.loadOriginalDistrictData(event.layer.feature.properties.CD, that);
+                            that.setState({precinctData: JSON.stringify(event.layer.feature.properties)})
+                        });
+                    });
 
-            map.on("zoomend", function (event) {
-                if (this.getZoom() < ZOOM) {
-                    layer.remove();
-                    that.handlePrecinctExists();
+                    return true;
                 }
-            });
+                else {
+                    console.log(that.map.getZoom());
+                    if (this.getZoom() < ZOOM && that.state.precinctLayer !== null) {
+                        console.log(that.state.precinctLayer);
+                        that.state.precinctLayer.remove();
+                        that.setState({precinctLayer: null});
+                    }
+                }
+            })
+        });
+    }
 
-            layer.bringToFront();
-
-
-            return layer
+    loadStateData() {
+        var that = this;
+        let state_data_url = 'http://127.0.0.1:8080/state/original/' + this.state.chosenState;
+        return fetch(state_data_url).then(function (response) {
+            if (response.status >= 400) {
+                throw new Error("Failed to load state data from server");
+            }
+            return response.json();
+        }).then(function (data) {
+            that.setState({stateData: data});
+            that.setState({precinctIds: data.precinctIds});
         });
     }
 
@@ -157,6 +179,7 @@ export default class State extends Component {
                 [33, -84]                /* South West */
             ];
             minZoom = 6;
+            ZOOM = minZoom + 1;
         } else if (chosenState === "RhodeIsland") {
             clustersUrl = 'http://127.0.0.1:8080/District_Borders?name=Rhode_Island';
             maxBounds = [
@@ -164,6 +187,7 @@ export default class State extends Component {
                 [40, -71]
             ];
             minZoom = 9;
+            ZOOM = minZoom + 1;
         } else if (chosenState === "Michigan") {
             clustersUrl = 'http://127.0.0.1:8080/District_Borders?name=Michigan';
             maxBounds = [
@@ -171,7 +195,7 @@ export default class State extends Component {
                 [40, -90]
             ];
             minZoom = 6;
-
+            ZOOM = minZoom + 1;
         }
 
         this.map = L.map('map', {
@@ -192,32 +216,13 @@ export default class State extends Component {
         },  {position: 'topright'}).addTo(this.map);
 
         var that = this;
-        this.map.on("zoomend", function (event) {
-            if (this.getZoom() >= ZOOM && that.state.precinctLayerExists === false) {
-                var precinctsUrl;
-                if (chosenState === "RhodeIsland") {
-                    precinctsUrl = 'http://127.0.0.1:8080/Precinct_Borders?name=Rhode_Island'
-                } else if (chosenState === "NorthCarolina") {
-                    precinctsUrl = 'http://127.0.0.1:8080/Precinct_Borders?name=North_Carolina'
-                } else {
-                    precinctsUrl = 'http://127.0.0.1:8080/Precinct_Borders?name=Michigan'
-                }
-
-                that.setState({ precinctLayerExists: true });
-
-                that.addPrecinctsToDistricts(precinctsUrl, this, that)
-                    .then(precinct_layer => {
-                        precinct_layer.on('mouseover', function (event) {
-                            that.setState({ precinctData: JSON.stringify(event.layer.feature.properties) })
-                        });
-                        return true;
-                    })
-                    .catch(err => console.log(err));
-                that.setState({ precinctLayerExists: true });
-            }
-        })
 
         this.addOriginalDistrictsToState(clustersUrl, this.map, that);
+
+        this.loadStateData().then(data =>
+        {
+            this.loadPrecinctsIncrementally(that);
+        })
     }
 
     render() {

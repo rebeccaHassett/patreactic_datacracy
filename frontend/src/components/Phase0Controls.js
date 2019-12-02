@@ -27,7 +27,17 @@ export default class Phase0Controls extends Component {
         electionYear: '2016',
         button2018: true,
         resultsUnavailable: true,
-        resultsInView: false
+        resultsInView: false,
+        vbdtoRows: [['-', '-', '-', '-', '-']]
+    }
+
+    wordCase(str) {
+        var splitStr = str.toLowerCase().split(' ');
+        for (var i = 0; i < splitStr.length; i++) {
+
+            splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
+        }
+        return splitStr.join(' ');
     }
 
     async runPhase0() {
@@ -55,11 +65,24 @@ export default class Phase0Controls extends Component {
             state: this.props.state
         };
 
-        const response = await fetch("http://127.0.0.1:8080/runPhase0", {
+        var that = this;
+        await fetch("http://127.0.0.1:8080/runPhase0", {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(phase0Dto),
-        })
+        }).then(function(data){
+            return data.json();
+        }).then(function(vbdtoData) {
+            console.log(vbdtoData);
+            for(let i = 0; i < vbdtoData.length; i++){
+                vbdtoData[i].precinctId = that.wordCase(vbdtoData[i].precinctId);
+                vbdtoData[i].demographic = that.wordCase(vbdtoData[i].demographic);
+                vbdtoData[i].winningParty = that.wordCase(vbdtoData[i].winningParty);
+            }
+            that.setState({vbdtoRows: vbdtoData})
+        });
+
+
 
         this.setState({ resultsUnavailable: false });
         this.setState({ resultsInView: true });
@@ -149,7 +172,7 @@ export default class Phase0Controls extends Component {
                     <p>Population Thresholds: {this.state.blocPopulationValues[0]}% - {this.state.blocPopulationValues[1]}%<br/>
                     Voting Thresholds: {this.state.blocVotingValues[0]}% - {this.state.blocVotingValues[1]}%</p>
                     <h4>Voting Bloc Precincts</h4>
-                    <TableDisplay columns={columns} rows={rows} createData={createData} />
+                    <TableDisplay columns={columns} rows={this.state.vbdtoRows}/>
                 </Phase0Styles>
             );
         }
@@ -182,32 +205,29 @@ const ControlGroup = styled.div`
 `;
 
 const columns = [
-    { id: 'precinctName', label: 'Name', },
+    { id: 'precinctId', label: 'Name', },
     { id: 'demographic', label: 'Demographic', },
     {
-        id: 'population',
-        label: 'Population',
-        align: 'right',
-        format: value => value.toLocaleString(),
-    },
-    {
         id: 'winningParty',
-        label: 'Winning Party',
-        align: 'right',
+        label: 'Party',
         format: value => value.toLocaleString(),
     },
     {
-        id: 'votes',
-        label: 'Votes',
-        align: 'right',
+        id: 'winningVotes',
+        label: 'Winning Votes',
+        format: value => value.toLocaleString(),
+    },
+    {
+        id: 'totalVotes',
+        label: 'Total Votes',
         format: value => value.toLocaleString(),
     }
 ];
 
-function createData(precinctName, demographic, population, winningParty, votes) {
-    return { precinctName, demographic, population, winningParty, votes };
-}
 
-const rows = [
-    createData('Kingstown 1', 'White', 1324171354, 'REP', 123),
-];
+/*    {
+        id: 'population',
+        label: 'Population',
+        align: 'right',
+        format: value => value.toLocaleString(),
+    },*/
