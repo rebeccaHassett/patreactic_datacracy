@@ -20,6 +20,7 @@ public class Properties {
     public final int numMajMinDistricts;
     public final Set<DemographicGroup> selectedMinorities;
     public final ElectionId electionId;
+    public final double majMinWeight;
 
 
     @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
@@ -30,7 +31,8 @@ public class Properties {
                       @JsonProperty("numMajMinDistricts") int numMajMinDistricts,
                       @JsonProperty("selectedMinorities") List<String> selectedMinorities,
                       @JsonProperty("year") int year,
-                      @JsonProperty("type") String type) {
+                      @JsonProperty("type") String type,
+                      @JsonProperty("majMinWeight") double majMinWeight) {
         this.thresholds = new HashMap<>();
         thresholds.forEach((constraint, thresh) -> this.thresholds.put(Constraint.valueOf(constraint), thresh));
         this.weights = new HashMap<>();
@@ -40,5 +42,9 @@ public class Properties {
         this.numMajMinDistricts = numMajMinDistricts;
         this.selectedMinorities = selectedMinorities.stream().map(DemographicGroup::valueOf).collect(Collectors.toUnmodifiableSet());
         this.electionId = new ElectionId(year, type);
+        if (majMinWeight < 0 || majMinWeight > 1) {
+            throw new IllegalArgumentException("majMinWeight should be within the range [0,1]");
+        }
+        this.majMinWeight = majMinWeight;
     }
 }
