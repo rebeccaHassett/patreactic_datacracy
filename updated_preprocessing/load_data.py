@@ -95,15 +95,15 @@ def load_precinct_data(connection):
     north_carolina_features = read_geojson_file('NC_VDT_MAPPED.geojson')
 
     load_precinct_values(connection, cursor, rhode_island_features, precinct_insert_query, "RhodeIsland")
-    # load_precinct_values(connection, cursor, michigan_features, precinct_insert_query, "Michigan")
+    load_precinct_values(connection, cursor, michigan_features, precinct_insert_query, "Michigan")
     # load_precinct_values(connection, cursor, north_carolina_features, precinct_insert_query, "NorthCarolina")
 
     load_precinct_population_data(connection, cursor, rhode_island_features)
-    # load_precinct_population_data(connection, cursor, michigan_features)
+    load_precinct_population_data(connection, cursor, michigan_features)
     # load_precinct_population_data(connection, cursor, north_carolina_features)
 
     load_election_data(connection, rhode_island_features)
-    # load_election_data(connection, michigan_features)
+    load_election_data(connection, michigan_features)
     # load_election_data(connection, north_carolina_features)
 
     connection.commit()
