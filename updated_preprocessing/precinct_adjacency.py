@@ -717,6 +717,15 @@ def update_all(name, data, votes16, votes18, precincts, comp):
     return data
 
 
+"""Michigan has duplicate precinct names in different counties [Sherman Township]"""
+def _update_duplicate_precinct_names(data):
+    features = data['features'] # list of dictionaries, with each dictionary containing info on geometry
+    for f in features:
+        f['properties']['PRENAME'] = f['properties']['PRENAME'] + " " + f["properties"]["county_nam"]
+    return features
+
+
+
 if __name__ == '__main__':
     #__run('RI_Precincts_MAPPED.geojson')
 
@@ -726,7 +735,7 @@ if __name__ == '__main__':
     with open('NC_temp.geojson', 'w') as f:
         json.dump(data, f)
     """
-
+    """
     file = 'NC_temp.geojson'
     with open(file) as f:
         data = json.load(f)
@@ -736,11 +745,20 @@ if __name__ == '__main__':
     voting18 = pd.read_csv('nc_2018.csv', dtype=str)
     votes18 = voting18[voting18.office == 'U.S. House'].drop(columns=['district'])
     update_NC(file, data, votes16, votes18)
+    """
 
     """
-    with open('RI_Precincts_MAPPED.geojson') as file:
+    data = None
+    with open('mapped_data/MI_Precincts_MAPPED.geojson') as file:
         data = json.load(file)
+        updated_features = _update_duplicate_precinct_names(data)
+        data['features'] = updated_features
 
+    with open('mapped_data/MI_Precincts_MAPPED.geojson', 'w') as file:
+        file.write(json.dumps(data))
+    """
+
+    """
     features = data['features'] # list of dictionaries, with each dictionary containing info on geometry
     collection = []
     i = 0
@@ -748,17 +766,14 @@ if __name__ == '__main__':
     map = dict()
     for f in features:
         d = f['properties']['PRENAME']
-        name = 'CRANSTON'
+        name = 'SHERMAN TOWNSHIP 1'
         if name in d:
             collection.append(shape(f['geometry']))
             i += 1
             map.update({i:d})
-        if name + ' 0728' == d:
-            p = shape(f['geometry'])
     print(map)
     collection = __all_polygons(collection)
     plot_polygons(collection)
-    plot(p, 'blue')
     plt.show()
     """
 

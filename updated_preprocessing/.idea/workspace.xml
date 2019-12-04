@@ -3,7 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="da7513d8-167f-45a0-92b8-c16a264abf58" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/load_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/load_data.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/mapped_data/MI_Precincts_MAPPED.geojson" beforeDir="false" afterPath="$PROJECT_DIR$/mapped_data/MI_Precincts_MAPPED.geojson" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/precinct_adjacency.py" beforeDir="false" afterPath="$PROJECT_DIR$/precinct_adjacency.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -13,11 +15,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/load_data.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="231">
-              <caret line="116" column="6" lean-forward="true" selection-start-line="116" selection-start-column="6" selection-end-line="116" selection-end-column="6" />
+            <state relative-caret-position="267">
+              <caret line="244" lean-forward="true" selection-start-line="244" selection-end-line="244" />
               <folding>
                 <element signature="e#0#22#0" expanded="true" />
               </folding>
@@ -30,11 +32,32 @@
           <provider selected="true" editor-type-id="text-editor" />
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/precinct_adjacency.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="328">
-              <caret line="776" column="51" selection-start-line="776" selection-start-column="51" selection-end-line="776" selection-end-column="51" />
+            <state relative-caret-position="421">
+              <caret line="757" column="36" lean-forward="true" selection-start-line="757" selection-start-column="36" selection-end-line="757" selection-end-column="36" />
+              <folding>
+                <element signature="e#0#11#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/mapped_data/MI_Precincts_MAPPED.geojson">
+          <provider selected="true" editor-type-id="LargeFileEditor">
+            <state relative-caret-position="2992">
+              <caret column="176056" selection-start-column="176056" selection-end-column="176056" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/map_election_geographic_data.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="323">
+              <caret line="22" column="45" selection-start-line="22" selection-start-column="45" selection-end-line="22" selection-end-column="45" />
               <folding>
                 <element signature="e#0#11#0" expanded="true" />
               </folding>
@@ -62,10 +85,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>SURRY</find>
-      <find>PROPERTIES</find>
-      <find>6W</find>
-      <find>&quot;HOUSE</find>
       <find>ALAMANCE</find>
       <find>6N</find>
       <find>Ward 1 Precinct</find>
@@ -80,7 +99,6 @@
       <find>interest</find>
       <find>Providence 0</find>
       <find>Providence 0731</find>
-      <find>Sherman</find>
       <find>Sherman Township 1</find>
       <find>South Kingstown 3206</find>
       <find>%d</find>
@@ -92,6 +110,11 @@
       <find>borders</find>
       <find>precin</find>
       <find>#</find>
+      <find>id</find>
+      <find>plot_polygons</find>
+      <find>popu</find>
+      <find>load_precinct_pop</find>
+      <find>Sherman</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -106,6 +129,7 @@
         <option value="$PROJECT_DIR$/laws/north_carolina_laws.txt" />
         <option value="$PROJECT_DIR$/laws/rhode_island_laws.txt" />
         <option value="$PROJECT_DIR$/load_data.py" />
+        <option value="$PROJECT_DIR$/precinct_adjacency.py" />
       </list>
     </option>
   </component>
@@ -242,9 +266,31 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="precinct_adjacency" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="updated_preprocessing" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/precinct_adjacency.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
         <item itemvalue="Python.load_data" />
+        <item itemvalue="Python.precinct_adjacency" />
         <item itemvalue="Python.clean_data" />
         <item itemvalue="Python.map_election_geographic_data" />
       </list>
@@ -268,18 +314,18 @@
     <frame x="-6" y="-6" width="1293" height="693" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.24980111" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.24980111" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.38898757" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.30017763" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Version Control" order="7" />
-      <window_info anchor="bottom" id="Terminal" order="8" weight="0.26820603" />
+      <window_info anchor="bottom" id="Terminal" order="8" weight="0.1740675" />
       <window_info anchor="bottom" id="Python Console" order="9" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -368,8 +414,42 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$USER_HOME$/venv/Lib/site-packages/mysql/connector/connection_cext.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="123">
+          <caret line="474" selection-start-line="474" selection-end-line="474" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/load_data.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="267">
+          <caret line="244" lean-forward="true" selection-start-line="244" selection-end-line="244" />
+          <folding>
+            <element signature="e#0#22#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/mapped_data/RI_Precincts_MAPPED_ManualUpdates.geojson">
       <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mapped_data/MI_Precincts_MAPPED.geojson">
+      <provider selected="true" editor-type-id="LargeFileEditor">
+        <state relative-caret-position="2992">
+          <caret column="176056" selection-start-column="176056" selection-end-column="176056" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/map_election_geographic_data.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="323">
+          <caret line="22" column="45" selection-start-line="22" selection-start-column="45" selection-end-line="22" selection-end-column="45" />
+          <folding>
+            <element signature="e#0#11#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/incumbents.py">
       <provider selected="true" editor-type-id="text-editor">
@@ -380,20 +460,10 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/precinct_adjacency.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="328">
-          <caret line="776" column="51" selection-start-line="776" selection-start-column="51" selection-end-line="776" selection-end-column="51" />
+        <state relative-caret-position="421">
+          <caret line="757" column="36" lean-forward="true" selection-start-line="757" selection-start-column="36" selection-end-line="757" selection-end-column="36" />
           <folding>
             <element signature="e#0#11#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/load_data.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="231">
-          <caret line="116" column="6" lean-forward="true" selection-start-line="116" selection-start-column="6" selection-end-line="116" selection-end-column="6" />
-          <folding>
-            <element signature="e#0#22#0" expanded="true" />
           </folding>
         </state>
       </provider>
