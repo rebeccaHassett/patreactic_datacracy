@@ -45,11 +45,15 @@ public class Edge {
                 d2.getPopulation(null),
                 config.thresholds.get(Constraint.MINORITY_PERCENTAGE));
         double avgScore = (d1Score + d2Score) / 2.0;
-        double combinedScore = Algorithm.getMajMinScore(
+        double combinedScore = getCombinedMMScore(config);
+        return combinedScore >= avgScore;
+    }
+
+    public double getCombinedMMScore(Properties config) {
+        return Algorithm.getMajMinScore(
                 config.selectedMinorities.stream().mapToLong(dg -> d1.getPopulation(dg) + d2.getPopulation(dg)).sum(),
                 d1.getPopulation(null) + d1.getPopulation(null),
                 config.thresholds.get(Constraint.MINORITY_PERCENTAGE));
-        return combinedScore >= avgScore;
     }
 
     public District peekCombined() {

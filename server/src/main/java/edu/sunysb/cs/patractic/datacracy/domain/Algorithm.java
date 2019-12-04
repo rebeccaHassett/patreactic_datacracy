@@ -133,7 +133,7 @@ public class Algorithm extends MyAlgorithm {
 
                 // Sort using objective function, descending
                 List<Edge> sortedEdges = new ArrayList<>(mmEdges);
-                sortedEdges.sort(new ObjectiveFunctionComparator(this).reversed());
+                sortedEdges.sort(new Phase1EdgeComparator(this).reversed());
 
                 // Remove edges that duplicate districts
                 Set<District> districtsIncluded = new HashSet<>();
