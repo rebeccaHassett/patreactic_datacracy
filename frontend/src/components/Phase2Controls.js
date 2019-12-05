@@ -10,16 +10,6 @@ export default class Phase2Controls extends Component {
         super();
         this.handleIncrementalClick = this.handleIncrementalClick.bind(this);
         this.handleRealTimeClick = this.handleRealTimeClick.bind(this);
-        this.handleEfficiencyGap = this.handleEfficiencyGap.bind(this);
-        this.handleConvexHullCompactness = this.handleConvexHullCompactness.bind(this);
-        this.handleEdgeCompactness = this.handleEdgeCompactness.bind(this);
-        this.handleReockCompactness = this.handleReockCompactness.bind(this);
-        this.handlePopulationEquality = this.handlePopulationEquality.bind(this);
-        this.handlePartisanFairness = this.handlePartisanFairness.bind(this);
-        this.handleCompetitiveness = this.handleCompetitiveness.bind(this);
-        this.handleGerrymanderRepublican = this.handleGerrymanderRepublican.bind(this);
-        this.handlePopulationHomogeneity = this.handlePopulationHomogeneity.bind(this);
-        this.handleGerrymanderDemocrat = this.handleGerrymanderDemocrat.bind(this);
         this.handleEfficiencyGapWeight = this.handleEfficiencyGapWeight.bind(this);
         this.handleConvexHullCompactnessWeight = this.handleConvexHullCompactnessWeight.bind(this);
         this.handleEdgeCompactnessWeight = this.handleEdgeCompactnessWeight.bind(this);
@@ -36,16 +26,6 @@ export default class Phase2Controls extends Component {
     state = {
         incremental: false,
         realtime: false,
-        convexHullCompactnessValues: [],
-        edgeCompactnessValues: [],
-        reockCompactnessValues: [],
-        efficiencyGapValues: [],
-        populationEqualityValues: [],
-        partisanFairnessValues: [],
-        competitivenessValues: [],
-        gerrymanderRepublicanValues: [],
-        populationHomogeneityValues: [],
-        gerrymanderDemocratValues: [],
         convexHullCompactnessWeightValue: 1,
         edgeCompactnessWeightValue: 1,
         reockCompactnessWeightValue: 1,
@@ -69,81 +49,40 @@ export default class Phase2Controls extends Component {
         this.setState({ realtime: evt.target.checked })
     }
 
-
-    handleEdgeCompactness(value) {
-        this.setState({ edgeCompactnessValues: value })
-    }
-
     handleEdgeCompactnessWeight(value) {
         this.setState({ edgeCompactnessWeightValue: value })
-    }
-
-    handleConvexHullCompactness(value) {
-        this.setState({ convexHullCompactnessValues: value })
     }
 
     handleConvexHullCompactnessWeight(value) {
         this.setState({ convexHullCompactnessWeightValue: value })
     }
 
-    handleEfficiencyGap(value) {
-        this.setState({ efficiencyGapValues: value })
-    }
-
     handleEfficiencyGapWeight(value) {
         this.setState({ efficiencyGapWeightValue: value })
-    }
-
-    handleReockCompactness(value) {
-        this.setState({ reockCompactnessValues: value })
     }
 
     handleReockCompactnessWeight(value) {
         this.setState({ reockCompactnessWeightValue: value })
     }
 
-    handlePopulationEquality(value) {
-        this.setState({ populationEqualityValues: value })
-    }
-
     handlePopulationEqualityWeight(value) {
         this.setState({ populationEqualityWeightValue: value })
-    }
-
-    handlePartisanFairness(value) {
-        this.setState({ partisanFairnessValues: value })
     }
 
     handlePartisanFairnessWeight(value) {
         this.setState({ partisanFairnessWeightValue: value })
     }
 
-    handleCompetitiveness(value) {
-        this.setState({ competitivenessValues: value })
-    }
-
     handleCompetitivenessWeight(value) {
         this.setState({ competitivenessWeightValue: value })
-    }
-
-    handleGerrymanderRepublican(value) {
-        this.setState({ gerrymanderRepublicanValues: value })
     }
 
     handleGerrymanderRepublicanWeight(value) {
         this.setState({ gerrymanderRepublicanWeightValue: value })
     }
 
-    handleGerrymanderDemocrat(value) {
-        this.setState({ gerrymanderDemocratValues: value })
-    }
-
     handleGerrymanderDemocratWeight(value) {
         this.setState({ gerrymanderDemocratWeightValue: value })
-    }
-
-    handlePopulationHomogeneity(value) {
-        this.setState({ populationHomogeneityValues: value })
     }
 
     handlePopulationHomogeneityWeight(value) {
@@ -157,104 +96,54 @@ export default class Phase2Controls extends Component {
                 <Button  variant="contained" color="primary" onClick={this.runPhase2} style={{ width: '25vw', marginBottom: '2vw' }}>Start Phase 2</Button>
                 <SwitchControl name="Incremental" exportIncremental={this.handleIncrementalClick} exportRealTime={this.handleRealTimeClick} />
                 <ControlGroup>
-                    <label className="label">Convex Hull Compactness Thresholds:</label>
-                    <SliderControlUpperLowerValues
-                        exportState={this.handleConvexHullCompactness}></SliderControlUpperLowerValues>
-                </ControlGroup>
-                <ControlGroup>
                     <label className="label">Convex Hull Compactness Weighting:</label>
-                    <SliderControlSingleValue min={0} max={1} step={0.01}
-                                              exportState={this.handleConvexHullCompactnessWeight}></SliderControlSingleValue>
-                </ControlGroup>
-                <ControlGroup>
-                    <label className="label">Reock Compactness Thresholds:</label>
-                    <SliderControlUpperLowerValues
-                        exportState={this.handleReockCompactness}></SliderControlUpperLowerValues>
+                    <SliderControlSingleValue min={0} max={1} step={0.01} marks={OFMarks}
+                                              exportState={this.handleConvexHullCompactnessWeight}/>
                 </ControlGroup>
                 <ControlGroup>
                     <label className="label">Reock Compactness Weighting:</label>
-                    <SliderControlSingleValue min={0} max={1} step={0.01}
-                                              exportState={this.handleReockCompactnessWeight}></SliderControlSingleValue>
-                </ControlGroup>
-                <ControlGroup>
-                    <label className="label">Edge Compactness Thresholds:</label>
-                    <SliderControlUpperLowerValues
-                        exportState={this.handleEdgeCompactness}></SliderControlUpperLowerValues>
+                    <SliderControlSingleValue min={0} max={1} step={0.01} marks={OFMarks}
+                                              exportState={this.handleReockCompactnessWeight}/>
                 </ControlGroup>
                 <ControlGroup>
                     <label className="label">Edge Compactness Weighting:</label>
-                    <SliderControlSingleValue min={0} max={1} step={0.01}
-                                              exportState={this.handleEdgeCompactnessWeight}></SliderControlSingleValue>
-                </ControlGroup>
-                <ControlGroup>
-                    <label className="label">Efficiency Gap Thresholds:</label>
-                    <SliderControlUpperLowerValues
-                        exportState={this.handleEfficiencyGap}></SliderControlUpperLowerValues>
+                    <SliderControlSingleValue min={0} max={1} step={0.01} marks={OFMarks}
+                                              exportState={this.handleEdgeCompactnessWeight}/>
                 </ControlGroup>
                 <ControlGroup>
                     <label className="label">Efficiency Gap Weighting:</label>
-                    <SliderControlSingleValue min={0} max={1} step={0.01}
-                                              exportState={this.handleEfficiencyGapWeight}></SliderControlSingleValue>
-                </ControlGroup>
-                <ControlGroup>
-                    <label className="label">Population Homogeneity Thresholds:</label>
-                    <SliderControlUpperLowerValues
-                        exportState={this.handlePopulationHomogeneity}></SliderControlUpperLowerValues>
+                    <SliderControlSingleValue min={0} max={1} step={0.01} marks={OFMarks}
+                                              exportState={this.handleEfficiencyGapWeight}/>
                 </ControlGroup>
                 <ControlGroup>
                     <label className="label">Population Homogeneity Weighting:</label>
-                    <SliderControlSingleValue min={0} max={1} step={0.01}
-                                              exportState={this.handlePopulationHomogeneityWeight}></SliderControlSingleValue>
-                </ControlGroup>
-                <ControlGroup>
-                    <label className="label">Population Equality Thresholds:</label>
-                    <SliderControlUpperLowerValues
-                        exportState={this.handlePopulationEquality}></SliderControlUpperLowerValues>
+                    <SliderControlSingleValue min={0} max={1} step={0.01} marks={OFMarks}
+                                              exportState={this.handlePopulationHomogeneityWeight}/>
                 </ControlGroup>
                 <ControlGroup>
                     <label className="label">Population Equality Weighting:</label>
-                    <SliderControlSingleValue min={0} max={1} step={0.01}
-                                              exportState={this.handlePopulationEqualityWeight}></SliderControlSingleValue>
-                </ControlGroup>
-                <ControlGroup>
-                    <label className="label">Partisan Fairness Thresholds:</label>
-                    <SliderControlUpperLowerValues
-                        exportState={this.handlePartisanFairness}></SliderControlUpperLowerValues>
+                    <SliderControlSingleValue min={0} max={1} step={0.01} marks={OFMarks}
+                                              exportState={this.handlePopulationEqualityWeight}/>
                 </ControlGroup>
                 <ControlGroup>
                     <label className="label">Partisan Fairness Weighting:</label>
-                    <SliderControlSingleValue min={0} max={1} step={0.01}
-                                              exportState={this.handlePartisanFairnessWeight}></SliderControlSingleValue>
-                </ControlGroup>
-                <ControlGroup>
-                    <label className="label">Competitiveness Thresholds:</label>
-                    <SliderControlUpperLowerValues
-                        exportState={this.handleCompetitiveness}></SliderControlUpperLowerValues>
+                    <SliderControlSingleValue min={0} max={1} step={0.01} marks={OFMarks}
+                                              exportState={this.handlePartisanFairnessWeight}/>
                 </ControlGroup>
                 <ControlGroup>
                     <label className="label">Competitiveness Weighting:</label>
-                    <SliderControlSingleValue min={0} max={1} step={0.01}
-                                              exportState={this.handleCompetitivenessWeight}></SliderControlSingleValue>
-                </ControlGroup>
-                <ControlGroup>
-                    <label className="label">Gerrymander Republican Thresholds:</label>
-                    <SliderControlUpperLowerValues
-                        exportState={this.handleGerrymanderRepublican}></SliderControlUpperLowerValues>
+                    <SliderControlSingleValue min={0} max={1} step={0.01} marks={OFMarks}
+                                              exportState={this.handleCompetitivenessWeight}/>
                 </ControlGroup>
                 <ControlGroup>
                     <label className="label">Gerrymander Republican Weighting:</label>
-                    <SliderControlSingleValue min={0} max={1} step={0.01}
-                                              exportState={this.handleGerrymanderRepublicanWeight}></SliderControlSingleValue>
-                </ControlGroup>
-                <ControlGroup>
-                    <label className="label">Gerrymander Democrat Thresholds:</label>
-                    <SliderControlUpperLowerValues
-                        exportState={this.handleGerrymanderDemocrat}></SliderControlUpperLowerValues>
+                    <SliderControlSingleValue min={0} max={1} step={0.01} marks={OFMarks}
+                                              exportState={this.handleGerrymanderRepublicanWeight}/>
                 </ControlGroup>
                 <ControlGroup>
                     <label className="label">Gerrymander Democrat Weighting:</label>
-                    <SliderControlSingleValue min={0} max={1} step={0.01}
-                                              exportState={this.handleGerrymanderDemocratWeight}></SliderControlSingleValue>
+                    <SliderControlSingleValue min={0} max={1} step={0.01} marks={OFMarks}
+                                              exportState={this.handleGerrymanderDemocratWeight}/>
                 </ControlGroup>
             </Phase2Styles>
         );
@@ -276,3 +165,14 @@ const Phase2Styles = styled.div`
 const ControlGroup = styled.div`
     width: 75%;
 `;
+
+const OFMarks =  [
+    {
+        value: 0,
+        label: '0',
+    },
+    {
+        value: 1,
+        label: '1',
+    },
+];

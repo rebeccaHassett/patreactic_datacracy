@@ -56,9 +56,14 @@ const StyledTab = withStyles(theme => ({
 export default function MenuSidenav(props) {
     const classes = useStyles();
     const [value, setValue] = React.useState(0);
+    const [generatedDistricts, setGeneratedDistricts] = React.useState(true);
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
+    };
+
+    const handleGeneratedDistricts = (event) => {
+      setGeneratedDistricts(false);
     };
 
     return (
@@ -82,17 +87,20 @@ export default function MenuSidenav(props) {
                 </Tabs>
             </AppBar>
             <TabPanel value={value} index={0} style={{marginLeft: '0px', paddingLeft: '0px', marginRight: '0px', paddingRight: '0px'}}>
-                <Phase0Controls state={props.chosenState}></Phase0Controls>
+                <Phase0Controls state={props.chosenState}/>
             </TabPanel>
             <TabPanel value={value} index={1}>
-                <Phase1Controls chosenState={props.chosenState} removeOGDisrtricts={props.removeOGDisrtricts} removePrecinctLayer={props.removePrecinctLayer} precinctLayer={props.precinctLayer}
-                handlePrecinctFeatures={props.handlePrecinctFeatures}></Phase1Controls>
+                <Phase1Controls chosenState={props.chosenState} removeOriginalDisrtricts={props.removeOriginalDisrtricts} removePrecinctLayer={props.removePrecinctLayer} precinctLayer={props.precinctLayer}
+                handlePrecinctFeatures={props.handlePrecinctFeatures} handleGeneratedDistricts={handleGeneratedDistricts}
+                                initializePhase1Map={props.initializePhase1Map}/>
             </TabPanel>
             <TabPanel value={value} index={2}>
-                <Phase2Controls></Phase2Controls>
+                <Phase2Controls/>
             </TabPanel>
             <TabPanel value={value} index={3}>
-                <DataDisplay stateData={props.stateData} precinctData={props.precinctData} districtData={props.districtData} chosenState={props.chosenState}></DataDisplay>
+                <DataDisplay stateData={props.stateData} precinctData={props.precinctData} districtData={props.districtData}
+                             chosenState={props.chosenState} generatedDistricts={generatedDistricts}
+                            loadOriginalDistricts={props.loadOriginalDistricts} removeOriginalDistricts={props.removeOriginalDisrtricts}/>
             </TabPanel>
         </div>
     );

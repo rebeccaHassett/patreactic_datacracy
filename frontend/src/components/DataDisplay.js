@@ -32,7 +32,6 @@ class DataDisplay extends React.Component {
     }
 
     componentDidMount() {
-        console.log(this.props.chosenState);
         fetch('http://127.0.0.1:8080/laws/' + this.props.chosenState).then(function (response) {
             if (response.status >= 400) {
                 console.log("Law data not loaded from server successfully");
@@ -52,7 +51,9 @@ class DataDisplay extends React.Component {
         return (
             <DataTabs stateData={this.props.stateData} districtData={this.props.districtData}
                 precinctData={this.props.precinctData}
-                incumbents={this.state.incumbents} laws={this.state.laws} />
+                incumbents={this.state.incumbents} laws={this.state.laws}
+                      generatedDistricts={this.props.generatedDistricts} loadOriginalDistricts={this.props.loadOriginalDistricts}
+                    removeOriginalDistricts={this.props.removeOriginalDistricts}/>
         );
     }
 }

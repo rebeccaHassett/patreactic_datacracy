@@ -8,6 +8,8 @@ import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import Statistics from "./Statistics";
 import TableDisplay from "./controls/TableDisplay";
+import Button from "@material-ui/core/Button";
+import styled from "styled-components";
 
 
 function TabPane(props) {
@@ -57,6 +59,8 @@ const StyledDataTab = withStyles(theme => ({
 export default function DataTabs(props) {
     const classes = useDataStyles();
     const [value, setValue] = React.useState(0);
+    const [enableDistrictView, setEnableDistrictView] = React.useState(true);
+    const [districtView, setDistrictView] = React.useState("View Original Districts");
     let  [,setState]=React.useState();
     const incumbent_columns = [
         { id: 'districtId', label: 'District', format: value => value.toLocaleString(),},
@@ -66,6 +70,21 @@ export default function DataTabs(props) {
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
+
+    const handleDistrictView = (event) => {
+        if(districtView === "View Original Districts") {
+            setDistrictView("View Generated Districts");
+            props.loadOriginalDistricts();
+        }
+        else {
+            setDistrictView("View Original Districts");
+            props.removeOriginalDistricts();
+        }
+    };
+
+    if(props.generatedDistricts === false && enableDistrictView === true) {
+        setEnableDistrictView(false);
+    }
 
     return (
         <div className={classes.root}>
@@ -95,7 +114,14 @@ export default function DataTabs(props) {
                 <Statistics data={props.stateData} type="state"></Statistics>
             </TabPane>
             <TabPane value={value} index={1}>
+                <DistrictDataStyle>
+                <Button variant="contained" color="primary"
+                        style={{width: '25vw', marginBottom: '2vw',}} onClick={handleDistrictView}
+                        disabled={enableDistrictView}>
+                    {districtView}
+                </Button>
                 <Statistics data={props.districtData} type="district"></Statistics>
+                </DistrictDataStyle>
             </TabPane>
             <TabPane value={value} index={2}>
                 <Statistics data={props.precinctData} type="precinct"></Statistics>
@@ -103,3 +129,9 @@ export default function DataTabs(props) {
         </div>
     );
 }
+const DistrictDataStyle = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+`

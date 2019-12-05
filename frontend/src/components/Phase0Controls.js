@@ -74,7 +74,6 @@ export default class Phase0Controls extends Component {
         }).then(function(data){
             return data.json();
         }).then(function(vbdtoData) {
-            console.log(vbdtoData);
             for(let i = 0; i < vbdtoData.length; i++){
                 vbdtoData[i].precinctId = that.wordCase(vbdtoData[i].precinctId);
                 vbdtoData[i].demographic = that.wordCase(vbdtoData[i].demographic);
