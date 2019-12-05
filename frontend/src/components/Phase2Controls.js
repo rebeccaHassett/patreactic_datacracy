@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import Button from "react-bootstrap/Button";
 import SliderControlUpperLowerValues from "./controls/SliderControlUpperLowerValues";
 import styled from "styled-components";
 import SwitchControl from "./controls/SwitchControl";
 import SliderControlSingleValue from "./controls/SliderControlSingleValue";
+import Button from "@material-ui/core/Button";
 
 export default class Phase2Controls extends Component {
     constructor() {
@@ -154,7 +154,7 @@ export default class Phase2Controls extends Component {
     render() {
         return (
             <Phase2Styles>
-                <Button onClick={this.runPhase2} style={{ width: '20vw', marginBottom: '2vw' }}>Start Phase 2</Button>
+                <Button  variant="contained" color="primary" onClick={this.runPhase2} style={{ width: '25vw', marginBottom: '2vw' }}>Start Phase 2</Button>
                 <SwitchControl name="Incremental" exportIncremental={this.handleIncrementalClick} exportRealTime={this.handleRealTimeClick} />
                 <ControlGroup>
                     <label className="label">Convex Hull Compactness Thresholds:</label>

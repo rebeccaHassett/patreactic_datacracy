@@ -1,10 +1,13 @@
 package edu.sunysb.cs.patractic.datacracy.controller;
 
+import edu.stonybrook.politech.annealing.models.concrete.State;
 import edu.sunysb.cs.patractic.datacracy.domain.Algorithm;
 import edu.sunysb.cs.patractic.datacracy.domain.models.Incumbent;
 import edu.sunysb.cs.patractic.datacracy.domain.models.RunPhase0Dto;
 import edu.sunysb.cs.patractic.datacracy.domain.models.VotingBlockDTO;
+import edu.sunysb.cs.patractic.datacracy.domain.persistence.HibernateUtil;
 import edu.sunysb.cs.patractic.datacracy.domain.persistence.StateDao;
+import org.hibernate.Session;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -38,5 +41,14 @@ public class Phase0Controller {
     @GetMapping(path = "/incumbent/{state}", produces = "application/json")
     public Collection<Incumbent> getIncumbents(@PathVariable("state") String stateName) {
         return stateDao.getBaseState(stateName).getIncumbents().values();
+    }
+    @GetMapping(path = "/initialize", produces = "application/json")
+    public String initialize() {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            return "Successfully Initialized Hibernate";
+        }
+        catch(Exception exception) {
+            return "Failed to Initialize Hibernate";
+        }
     }
 }

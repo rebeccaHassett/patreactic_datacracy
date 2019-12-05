@@ -2,9 +2,19 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="da7513d8-167f-45a0-92b8-c16a264abf58" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/../frontend/src/components/VotingBlocSummaryDialog.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/components/AppIntro.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/AppIntro.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/components/DataDisplay.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/DataDisplay.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/components/Map.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/Map.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/components/MenuSidenav.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/MenuSidenav.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/components/Phase0Controls.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/Phase0Controls.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/components/Phase1Controls.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/Phase1Controls.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/components/Phase2Controls.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/Phase2Controls.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/components/State.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/State.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/components/controls/DataTabs.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/DataTabs.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/components/controls/ModalControl.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../server/src/main/java/edu/sunysb/cs/patractic/datacracy/controller/Phase0Controller.java" beforeDir="false" afterPath="$PROJECT_DIR$/../server/src/main/java/edu/sunysb/cs/patractic/datacracy/controller/Phase0Controller.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/load_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/load_data.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mapped_data/MI_Precincts_MAPPED.geojson" beforeDir="false" afterPath="$PROJECT_DIR$/mapped_data/MI_Precincts_MAPPED.geojson" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/precinct_adjacency.py" beforeDir="false" afterPath="$PROJECT_DIR$/precinct_adjacency.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -18,8 +28,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/load_data.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="267">
-              <caret line="244" lean-forward="true" selection-start-line="244" selection-end-line="244" />
+            <state relative-caret-position="4080">
+              <caret line="244" selection-start-line="244" selection-end-line="244" />
               <folding>
                 <element signature="e#0#22#0" expanded="true" />
               </folding>
@@ -35,8 +45,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/precinct_adjacency.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="421">
-              <caret line="757" column="36" lean-forward="true" selection-start-line="757" selection-start-column="36" selection-end-line="757" selection-end-column="36" />
+            <state relative-caret-position="221">
+              <caret line="23" column="22" lean-forward="true" selection-start-line="23" selection-start-column="22" selection-end-line="23" selection-end-column="22" />
               <folding>
                 <element signature="e#0#11#0" expanded="true" />
               </folding>
@@ -56,8 +66,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/map_election_geographic_data.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="323">
-              <caret line="22" column="45" selection-start-line="22" selection-start-column="45" selection-end-line="22" selection-end-column="45" />
+            <state relative-caret-position="161">
+              <caret line="32" column="45" selection-start-line="32" selection-start-column="36" selection-end-line="32" selection-end-column="45" />
               <folding>
                 <element signature="e#0#11#0" expanded="true" />
               </folding>
@@ -85,21 +95,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>ALAMANCE</find>
-      <find>6N</find>
-      <find>Ward 1 Precinct</find>
-      <find>election</find>
-      <find>Ward</find>
-      <find>Harrisville City</find>
-      <find>&quot;HOUSE_ELECTION_18&quot;: {</find>
-      <find>&quot;HOUSE_ELECTION_18&quot;: {}</find>
-      <find>&quot;HOUSE_ELECTION_16&quot;: {}</find>
-      <find>Alle</find>
-      <find>clean</find>
-      <find>interest</find>
-      <find>Providence 0</find>
-      <find>Providence 0731</find>
-      <find>Sherman Township 1</find>
       <find>South Kingstown 3206</find>
       <find>%d</find>
       <find>properties</find>
@@ -115,6 +110,21 @@
       <find>popu</find>
       <find>load_precinct_pop</find>
       <find>Sherman</find>
+      <find>geometry</find>
+      <find>neighbors</find>
+      <find>grid</find>
+      <find>enumerate</find>
+      <find>all</find>
+      <find>polygons</find>
+      <find>comp</find>
+      <find>compute</find>
+      <find>compute_sear</find>
+      <find>compute_search</find>
+      <find>get_precinct_neighbors</find>
+      <find>compute_search_spaces</find>
+      <find>get_precinct_</find>
+      <find>r</find>
+      <find>run</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -133,7 +143,7 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
+  <component name="ProjectFrameBounds" extendedState="7">
     <option name="x" value="20" />
     <option name="y" value="40" />
     <option name="width" value="2520" />
@@ -146,6 +156,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -167,12 +178,11 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$USER_HOME$/CSE508_Crawling/research-project-f19-jjrv/code/crawler" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -423,8 +433,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/load_data.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="267">
-          <caret line="244" lean-forward="true" selection-start-line="244" selection-end-line="244" />
+        <state relative-caret-position="4080">
+          <caret line="244" selection-start-line="244" selection-end-line="244" />
           <folding>
             <element signature="e#0#22#0" expanded="true" />
           </folding>
@@ -441,16 +451,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/map_election_geographic_data.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="22" column="45" selection-start-line="22" selection-start-column="45" selection-end-line="22" selection-end-column="45" />
-          <folding>
-            <element signature="e#0#11#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/incumbents.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="119">
@@ -458,10 +458,20 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/map_election_geographic_data.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="161">
+          <caret line="32" column="45" selection-start-line="32" selection-start-column="36" selection-end-line="32" selection-end-column="45" />
+          <folding>
+            <element signature="e#0#11#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/precinct_adjacency.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="421">
-          <caret line="757" column="36" lean-forward="true" selection-start-line="757" selection-start-column="36" selection-end-line="757" selection-end-column="36" />
+        <state relative-caret-position="221">
+          <caret line="23" column="22" lean-forward="true" selection-start-line="23" selection-start-column="22" selection-end-line="23" selection-end-column="22" />
           <folding>
             <element signature="e#0#11#0" expanded="true" />
           </folding>

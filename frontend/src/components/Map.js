@@ -31,8 +31,8 @@ export default class Map extends Component {
         }).fitBounds(maxMapBounds);
 
         addLayerToMap('http://127.0.0.1:8080/borders/state/RhodeIsland', this.map, "Rhode Island");
-        //addLayerToMap('http://127.0.0.1:8080/borders/state/Michigan', this.map, "Michigan");
-        //addLayerToMap('http://127.0.0.1:8080/borders/state/NorthCarolina', this.map, "North Carolina");
+        addLayerToMap('http://127.0.0.1:8080/borders/state/Michigan', this.map, "Michigan");
+        addLayerToMap('http://127.0.0.1:8080/borders/state/NorthCarolina', this.map, "North Carolina");
     }
 
     render() {

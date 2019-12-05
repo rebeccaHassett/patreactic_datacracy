@@ -19,6 +19,7 @@
     "react-chartjs-2": "^2.8.0",
     "react-collapse": "^5.0.0",
     "react-dom": "^16.10.2",
+    "react-draggable": "^4.1.0",
     "react-range": "^1.4.3",
     "react-rangeslider": "^2.2.0",
     "react-router-dom": "^5.1.2",

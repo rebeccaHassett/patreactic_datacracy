@@ -1,19 +1,43 @@
 import React from 'react';
-import {Alert, Button} from 'react-bootstrap';
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Slide from '@material-ui/core/Slide';
 
-export default function AlertControl() {
-    const [show, setShow] = React.useState(true);
+const Transition = React.forwardRef(function Transition(props, ref) {
+    return <Slide direction="up" ref={ref} {...props} />;
+});
 
-    if (show) {
-        return (
-            <Alert variant="danger" onClose={() => setShow(false)} dismissible>
-                <Alert.Heading>Phase 1 Requirement:</Alert.Heading>
-                <p>
-                    Must select at least one demographic group before running phase 1
-                </p>
-            </Alert>
-        );
-    }
-    return <Button onClick={() => setShow(true)}>Show Alert</Button>;
+export default function AlertDialogSlide(props) {
+    const [open, setOpen] = React.useState(false);
+
+    const handleClose = () => {
+        setOpen(false);
+        props.exportState(false);
+    };
+
+    return (
+        <div>
+            <Dialog
+                open={props.open}
+                TransitionComponent={Transition}
+                keepMounted
+                onClose={handleClose}
+                aria-labelledby="alert-dialog-slide-title"
+                aria-describedby="alert-dialog-slide-description"
+            >
+                <DialogTitle id="alert-dialog-slide-title">{props.alert}</DialogTitle>
+                <DialogContent>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose} color="primary">
+                        Exit
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        </div>
+    );
 }
-

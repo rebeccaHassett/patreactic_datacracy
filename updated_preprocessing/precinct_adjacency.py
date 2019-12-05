@@ -98,50 +98,51 @@ def __create_grid(precincts):
 
 
 """
-@param precincts: A list of all the precincts in the state.
+@param precincts: A list of all the precincts in the state. (Polygon, Name)
 @return: A dictionary,  where the keys are precincts (as a tuple) 
-        and the values are each precinct's search space (a list of tuples).
+        and the values are each precinct's search space (a list of tuples). Need to map precinct names to tuples in search space.
 """
 def __compute_search_spaces(precincts):
-    grid = __create_grid(precincts)
+    polygon_list = [x[0] for x in precincts]
+    grid = __create_grid(polygon_list)
 
     for box in grid:
         x,y = box.exterior.xy
         plt.plot(x,y,'black')
     plt.show()
 
-    b_precincts = dict() # dictionary containing each box's set of precincts; key = box
+    b_precincts = dict() # dictionary containing each box's set of precincts with the precincts' names; key = box
     p_boxes = dict() # dictionary containing each precinct's set of boxes; key = precinct
     for box in grid:
-        for p in precincts:
+        for p_index, p in enumerate(precincts):
             b = tuple(box.exterior.coords) # list of tuple coordinates
-            if box.intersects(p): # box is a polygon; p is a polygon
+            if box.intersects(p[0]): # box is a polygon; p is a polygon
                 # add p to box's set of precincts
                 val = b_precincts.get(b) # box's set of precincts
-                p_coords = tuple(p.exterior.coords)
+                p_coords = tuple(p[0].exterior.coords)
                 if val == None:
                     val = set()
-                val.add(p_coords)
+                val.add((p_coords, p[1]))
                 b_precincts[b] = val
 
                 # add box to p's set of boxes
-                val = p_boxes.get(p_coords) # p's set of boxes
+                val = p_boxes.get((p_coords, p[1])) # p's set of boxes
                 if val == None:
                     val = set()
                 val.add(b)
-                p_boxes[p_coords] = val
+                p_boxes[(p_coords, p[1])] = val
 
     search_space = dict() # key = precinct; val = set of precincts to search
     for p in precincts:
-        p_coords = tuple(p.exterior.coords)
-        for box in p_boxes[p_coords]:
+        p_coords = tuple(p[0].exterior.coords)
+        for box in p_boxes[(p_coords, p[1])]:
             # add all precincts p2 in box's set of of precincts to p's search space
             p2 = b_precincts.get(tuple(box)) # set of precincts in box
             if search_space.get(p_coords) == None:
-                search_space[p_coords] = p2.difference({p_coords})
+                search_space[(p_coords, p[1])] = p2.difference({(p_coords, p[1])})
             else:
-                pre_list = p2.union(search_space[p_coords]).difference({p_coords})
-                search_space[p_coords] = pre_list
+                pre_list = p2.union(search_space[(p_coords, p[1])]).difference({(p_coords, p[1])})
+                search_space[(p_coords, p[1])] = pre_list
 
     return search_space
 
@@ -208,24 +209,24 @@ def share_border(precinct1, precinct2):
 
 
 """
-@param precincts: The list of all precincts.
-@param precinct: The precinct whose neighbors you want to find.
-@return: The list of neighboring precincts.
+@param precincts: The list of all precincts. [(polygon, precinct name)]
+@param precinct: The precinct whose neighbors you want to find. (polygon, precinct name)
+@return: The list of neighboring precincts. [(polygon, precinct name)]
 """
 def get_precinct_neighbors(precinct, grid):
     neighbors = []
-    search_space = grid[tuple(precinct.exterior.coords)]
+    search_space = grid[(tuple(precinct[0].exterior.coords), precinct[1])]
 
     for p in search_space:
         # enclosed precincts -- merge the precincts and drop enclosed precinct
-        p = Polygon(p)
-        if precinct.contains(p):
+        p_polygon = Polygon(p[0])
+        if precinct[0].contains(p_polygon):
             # __merge_and_drop(precinct, p)
             pass
 
         #if precincts share a border
-        if share_border(precinct, p):
-            neighbors.append(p)
+        if share_border(precinct[0], p_polygon):
+            neighbors.append(p[1])
 
     return neighbors
 
@@ -242,16 +243,16 @@ def different_counties(precinct1, precinct2):
 """
 Coverts a list that contains Polygons/Multipolgyons into a list that only contains Polygons.
 @param collection: List of geometric objects that include Polygons and MultiPolygons
-@return: A list of Polygons
+@return: A list of tuples (Polygon, Precinct Name)
 """
-def __all_polygons(collection):
+def __all_polygons(collection, features):
     new_collection = []
-    for poly in collection:
+    for feature_index, poly in enumerate(collection):
         if isinstance(poly, MultiPolygon):
             for p in poly:
-                new_collection.append(p)
+                new_collection.append((p, features[feature_index]["properties"]["PRENAME"]))
         else:
-            new_collection.append(poly)
+            new_collection.append((poly, features[feature_index]["properties"]["PRENAME"]))
     return new_collection
 
 
@@ -280,21 +281,24 @@ def plot(poly, color='r'):
     plt.plot(x, y, color)
 
 
-def __run(filename):
+def __run(filename, state):
     with open(filename) as file:
         data = json.load(file)
 
     features = data['features'] # list of dictionaries, with each dictionary containing info on geometry
     collection = GeometryCollection([shape(feature['geometry']).buffer(0) for feature in features]) # geometry of each precinct
-    collection = __all_polygons(collection)
-    # plot rhode island
-    plot_polygons(collection)
+    collection = __all_polygons(collection, data['features'])
+    print(collection)
+    #plot rhode island
+    #plot_polygons(collection)
     grid = __compute_search_spaces(collection)
+    precinct_neighbors = {}
     for poly in collection:
-        neighbors = get_precinct_neighbors(collection, poly, grid)
-        for n in neighbors:
-            print(n)
-        print()
+        print("Finding Neighbors for..." + poly[1])
+        neighbors = get_precinct_neighbors(poly, grid)
+        precinct_neighbors[poly[1]] = neighbors
+    with open("precinct_neighbors_" + state + ".json", 'w') as file:
+        file.write(json.dumps(precinct_neighbors))
 
 
 def __get_county(data, county_name):
@@ -727,8 +731,7 @@ def _update_duplicate_precinct_names(data):
 
 
 if __name__ == '__main__':
-    #__run('RI_Precincts_MAPPED.geojson')
-
+    __run('mapped_data/RI_Precincts_MAPPED.geojson', "RI")
     """
     with open('NC_VDT_MAPPED.geojson') as f:
         data = json.load(f)
@@ -776,7 +779,6 @@ if __name__ == '__main__':
     plot_polygons(collection)
     plt.show()
     """
-
     """
     pre = [
         Polygon([(1,2),(3,2),(3,0),(2.5,0.25),(2.75,0.5),(2.4,0.6),(1.7,0.8),(1,2)]),
@@ -785,7 +787,7 @@ if __name__ == '__main__':
         Polygon([(0,1.75), (0,2), (1,2), (0,1.75)]),
         Polygon([(1,1), (1,2), (3,0), (2,0), (1,1)]),
     ]
-    plot_polygons(pre)
+    #plot_polygons(pre)
     
     grid = __compute_search_spaces(pre)
     for p in pre:
@@ -793,4 +795,7 @@ if __name__ == '__main__':
         for n in neighbors:
             print(n)
         print()
-    """
+        """
+
+
+

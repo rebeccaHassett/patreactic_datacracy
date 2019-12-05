@@ -4,6 +4,7 @@ import styled from "styled-components";
 import Button from '@material-ui/core/Button';
 import ElectionButtonsControl from "./controls/ElectionButtonsControl";
 import TableDisplay from "./controls/TableDisplay";
+import VotingBlocSummaryDialog from "./VotingBlocSummaryDialog";
 
 
 export default class Phase0Controls extends Component {
@@ -146,7 +147,7 @@ export default class Phase0Controls extends Component {
             return (
                 <Phase0Styles>
                     <Button variant="contained" color="primary" onClick={this.runPhase0}
-                        style={{ width: '20vw', marginBottom: '2vw' }}>Start Phase 0</Button>
+                        style={{ width: '25vw', marginBottom: '2vw' }}>Start Phase 0</Button>
                     <ControlGroup>
                         <label className="label">Bloc Population Thresholds:</label>
                         <SliderControlUpperLowerValues exportState={this.handleBlocPopulationUpdate} />
@@ -159,15 +160,16 @@ export default class Phase0Controls extends Component {
                         <label className="electionLabel">Election Type:</label>
                         <ElectionButtonsControl exportState={this.handleElectionChanges} />
                     </ControlGroup>
-                    <Button variant="contained" color="primary" style={{ width: '20vw', marginBottom: '2vw' }}
+                    <Button variant="contained" color="primary" style={{ width: '25vw', marginBottom: '2vw' }}
                         disabled={this.state.resultsUnavailable} onClick={this.resultsViewOn}>View Results</Button>
                 </Phase0Styles>
             );
         } else {
             return (
                 <Phase0Styles style={{ paddingLeft: "10px", paddingRight: "10px" }}>
-                    <Button variant="contained" color="primary" style={{ width: '20vw', marginBottom: '2vw' }}
-                        onClick={this.resultsViewOff}>Back</Button>
+                    <Button variant="contained" color="primary" style={{ width: '25vw', marginBottom: '2vw' }}
+                        onClick={this.resultsViewOff}>Back to Controls</Button>
+                    <VotingBlocSummaryDialog data={this.state.vbdtoRows}/>
                     <h5>Election Type: {this.state.electionType} {this.state.electionYear}</h5>
                     <p>Population Thresholds: {this.state.blocPopulationValues[0]}% - {this.state.blocPopulationValues[1]}%<br/>
                     Voting Thresholds: {this.state.blocVotingValues[0]}% - {this.state.blocVotingValues[1]}%</p>

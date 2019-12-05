@@ -6,8 +6,8 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
-import Statistics from "../Statistics";
-import TableDisplay from "./TableDisplay";
+import Statistics from "./Statistics";
+import TableDisplay from "./controls/TableDisplay";
 
 
 function TabPane(props) {
@@ -47,8 +47,8 @@ const StyledDataTab = withStyles(theme => ({
         textTransform: 'none',
         fontWeight: theme.typography.fontWeightRegular,
         fontSize: theme.typography.pxToRem(15),
-        width: '6.5vw',
-        minWidth: '6.5vw',
+        width: '12vw',
+        minWidth: '12vw',
         justifyContent: 'center',
         itemAlign: 'center',
     },
@@ -69,12 +69,12 @@ export default function DataTabs(props) {
 
     return (
         <div className={classes.root}>
-            <AppBar position="static" style={{ width: '24vw' }} color="primary">
+            <AppBar position="static" style={{ width: '35vw' }} color="primary">
                 <Tabs
                     value={value}
                     onChange={handleChange}
                     indicatorColor="secondary"
-                    tabItemContainerStyle={{ width: '5%' }}
+                    tabItemContainerStyle={{ width: '20%' }}
                     contentContainerStyle={{
                         display: 'flex',
                         alignItems: 'center',

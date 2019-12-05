@@ -58,12 +58,13 @@ export default class State extends Component {
         }).then(function (data) {
             console.log(data);
             that.setState({districtIds: data});
+            return data;
         })
     }
 
 
 
-    async loadDistrictsIncrementally(map, that) {
+    async loadDistrictsIncrementally(map, districtIds, that) {
         var selected;
 
         function districtStyle(feature) {
@@ -80,7 +81,9 @@ export default class State extends Component {
         let districtUrl = 'http://127.0.0.1:8080/borders/district/' + this.state.chosenState + '/';
         let districtLayerArr = [];
 
-        let districtPromises = this.state.districtIds.map(districtId => fetch(districtUrl + districtId).then(function (response) {
+        console.log("district ids " + districtIds);
+
+        let districtPromises = districtIds.map(districtId => fetch(districtUrl + districtId).then(function (response) {
                 if (response.status >= 400) {
                     throw new Error("District geographic data not incrementally loaded from server successfully");
                 }
@@ -133,14 +136,14 @@ export default class State extends Component {
         });
     }
 
-    async loadPrecinctsIncrementally(that) {
+    async loadPrecinctsIncrementally(precinctIds, that) {
         var precinctStyle = {
             "color": "black"
         };
         var precinctLayerArr = [];
         var precinctUrl = 'http://127.0.0.1:8080/borders/precinct/' + that.state.chosenState + '/';
 
-        let precinctPromises = this.state.precinctIds.map(precinctId => fetch(precinctUrl + precinctId).then(function (response) {
+        let precinctPromises = precinctIds.map(precinctId => fetch(precinctUrl + precinctId).then(function (response) {
             if (response.status >= 400) {
                 throw new Error("Precinct geographic data not incrementally loaded from server successfully");
             }
@@ -244,6 +247,7 @@ export default class State extends Component {
         }).then(function (data) {
             that.setState({stateData: data});
             that.setState({precinctIds: data.precinctIds});
+            return data.precinctIds;
         });
     }
 
@@ -303,14 +307,14 @@ export default class State extends Component {
 
         var that = this;
 
-        this.loadDistrictNumber().then(data =>
+        this.loadDistrictNumber().then(districtIds =>
         {
-            this.loadDistrictsIncrementally(this.map, that)
+            this.loadDistrictsIncrementally(this.map, districtIds, that)
         });
 
-        this.loadStateData().then(data =>
+        this.loadStateData().then(precinctIds =>
         {
-            this.loadPrecinctsIncrementally(that);
+            this.loadPrecinctsIncrementally(precinctIds, that);
         });
 
     }
@@ -329,12 +333,12 @@ export default class State extends Component {
             <MuiThemeProvider theme={theme}>
                 <State_Style>
                     <Row>
-                        <Col className="menu" xs={4}>
+                        <Col className="menu" xs={5}>
                             <MenuSidenav chosenState={this.state.chosenState} precinctData={this.state.precinctData}
                                 districtData={this.state.districtData} stateData={this.state.stateData}
                                 removeOGDisrtricts={this.removeOriginalDistrictLayer} precinctLayer={this.state.precinctLayer} />
                         </Col>
-                        <Col className="mapContainer" xs={8}>
+                        <Col className="mapContainer" xs={7}>
                             <div id='map'></div>
                         </Col>
                     </Row>
