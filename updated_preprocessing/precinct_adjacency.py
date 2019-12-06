@@ -1,12 +1,15 @@
 import json
+import multiprocessing
 from shapely.geometry import shape, Polygon, LineString, GeometryCollection, MultiPolygon, mapping
 from shapely.ops import split, shared_paths, cascaded_union
 import math
-import numpy as np
-import pandas as pd
+#import pandas as pd
 from scipy.spatial import distance
 import matplotlib.pyplot as plt
 from pyproj import Geod
+import sys
+from logging import INFO
+import pickle
 
 """
 Create a grid G that divides a set of precincts into a reasonable number of sections.
@@ -49,7 +52,7 @@ def __create_grid(precincts):
     #print(list(outline.exterior.coords))
     coor = list(outline.exterior.coords)
 
-    n = 4 # some random number that will probably change later
+    n = 40 # some random number that will probably change later
     length = distance.euclidean(coor[1], coor[2])/n
     width = distance.euclidean(coor[0], coor[1])/n
     #print('length: ', length, '\twidth: ', width, '\n')
@@ -109,11 +112,12 @@ def __compute_search_spaces(precincts):
     for box in grid:
         x,y = box.exterior.xy
         plt.plot(x,y,'black')
-    plt.show()
+    #plt.show()
 
     b_precincts = dict() # dictionary containing each box's set of precincts with the precincts' names; key = box
     p_boxes = dict() # dictionary containing each precinct's set of boxes; key = precinct
-    for box in grid:
+    for i, box in enumerate(grid):
+        print(f"Computing search space...{(i/len(grid))*100:.2f}% complete")
         for p_index, p in enumerate(precincts):
             b = tuple(box.exterior.coords) # list of tuple coordinates
             if box.intersects(p[0]): # box is a polygon; p is a polygon
@@ -281,7 +285,19 @@ def plot(poly, color='r'):
     plt.plot(x, y, color)
 
 
-def __run(filename, state):
+def chunks(seq, num):
+    avg = len(seq) / float(num)
+    out = []
+    last = 0.0
+
+    while last < len(seq):
+        out.append(seq[int(last):int(last + avg)])
+        last += avg
+
+    return out
+
+
+def __run(filename, state, num_procs, grid_filename, save_grid):
     with open(filename) as file:
         data = json.load(file)
 
@@ -290,16 +306,35 @@ def __run(filename, state):
     collection = __all_polygons(collection, data['features'])
     print(collection)
     #plot rhode island
-    #plot_polygons(collection)
-    grid = __compute_search_spaces(collection)
-    precinct_neighbors = {}
-    for poly in collection:
-        print("Finding Neighbors for..." + poly[1])
-        neighbors = get_precinct_neighbors(poly, grid)
-        precinct_neighbors[poly[1]] = neighbors
-    with open("precinct_neighbors_" + state + ".json", 'w') as file:
-        file.write(json.dumps(precinct_neighbors))
+    #plot_polygons([i[0] for i in collection])
+    if save_grid:
+        grid = __compute_search_spaces(collection)
+        with open(f"{grid_filename}_{state}.pickle", "wb") as f:
+            pickle.dump(grid, f)
+    else:
+        with open(f"{grid_filename}_{state}.pickle", "rb") as f:
+            grid = pickle.load(f)
 
+    assignments = chunks(range(len(collection)), num_procs)
+    jobs = []
+    for i, assignment in enumerate(assignments):
+        p = multiprocessing.Process(target=find_precinct_neighbors, args=(collection, grid, assignment, i, state))
+        jobs.append(p)
+        p.start()
+
+def find_precinct_neighbors(collection, grid, indices, file_prefix, state):
+    precinct_neighbors = {}
+    print(f"Process {file_prefix:0>2d} starting with assignment {str(indices)}")
+    for index, i in enumerate(indices):
+        poly = collection[i]
+        print(f"Finding Neighbors for {poly[1]}... Process {file_prefix:0>2d} is {(index/len(indices))*100:.2f}% complete")
+        sys.stdout.flush()
+        neighbors = get_precinct_neighbors(poly, grid)
+        if precinct_neighbors.get(poly[1], None) is None:
+            precinct_neighbors[poly[1]] = []
+        precinct_neighbors[poly[1]] += neighbors
+    with open(f"{file_prefix:0>2d}_precinct_neighbors_{state}.json", 'w') as file:
+        file.write(json.dumps(precinct_neighbors))
 
 def __get_county(data, county_name):
     county_data = []
@@ -731,7 +766,7 @@ def _update_duplicate_precinct_names(data):
 
 
 if __name__ == '__main__':
-    __run('mapped_data/RI_Precincts_MAPPED.geojson', "RI")
+    __run(f'mapped_data/{sys.argv[3]}_Precincts_MAPPED.geojson', sys.argv[3], num_procs=int(sys.argv[1]), grid_filename=(sys.argv[2]), save_grid=(int(sys.argv[4]) == 1))
     """
     with open('NC_VDT_MAPPED.geojson') as f:
         data = json.load(f)
