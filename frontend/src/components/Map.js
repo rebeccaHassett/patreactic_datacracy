@@ -13,8 +13,8 @@ export default class Map extends Component {
 
     componentDidMount() {
         var maxMapBounds = [
-            [29, -127],
-            [49, -70]
+            [29, -140],
+            [49, -60]
         ];
 
         this.map = L.map('map', {

@@ -344,7 +344,7 @@ export default class State extends Component {
             clustersUrl = 'http://127.0.0.1:8080/District_Borders?name=Rhode_Island';
             maxBounds = [
                 [43, -70.75],
-                [40, -71]
+                [40, -72]
             ];
             minZoom = 9;
             ZOOM = minZoom + 1;
@@ -370,7 +370,7 @@ export default class State extends Component {
             ]
         }).fitBounds(maxBounds);
 
-        L.easyButton('<h5>Back US to Map</h5>', function() {
+        L.easyButton('<h5>Back to US Map</h5>', function() {
             window.location.replace("/map");
         },  {position: 'topright'}).addTo(this.map);
 
