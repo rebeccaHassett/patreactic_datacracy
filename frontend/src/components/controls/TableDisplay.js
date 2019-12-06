@@ -12,7 +12,7 @@ const useStyles = makeStyles({
     root: {
         width: '100%',
         left: '10vw !',
-        fontSize: '1vw'
+        fontSize: '1vw',
     },
     tableWrapper: {
         maxHeight: 440,
@@ -23,7 +23,7 @@ const useStyles = makeStyles({
 export default function StickyHeadTable(props) {
     const classes = useStyles();
     const [page, setPage] = React.useState(0);
-    const [rowsPerPage, setRowsPerPage] = React.useState(4);
+    const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -70,7 +70,7 @@ export default function StickyHeadTable(props) {
                 </Table>
             </div>
             <TablePagination
-                rowsPerPageOptions={[4, 10]}
+                rowsPerPageOptions={[5, 10]}
                 component="div"
                 count={props.rows.length}
                 rowsPerPage={rowsPerPage}
