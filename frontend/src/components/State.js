@@ -291,13 +291,46 @@ export default class State extends Component {
 
         }
 
+        getVotingColors(r, d) {
+        console.log(r + "fdsfds" + d);
+        if(r > d) {
+            return r > 1000 ? '#800026' :
+                r > 900 ? '#BD0026' :
+                    r > 800 ? '#E31A1C' :
+                        r > 700 ? '#FC4E2A' :
+                            r > 600 ? '#FD8D3C' :
+                                r > 500 ? '#FEB24C' :
+                                    r > 400 ? '#FED976' :
+                                        '#FFEDA0';
+        }
+        else {
+            return d > 1000 ? '#084594' :
+                d > 900 ? '#2171b5' :
+                    d > 800 ? '#4292c6' :
+                        d > 700 ? '#6baed6' :
+                            d > 600 ? '#9ecae1' :
+                                d > 500 ? '#c6dbef' :
+                                    d > 400 ? '#deebf7' :
+                                        '#f7fbff';
+        }
+        }
+
         addPrecinctsToMap(layerGroup, map, that) {
             map.on("zoomend", function (event) {
                 if (this.getZoom() >= ZOOM  && !that.state.precinctsLoaded) {
+                    that.removeOriginalDistrictLayer();
                     layerGroup.addTo(map);
                     that.setState({precinctsLoaded: true});
                     layerGroup.bringToFront();
                     layerGroup.eachLayer(function (layer) {
+                        let precinctLayers = layer._layers;
+                        Object.keys(precinctLayers).forEach(function(key) {
+                            precinctLayers[key].setStyle( {
+                                fillColor: that.getVotingColors(precinctLayers[key].feature.properties.PRES16R, precinctLayers[key].feature.properties.PRES16D),
+                                opacity: 1,
+                                fillOpacity: 1
+                            });
+                        });
                         layer.on('mouseover', function (event) {
                             that.loadOriginalDistrictData(event.layer.feature.properties.CD, that);
                             that.setState({precinctData: JSON.stringify(event.layer.feature.properties)})
@@ -315,6 +348,7 @@ export default class State extends Component {
                             that.map.removeLayer(layerGroup)
                         });
                         that.setState({precinctsLoaded: false});
+                        that.loadOriginalDistricts();
                     }
                 }
             })
