@@ -31,6 +31,7 @@ export default function SliderControlUpperLowerValues(props) {
                 marks={blocMarks}
                 min={50}
                 max={100}
+                disabled={props.disabled}
             />
         </div>
     );

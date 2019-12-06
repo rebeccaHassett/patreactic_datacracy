@@ -8,6 +8,7 @@
     "@material-ui/system": "^4.5.2",
     "@trendmicro/react-sidenav": "^0.4.5",
     "@yaga/leaflet-cached-tile-layer": "^1.0.0",
+    "colorsys": "^1.0.22",
     "leaflet": "^1.5.1",
     "leaflet-easybutton": "^2.4.0",
     "mdbreact": "^4.21.0",

@@ -149,11 +149,13 @@ export default class Phase0Controls extends Component {
                         style={{ width: '25vw', marginBottom: '2vw' }}>Start Phase 0</Button>
                     <ControlGroup>
                         <label className="label">Bloc Population Thresholds:</label>
-                        <SliderControlUpperLowerValues exportState={this.handleBlocPopulationUpdate} />
+                        <SliderControlUpperLowerValues disabled={false}
+                            exportState={this.handleBlocPopulationUpdate} />
                     </ControlGroup>
                     <ControlGroup>
                         <label className="label">Bloc Voting Thresholds:</label>
-                        <SliderControlUpperLowerValues exportState={this.handleBlocVotingUpdate} />
+                        <SliderControlUpperLowerValues disabled={false}
+                            exportState={this.handleBlocVotingUpdate} />
                     </ControlGroup>
                     <ControlGroup>
                         <label className="electionLabel">Election Type:</label>

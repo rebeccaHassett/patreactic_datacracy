@@ -6,6 +6,7 @@ import { Row, Col} from "react-bootstrap";
 import styled from 'styled-components';
 import MenuSidenav from "./MenuSidenav";
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import 'colorsys';
 
 var ZOOM = 7;
 
@@ -16,6 +17,7 @@ export default class State extends Component {
         this.loadOriginalDistricts = this.loadOriginalDistricts.bind(this);
         this.loadOriginalDistrictData = this.loadOriginalDistrictData.bind(this);
         this.initializePhase1Map = this.initializePhase1Map.bind(this);
+        this.phase1Update = this.phase1Update.bind(this);
         this.addDistrictsToMap = this.addDistrictsToMap.bind(this);
         this.addPrecinctsToMap = this.addPrecinctsToMap.bind(this);
 
@@ -31,6 +33,7 @@ export default class State extends Component {
             originalDistrictsLoaded: false,
             generatedDistrictMap: {},
             districtIds: null,
+            generatedDistrictDataMap: {}
         };
 
         this.toggleBox = this.toggleBox.bind(this);
@@ -40,10 +43,15 @@ export default class State extends Component {
         if(this.state.originalDistrictsLoaded) {
             this.map.removeLayer(this.state.originalDistrictLayer);
             this.setState({originalDistrictsLoaded: false});
-            this.state.generatedDistrictLayer.addTo(this.map);
+            let generatedDistrictsArr = [];
+            Object.keys(this.state.generatedDistrictMap).forEach(function(key) {
+                generatedDistrictsArr.push(this.state.generatedDistrictMap[key]);
+            });
+            let layerGroup = L.featureGroup(generatedDistrictsArr);
+            layerGroup.addTo(this.map);
             let that = this;
-            this.state.generatedDistrictLayer.eachLayer(function(layer) {
-                layer.setStyle({fillColor: 'blue'});//layer.feature.properties.COLOR});
+            layerGroup.eachLayer(function(layer) {
+                layer.setStyle({fillColor: layer.feature.properties.COLOR});
                 layer.on('mouseover', function (event) {
                     that.setState({districtData: JSON.stringify(event.layer.feature.properties)})
                 });
@@ -79,17 +87,6 @@ export default class State extends Component {
     }
 
     async loadOriginalDistrictsIncrementally(map, districtIds, that) {
-        function districtStyle(feature) {
-            return {
-                fillColor: feature.properties.COLOR,
-                weight: 2,
-                opacity: 1,
-                color: 'white',
-                dashArray: '3',
-                fillOpacity: 0.7
-            };
-        }
-
         let districtUrl = 'http://127.0.0.1:8080/borders/district/' + this.state.chosenState + '/';
         let districtLayerArr = [];
 
@@ -99,7 +96,7 @@ export default class State extends Component {
                 }
                 return response.json();
             }).then(function (data) {
-                let layers = L.geoJSON(data, {style: districtStyle});
+                let layers = L.geoJSON(data);
                 layers.eachLayer(function(layer) {
                     layer.feature.properties.districtId = districtId;
                 });
@@ -112,7 +109,7 @@ export default class State extends Component {
             that.setState({originalDistrictLayer: layerGroup});
             that.setState({originalDistrictsLoaded: true});
 
-            this.addDistrictsToMap(layerGroup);
+            this.addDistrictsToMap(layerGroup, true, {});
          });
     }
 
@@ -143,36 +140,98 @@ export default class State extends Component {
         });
     }
 
-    initializePhase1Map() {
-        /*this.setState({generatedDistrictLayer: this.state.precinctMap});
+    contrastingColors(total)
+    {
+        var colorsys = require('colorsys');
+
+        var i = 360 / (total - 1); // distribute the colors evenly on the hue range
+        var r = []; // hold the generated colors
+        //s = 80, v = 70 is brighter
+        for (var x=0; x<total; x++)
+        {
+            r.push(colorsys.hsvToRgb(i * x, 50, 50)); // you can also alternate the saturation and value for even more contrast between the colors
+        }
+        return r;
+    }
+
+    initializePhase1Map(data) {
+        var colorsys = require('colorsys');
+        let contrastingColors = this.contrastingColors(Object.keys(this.state.precinctMap).length);
         this.map.removeLayer(this.state.originalDistrictLayer);
-        let precinctArr = [];
-        console.log(this.state.precinctMap);
-        Object.keys(that.state.precinctMap).forEach(function(key) {
-            precinctArr.push(this.state.precinctMap[key]);
-        });
-        let layerGroup = L.featureGroup(precinctArr);
-        this.addPrecinctsToMap(layerGroup, this.map, this);
-        this.setState({originalDistrictsLoaded: false});
-        let that = this;
-        layerGroup.eachLayer(function(layer) {
-            layer.setStyle({fillColor: 'blue'});//layer.feature.properties.COLOR});
-            layer.on('mouseover', function (event) {
-                that.setState({districtData: JSON.stringify(event.layer.feature.properties)})
+        let updatedDistrictMap = this.state.precinctMap;
+        let districtDataMap = {};
+        data.districtUpdates.forEach((updatedDistrict, index) => {
+            let updatedDistrictId = updatedDistrict.PRENAME;
+            updatedDistrict.precinctIds.forEach(precinctId => {
+                updatedDistrictMap[precinctId].feature.properties.CD = updatedDistrictId;
+                updatedDistrictMap[precinctId].feature.properties.COLOR = colorsys.rgb2Hex(contrastingColors[index]);
             });
-        });*/
+
+            /*Initialize Generated District Data Map*/
+            districtDataMap[updatedDistrictId] = {"VAP" : updatedDistrict.VAP, "HVAP" : updatedDistrict.HVAP, "WVAP" : updatedDistrict.WVAP,
+                                            "BVAP" : updatedDistrict.BVAP, "AMINVAP" : updatedDistrict.AMINVAP, "ASIANVAP" : updatedDistrict.ASIANVAP,
+                                            "PRES16D" : updatedDistrict.PRES16D, "PRES16R" : updatedDistrict.PRES16R, "PRENAME" : updatedDistrict.PRENAME,
+                                            "HOUSE_ELECTION_16" : updatedDistrict.HOUSE_ELECTION_16, "HOUSE_ELECTION_18" : updatedDistrict.HOUSE_ELECTION_18};
+
+        });
+        this.setState({generatedDistrictMap: updatedDistrictMap});
+        this.setState({generatedDistrictDataMap : districtDataMap});
+        let generatedDistrictsArr = [];
+        Object.keys(updatedDistrictMap).forEach(function(key) {
+            generatedDistrictsArr.push(updatedDistrictMap[key]);
+        });
+        let layerGroup = L.featureGroup(generatedDistrictsArr);
+        this.addDistrictsToMap(layerGroup, false, districtDataMap);
+        this.setState({originalDistrictsLoaded: false});
+    }
+
+
+    phase1Update(data) {
+        if(this.state.originalDistrictsLoaded) {
+            this.map.removeLayer(this.state.originalDistrictLayer);
+        }
+        let updatedDistrictMap = this.state.generatedDistrictMap;
+        data.districtUpdates.forEach((updatedDistrict) => {
+            let updatedDistrictId = updatedDistrict.PRENAME;
+            let mergedIntoPrecinctIds = data.precinctIds.filter(x => !data.districtsToRemove.includes(x));
+            let updateColor = updatedDistrictMap[mergedIntoPrecinctIds[0]].feature.properties.COLOR;
+            updatedDistrict.precinctIds.forEach(precinctId => {
+                updatedDistrictMap[precinctId].feature.properties.CD = updatedDistrictId;
+                updatedDistrictMap[precinctId].feature.properties.COLOR = updateColor;
+            });
+
+            /*Initialize Generated District Data Map*/
+            districtDataMap[updatedDistrictId] = {"VAP" : updatedDistrict.VAP, "HVAP" : updatedDistrict.HVAP, "WVAP" : updatedDistrict.WVAP,
+                "BVAP" : updatedDistrict.BVAP, "AMINVAP" : updatedDistrict.AMINVAP, "ASIANVAP" : updatedDistrict.ASIANVAP,
+                "PRES16D" : updatedDistrict.PRES16D, "PRES16R" : updatedDistrict.PRES16R, "PRENAME" : updatedDistrict.PRENAME,
+                "HOUSE_ELECTION_16" : updatedDistrict.HOUSE_ELECTION_16, "HOUSE_ELECTION_18" : updatedDistrict.HOUSE_ELECTION_18};
+
+        });
+        let districtDataMap = this.state.generatedDistrictDataMap;
+        data.districtsToRemove.forEach(removeDistrict => {
+            districtDataMap.delete(removeDistrict);
+        });
+        this.setState({generatedDistrictMap: updatedDistrictMap});
+        this.setState({generatedDistrictDataMap : districtDataMap});
+        let generatedDistrictsArr = [];
+        Object.keys(updatedDistrictMap).forEach(function(key) {
+            generatedDistrictsArr.push(updatedDistrictMap[key]);
+        });
+        let layerGroup = L.featureGroup(generatedDistrictsArr);
+        this.addDistrictsToMap(layerGroup, false, districtDataMap);
+        this.setState({originalDistrictsLoaded: false});
     }
 
     loadOriginalDistricts() {
         if(!this.state.originalDistrictsLoaded) {
-            let districtArr;
+            let districtArr = [];
             Object.keys(this.state.generatedDistrictMap).forEach(function(key) {
                 districtArr.push(this.state.generatedDistrictMap[key]);
             });
             let layerGroup = L.featureGroup(districtArr);
             this.map.removeLayer(layerGroup);
             this.setState({originalDistrictsLoaded: true});
-            this.addDistrictsToMap(this.state.originalDistrictLayer);
+            this.addDistrictsToMap(this.state.originalDistrictLayer, true, {});
         }
     }
 
@@ -191,7 +250,7 @@ export default class State extends Component {
         });
     }
 
-    addDistrictsToMap(districtLayer) {
+    addDistrictsToMap(districtLayer, original, districtDataMap) {
         districtLayer.addTo(this.map);
         let that = this;
         districtLayer.eachLayer(function (layer) {
@@ -210,57 +269,73 @@ export default class State extends Component {
             layer.on('mouseover', function (event) {
                 let districtId = "";
                 districtId = event.layer.feature.properties.districtId;
-                that.loadOriginalDistrictData(districtId, that);
+                if(original) {
+                    that.loadOriginalDistrictData(districtId, that);
+                }
+                else {
+                    that.setState({districtData: districtDataMap[event.layer.feature.properties.CD]});
+                }
+            });
+            /*If no color field, then original districts and set color based on votes, else set color based on properties field*/
+            let districtLayers = layer._layers;
+            Object.keys(districtLayers).forEach(function(key) {
+                districtLayers[key].setStyle( {
+                    fillColor: districtLayers[key].feature.properties.COLOR,
+                    weight: 2,
+                    color: 'white',
+                    opacity: 1,
+                    fillOpacity: 0.7
+                });
             });
         });
-    }
 
-    /*Issue here*/
-    addPrecinctsToMap(layerGroup, map, that) {
-        map.on("zoomend", function (event) {
-            if (this.getZoom() >= ZOOM  && !that.state.precinctsLoaded) {
-                layerGroup.addTo(map);
-                that.setState({precinctsLoaded: true});
-                layerGroup.bringToFront();
-                layerGroup.eachLayer(function (layer) {
-                    layer.on('mouseover', function (event) {
-                        that.loadOriginalDistrictData(event.layer.feature.properties.CD, that);
-                        that.setState({precinctData: JSON.stringify(event.layer.feature.properties)})
+        }
+
+        addPrecinctsToMap(layerGroup, map, that) {
+            map.on("zoomend", function (event) {
+                if (this.getZoom() >= ZOOM  && !that.state.precinctsLoaded) {
+                    layerGroup.addTo(map);
+                    that.setState({precinctsLoaded: true});
+                    layerGroup.bringToFront();
+                    layerGroup.eachLayer(function (layer) {
+                        layer.on('mouseover', function (event) {
+                            that.loadOriginalDistrictData(event.layer.feature.properties.CD, that);
+                            that.setState({precinctData: JSON.stringify(event.layer.feature.properties)})
+                        });
                     });
-                });
-                return true;
-            }
-            else {
-                if (this.getZoom() < ZOOM && that.state.precinctsLoaded) {
-                    let precinctArr = [];
-                    Object.keys(that.state.precinctMap).forEach(function(key) {
-                        precinctArr.push(that.state.precinctMap[key]);
-                    });
-                    precinctArr.forEach(layer => {
-                        that.map.removeLayer(layerGroup)
-                    });
-                    that.setState({precinctsLoaded: false});
+                    return true;
                 }
-            }
-        })
-    }
+                else {
+                    if (this.getZoom() < ZOOM && that.state.precinctsLoaded) {
+                        let precinctArr = [];
+                        Object.keys(that.state.precinctMap).forEach(function(key) {
+                            precinctArr.push(that.state.precinctMap[key]);
+                        });
+                        precinctArr.forEach(layer => {
+                            that.map.removeLayer(layerGroup)
+                        });
+                        that.setState({precinctsLoaded: false});
+                    }
+                }
+            })
+        }
 
-    toggleBox() {
-        this.setState(oldState => ({ sidebar: !oldState.sidebar }));
-    }
+        toggleBox() {
+            this.setState(oldState => ({ sidebar: !oldState.sidebar }));
+        }
 
-    componentDidMount() {
-        var maxBounds;
-        var minZoom;
-        var chosenState = window.location.pathname.split("/").pop();
-        var clustersUrl;
+        componentDidMount() {
+            var maxBounds;
+            var minZoom;
+            var chosenState = window.location.pathname.split("/").pop();
+            var clustersUrl;
 
-        this.setState({ chosenState: chosenState });
+            this.setState({ chosenState: chosenState });
 
-        if (chosenState === "NorthCarolina") {
-            clustersUrl = 'http://127.0.0.1:8080/District_Borders?name=North_Carolina';
-            maxBounds = [
-                [37, -71],               /* North East */
+            if (chosenState === "NorthCarolina") {
+                clustersUrl = 'http://127.0.0.1:8080/District_Borders?name=North_Carolina';
+                maxBounds = [
+                    [37, -71],               /* North East */
                 [33, -84]                /* South West */
             ];
             minZoom = 6;
@@ -330,7 +405,8 @@ export default class State extends Component {
                             <MenuSidenav chosenState={this.state.chosenState} precinctData={this.state.precinctData}
                                 districtData={this.state.districtData} stateData={this.state.stateData}
                                 removeOriginalDisrtricts={this.removeOriginalDistrictLayer} precinctLayer={this.state.precinctLayer}
-                                loadOriginalDistricts={this.loadOriginalDistricts} initializePhase1Map={this.initializePhase1Map}/>
+                                loadOriginalDistricts={this.loadOriginalDistricts} initializePhase1Map={this.initializePhase1Map}
+                                phase1Update={this.phase1Update}/>
                         </Col>
                         <Col className="mapContainer" xs={7}>
                             <div id='map'></div>

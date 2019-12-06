@@ -23,6 +23,7 @@ export default function SwitchLabels(props) {
                         onClick={handleChange('incremental')}
                         value="incremental"
                         color="primary"
+                        disabled={props.disabled}
                     />
                 }
                 label="Incremental"
@@ -35,6 +36,7 @@ export default function SwitchLabels(props) {
                         onClick={handleChange('realtime')}
                         value="realtime"
                         color="primary"
+                        disabled={props.disabled}
                     />
                 }
                 label="Real-Time"
