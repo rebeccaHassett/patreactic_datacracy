@@ -57,6 +57,7 @@ export default function MenuSidenav(props) {
     const classes = useStyles();
     const [value, setValue] = React.useState(0);
     const [generatedDistricts, setGeneratedDistricts] = React.useState(true);
+    const [phase2Tab, setPhase2Tab] = React.useState(true);
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -64,6 +65,10 @@ export default function MenuSidenav(props) {
 
     const handleGeneratedDistricts = (event) => {
       setGeneratedDistricts(false);
+    };
+
+    const togglePhase2Tab = (value) => {
+      setPhase2Tab(value);
     };
 
     return (
@@ -82,7 +87,7 @@ export default function MenuSidenav(props) {
                 >
                     <StyledTab label="Phase 0" />
                     <StyledTab label="Phase 1" />
-                    <StyledTab label="Phase 2"/>
+                    <StyledTab label="Phase 2" disabled={true}/>
                     <StyledTab label="Data"/>
                 </Tabs>
             </AppBar>
@@ -92,7 +97,7 @@ export default function MenuSidenav(props) {
             <TabPanel value={value} index={1}>
                 <Phase1Controls chosenState={props.chosenState} removeOriginalDisrtricts={props.removeOriginalDisrtricts} removePrecinctLayer={props.removePrecinctLayer} precinctLayer={props.precinctLayer}
                 handlePrecinctFeatures={props.handlePrecinctFeatures} handleGeneratedDistricts={handleGeneratedDistricts}
-                                initializePhase1Map={props.initializePhase1Map} phase1Update={props.phase1Update}/>
+                                initializePhase1Map={props.initializePhase1Map} phase1Update={props.phase1Update} togglePhase2Tab={togglePhase2Tab}/>
             </TabPanel>
             <TabPanel value={value} index={2}>
                 <Phase2Controls/>

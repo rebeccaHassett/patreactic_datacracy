@@ -69,6 +69,7 @@ export default class Phase1Controls extends Component {
         this.setState({phase1RunButtonDisabled: true});
         this.setState({resultsUnavailable: true});
         this.setState({phase1ControlsDisabled : true});
+        this.props.togglePhase2Tab(true);
 
         let normalizedCompetitiveness = 0.1;
         let normalizedPopulationHomogeneity = 0.1;
@@ -172,9 +173,7 @@ export default class Phase1Controls extends Component {
             }).then(function (data) {
                 console.log(data);
                 if(data.districtUpdates === []) {
-                    this.setState({phase1ButtonText: "Start Phase 1"});
-                    this.setState({phase1RunButtonDisabled: false});
-                    this.setState({phase1ControlsDisabled: false});
+                    endPhase1();
                     clearInterval(interval);
                 }
                 else {
@@ -194,13 +193,19 @@ export default class Phase1Controls extends Component {
         }).then(function (data) {
             console.log(data);
             if(data.districtUpdates === []) {
-                this.setState({phase1ButtonText: "Start Phase 1"});
-                this.setState({phase1ControlsDisabled: false});
+                endPhase1();
             }
             else {
                 this.props.phase1Update(data);
             }
         });*/
+        this.setState({phase1RunButtonDisabled: false});
+    }
+
+    endPhase1() {
+        this.setState({phase1ButtonText: "Start Phase 1"});
+        this.setState({phase1ControlsDisabled: false});
+        this.props.togglePhase2Tab(false);
         this.setState({phase1RunButtonDisabled: false});
     }
 

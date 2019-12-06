@@ -10,6 +10,7 @@ import Statistics from "./Statistics";
 import TableDisplay from "./controls/TableDisplay";
 import Button from "@material-ui/core/Button";
 import styled from "styled-components";
+import TextField from '@material-ui/core/TextField';
 
 
 function TabPane(props) {
@@ -24,7 +25,7 @@ function TabPane(props) {
             aria-labelledby={`scrollable-auto-tab-${index}`}
             {...other}
         >
-            <Box p={3}>{children}</Box>
+            <Box p={3} style={{ paddingLeft: '0', paddingRight: '0', }}>{children}</Box>
         </Typography>
     );
 }
@@ -38,9 +39,6 @@ TabPane.propTypes = {
 const useDataStyles = makeStyles(theme => ({
     root: {
         backgroundColor: theme.palette.background.paper,
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
     },
 }));
 
@@ -51,6 +49,7 @@ const StyledDataTab = withStyles(theme => ({
         fontSize: theme.typography.pxToRem(15),
         width: '12vw',
         minWidth: '12vw',
+        display: 'flex',
         justifyContent: 'center',
         itemAlign: 'center',
     },
@@ -88,7 +87,7 @@ export default function DataTabs(props) {
 
     return (
         <div className={classes.root}>
-            <AppBar position="static" style={{ width: '35vw' }} color="primary">
+            <AppBar position="static" style={{ width: '35vw', margin: 'auto'}} color="primary">
                 <Tabs
                     value={value}
                     onChange={handleChange}
@@ -97,7 +96,7 @@ export default function DataTabs(props) {
                     contentContainerStyle={{
                         display: 'flex',
                         alignItems: 'center',
-                        justifyContent: 'center', right: '10vw'
+                        justifyContent: 'center',
                     }}
                     centered={true}
                 >
@@ -106,22 +105,24 @@ export default function DataTabs(props) {
                     <StyledDataTab label="Precinct" />
                 </Tabs>
             </AppBar>
-            <TabPane value={value} index={0}>
+            <TabPane value={value} index={0} style={{marginLeft: '0vw', paddingLeft: '2vw', marginRight: '0vw', paddingRight: '2vw'}}>
+                <DataStyle>
                 <h4 style={{ fontWeight: 'bold', textDecoration: 'underline' }}>Voting Incumbents:</h4>
                 <TableDisplay columns={incumbent_columns} rows={props.incumbents}/>
-                <h4 style={{ fontWeight: 'bold', textDecoration: 'underline' }}>Laws:</h4>
-                <p>{props.laws}</p>
-                <Statistics data={props.stateData} type="state"></Statistics>
+                <h4 style={{ fontWeight: 'bold', textDecoration: 'underline' }}>Redistricting Laws:</h4>
+                <TextField variant = "filled" color="primary" value={props.laws} multiline={true} style={{width: "100%", marginBottom: '2vw'}}/>
+                <Statistics data={props.stateData} type="state"/>
+                </DataStyle>
             </TabPane>
             <TabPane value={value} index={1}>
-                <DistrictDataStyle>
+                <DataStyle>
                 <Button variant="contained" color="primary"
                         style={{width: '25vw', marginBottom: '2vw',}} onClick={handleDistrictView}
                         disabled={enableDistrictView}>
                     {districtView}
                 </Button>
                 <Statistics data={props.districtData} type="district"></Statistics>
-                </DistrictDataStyle>
+                </DataStyle>
             </TabPane>
             <TabPane value={value} index={2}>
                 <Statistics data={props.precinctData} type="precinct"></Statistics>
@@ -129,9 +130,14 @@ export default function DataTabs(props) {
         </div>
     );
 }
-const DistrictDataStyle = styled.div`
+const DataStyle = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
     position: relative;
+    
+    h4 {
+        margin-bottom: 1vw;
+        margin-top: 1vw;
+    }
 `
