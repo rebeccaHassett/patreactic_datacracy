@@ -83,12 +83,11 @@ export default function VotingBlocSummaryDialog(props) {
     }
 
     props.data.forEach(row => {
-       demographics.forEach(demographic => {
            if(row.demographic === demographicMostVB && row.winningParty === winningPartyOverall) {
+               console.log(row.totalVotes);
                winningPartyOverallPrecinctsTotalVotes = winningPartyOverallPrecinctsTotalVotes + row.totalVotes;
                votesWinningPartyOverall = votesWinningPartyOverall + row.winningVotes;
            }
-       })
     });
     votePercentageWinningPartyOverall = (votesWinningPartyOverall / winningPartyOverallPrecinctsTotalVotes) * 100;
 

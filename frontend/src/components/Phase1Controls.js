@@ -148,6 +148,7 @@ export default class Phase1Controls extends Component {
         if(this.state.incremental) {
             this.setState({phase1ButtonText: "Update Phase 1"});
         }
+        this.props.handleGeneratedDistricts();
         if(!this.state.incremental) {
             this.setState({phase1Disabled: false});
         }
@@ -175,14 +176,14 @@ export default class Phase1Controls extends Component {
                 clearInterval(interval);
                 this.setState({phase1Disabled: false});
             }
-            fetch("http://127.0.0.1:8080//phase1/poll").then(function (response) {
+            /*fetch("http://127.0.0.1:8080/phase1/poll").then(function (response) {
                 if (response.status >= 400) {
                     throw new Error("Failed to load phase 1 update from server");
                 }
                 return response.json();
             }).then(function (data) {
                 console.log(data);
-            });
+            });*/
         }, timeout);
     };
 

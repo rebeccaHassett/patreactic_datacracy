@@ -16,20 +16,20 @@ export default class State extends Component {
         this.loadOriginalDistricts = this.loadOriginalDistricts.bind(this);
         this.loadOriginalDistrictData = this.loadOriginalDistrictData.bind(this);
         this.initializePhase1Map = this.initializePhase1Map.bind(this);
+        this.addDistrictsToMap = this.addDistrictsToMap.bind(this);
+        this.addPrecinctsToMap = this.addPrecinctsToMap.bind(this);
 
         this.state = {
             sidebar: true,
             precinctData: "",
-            displayedDistrictData: "",
-            originalDistrictData: "",
-            generatedDistrictData: "",
+            districtData: "",
             stateData: "",
             chosenState: window.location.pathname.split("/").pop(),
-            precinctLayer: null,
-            precinctIds: null,
+            precinctsLoaded: false,
+            precinctMap: {},
             originalDistrictLayer: null,
             originalDistrictsLoaded: false,
-            generatedDistrictLayer: null,
+            generatedDistrictMap: {},
             districtIds: null,
         };
 
@@ -40,11 +40,19 @@ export default class State extends Component {
         if(this.state.originalDistrictsLoaded) {
             this.map.removeLayer(this.state.originalDistrictLayer);
             this.setState({originalDistrictsLoaded: false});
-            this.setState({displayedDistrictData: this.state.generatedDistrictData});
+            this.state.generatedDistrictLayer.addTo(this.map);
+            let that = this;
+            this.state.generatedDistrictLayer.eachLayer(function(layer) {
+                layer.setStyle({fillColor: 'blue'});//layer.feature.properties.COLOR});
+                layer.on('mouseover', function (event) {
+                    that.setState({districtData: JSON.stringify(event.layer.feature.properties)})
+                });
+            });
         }
     }
 
     loadOriginalDistrictData(districtId, that) {
+        let instance = that;
         let district_data_url = 'http://127.0.0.1:8080/district/original/' + this.state.chosenState + '/' + districtId;
         return fetch(district_data_url).then(function (response) {
             if (response.status >= 400) {
@@ -52,8 +60,7 @@ export default class State extends Component {
             }
             return response.json();
         }).then(function (data) {
-            that.setState({originalDistrictData: data});
-            that.setState({displayedDistrictData: data});
+            instance.setState({districtData: data});
         });
     }
 
@@ -72,8 +79,6 @@ export default class State extends Component {
     }
 
     async loadOriginalDistrictsIncrementally(map, districtIds, that) {
-        var selected;
-
         function districtStyle(feature) {
             return {
                 fillColor: feature.properties.COLOR,
@@ -97,45 +102,18 @@ export default class State extends Component {
                 let layers = L.geoJSON(data, {style: districtStyle});
                 layers.eachLayer(function(layer) {
                     layer.feature.properties.districtId = districtId;
-                })
+                });
                 districtLayerArr.push(layers);
-            }))
+            }));
 
 
         await Promise.all(districtPromises).then(() => {
-            let layerGroup = L.featureGroup(districtLayerArr).addTo(map);
+            let layerGroup = L.featureGroup(districtLayerArr);
             that.setState({originalDistrictLayer: layerGroup});
             that.setState({originalDistrictsLoaded: true});
 
-            layerGroup.eachLayer(function (layer) {
-                layer.on('click', function (e) {
-                    if (selected) {
-                        e.target.resetStyle(selected)
-                    }
-                    selected = e.layer
-                    selected.bringToFront()
-                    selected.setStyle({
-                        'color': 'red'
-                    })
-                    map.fitBounds(e.layer.getBounds());
-                });
-
-                layer.on('mouseover', function (event) {
-                    let districtId = "";
-                    /*if(that.state.chosenState === "RhodeIsland") {
-                        districtId = event.layer.feature.properties.CD115FP;
-                    }
-                    else if(that.state.chosenState === "NorthCarolina") {
-                        districtId = event.layer.feature.properties.CD116FP;
-                    }
-                    else if(that.state.chosenState === "Michigan") {
-                        districtId = event.layer.feature.properties.NAME;
-                    }*/
-                    districtId = event.layer.feature.properties.districtId;
-                    that.loadOriginalDistrictData(districtId, that);
-                });
-            });
-        });
+            this.addDistrictsToMap(layerGroup);
+         });
     }
 
     async loadPrecinctsIncrementally(precinctIds, that) {
@@ -144,6 +122,7 @@ export default class State extends Component {
         };
         var precinctLayerArr = [];
         var precinctUrl = 'http://127.0.0.1:8080/borders/precinct/' + that.state.chosenState + '/';
+        let precinctMap = {};
 
         let precinctPromises = precinctIds.map(precinctId => fetch(precinctUrl + precinctId).then(function (response) {
             if (response.status >= 400) {
@@ -153,69 +132,47 @@ export default class State extends Component {
         }).then(function (data) {
             let layer = L.geoJSON(data, {style: precinctStyle});
             precinctLayerArr.push(layer);
-        }))
+            precinctMap[precinctId] = layer;
+        }));
 
         await Promise.all(precinctPromises).then(() => {
+            console.log(precinctMap);
+            this.setState({precinctMap: precinctMap});
             let layerGroup = L.featureGroup(precinctLayerArr);
-            that.setState({precinctLayer: layerGroup});
-            this.map.on("zoomend", function (event) {
-                if (this.getZoom() >= ZOOM && that.state.precinctLayer === null) {
-                    layerGroup.addTo(that.map);
-                    layerGroup.bringToFront();
-                    layerGroup.eachLayer(function (layer) {
-                        layer.on('mouseover', function (event) {
-                            that.loadOriginalDistrictData(event.layer.feature.properties.CD, that);
-                            that.setState({precinctData: JSON.stringify(event.layer.feature.properties)})
-                        });
-                    });
-
-                    return true;
-                }
-                else {
-                    if (this.getZoom() < ZOOM && that.state.precinctLayer !== null) {
-                        that.state.precinctLayer.remove();
-                        that.setState({precinctLayer: null});
-                    }
-                }
-            })
+            this.addPrecinctsToMap(layerGroup, this.map, that);
         });
     }
 
     initializePhase1Map() {
-        this.setState({generatedDistrictLayer: this.state.precinctLayer});
-        this.removeOriginalDistrictLayer();
-        this.state.precinctLayer.addTo(this.map);
-        this.state.precinctLayer.eachLayer(function(layer) {
-            layer.setStyle({fillColor: 'blue'});//layer.feature.properties.COLOR});
+        /*this.setState({generatedDistrictLayer: this.state.precinctMap});
+        this.map.removeLayer(this.state.originalDistrictLayer);
+        let precinctArr = [];
+        console.log(this.state.precinctMap);
+        Object.keys(that.state.precinctMap).forEach(function(key) {
+            precinctArr.push(this.state.precinctMap[key]);
         });
-        this.setState({displayedDistrictData: this.state.precinctData});
-        this.setState({generatedDistrictData: this.state.precinctData});
+        let layerGroup = L.featureGroup(precinctArr);
+        this.addPrecinctsToMap(layerGroup, this.map, this);
+        this.setState({originalDistrictsLoaded: false});
+        let that = this;
+        layerGroup.eachLayer(function(layer) {
+            layer.setStyle({fillColor: 'blue'});//layer.feature.properties.COLOR});
+            layer.on('mouseover', function (event) {
+                that.setState({districtData: JSON.stringify(event.layer.feature.properties)})
+            });
+        });*/
     }
 
     loadOriginalDistricts() {
         if(!this.state.originalDistrictsLoaded) {
-            this.state.originalDistrictLayer.addTo(this.map);
-            this.setState({displayedDistrictData: this.state.originalDistrictData});
-            this.state.originalDistrictLayer.eachLayer(function (layer) {
-                layer.on('click', function (e) {
-                    if (this.selected) {
-                        e.target.resetStyle(this.selected)
-                    }
-                    this.selected = e.layer
-                    this.selected.bringToFront()
-                    this.selected.setStyle({
-                        'color': 'red'
-                    })
-                    this.map.fitBounds(e.layer.getBounds());
-                });
-
-                layer.on('mouseover', function (event) {
-                    let districtId = "";
-                    districtId = event.layer.feature.properties.districtId;
-                    this.loadOriginalDistrictData(districtId, this);
-                });
+            let districtArr;
+            Object.keys(this.state.generatedDistrictMap).forEach(function(key) {
+                districtArr.push(this.state.generatedDistrictMap[key]);
             });
+            let layerGroup = L.featureGroup(districtArr);
+            this.map.removeLayer(layerGroup);
             this.setState({originalDistrictsLoaded: true});
+            this.addDistrictsToMap(this.state.originalDistrictLayer);
         }
     }
 
@@ -232,6 +189,60 @@ export default class State extends Component {
             that.setState({precinctIds: data.precinctIds});
             return data.precinctIds;
         });
+    }
+
+    addDistrictsToMap(districtLayer) {
+        districtLayer.addTo(this.map);
+        let that = this;
+        districtLayer.eachLayer(function (layer) {
+            layer.on('click', function (e) {
+                if (this.selected) {
+                    e.target.resetStyle(this.selected)
+                }
+                this.selected = e.layer
+                this.selected.bringToFront()
+                this.selected.setStyle({
+                    'color': 'red'
+                })
+                this.map.fitBounds(e.layer.getBounds());
+            });
+
+            layer.on('mouseover', function (event) {
+                let districtId = "";
+                districtId = event.layer.feature.properties.districtId;
+                that.loadOriginalDistrictData(districtId, that);
+            });
+        });
+    }
+
+    /*Issue here*/
+    addPrecinctsToMap(layerGroup, map, that) {
+        map.on("zoomend", function (event) {
+            if (this.getZoom() >= ZOOM  && !that.state.precinctsLoaded) {
+                layerGroup.addTo(map);
+                that.setState({precinctsLoaded: true});
+                layerGroup.bringToFront();
+                layerGroup.eachLayer(function (layer) {
+                    layer.on('mouseover', function (event) {
+                        that.loadOriginalDistrictData(event.layer.feature.properties.CD, that);
+                        that.setState({precinctData: JSON.stringify(event.layer.feature.properties)})
+                    });
+                });
+                return true;
+            }
+            else {
+                if (this.getZoom() < ZOOM && that.state.precinctsLoaded) {
+                    let precinctArr = [];
+                    Object.keys(that.state.precinctMap).forEach(function(key) {
+                        precinctArr.push(that.state.precinctMap[key]);
+                    });
+                    precinctArr.forEach(layer => {
+                        that.map.removeLayer(layerGroup)
+                    });
+                    that.setState({precinctsLoaded: false});
+                }
+            }
+        })
     }
 
     toggleBox() {
@@ -290,14 +301,14 @@ export default class State extends Component {
 
         var that = this;
 
-        this.loadStateData().then(precinctIds =>
-        {
-            this.loadPrecinctsIncrementally(precinctIds, that);
-        });
-
         this.loadDistrictNumber().then(districtIds =>
         {
             this.loadOriginalDistrictsIncrementally(this.map, districtIds, that)
+        }).then(() => {
+            this.loadStateData().then(precinctIds =>
+            {
+                this.loadPrecinctsIncrementally(precinctIds, that);
+            });
         });
     }
 
@@ -317,7 +328,7 @@ export default class State extends Component {
                     <Row>
                         <Col className="menu" xs={5}>
                             <MenuSidenav chosenState={this.state.chosenState} precinctData={this.state.precinctData}
-                                districtData={this.state.displayedDistrictData} stateData={this.state.stateData}
+                                districtData={this.state.districtData} stateData={this.state.stateData}
                                 removeOriginalDisrtricts={this.removeOriginalDistrictLayer} precinctLayer={this.state.precinctLayer}
                                 loadOriginalDistricts={this.loadOriginalDistricts} initializePhase1Map={this.initializePhase1Map}/>
                         </Col>

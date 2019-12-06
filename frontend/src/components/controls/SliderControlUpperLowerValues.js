@@ -29,6 +29,8 @@ export default function SliderControlUpperLowerValues(props) {
                 aria-labelledby="range-slider"
                 getAriaValueText={valuetext}
                 marks={blocMarks}
+                min={50}
+                max={100}
             />
         </div>
     );
@@ -36,24 +38,24 @@ export default function SliderControlUpperLowerValues(props) {
 
 const blocMarks = [
     {
-        value: 0,
-        label: '0%',
-    },
-    {
-        value: 20,
-        label: '20%',
-    },
-    {
-        value: 40,
-        label: '40%',
+        value: 50,
+        label: '50%',
     },
     {
         value: 60,
         label: '60%',
     },
     {
+        value: 70,
+        label: '70%',
+    },
+    {
         value: 80,
         label: '80%',
+    },
+    {
+        value: 90,
+        label: '90%',
     },
     {
         value: 100,
