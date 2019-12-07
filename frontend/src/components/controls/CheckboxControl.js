@@ -66,7 +66,7 @@ export default function CheckboxControl(props) {
                         label="Native American"
                     />
                 </FormGroup>
-                <FormHelperText>Must select at least one demographic</FormHelperText>
+                <FormHelperText>{props.helperText}</FormHelperText>
             </FormControl>
         </div>
     );

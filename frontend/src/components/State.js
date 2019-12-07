@@ -16,8 +16,11 @@ export default class State extends Component {
         this.removeOriginalDistrictLayer = this.removeOriginalDistrictLayer.bind(this);
         this.loadOriginalDistricts = this.loadOriginalDistricts.bind(this);
         this.loadOriginalDistrictData = this.loadOriginalDistrictData.bind(this);
+        this.phase0SelectedElection = this.phase0SelectedElection.bind(this);
         this.initializePhase1Map = this.initializePhase1Map.bind(this);
         this.phase1Update = this.phase1Update.bind(this);
+        this.demographicMapUpdate = this.demographicMapUpdate.bind(this);
+        this.demographicMapUpdateSelection = this.demographicMapUpdateSelection.bind(this);
         this.addDistrictsToMap = this.addDistrictsToMap.bind(this);
         this.addPrecinctsToMap = this.addPrecinctsToMap.bind(this);
 
@@ -26,17 +29,61 @@ export default class State extends Component {
             precinctData: "",
             districtData: "",
             stateData: "",
+            election: "Presidential 2016",
             chosenState: window.location.pathname.split("/").pop(),
             precinctsLoaded: false,
             precinctMap: {},
             originalDistrictLayer: null,
             originalDistrictsLoaded: false,
+            originalDistrictDataMap: {},
             generatedDistrictMap: {},
             districtIds: null,
-            generatedDistrictDataMap: {}
+            generatedDistrictDataMap: {},
+            demographicsMapDisplay: []
         };
-
         this.toggleBox = this.toggleBox.bind(this);
+    }
+
+    phase0SelectedElection(selectedElection) {
+        this.setState({election: selectedElection});
+        let precinctArr = [];
+        let that = this;
+        Object.keys(this.state.precinctMap).forEach(function (key) {
+            precinctArr.push(that.state.precinctMap[key]);
+        });
+        let layerGroup = L.layerGroup(precinctArr);
+        layerGroup.eachLayer(function (layer) {
+            let precinctLayers = layer._layers;
+            let republicanElectionData;
+            let democraticElectionData;
+            Object.keys(precinctLayers).forEach(function (key) {
+                if (selectedElection === "Presidential 2016") {
+                    republicanElectionData = precinctLayers[key].feature.properties.PRES16R;
+                    democraticElectionData = precinctLayers[key].feature.properties.PRES16D;
+                } else if (selectedElection.split(" ")[0] === "Congressional") {
+                    let houseElection;
+                    if (selectedElection.split(" ")[1] === "2016") {
+                        houseElection = precinctLayers[key].feature.properties.HOUSE_ELECTION_16;
+                    } else if (selectedElection.split(" ")[1] === "2018") {
+                        houseElection = precinctLayers[key].feature.properties.HOUSE_ELECTION_18;
+                    }
+                    for (var candidate in houseElection) {
+                        if (candidate.endsWith("_D")) {
+                            democraticElectionData = houseElection[candidate];
+                        } else if (candidate.endsWith("_R")) {
+                            republicanElectionData = houseElection[candidate];
+                        }
+                    }
+                }
+                precinctLayers[key].setStyle({
+                    fillColor: that.getVotingColors(republicanElectionData, democraticElectionData),
+                    opacity: 1,
+                    fillOpacity: 0.8,
+                    weight: 2,
+                    color: 'white',
+                });
+            });
+        });
     }
 
     removeOriginalDistrictLayer() {
@@ -68,7 +115,9 @@ export default class State extends Component {
             }
             return response.json();
         }).then(function (data) {
-            instance.setState({districtData: data});
+            let tempDataMap = instance.state.originalDistrictDataMap;
+            tempDataMap[districtId] = data;
+            instance.setState({originalDistrictDataMap: tempDataMap});
         });
     }
 
@@ -111,6 +160,10 @@ export default class State extends Component {
 
             this.addDistrictsToMap(layerGroup, true, {});
          });
+
+        districtIds.map(districtId => {
+            that.loadOriginalDistrictData(districtId, that);
+        });
     }
 
     async loadPrecinctsIncrementally(precinctIds, that) {
@@ -133,7 +186,6 @@ export default class State extends Component {
         }));
 
         await Promise.all(precinctPromises).then(() => {
-            console.log(precinctMap);
             this.setState({precinctMap: precinctMap});
             let layerGroup = L.featureGroup(precinctLayerArr);
             this.addPrecinctsToMap(layerGroup, this.map, that);
@@ -259,10 +311,10 @@ export default class State extends Component {
                     e.target.resetStyle(this.selected)
                 }
                 this.selected = e.layer
-                this.selected.bringToFront()
+                this.selected.bringToFront();
                 this.selected.setStyle({
                     'color': 'red'
-                })
+                });
                 this.map.fitBounds(e.layer.getBounds());
             });
 
@@ -270,10 +322,10 @@ export default class State extends Component {
                 let districtId = "";
                 districtId = event.layer.feature.properties.districtId;
                 if(original) {
-                    that.loadOriginalDistrictData(districtId, that);
+                    that.setState({districtData: that.state.originalDistrictDataMap[districtId]});
                 }
                 else {
-                    that.setState({districtData: districtDataMap[event.layer.feature.properties.CD]});
+                    that.setState({districtData: districtDataMap[districtId]});
                 }
             });
             /*If no color field, then original districts and set color based on votes, else set color based on properties field*/
@@ -292,7 +344,6 @@ export default class State extends Component {
         }
 
         getVotingColors(r, d) {
-        console.log(r + "fdsfds" + d);
         if(r > d) {
             return r > 1000 ? '#800026' :
                 r > 900 ? '#BD0026' :
@@ -324,15 +375,41 @@ export default class State extends Component {
                     layerGroup.bringToFront();
                     layerGroup.eachLayer(function (layer) {
                         let precinctLayers = layer._layers;
+                        let republicanElectionData;
+                        let democraticElectionData;
                         Object.keys(precinctLayers).forEach(function(key) {
+                            if(that.state.election === "Presidential 2016") {
+                                republicanElectionData = precinctLayers[key].feature.properties.PRES16R;
+                                democraticElectionData = precinctLayers[key].feature.properties.PRES16D;
+                            }
+                            else if(that.state.election.split(" ")[0] === "Congressional") {
+                                let houseElection;
+                                if(that.state.election.split(" ")[1] === "2016") {
+                                    houseElection = precinctLayers[key].feature.properties.HOUSE_ELECTION_16;
+                                }
+                                else if(that.state.election.split(" ")[1] === "2018") {
+                                    houseElection = precinctLayers[key].feature.properties.HOUSE_ELECTION_18;
+                                }
+                                for(var candidate in houseElection) {
+                                    if(candidate.endsWith("_D")) {
+                                        democraticElectionData = houseElection[candidate];
+                                    }
+                                    else if(candidate.endsWith("_R")) {
+                                        republicanElectionData = houseElection[candidate];
+                                    }
+                                }
+                            }
                             precinctLayers[key].setStyle( {
-                                fillColor: that.getVotingColors(precinctLayers[key].feature.properties.PRES16R, precinctLayers[key].feature.properties.PRES16D),
+                                fillColor: that.getVotingColors(republicanElectionData, democraticElectionData),
                                 opacity: 1,
-                                fillOpacity: 1
+                                fillOpacity: 0.8,
+                                weight: 2,
+                                color: 'white',
                             });
                         });
                         layer.on('mouseover', function (event) {
-                            that.loadOriginalDistrictData(event.layer.feature.properties.CD, that);
+                            /*CD property is original congressional district that precinct is in, districtId is the assigned district*/
+                            that.setState({districtData: that.state.originalDistrictDataMap[event.layer.feature.properties.CD]});
                             that.setState({precinctData: JSON.stringify(event.layer.feature.properties)})
                         });
                     });
@@ -353,6 +430,76 @@ export default class State extends Component {
                 }
             })
         }
+
+    /*Updates Population Distribution in Map*/
+    demographicMapUpdate() {
+        console.log(this.state.demographicsMapDisplay);
+        let that = this;
+        if(this.state.precinctsLoaded) {
+            let precinctArr = [];
+            Object.keys(that.state.precinctMap).forEach(function(key) {
+                precinctArr.push(that.state.precinctMap[key]);
+            });
+            precinctArr.forEach(layer => {
+                that.map.removeLayer(layer)
+            });
+            that.setState({precinctsLoaded: false});
+        }
+        if(!this.state.originalDistrictsLoaded) {
+            this.addDistrictsToMap(this.state.originalDistrictLayer, true, {});
+        }
+        this.state.originalDistrictLayer.eachLayer(function (layer) {
+            let districtLayers = layer._layers;
+            console.log(layer);
+            Object.keys(districtLayers).forEach(function(key) {
+                let combinedPopulation = 0;
+                let districtData = that.state.originalDistrictDataMap[districtLayers[key].feature.properties.districtId];
+                that.state.demographicsMapDisplay.forEach(demographic => {
+                   if(demographic === "WHITE") {
+                       combinedPopulation = combinedPopulation + districtData.WVAP;
+                   }
+                   else if(demographic === "BLACK") {
+                       combinedPopulation = combinedPopulation + districtData.BVAP;
+                   }
+                   else if(demographic === "ASIAN") {
+                       combinedPopulation = combinedPopulation + districtData.ASIANVAP;
+                   }
+                   else if(demographic === "HISPANIC") {
+                       combinedPopulation = combinedPopulation + districtData.HVAP;
+                   }
+                   else if(demographic === "NATIVE_AMERICAN") {
+                       combinedPopulation = combinedPopulation + districtData.AMINVAP;
+                   }
+                });
+                districtLayers[key].setStyle({
+                    fillColor: that.getDemographicColors(combinedPopulation, districtData.VAP),
+                    opacity: 1,
+                    fillOpacity: 0.8,
+                    weight: 2,
+                    color: 'white',
+                });
+            });
+        });
+    }
+
+    demographicMapUpdateSelection(updatedDemographics) {
+        if (Object.keys(updatedDemographics).length === 5) {
+            this.setState({demographicsMapDisplay: Object.entries(updatedDemographics).filter(([d, chosen]) => chosen).map(([d, chosen]) => d)})
+        }
+    };
+
+
+    getDemographicColors(demographicTotal, overall) {
+            return (demographicTotal/overall)*100 > 80 ? '#49006a' :
+                (demographicTotal/overall)*100 > 70 ? '#7a0177' :
+                    (demographicTotal/overall)*100 > 60 ? '#ae017e' :
+                        (demographicTotal/overall)*100 > 50 ? '#dd3497' :
+                            (demographicTotal/overall)*100 > 40 ? '#f768a1' :
+                                (demographicTotal/overall)*100 > 30 ? '#fa9fb5' :
+                                    (demographicTotal/overall)*100 > 20 ? '#fcc5c0' :
+                                        (demographicTotal/overall)*100 > 10 ? '#fde0dd' :
+                                            '#fff7f3';
+    }
 
         toggleBox() {
             this.setState(oldState => ({ sidebar: !oldState.sidebar }));
@@ -440,7 +587,8 @@ export default class State extends Component {
                                 districtData={this.state.districtData} stateData={this.state.stateData}
                                 removeOriginalDisrtricts={this.removeOriginalDistrictLayer} precinctLayer={this.state.precinctLayer}
                                 loadOriginalDistricts={this.loadOriginalDistricts} initializePhase1Map={this.initializePhase1Map}
-                                phase1Update={this.phase1Update}/>
+                                phase1Update={this.phase1Update} phase0SelectedElection={this.phase0SelectedElection}
+                                demographicMapUpdate={this.demographicMapUpdate} demographicMapUpdateSelection={this.demographicMapUpdateSelection}/>
                         </Col>
                         <Col className="mapContainer" xs={7}>
                             <div id='map'></div>

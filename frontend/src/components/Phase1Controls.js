@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import Button from '@material-ui/core/Button';
 import AlertDialogSlide from "./controls/AlertControl";
 import TableDisplay from "./controls/TableDisplay";
+import FormHelperText from "@material-ui/core/FormHelperText";
 
 export default class Phase1Controls extends Component {
     constructor() {
@@ -346,7 +347,8 @@ export default class Phase1Controls extends Component {
                     </ControlGroup>
                     <ControlGroup id="minorityPopulationThreshold">
                         <label className="ethnicLabel">Ethnic/Racial Groups:</label>
-                        <CheckboxControl exportState={this.handleSelectedDemographics} disabled={this.state.phase1ControlsDisabled}/>
+                        <CheckboxControl exportState={this.handleSelectedDemographics} disabled={this.state.phase1ControlsDisabled}
+                                    helperText="Must select at least one demographic"/>
                     </ControlGroup>
                     <ControlGroup>
                         <label className="label">Convex Hull Compactness Weighting:</label>

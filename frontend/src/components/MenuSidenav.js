@@ -56,7 +56,7 @@ const StyledTab = withStyles(theme => ({
 export default function MenuSidenav(props) {
     const classes = useStyles();
     const [value, setValue] = React.useState(0);
-    const [generatedDistricts, setGeneratedDistricts] = React.useState(true);
+    const [generatedDistricts, setGeneratedDistricts] = React.useState(false);
     const [phase2Tab, setPhase2Tab] = React.useState(true);
 
     const handleChange = (event, newValue) => {
@@ -64,7 +64,7 @@ export default function MenuSidenav(props) {
     };
 
     const handleGeneratedDistricts = (event) => {
-      setGeneratedDistricts(false);
+      setGeneratedDistricts(true);
     };
 
     const togglePhase2Tab = (value) => {
@@ -92,7 +92,7 @@ export default function MenuSidenav(props) {
                 </Tabs>
             </AppBar>
             <TabPanel value={value} index={0} style={{marginLeft: '0px', paddingLeft: '0px', marginRight: '0px', paddingRight: '0px'}}>
-                <Phase0Controls state={props.chosenState}/>
+                <Phase0Controls state={props.chosenState} phase0SelectedElection={props.phase0SelectedElection}/>
             </TabPanel>
             <TabPanel value={value} index={1}>
                 <Phase1Controls chosenState={props.chosenState} removeOriginalDisrtricts={props.removeOriginalDisrtricts} removePrecinctLayer={props.removePrecinctLayer} precinctLayer={props.precinctLayer}
@@ -105,7 +105,8 @@ export default function MenuSidenav(props) {
             <TabPanel value={value} index={3}>
                 <DataDisplay stateData={props.stateData} precinctData={props.precinctData} districtData={props.districtData}
                              chosenState={props.chosenState} generatedDistricts={generatedDistricts}
-                            loadOriginalDistricts={props.loadOriginalDistricts} removeOriginalDistricts={props.removeOriginalDisrtricts}/>
+                            loadOriginalDistricts={props.loadOriginalDistricts} removeOriginalDistricts={props.removeOriginalDisrtricts}
+                            demographicMapUpdate={props.demographicMapUpdate} demographicMapUpdateSelection={props.demographicMapUpdateSelection}/>
             </TabPanel>
         </div>
     );

@@ -11,6 +11,7 @@ import TableDisplay from "./controls/TableDisplay";
 import Button from "@material-ui/core/Button";
 import styled from "styled-components";
 import TextField from '@material-ui/core/TextField';
+import CheckboxControl from "./controls/CheckboxControl";
 
 
 function TabPane(props) {
@@ -58,8 +59,10 @@ const StyledDataTab = withStyles(theme => ({
 export default function DataTabs(props) {
     const classes = useDataStyles();
     const [value, setValue] = React.useState(0);
-    const [enableDistrictView, setEnableDistrictView] = React.useState(true);
+    const [disableDistrictView, setDisableDistrictView] = React.useState(true);
     const [districtView, setDistrictView] = React.useState("View Original Districts");
+    const [demographicMapMinorities, setDemographicMapMinorities] =  React.useState([]);
+    const [demographicDistributionEnabled, setDemographicDistributionEnabled] = React.useState(true);
     let  [,setState]=React.useState();
     const incumbent_columns = [
         { id: 'districtId', label: 'District', format: value => value.toLocaleString(),},
@@ -74,16 +77,23 @@ export default function DataTabs(props) {
         if(districtView === "View Original Districts") {
             setDistrictView("View Generated Districts");
             props.loadOriginalDistricts();
+            setDemographicDistributionEnabled(true);
         }
         else {
             setDistrictView("View Original Districts");
             props.removeOriginalDistricts();
+            setDemographicDistributionEnabled(false);
         }
     };
 
-    if(props.generatedDistricts === false && enableDistrictView === true) {
-        setEnableDistrictView(false);
+    if(props.generatedDistricts === true && disableDistrictView === true) {
+        setDisableDistrictView(false);
+        setDemographicDistributionEnabled(false);
     }
+
+    function initDemographicMapUpdate() {
+      props.demographicMapUpdate();
+    };
 
     return (
         <div className={classes.root}>
@@ -118,14 +128,22 @@ export default function DataTabs(props) {
                 <DataStyle>
                 <Button variant="contained" color="primary"
                         style={{width: '25vw', marginBottom: '2vw',}} onClick={handleDistrictView}
-                        disabled={enableDistrictView}>
+                        disabled={disableDistrictView}>
                     {districtView}
                 </Button>
-                <Statistics data={props.districtData} type="district"></Statistics>
+                <Statistics data={props.districtData} type="district"/>
+                    <h4>Demographic Map Display</h4>
+                    <CheckboxControl exportState={props.demographicMapUpdateSelection} disabled={!demographicDistributionEnabled}
+                                     helperText=""/>
+                    <Button variant="contained" color="primary"
+                            style={{width: '25vw', marginBottom: '2vw',}} onClick={initDemographicMapUpdate}
+                            disabled={!demographicDistributionEnabled}>
+                        Display Demographics
+                    </Button>
                 </DataStyle>
             </TabPane>
             <TabPane value={value} index={2}>
-                <Statistics data={props.precinctData} type="precinct"></Statistics>
+                <Statistics data={props.precinctData} type="precinct"/>
             </TabPane>
         </div>
     );

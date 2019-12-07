@@ -24,13 +24,12 @@ export default class Phase0Controls extends Component {
         phase1Tab: false,
         blocPopulationValues: [80, 90],
         blocVotingValues: [80, 90],
-        electionType: 'Presidential',
-        electionYear: '2016',
+        election: 'Presidential 2016',
         button2018: true,
         resultsUnavailable: true,
         resultsInView: false,
         vbdtoRows: [['-', '-', '-', '-', '-']]
-    }
+    };
 
     wordCase(str) {
         var splitStr = str.toLowerCase().split(' ');
@@ -60,8 +59,8 @@ export default class Phase0Controls extends Component {
                 numDistricts: 0,
                 numMajMinDistricts: 0,
                 selectedMinorities: [],
-                year: this.state.electionYear,
-                type: this.state.electionType
+                year: this.state.election.split(" ")[1],
+                type: this.state.election.split(" ")[0]
             },
             state: this.props.state
         };
@@ -109,37 +108,20 @@ export default class Phase0Controls extends Component {
         if (event.target.value === "Congressional 2016") {
             this.setState({
                 election: 'Congressional 2016'
-            })
-            this.setState({
-                electionYear: '2016'
-            })
-            this.setState({
-                electionType: 'Congressional'
-            })
+            });
         } else if (event.target.value === "Congressional 2018") {
             this.setState({
                 election: 'Congressional 2018'
-            })
-            this.setState({
-                electionYear: '2018'
-            })
-            this.setState({
-                electionType: 'Congressional'
-            })
+            });
         } else if (event.target.value === "Presidential 2016") {
             this.setState({
                 election: 'Presidential 2016'
-            })
-            this.setState({
-                electionYear: '2016'
-            })
-            this.setState({
-                electionType: 'Presidential'
-            })
+            });
+        }
+        if(event.target.value !== undefined) {
+            this.props.phase0SelectedElection(event.target.value);
         }
     }
-
-
 
     render() {
         if (this.state.resultsUnavailable === true || this.state.resultsInView === false) {
@@ -171,7 +153,7 @@ export default class Phase0Controls extends Component {
                     <Button variant="contained" color="primary" style={{ width: '25vw', marginBottom: '2vw' }}
                         onClick={this.resultsViewOff}>Back to Controls</Button>
                     <VotingBlocSummaryDialog data={this.state.vbdtoRows}/>
-                    <h5>Election Type: {this.state.electionType} {this.state.electionYear}</h5>
+                    <h5>Election Type: {this.state.election}</h5>
                     <p>Population Thresholds: {this.state.blocPopulationValues[0]}% - {this.state.blocPopulationValues[1]}%<br/>
                     Voting Thresholds: {this.state.blocVotingValues[0]}% - {this.state.blocVotingValues[1]}%</p>
                     <h4>Voting Bloc Precincts</h4>
@@ -226,11 +208,3 @@ const columns = [
         format: value => value.toLocaleString(),
     }
 ];
-
-
-/*    {
-        id: 'population',
-        label: 'Population',
-        align: 'right',
-        format: value => value.toLocaleString(),
-    },*/
