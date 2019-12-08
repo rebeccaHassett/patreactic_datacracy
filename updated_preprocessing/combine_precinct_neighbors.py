@@ -17,3 +17,15 @@ def combine_neighbor_files(stateInitials):
 
     deduped = {pId: list(s) for pId, s in deduped.items()}
     return deduped
+
+def main(args):
+    if (args.get(1, None) is None):
+        print("Please supply state initials e.g. 'RI'")
+        exit(1)
+    neighbors = combine_neighbor_files(args[1])
+    with open(f"precinct_neighbors_{args[1]}.json", "w") as f:
+        json.dump(neighbors, f)
+
+
+if __name__ == "__main__":
+    main(sys.argv)
