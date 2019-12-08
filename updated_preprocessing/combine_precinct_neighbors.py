@@ -9,7 +9,7 @@ def combine_neighbor_files(stateInitials):
     deduped = {}
     for filename in files:
         with open(filename, "r+") as f:
-            curr = json.read(f)
+            curr = json.load(f)
         for prec, neighbors in curr.items():
             if deduped.get(prec, None) is None:
                 deduped[prec] = set()
