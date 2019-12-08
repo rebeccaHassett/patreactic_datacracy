@@ -348,7 +348,7 @@ def __get_county(data, county_name):
 
 
 def merge_precincts(data, votes16, votes18, county_name, precinct_names, new_name):
-    """
+   """
     :param data: Geojson data
     :param votes16: Voting data related to 2016
     :param votes18: Voting data related to 2018
@@ -359,6 +359,8 @@ def merge_precincts(data, votes16, votes18, county_name, precinct_names, new_nam
         geometry and the updated voting data.
     """
 
+    EL16G_PR_R = 0
+    EL16G_PR_D = 0
     VAP = 0
     HVAP = 0
     WVAP = 0
@@ -371,17 +373,20 @@ def merge_precincts(data, votes16, votes18, county_name, precinct_names, new_nam
     new_data = []
     for p in precinct_names: # YAN2, YAN4
         for feature in data['features']:
-            name = feature['properties']['PRENAME'] # CASWELL YAN2
+            prop = feature['properties']
+            name = prop['PRENAME'] # CASWELL YAN2
             if county_name + ' ' + p == name:
                 geometries.append(shape(feature['geometry']))
-                VAP += feature['properties']['VAP']
-                HVAP += feature['properties']['HVAP']
-                WVAP += feature['properties']['WVAP']
-                BVAP += feature['properties']['BVAP']
-                AMINVAP += feature['properties']['AMINVAP']
-                ASIANVAP += feature['properties']['ASIANVAP']
-                NHPIVAP += feature['properties']['NHPIVAP']
-                OTHERVAP += feature['properties']['OTHERVAP']
+                EL16G_PR_D += prop['EL16G_PR_D']
+                EL16G_PR_R += prop['EL16G_PR_R']
+                VAP += prop['VAP']
+                HVAP += prop['HVAP']
+                WVAP += prop['WVAP']
+                BVAP += prop['BVAP']
+                AMINVAP += prop['AMINVAP']
+                ASIANVAP += prop['ASIANVAP']
+                NHPIVAP += prop['NHPIVAP']
+                OTHERVAP += prop['OTHERVAP']
 
     for feature in data['features']:
         name = feature['properties']['PRENAME']
@@ -415,19 +420,41 @@ def merge(data, votes16, votes18, county_name, precincts, new_precinct_names):
         data = merge_precincts(data, votes16, votes18, county_name, precincts[i], new_precinct_names[i])
     return data
 
+
 def __get_votes(votes_df, county_name, precinct_name):
     df = votes_df[votes_df.parent_jurisdiction == county_name]
     candidates = set(df['candidate'].values)
     house_data = {}
     for c in candidates:
         d = df[df.candidate == c]
-        #print(d[d.jurisdiction == precinct_name], precinct_name)
         votes = int(d[d.jurisdiction == precinct_name]['votes'].values[0])
         house_data.update({c: votes})
     return house_data
 
 
 def update_NC(file, data, votes16, votes18):
+    
+    # CABARRUS
+    name = 'CABARRUS'
+    df = votes18[votes18.parent_jurisdiction == name]['jurisdiction']
+    precincts = [name + ' ' + p[1:] for p in df.to_numpy() if len(p) == 6]
+    comp = [['\'' + p[len(name)+1:]] for p in precincts]
+    #data = update_all(name, data, votes16, votes18, precincts, comp)
+
+    # WAKE
+    name = 'WAKE'
+    df = votes16[votes16.parent_jurisdiction == name]['jurisdiction'].to_numpy()
+    precincts = []
+    for p in df:
+        if len(p) <= 6:
+            if p[0] == '\'': # starts with '
+              precincts.append(name + ' ' + p[1:])
+            else:
+                precincts.append(name + ' ' + p)
+    comp = [[p] for p in df if len(p) <= 6]
+    data = update_all(name, data, votes16, votes18, precincts, comp)
+
+    # problem -- no 7-07A --> probably consumed by other precincts -- need to go back and check
 
     # CALDWELL
     name = 'CALDWELL'
@@ -730,10 +757,11 @@ def update_precinct(data, votes, precinct, comp, election_type):
     candidates = set(votes['candidate'].values) # list of candidates
     house_data = {}
     for c in candidates:
-        d = votes[votes.candidate == c] # rows related to candidate
+        d = votes[votes.office == 'U.S. House'][votes.candidate == c] # rows related to candidate
         tot = 0 # votes for candidate c
         for p_name in comp:
-            if p_name in d[['jurisdiction']].to_numpy():
+            juris = d['jurisdiction'].to_numpy()
+            if p_name in juris:
                 tot += int(d[d.jurisdiction == p_name]['votes'].values[0])
         house_data.update({c: tot})
 
