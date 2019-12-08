@@ -242,19 +242,58 @@ def load_district_borders(connection):
             cursor.execute(query, (state["name"], district["properties"][state["district_id_key"]], json.dumps(district)))
     connection.commit()
 
+"""
+Reads neighbor json file, and returns a list of tuples (precinctId, neighbors string)
+
+Load one precinct Id neighbor pair at a time instead of uploading the neighbor pairs directly as a list of strings
+Notice PrecinctId is not a primary key in the PrecinctNeighbors table
+
+@param String: precinct neighbors file name
+@return: A list of tuples (precinctId, neighbors string)
+"""
+def read_neighbors_file(filename):
+    neighbor_list = []
+    with open(filename) as json_file:
+        data = json.load(json_file)
+        for precinctId in data:
+            for neighbor in data[precinctId]:
+                neighbor_list.append((precinctId, neighbor))
+    return neighbor_list
+
+def load_precinct_neighbors(connection):
+
+    neighbors_insert_query = """INSERT INTO PrecinctNeighbors (precinctId, neighborIDs) 
+                           VALUES 
+                           (%s, %s) """
+
+    rhode_island_neighbors_data = read_neighbors_file("precinct_neighbors_RI.json")
+    michigan_neighbors_data = read_neighbors_file("precinct_neighbors_MI.json")
+    #north_carolina_neighbors_data = read_neighbors_file("precinct_neighbors_NC.json")
+
+    state_neighbor_data = [rhode_island_neighbors_data, michigan_neighbors_data]
+
+    cursor = connection.cursor()
+
+    for state in state_neighbor_data:
+        for neighbor_pair in state:
+            cursor.execute(neighbors_insert_query, neighbor_pair)
+
+    connection.commit()
+
 
 def load_data():
     connection = get_connection()
     try:
-        print("loading state data...")
-        load_state_data(connection)
-        print("loading precinct data...")
-        load_precinct_data(connection)
-        print("loading incumbent data...")
-        load_incumbent_data(connection)
+    #     print("loading state data...")
+    #     load_state_data(connection)
+    #     print("loading precinct data...")
+    #     load_precinct_data(connection)
+    #     print("loading incumbent data...")
+    #     load_incumbent_data(connection)
         print("loading precinct neighbor data...")
-        print("loading district data...")
-        load_district_borders(connection)
+        load_precinct_neighbors(connection)
+        #print("loading district data...")
+        #load_district_borders(connection)
     finally:
         connection.close()
 
