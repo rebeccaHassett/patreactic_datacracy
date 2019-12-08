@@ -6,6 +6,7 @@ import { Row, Col} from "react-bootstrap";
 import styled from 'styled-components';
 import MenuSidenav from "./MenuSidenav";
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import 'colorsys';
 
 var ZOOM = 7;
 
@@ -15,36 +16,98 @@ export default class State extends Component {
         this.removeOriginalDistrictLayer = this.removeOriginalDistrictLayer.bind(this);
         this.loadOriginalDistricts = this.loadOriginalDistricts.bind(this);
         this.loadOriginalDistrictData = this.loadOriginalDistrictData.bind(this);
+        this.phase0SelectedElection = this.phase0SelectedElection.bind(this);
         this.initializePhase1Map = this.initializePhase1Map.bind(this);
+        this.phase1Update = this.phase1Update.bind(this);
+        this.demographicMapUpdate = this.demographicMapUpdate.bind(this);
+        this.demographicMapUpdateSelection = this.demographicMapUpdateSelection.bind(this);
+        this.addDistrictsToMap = this.addDistrictsToMap.bind(this);
+        this.addPrecinctsToMap = this.addPrecinctsToMap.bind(this);
 
         this.state = {
             sidebar: true,
             precinctData: "",
-            displayedDistrictData: "",
-            originalDistrictData: "",
-            generatedDistrictData: "",
+            districtData: "",
             stateData: "",
+            election: "Presidential 2016",
             chosenState: window.location.pathname.split("/").pop(),
-            precinctLayer: null,
-            precinctIds: null,
+            precinctsLoaded: false,
+            precinctMap: {},
             originalDistrictLayer: null,
             originalDistrictsLoaded: false,
-            generatedDistrictLayer: null,
+            originalDistrictDataMap: {},
+            generatedDistrictMap: {},
             districtIds: null,
+            generatedDistrictDataMap: {},
+            demographicsMapDisplay: []
         };
-
         this.toggleBox = this.toggleBox.bind(this);
+    }
+
+    phase0SelectedElection(selectedElection) {
+        this.setState({election: selectedElection});
+        let precinctArr = [];
+        let that = this;
+        Object.keys(this.state.precinctMap).forEach(function (key) {
+            precinctArr.push(that.state.precinctMap[key]);
+        });
+        let layerGroup = L.layerGroup(precinctArr);
+        layerGroup.eachLayer(function (layer) {
+            let precinctLayers = layer._layers;
+            let republicanElectionData;
+            let democraticElectionData;
+            Object.keys(precinctLayers).forEach(function (key) {
+                if (selectedElection === "Presidential 2016") {
+                    republicanElectionData = precinctLayers[key].feature.properties.PRES16R;
+                    democraticElectionData = precinctLayers[key].feature.properties.PRES16D;
+                } else if (selectedElection.split(" ")[0] === "Congressional") {
+                    let houseElection;
+                    if (selectedElection.split(" ")[1] === "2016") {
+                        houseElection = precinctLayers[key].feature.properties.HOUSE_ELECTION_16;
+                    } else if (selectedElection.split(" ")[1] === "2018") {
+                        houseElection = precinctLayers[key].feature.properties.HOUSE_ELECTION_18;
+                    }
+                    for (var candidate in houseElection) {
+                        if (candidate.endsWith("_D")) {
+                            democraticElectionData = houseElection[candidate];
+                        } else if (candidate.endsWith("_R")) {
+                            republicanElectionData = houseElection[candidate];
+                        }
+                    }
+                }
+                precinctLayers[key].setStyle({
+                    fillColor: that.getVotingColors(republicanElectionData, democraticElectionData),
+                    opacity: 1,
+                    fillOpacity: 0.8,
+                    weight: 2,
+                    color: 'white',
+                });
+            });
+        });
     }
 
     removeOriginalDistrictLayer() {
         if(this.state.originalDistrictsLoaded) {
             this.map.removeLayer(this.state.originalDistrictLayer);
             this.setState({originalDistrictsLoaded: false});
-            this.setState({displayedDistrictData: this.state.generatedDistrictData});
+            let generatedDistrictsArr = [];
+            Object.keys(this.state.generatedDistrictMap).forEach(function(key) {
+                generatedDistrictsArr.push(this.state.generatedDistrictMap[key]);
+            });
+            let layerGroup = L.featureGroup(generatedDistrictsArr);
+            layerGroup.addTo(this.map);
+            let that = this;
+            layerGroup.eachLayer(function(layer) {
+                layer.setStyle({fillColor: layer.feature.properties.COLOR});
+                layer.on('mouseover', function (event) {
+                    that.setState({districtData: JSON.stringify(event.layer.feature.properties)})
+                });
+            });
         }
     }
 
     loadOriginalDistrictData(districtId, that) {
+        let instance = that;
         let district_data_url = 'http://127.0.0.1:8080/district/original/' + this.state.chosenState + '/' + districtId;
         return fetch(district_data_url).then(function (response) {
             if (response.status >= 400) {
@@ -52,8 +115,9 @@ export default class State extends Component {
             }
             return response.json();
         }).then(function (data) {
-            that.setState({originalDistrictData: data});
-            that.setState({displayedDistrictData: data});
+            let tempDataMap = instance.state.originalDistrictDataMap;
+            tempDataMap[districtId] = data;
+            instance.setState({originalDistrictDataMap: tempDataMap});
         });
     }
 
@@ -72,19 +136,6 @@ export default class State extends Component {
     }
 
     async loadOriginalDistrictsIncrementally(map, districtIds, that) {
-        var selected;
-
-        function districtStyle(feature) {
-            return {
-                fillColor: feature.properties.COLOR,
-                weight: 2,
-                opacity: 1,
-                color: 'white',
-                dashArray: '3',
-                fillOpacity: 0.7
-            };
-        }
-
         let districtUrl = 'http://127.0.0.1:8080/borders/district/' + this.state.chosenState + '/';
         let districtLayerArr = [];
 
@@ -94,47 +145,24 @@ export default class State extends Component {
                 }
                 return response.json();
             }).then(function (data) {
-                let layers = L.geoJSON(data, {style: districtStyle});
+                let layers = L.geoJSON(data);
                 layers.eachLayer(function(layer) {
                     layer.feature.properties.districtId = districtId;
-                })
+                });
                 districtLayerArr.push(layers);
-            }))
+            }));
 
 
         await Promise.all(districtPromises).then(() => {
-            let layerGroup = L.featureGroup(districtLayerArr).addTo(map);
+            let layerGroup = L.featureGroup(districtLayerArr);
             that.setState({originalDistrictLayer: layerGroup});
             that.setState({originalDistrictsLoaded: true});
 
-            layerGroup.eachLayer(function (layer) {
-                layer.on('click', function (e) {
-                    if (selected) {
-                        e.target.resetStyle(selected)
-                    }
-                    selected = e.layer
-                    selected.bringToFront()
-                    selected.setStyle({
-                        'color': 'red'
-                    })
-                    map.fitBounds(e.layer.getBounds());
-                });
+            this.addDistrictsToMap(layerGroup, true, {});
+         });
 
-                layer.on('mouseover', function (event) {
-                    let districtId = "";
-                    /*if(that.state.chosenState === "RhodeIsland") {
-                        districtId = event.layer.feature.properties.CD115FP;
-                    }
-                    else if(that.state.chosenState === "NorthCarolina") {
-                        districtId = event.layer.feature.properties.CD116FP;
-                    }
-                    else if(that.state.chosenState === "Michigan") {
-                        districtId = event.layer.feature.properties.NAME;
-                    }*/
-                    districtId = event.layer.feature.properties.districtId;
-                    that.loadOriginalDistrictData(districtId, that);
-                });
-            });
+        districtIds.map(districtId => {
+            that.loadOriginalDistrictData(districtId, that);
         });
     }
 
@@ -144,6 +172,7 @@ export default class State extends Component {
         };
         var precinctLayerArr = [];
         var precinctUrl = 'http://127.0.0.1:8080/borders/precinct/' + that.state.chosenState + '/';
+        let precinctMap = {};
 
         let precinctPromises = precinctIds.map(precinctId => fetch(precinctUrl + precinctId).then(function (response) {
             if (response.status >= 400) {
@@ -153,69 +182,108 @@ export default class State extends Component {
         }).then(function (data) {
             let layer = L.geoJSON(data, {style: precinctStyle});
             precinctLayerArr.push(layer);
-        }))
+            precinctMap[precinctId] = layer;
+        }));
 
         await Promise.all(precinctPromises).then(() => {
+            this.setState({precinctMap: precinctMap});
             let layerGroup = L.featureGroup(precinctLayerArr);
-            that.setState({precinctLayer: layerGroup});
-            this.map.on("zoomend", function (event) {
-                if (this.getZoom() >= ZOOM && that.state.precinctLayer === null) {
-                    layerGroup.addTo(that.map);
-                    layerGroup.bringToFront();
-                    layerGroup.eachLayer(function (layer) {
-                        layer.on('mouseover', function (event) {
-                            that.loadOriginalDistrictData(event.layer.feature.properties.CD, that);
-                            that.setState({precinctData: JSON.stringify(event.layer.feature.properties)})
-                        });
-                    });
-
-                    return true;
-                }
-                else {
-                    if (this.getZoom() < ZOOM && that.state.precinctLayer !== null) {
-                        that.state.precinctLayer.remove();
-                        that.setState({precinctLayer: null});
-                    }
-                }
-            })
+            this.addPrecinctsToMap(layerGroup, this.map, that);
         });
     }
 
-    initializePhase1Map() {
-        this.setState({generatedDistrictLayer: this.state.precinctLayer});
-        this.removeOriginalDistrictLayer();
-        this.state.precinctLayer.addTo(this.map);
-        this.state.precinctLayer.eachLayer(function(layer) {
-            layer.setStyle({fillColor: 'blue'});//layer.feature.properties.COLOR});
+    contrastingColors(total)
+    {
+        var colorsys = require('colorsys');
+
+        var i = 360 / (total - 1); // distribute the colors evenly on the hue range
+        var r = []; // hold the generated colors
+        //s = 80, v = 70 is brighter
+        for (var x=0; x<total; x++)
+        {
+            r.push(colorsys.hsvToRgb(i * x, 50, 50)); // you can also alternate the saturation and value for even more contrast between the colors
+        }
+        return r;
+    }
+
+    initializePhase1Map(data) {
+        var colorsys = require('colorsys');
+        let contrastingColors = this.contrastingColors(Object.keys(this.state.precinctMap).length);
+        this.map.removeLayer(this.state.originalDistrictLayer);
+        let updatedDistrictMap = this.state.precinctMap;
+        let districtDataMap = {};
+        data.districtUpdates.forEach((updatedDistrict, index) => {
+            let updatedDistrictId = updatedDistrict.PRENAME;
+            updatedDistrict.precinctIds.forEach(precinctId => {
+                updatedDistrictMap[precinctId].feature.properties.CD = updatedDistrictId;
+                updatedDistrictMap[precinctId].feature.properties.COLOR = colorsys.rgb2Hex(contrastingColors[index]);
+            });
+
+            /*Initialize Generated District Data Map*/
+            districtDataMap[updatedDistrictId] = {"VAP" : updatedDistrict.VAP, "HVAP" : updatedDistrict.HVAP, "WVAP" : updatedDistrict.WVAP,
+                                            "BVAP" : updatedDistrict.BVAP, "AMINVAP" : updatedDistrict.AMINVAP, "ASIANVAP" : updatedDistrict.ASIANVAP,
+                                            "PRES16D" : updatedDistrict.PRES16D, "PRES16R" : updatedDistrict.PRES16R, "PRENAME" : updatedDistrict.PRENAME,
+                                            "HOUSE_ELECTION_16" : updatedDistrict.HOUSE_ELECTION_16, "HOUSE_ELECTION_18" : updatedDistrict.HOUSE_ELECTION_18};
+
         });
-        this.setState({displayedDistrictData: this.state.precinctData});
-        this.setState({generatedDistrictData: this.state.precinctData});
+        this.setState({generatedDistrictMap: updatedDistrictMap});
+        this.setState({generatedDistrictDataMap : districtDataMap});
+        let generatedDistrictsArr = [];
+        Object.keys(updatedDistrictMap).forEach(function(key) {
+            generatedDistrictsArr.push(updatedDistrictMap[key]);
+        });
+        let layerGroup = L.featureGroup(generatedDistrictsArr);
+        this.addDistrictsToMap(layerGroup, false, districtDataMap);
+        this.setState({originalDistrictsLoaded: false});
+    }
+
+
+    phase1Update(data) {
+        if(this.state.originalDistrictsLoaded) {
+            this.map.removeLayer(this.state.originalDistrictLayer);
+        }
+        let updatedDistrictMap = this.state.generatedDistrictMap;
+        data.districtUpdates.forEach((updatedDistrict) => {
+            let updatedDistrictId = updatedDistrict.PRENAME;
+            let mergedIntoPrecinctIds = data.precinctIds.filter(x => !data.districtsToRemove.includes(x));
+            let updateColor = updatedDistrictMap[mergedIntoPrecinctIds[0]].feature.properties.COLOR;
+            updatedDistrict.precinctIds.forEach(precinctId => {
+                updatedDistrictMap[precinctId].feature.properties.CD = updatedDistrictId;
+                updatedDistrictMap[precinctId].feature.properties.COLOR = updateColor;
+            });
+
+            /*Initialize Generated District Data Map*/
+            districtDataMap[updatedDistrictId] = {"VAP" : updatedDistrict.VAP, "HVAP" : updatedDistrict.HVAP, "WVAP" : updatedDistrict.WVAP,
+                "BVAP" : updatedDistrict.BVAP, "AMINVAP" : updatedDistrict.AMINVAP, "ASIANVAP" : updatedDistrict.ASIANVAP,
+                "PRES16D" : updatedDistrict.PRES16D, "PRES16R" : updatedDistrict.PRES16R, "PRENAME" : updatedDistrict.PRENAME,
+                "HOUSE_ELECTION_16" : updatedDistrict.HOUSE_ELECTION_16, "HOUSE_ELECTION_18" : updatedDistrict.HOUSE_ELECTION_18};
+
+        });
+        let districtDataMap = this.state.generatedDistrictDataMap;
+        data.districtsToRemove.forEach(removeDistrict => {
+            districtDataMap.delete(removeDistrict);
+        });
+        this.setState({generatedDistrictMap: updatedDistrictMap});
+        this.setState({generatedDistrictDataMap : districtDataMap});
+        let generatedDistrictsArr = [];
+        Object.keys(updatedDistrictMap).forEach(function(key) {
+            generatedDistrictsArr.push(updatedDistrictMap[key]);
+        });
+        let layerGroup = L.featureGroup(generatedDistrictsArr);
+        this.addDistrictsToMap(layerGroup, false, districtDataMap);
+        this.setState({originalDistrictsLoaded: false});
     }
 
     loadOriginalDistricts() {
         if(!this.state.originalDistrictsLoaded) {
-            this.state.originalDistrictLayer.addTo(this.map);
-            this.setState({displayedDistrictData: this.state.originalDistrictData});
-            this.state.originalDistrictLayer.eachLayer(function (layer) {
-                layer.on('click', function (e) {
-                    if (this.selected) {
-                        e.target.resetStyle(this.selected)
-                    }
-                    this.selected = e.layer
-                    this.selected.bringToFront()
-                    this.selected.setStyle({
-                        'color': 'red'
-                    })
-                    this.map.fitBounds(e.layer.getBounds());
-                });
-
-                layer.on('mouseover', function (event) {
-                    let districtId = "";
-                    districtId = event.layer.feature.properties.districtId;
-                    this.loadOriginalDistrictData(districtId, this);
-                });
+            let districtArr = [];
+            Object.keys(this.state.generatedDistrictMap).forEach(function(key) {
+                districtArr.push(this.state.generatedDistrictMap[key]);
             });
+            let layerGroup = L.featureGroup(districtArr);
+            this.map.removeLayer(layerGroup);
             this.setState({originalDistrictsLoaded: true});
+            this.addDistrictsToMap(this.state.originalDistrictLayer, true, {});
         }
     }
 
@@ -234,22 +302,221 @@ export default class State extends Component {
         });
     }
 
-    toggleBox() {
-        this.setState(oldState => ({ sidebar: !oldState.sidebar }));
+    addDistrictsToMap(districtLayer, original, districtDataMap) {
+        districtLayer.addTo(this.map);
+        let that = this;
+        districtLayer.eachLayer(function (layer) {
+            layer.on('click', function (e) {
+                if (this.selected) {
+                    e.target.resetStyle(this.selected)
+                }
+                this.selected = e.layer
+                this.selected.bringToFront();
+                this.selected.setStyle({
+                    'color': 'red'
+                });
+                this.map.fitBounds(e.layer.getBounds());
+            });
+
+            layer.on('mouseover', function (event) {
+                let districtId = "";
+                districtId = event.layer.feature.properties.districtId;
+                if(original) {
+                    that.setState({districtData: that.state.originalDistrictDataMap[districtId]});
+                }
+                else {
+                    that.setState({districtData: districtDataMap[districtId]});
+                }
+            });
+            /*If no color field, then original districts and set color based on votes, else set color based on properties field*/
+            let districtLayers = layer._layers;
+            Object.keys(districtLayers).forEach(function(key) {
+                districtLayers[key].setStyle( {
+                    fillColor: districtLayers[key].feature.properties.COLOR,
+                    weight: 2,
+                    color: 'white',
+                    opacity: 1,
+                    fillOpacity: 0.7
+                });
+            });
+        });
+
+        }
+
+        getVotingColors(r, d) {
+        if(r > d) {
+            return r > 1000 ? '#800026' :
+                r > 900 ? '#BD0026' :
+                    r > 800 ? '#E31A1C' :
+                        r > 700 ? '#FC4E2A' :
+                            r > 600 ? '#FD8D3C' :
+                                r > 500 ? '#FEB24C' :
+                                    r > 400 ? '#FED976' :
+                                        '#FFEDA0';
+        }
+        else {
+            return d > 1000 ? '#084594' :
+                d > 900 ? '#2171b5' :
+                    d > 800 ? '#4292c6' :
+                        d > 700 ? '#6baed6' :
+                            d > 600 ? '#9ecae1' :
+                                d > 500 ? '#c6dbef' :
+                                    d > 400 ? '#deebf7' :
+                                        '#f7fbff';
+        }
+        }
+
+        addPrecinctsToMap(layerGroup, map, that) {
+            map.on("zoomend", function (event) {
+                if (this.getZoom() >= ZOOM  && !that.state.precinctsLoaded) {
+                    that.removeOriginalDistrictLayer();
+                    layerGroup.addTo(map);
+                    that.setState({precinctsLoaded: true});
+                    layerGroup.bringToFront();
+                    layerGroup.eachLayer(function (layer) {
+                        let precinctLayers = layer._layers;
+                        let republicanElectionData;
+                        let democraticElectionData;
+                        Object.keys(precinctLayers).forEach(function(key) {
+                            if(that.state.election === "Presidential 2016") {
+                                republicanElectionData = precinctLayers[key].feature.properties.PRES16R;
+                                democraticElectionData = precinctLayers[key].feature.properties.PRES16D;
+                            }
+                            else if(that.state.election.split(" ")[0] === "Congressional") {
+                                let houseElection;
+                                if(that.state.election.split(" ")[1] === "2016") {
+                                    houseElection = precinctLayers[key].feature.properties.HOUSE_ELECTION_16;
+                                }
+                                else if(that.state.election.split(" ")[1] === "2018") {
+                                    houseElection = precinctLayers[key].feature.properties.HOUSE_ELECTION_18;
+                                }
+                                for(var candidate in houseElection) {
+                                    if(candidate.endsWith("_D")) {
+                                        democraticElectionData = houseElection[candidate];
+                                    }
+                                    else if(candidate.endsWith("_R")) {
+                                        republicanElectionData = houseElection[candidate];
+                                    }
+                                }
+                            }
+                            precinctLayers[key].setStyle( {
+                                fillColor: that.getVotingColors(republicanElectionData, democraticElectionData),
+                                opacity: 1,
+                                fillOpacity: 0.8,
+                                weight: 2,
+                                color: 'white',
+                            });
+                        });
+                        layer.on('mouseover', function (event) {
+                            /*CD property is original congressional district that precinct is in, districtId is the assigned district*/
+                            that.setState({districtData: that.state.originalDistrictDataMap[event.layer.feature.properties.CD]});
+                            that.setState({precinctData: JSON.stringify(event.layer.feature.properties)})
+                        });
+                    });
+                    return true;
+                }
+                else {
+                    if (this.getZoom() < ZOOM && that.state.precinctsLoaded) {
+                        let precinctArr = [];
+                        Object.keys(that.state.precinctMap).forEach(function(key) {
+                            precinctArr.push(that.state.precinctMap[key]);
+                        });
+                        precinctArr.forEach(layer => {
+                            that.map.removeLayer(layerGroup)
+                        });
+                        that.setState({precinctsLoaded: false});
+                        that.loadOriginalDistricts();
+                    }
+                }
+            })
+        }
+
+    /*Updates Population Distribution in Map*/
+    demographicMapUpdate() {
+        console.log(this.state.demographicsMapDisplay);
+        let that = this;
+        if(this.state.precinctsLoaded) {
+            let precinctArr = [];
+            Object.keys(that.state.precinctMap).forEach(function(key) {
+                precinctArr.push(that.state.precinctMap[key]);
+            });
+            precinctArr.forEach(layer => {
+                that.map.removeLayer(layer)
+            });
+            that.setState({precinctsLoaded: false});
+        }
+        if(!this.state.originalDistrictsLoaded) {
+            this.addDistrictsToMap(this.state.originalDistrictLayer, true, {});
+        }
+        this.state.originalDistrictLayer.eachLayer(function (layer) {
+            let districtLayers = layer._layers;
+            console.log(layer);
+            Object.keys(districtLayers).forEach(function(key) {
+                let combinedPopulation = 0;
+                let districtData = that.state.originalDistrictDataMap[districtLayers[key].feature.properties.districtId];
+                that.state.demographicsMapDisplay.forEach(demographic => {
+                   if(demographic === "WHITE") {
+                       combinedPopulation = combinedPopulation + districtData.WVAP;
+                   }
+                   else if(demographic === "BLACK") {
+                       combinedPopulation = combinedPopulation + districtData.BVAP;
+                   }
+                   else if(demographic === "ASIAN") {
+                       combinedPopulation = combinedPopulation + districtData.ASIANVAP;
+                   }
+                   else if(demographic === "HISPANIC") {
+                       combinedPopulation = combinedPopulation + districtData.HVAP;
+                   }
+                   else if(demographic === "NATIVE_AMERICAN") {
+                       combinedPopulation = combinedPopulation + districtData.AMINVAP;
+                   }
+                });
+                districtLayers[key].setStyle({
+                    fillColor: that.getDemographicColors(combinedPopulation, districtData.VAP),
+                    opacity: 1,
+                    fillOpacity: 0.8,
+                    weight: 2,
+                    color: 'white',
+                });
+            });
+        });
     }
 
-    componentDidMount() {
-        var maxBounds;
-        var minZoom;
-        var chosenState = window.location.pathname.split("/").pop();
-        var clustersUrl;
+    demographicMapUpdateSelection(updatedDemographics) {
+        if (Object.keys(updatedDemographics).length === 5) {
+            this.setState({demographicsMapDisplay: Object.entries(updatedDemographics).filter(([d, chosen]) => chosen).map(([d, chosen]) => d)})
+        }
+    };
 
-        this.setState({ chosenState: chosenState });
 
-        if (chosenState === "NorthCarolina") {
-            clustersUrl = 'http://127.0.0.1:8080/District_Borders?name=North_Carolina';
-            maxBounds = [
-                [37, -71],               /* North East */
+    getDemographicColors(demographicTotal, overall) {
+            return (demographicTotal/overall)*100 > 80 ? '#49006a' :
+                (demographicTotal/overall)*100 > 70 ? '#7a0177' :
+                    (demographicTotal/overall)*100 > 60 ? '#ae017e' :
+                        (demographicTotal/overall)*100 > 50 ? '#dd3497' :
+                            (demographicTotal/overall)*100 > 40 ? '#f768a1' :
+                                (demographicTotal/overall)*100 > 30 ? '#fa9fb5' :
+                                    (demographicTotal/overall)*100 > 20 ? '#fcc5c0' :
+                                        (demographicTotal/overall)*100 > 10 ? '#fde0dd' :
+                                            '#fff7f3';
+    }
+
+        toggleBox() {
+            this.setState(oldState => ({ sidebar: !oldState.sidebar }));
+        }
+
+        componentDidMount() {
+            var maxBounds;
+            var minZoom;
+            var chosenState = window.location.pathname.split("/").pop();
+            var clustersUrl;
+
+            this.setState({ chosenState: chosenState });
+
+            if (chosenState === "NorthCarolina") {
+                clustersUrl = 'http://127.0.0.1:8080/District_Borders?name=North_Carolina';
+                maxBounds = [
+                    [37, -71],               /* North East */
                 [33, -84]                /* South West */
             ];
             minZoom = 6;
@@ -258,7 +525,7 @@ export default class State extends Component {
             clustersUrl = 'http://127.0.0.1:8080/District_Borders?name=Rhode_Island';
             maxBounds = [
                 [43, -70.75],
-                [40, -71]
+                [40, -72]
             ];
             minZoom = 9;
             ZOOM = minZoom + 1;
@@ -284,20 +551,20 @@ export default class State extends Component {
             ]
         }).fitBounds(maxBounds);
 
-        L.easyButton('<h5>Back US to Map</h5>', function() {
+        L.easyButton('<h5>Back to US Map</h5>', function() {
             window.location.replace("/map");
         },  {position: 'topright'}).addTo(this.map);
 
         var that = this;
 
-        this.loadStateData().then(precinctIds =>
-        {
-            this.loadPrecinctsIncrementally(precinctIds, that);
-        });
-
         this.loadDistrictNumber().then(districtIds =>
         {
             this.loadOriginalDistrictsIncrementally(this.map, districtIds, that)
+        }).then(() => {
+            this.loadStateData().then(precinctIds =>
+            {
+                this.loadPrecinctsIncrementally(precinctIds, that);
+            });
         });
     }
 
@@ -317,9 +584,11 @@ export default class State extends Component {
                     <Row>
                         <Col className="menu" xs={5}>
                             <MenuSidenav chosenState={this.state.chosenState} precinctData={this.state.precinctData}
-                                districtData={this.state.displayedDistrictData} stateData={this.state.stateData}
+                                districtData={this.state.districtData} stateData={this.state.stateData}
                                 removeOriginalDisrtricts={this.removeOriginalDistrictLayer} precinctLayer={this.state.precinctLayer}
-                                loadOriginalDistricts={this.loadOriginalDistricts} initializePhase1Map={this.initializePhase1Map}/>
+                                loadOriginalDistricts={this.loadOriginalDistricts} initializePhase1Map={this.initializePhase1Map}
+                                phase1Update={this.phase1Update} phase0SelectedElection={this.phase0SelectedElection}
+                                demographicMapUpdate={this.demographicMapUpdate} demographicMapUpdateSelection={this.demographicMapUpdateSelection}/>
                         </Col>
                         <Col className="mapContainer" xs={7}>
                             <div id='map'></div>

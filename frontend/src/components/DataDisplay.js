@@ -53,7 +53,8 @@ class DataDisplay extends React.Component {
                 precinctData={this.props.precinctData}
                 incumbents={this.state.incumbents} laws={this.state.laws}
                       generatedDistricts={this.props.generatedDistricts} loadOriginalDistricts={this.props.loadOriginalDistricts}
-                    removeOriginalDistricts={this.props.removeOriginalDistricts}/>
+                    removeOriginalDistricts={this.props.removeOriginalDistricts} demographicMapUpdate={this.props.demographicMapUpdate}
+                    demographicMapUpdateSelection={this.props.demographicMapUpdateSelection}/>
         );
     }
 }

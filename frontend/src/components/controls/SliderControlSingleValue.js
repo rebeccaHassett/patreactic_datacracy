@@ -32,6 +32,7 @@ export default function SliderControlSingleValue(props) {
                 max={props.max}
                 step={props.step}
                 defaultValue={props.max}
+                disabled={props.disabled}
             />
         </div>
     );

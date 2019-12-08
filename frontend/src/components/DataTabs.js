@@ -10,6 +10,8 @@ import Statistics from "./Statistics";
 import TableDisplay from "./controls/TableDisplay";
 import Button from "@material-ui/core/Button";
 import styled from "styled-components";
+import TextField from '@material-ui/core/TextField';
+import CheckboxControl from "./controls/CheckboxControl";
 
 
 function TabPane(props) {
@@ -24,7 +26,7 @@ function TabPane(props) {
             aria-labelledby={`scrollable-auto-tab-${index}`}
             {...other}
         >
-            <Box p={3}>{children}</Box>
+            <Box p={3} style={{ paddingLeft: '0', paddingRight: '0', }}>{children}</Box>
         </Typography>
     );
 }
@@ -38,9 +40,6 @@ TabPane.propTypes = {
 const useDataStyles = makeStyles(theme => ({
     root: {
         backgroundColor: theme.palette.background.paper,
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
     },
 }));
 
@@ -51,6 +50,7 @@ const StyledDataTab = withStyles(theme => ({
         fontSize: theme.typography.pxToRem(15),
         width: '12vw',
         minWidth: '12vw',
+        display: 'flex',
         justifyContent: 'center',
         itemAlign: 'center',
     },
@@ -59,8 +59,10 @@ const StyledDataTab = withStyles(theme => ({
 export default function DataTabs(props) {
     const classes = useDataStyles();
     const [value, setValue] = React.useState(0);
-    const [enableDistrictView, setEnableDistrictView] = React.useState(true);
+    const [disableDistrictView, setDisableDistrictView] = React.useState(true);
     const [districtView, setDistrictView] = React.useState("View Original Districts");
+    const [demographicMapMinorities, setDemographicMapMinorities] =  React.useState([]);
+    const [demographicDistributionEnabled, setDemographicDistributionEnabled] = React.useState(true);
     let  [,setState]=React.useState();
     const incumbent_columns = [
         { id: 'districtId', label: 'District', format: value => value.toLocaleString(),},
@@ -75,20 +77,27 @@ export default function DataTabs(props) {
         if(districtView === "View Original Districts") {
             setDistrictView("View Generated Districts");
             props.loadOriginalDistricts();
+            setDemographicDistributionEnabled(true);
         }
         else {
             setDistrictView("View Original Districts");
             props.removeOriginalDistricts();
+            setDemographicDistributionEnabled(false);
         }
     };
 
-    if(props.generatedDistricts === false && enableDistrictView === true) {
-        setEnableDistrictView(false);
+    if(props.generatedDistricts === true && disableDistrictView === true) {
+        setDisableDistrictView(false);
+        setDemographicDistributionEnabled(false);
     }
+
+    function initDemographicMapUpdate() {
+      props.demographicMapUpdate();
+    };
 
     return (
         <div className={classes.root}>
-            <AppBar position="static" style={{ width: '35vw' }} color="primary">
+            <AppBar position="static" style={{ width: '35vw', margin: 'auto'}} color="primary">
                 <Tabs
                     value={value}
                     onChange={handleChange}
@@ -97,7 +106,7 @@ export default function DataTabs(props) {
                     contentContainerStyle={{
                         display: 'flex',
                         alignItems: 'center',
-                        justifyContent: 'center', right: '10vw'
+                        justifyContent: 'center',
                     }}
                     centered={true}
                 >
@@ -106,32 +115,47 @@ export default function DataTabs(props) {
                     <StyledDataTab label="Precinct" />
                 </Tabs>
             </AppBar>
-            <TabPane value={value} index={0}>
+            <TabPane value={value} index={0} style={{marginLeft: '0vw', paddingLeft: '2vw', marginRight: '0vw', paddingRight: '2vw'}}>
+                <DataStyle>
                 <h4 style={{ fontWeight: 'bold', textDecoration: 'underline' }}>Voting Incumbents:</h4>
                 <TableDisplay columns={incumbent_columns} rows={props.incumbents}/>
-                <h4 style={{ fontWeight: 'bold', textDecoration: 'underline' }}>Laws:</h4>
-                <p>{props.laws}</p>
-                <Statistics data={props.stateData} type="state"></Statistics>
+                <h4 style={{ fontWeight: 'bold', textDecoration: 'underline' }}>Redistricting Laws:</h4>
+                <TextField variant = "filled" color="primary" value={props.laws} multiline={true} style={{width: "100%", marginBottom: '2vw'}}/>
+                <Statistics data={props.stateData} type="state"/>
+                </DataStyle>
             </TabPane>
             <TabPane value={value} index={1}>
-                <DistrictDataStyle>
+                <DataStyle>
                 <Button variant="contained" color="primary"
                         style={{width: '25vw', marginBottom: '2vw',}} onClick={handleDistrictView}
-                        disabled={enableDistrictView}>
+                        disabled={disableDistrictView}>
                     {districtView}
                 </Button>
-                <Statistics data={props.districtData} type="district"></Statistics>
-                </DistrictDataStyle>
+                <Statistics data={props.districtData} type="district"/>
+                    <h4>Demographic Map Display</h4>
+                    <CheckboxControl exportState={props.demographicMapUpdateSelection} disabled={!demographicDistributionEnabled}
+                                     helperText=""/>
+                    <Button variant="contained" color="primary"
+                            style={{width: '25vw', marginBottom: '2vw',}} onClick={initDemographicMapUpdate}
+                            disabled={!demographicDistributionEnabled}>
+                        Display Demographics
+                    </Button>
+                </DataStyle>
             </TabPane>
             <TabPane value={value} index={2}>
-                <Statistics data={props.precinctData} type="precinct"></Statistics>
+                <Statistics data={props.precinctData} type="precinct"/>
             </TabPane>
         </div>
     );
 }
-const DistrictDataStyle = styled.div`
+const DataStyle = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
     position: relative;
+    
+    h4 {
+        margin-bottom: 1vw;
+        margin-top: 1vw;
+    }
 `

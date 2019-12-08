@@ -7,7 +7,6 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Paper from '@material-ui/core/Paper';
 import Draggable from 'react-draggable';
-import {forEach} from "react-bootstrap/cjs/utils/ElementChildren";
 
 function PaperComponent(props) {
     return (
@@ -83,12 +82,11 @@ export default function VotingBlocSummaryDialog(props) {
     }
 
     props.data.forEach(row => {
-       demographics.forEach(demographic => {
            if(row.demographic === demographicMostVB && row.winningParty === winningPartyOverall) {
+               console.log(row.totalVotes);
                winningPartyOverallPrecinctsTotalVotes = winningPartyOverallPrecinctsTotalVotes + row.totalVotes;
                votesWinningPartyOverall = votesWinningPartyOverall + row.winningVotes;
            }
-       })
     });
     votePercentageWinningPartyOverall = (votesWinningPartyOverall / winningPartyOverallPrecinctsTotalVotes) * 100;
 

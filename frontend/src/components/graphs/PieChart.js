@@ -5,7 +5,7 @@ import {MDBContainer} from "mdbreact";
 export default class PieChart extends React.Component {
     render() {
         return (
-            <MDBContainer>
+            <MDBContainer style={{marginTop: "3vw", width: '100%'}}>
                 <Pie data={this.props.dataPie} options={option} id="pie"/>
             </MDBContainer>
         );

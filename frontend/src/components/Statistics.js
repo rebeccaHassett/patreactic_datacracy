@@ -4,6 +4,7 @@ import PieChart from "./graphs/PieChart";
 import ElectionButtonsControl from "./controls/ElectionButtonsControl";
 import styled from "styled-components";
 import Button from '@material-ui/core/Button'
+import TableDisplay from "./controls/TableDisplay";
 
 
 export default class Statistics extends Component {
@@ -75,6 +76,20 @@ export default class Statistics extends Component {
             var africanAmericanPopulation = jsonData.BVAP;
             var nativeAmericanPopulation = jsonData.AMINVAP;
             var asianPopulation = jsonData.ASIANVAP;
+
+            function createData(demographic, population, total) {
+                let percentage = ((population / total) * 100);
+                return { demographic, population, percentage};
+            }
+
+            var rows = [
+                createData("White", whitePopulation, totalPopulation),
+                createData('Black', africanAmericanPopulation, totalPopulation),
+                createData('Asian', asianPopulation, totalPopulation),
+                createData('Hispanic', hispanicPopulation, totalPopulation),
+                createData('Native American', nativeAmericanPopulation, totalPopulation),
+            ];
+
 
 
             var dataPie = {
@@ -171,13 +186,9 @@ export default class Statistics extends Component {
                 <h5>{democraticCandidate}: {democraticVotes.toLocaleString()} votes</h5>
                 <h5>{republicanCandidate}: {republicanVotes.toLocaleString()} votes</h5>
                 <BarChart databar={databar}/>
+                <h4>Total Population: {Math.round(totalPopulation).toLocaleString()}</h4>
                 <h4 className="bolden">Demographic Data</h4>
-                <p>Total Population: {Math.round(totalPopulation).toLocaleString()}</p>
-                <p>Hispanic Population: {Math.round(hispanicPopulation).toLocaleString()}</p>
-                <p>White Population: {Math.round(whitePopulation).toLocaleString()}</p>
-                <p>African American Population: {Math.round(africanAmericanPopulation).toLocaleString()}</p>
-                <p>Native American Population: {Math.round(nativeAmericanPopulation).toLocaleString()}</p>
-                <p>Asian Population: {Math.round(asianPopulation).toLocaleString()}</p>
+                <TableDisplay columns={columns} rows={rows}/>
                 <PieChart dataPie={dataPie}/>
             </StatisticsStyles>
         );
@@ -204,3 +215,17 @@ const StatisticsStyles = styled.div`
     }
 
  `;
+
+const columns = [
+    { id: 'demographic', label: 'Demographic', },
+    {
+        id: 'population',
+        label: 'Population',
+        format: value => value.toLocaleString(),
+    },
+    {
+        id: 'percentage',
+        label: '%',
+        format: value => value.toLocaleString(),
+    },
+];
