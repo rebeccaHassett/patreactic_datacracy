@@ -19,7 +19,7 @@ def combine_neighbor_files(stateInitials):
     return deduped
 
 def main(args):
-    if (args.get(1, None) is None):
+    if (len(args) < 2):
         print("Please supply state initials e.g. 'RI'")
         exit(1)
     neighbors = combine_neighbor_files(args[1])
