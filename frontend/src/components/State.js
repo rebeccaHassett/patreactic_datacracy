@@ -345,24 +345,20 @@ export default class State extends Component {
 
         getVotingColors(r, d) {
         if(r > d) {
-            return r > 1000 ? '#800026' :
-                r > 900 ? '#BD0026' :
-                    r > 800 ? '#E31A1C' :
-                        r > 700 ? '#FC4E2A' :
-                            r > 600 ? '#FD8D3C' :
-                                r > 500 ? '#FEB24C' :
-                                    r > 400 ? '#FED976' :
-                                        '#FFEDA0';
+            console.log(r/(r+d) * 100);
+            return (r/(r+d) * 100) > 90 ? '#67000d' :
+                (r/(r+d) * 100) > 80 ? '#a50f15' :
+                    (r/(r+d) * 100) > 70 ? '#cb181d' :
+                        (r/(r+d) * 100) > 60 ? '#ef3b2c' :
+                                        '#fb6a4a';
         }
         else {
-            return d > 1000 ? '#084594' :
-                d > 900 ? '#2171b5' :
-                    d > 800 ? '#4292c6' :
-                        d > 700 ? '#6baed6' :
-                            d > 600 ? '#9ecae1' :
-                                d > 500 ? '#c6dbef' :
-                                    d > 400 ? '#deebf7' :
-                                        '#f7fbff';
+            console.log(d/(r+d) *100);
+            return (d /(r+d)* 100) > 90? '#084594' :
+                (d /(r+d)* 100) > 80 ? '#2171b5' :
+                    (d /(r+d)* 100) > 70 ? '#4292c6' :
+                        (d /(r+d)* 100) > 60 ? '#6baed6' :
+                                        '#9ecae1';
         }
         }
 
