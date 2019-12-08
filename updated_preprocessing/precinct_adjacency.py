@@ -404,6 +404,10 @@ def merge_precincts(data, votes16, votes18, county_name, precinct_names, new_nam
                 'HVAP': HVAP,
                 'WVAP': WVAP,
                 'BVAP': BVAP,
+                'AMINVAP': AMINVAP,
+                'ASIANVAP': ASIANVAP,
+                'NHPIVAP': NHPIVAP,
+                'OTHERVAP': OTHERVAP,
                 'PRENAME': county_name + ' ' + new_name,
                 'HOUSE_ELECTION_16': HOUSE_ELECTION_16,
                 'HOUSE_ELECTION_18': HOUSE_ELECTION_18
