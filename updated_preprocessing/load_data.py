@@ -75,7 +75,7 @@ def read_geojson_file(file_name):
 def load_precinct_values(connection, cursor, features, query, stateName):
     for feature in features:
         precinctId = feature["properties"]["PRENAME"]
-        geojson = json.dumps(feature)
+        geojson = json.dumps(feature["geometry"])
         districtId = feature["properties"]["CD"]
         data_tuple = (precinctId, geojson, districtId, stateName)
 
@@ -286,12 +286,12 @@ def load_data():
     try:
     #     print("loading state data...")
     #     load_state_data(connection)
-    #     print("loading precinct data...")
-    #     load_precinct_data(connection)
+        print("loading precinct data...")
+        load_precinct_data(connection)
     #     print("loading incumbent data...")
     #     load_incumbent_data(connection)
-        print("loading precinct neighbor data...")
-        load_precinct_neighbors(connection)
+    #     print("loading precinct neighbor data...")
+    #     load_precinct_neighbors(connection)
         #print("loading district data...")
         #load_district_borders(connection)
     finally:

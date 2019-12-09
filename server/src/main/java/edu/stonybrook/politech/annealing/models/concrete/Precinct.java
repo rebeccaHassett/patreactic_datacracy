@@ -69,9 +69,8 @@ public class Precinct
     @PostLoad
     public void postLoad() {
         try {
-            JsonNode parsed = jsonMapper.readTree(geometryJSON);
-            this.geometry = new GeoJsonReader().read(jsonMapper.writeValueAsString(parsed.get("geometry")));
-        } catch (ParseException | IOException e) {
+            this.geometry = new GeoJsonReader().read(geometryJSON);
+        } catch (ParseException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
@@ -141,6 +140,7 @@ public class Precinct
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "PrecinctNeighbors", joinColumns = {@JoinColumn(name = "precinctId")})
+    @Column(columnDefinition = "LONGTEXT")
     public Set<String> getNeighborIDs() {
         return neighborIDs;
     }

@@ -91,18 +91,12 @@ export default class State extends Component {
             this.map.removeLayer(this.state.originalDistrictLayer);
             this.setState({originalDistrictsLoaded: false});
             let generatedDistrictsArr = [];
+            let that = this;
             Object.keys(this.state.generatedDistrictMap).forEach(function(key) {
-                generatedDistrictsArr.push(this.state.generatedDistrictMap[key]);
+                generatedDistrictsArr.push(that.state.generatedDistrictMap[key]);
             });
             let layerGroup = L.featureGroup(generatedDistrictsArr);
-            layerGroup.addTo(this.map);
-            let that = this;
-            layerGroup.eachLayer(function(layer) {
-                layer.setStyle({fillColor: layer.feature.properties.COLOR});
-                layer.on('mouseover', function (event) {
-                    that.setState({districtData: JSON.stringify(event.layer.feature.properties)})
-                });
-            });
+            that.addDistrictsToMap(layerGroup, false, that.state.generatedDistrictDataMap);
         }
     }
 
@@ -212,11 +206,16 @@ export default class State extends Component {
         this.map.removeLayer(this.state.originalDistrictLayer);
         let updatedDistrictMap = this.state.precinctMap;
         let districtDataMap = {};
+        console.log(data);
         data.districtUpdates.forEach((updatedDistrict, index) => {
             let updatedDistrictId = updatedDistrict.PRENAME;
             updatedDistrict.precinctIds.forEach(precinctId => {
-                updatedDistrictMap[precinctId].feature.properties.CD = updatedDistrictId;
-                updatedDistrictMap[precinctId].feature.properties.COLOR = colorsys.rgb2Hex(contrastingColors[index]);
+                let updatedDistrictLayers = updatedDistrictMap[precinctId]._layers;
+                Object.keys(updatedDistrictLayers).forEach(function(key) {
+                    console.log(updatedDistrictLayers[key]);
+                    updatedDistrictLayers[key].feature.properties.districtId = updatedDistrictId;
+                    updatedDistrictLayers[key].feature.properties.COLOR = colorsys.rgb2Hex(contrastingColors[index]);
+                });
             });
 
             /*Initialize Generated District Data Map*/
@@ -248,7 +247,7 @@ export default class State extends Component {
             let mergedIntoPrecinctIds = data.precinctIds.filter(x => !data.districtsToRemove.includes(x));
             let updateColor = updatedDistrictMap[mergedIntoPrecinctIds[0]].feature.properties.COLOR;
             updatedDistrict.precinctIds.forEach(precinctId => {
-                updatedDistrictMap[precinctId].feature.properties.CD = updatedDistrictId;
+                updatedDistrictMap[precinctId].feature.properties.districtId = updatedDistrictId;
                 updatedDistrictMap[precinctId].feature.properties.COLOR = updateColor;
             });
 
@@ -275,13 +274,15 @@ export default class State extends Component {
     }
 
     loadOriginalDistricts() {
+        let that = this;
         if(!this.state.originalDistrictsLoaded) {
             let districtArr = [];
             Object.keys(this.state.generatedDistrictMap).forEach(function(key) {
-                districtArr.push(this.state.generatedDistrictMap[key]);
+                districtArr.push(that.state.generatedDistrictMap[key]);
             });
-            let layerGroup = L.featureGroup(districtArr);
-            this.map.removeLayer(layerGroup);
+            districtArr.forEach(layer => {
+               this.map.removeLayer(layer);
+            });
             this.setState({originalDistrictsLoaded: true});
             this.addDistrictsToMap(this.state.originalDistrictLayer, true, {});
         }
@@ -520,8 +521,8 @@ export default class State extends Component {
         } else if (chosenState === "RhodeIsland") {
             clustersUrl = 'http://127.0.0.1:8080/District_Borders?name=Rhode_Island';
             maxBounds = [
-                [43, -70.75],
-                [40, -72]
+                [43, -70],
+                [40, -71]
             ];
             minZoom = 9;
             ZOOM = minZoom + 1;
