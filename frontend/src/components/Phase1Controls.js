@@ -7,7 +7,6 @@ import styled from 'styled-components';
 import Button from '@material-ui/core/Button';
 import AlertDialogSlide from "./controls/AlertControl";
 import TableDisplay from "./controls/TableDisplay";
-import FormHelperText from "@material-ui/core/FormHelperText";
 
 export default class Phase1Controls extends Component {
     constructor() {
@@ -60,8 +59,6 @@ export default class Phase1Controls extends Component {
         majorityMinorityRows: [['-', '-']],
         phase1ButtonText: "Start Phase 1",
         phase1ControlsDisabled: false,
-        electionType: 'Presidential',
-        electionYear: '2016'
     };
 
     async runPhase1() {
@@ -92,7 +89,7 @@ export default class Phase1Controls extends Component {
                 + this.state.gerrymanderRepublicanWeightValue + this.state.populationEqualityWeightValue
                 + this.state.edgeCompactnessWeightValue + this.state.efficiencyGapWeightValue
                 + this.state.reockCompactnessWeightValue + this.state.convexHullCompactnessWeightValue
-                + this.state.partisanFairnessWeightValue
+                + this.state.partisanFairnessWeightValue;
 
             if(sum !== 0) {
                 normalizedCompetitiveness = this.state.competitivenessWeightValue / sum;
@@ -133,8 +130,8 @@ export default class Phase1Controls extends Component {
                 numDistricts: this.state.numCongressionalDistricts,
                 numMajMinDistricts: this.state.numMajorityMinorityDistricts,
                 selectedMinorities: this.state.selectedMinorities,
-                year: this.state.electionYear,
-                type: this.state.electionType
+                year: this.props.election.split(" ")[1],
+                type: this.props.election.split(" ")[0]
             },
             stateName: this.props.chosenState,
         };

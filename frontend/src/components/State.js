@@ -212,7 +212,6 @@ export default class State extends Component {
             updatedDistrict.precinctIds.forEach(precinctId => {
                 let updatedDistrictLayers = updatedDistrictMap[precinctId]._layers;
                 Object.keys(updatedDistrictLayers).forEach(function(key) {
-                    console.log(updatedDistrictLayers[key]);
                     updatedDistrictLayers[key].feature.properties.districtId = updatedDistrictId;
                     updatedDistrictLayers[key].feature.properties.COLOR = colorsys.rgb2Hex(contrastingColors[index]);
                 });
@@ -585,7 +584,8 @@ export default class State extends Component {
                                 removeOriginalDisrtricts={this.removeOriginalDistrictLayer} precinctLayer={this.state.precinctLayer}
                                 loadOriginalDistricts={this.loadOriginalDistricts} initializePhase1Map={this.initializePhase1Map}
                                 phase1Update={this.phase1Update} phase0SelectedElection={this.phase0SelectedElection}
-                                demographicMapUpdate={this.demographicMapUpdate} demographicMapUpdateSelection={this.demographicMapUpdateSelection}/>
+                                demographicMapUpdate={this.demographicMapUpdate} demographicMapUpdateSelection={this.demographicMapUpdateSelection}
+                                election={this.state.election}/>
                         </Col>
                         <Col className="mapContainer" xs={7}>
                             <div id='map'></div>
