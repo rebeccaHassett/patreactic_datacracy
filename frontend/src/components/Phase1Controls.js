@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import SliderControlUpperLowerValues from "./controls/SliderControlUpperLowerValues";
 import SliderControlSingleValue from "./controls/SliderControlSingleValue";
 import SwitchControl from "./controls/SwitchControl";
@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import Button from '@material-ui/core/Button';
 import AlertDialogSlide from "./controls/AlertControl";
 import TableDisplay from "./controls/TableDisplay";
+import {forEach} from "react-bootstrap/cjs/ElementChildren";
 
 export default class Phase1Controls extends Component {
     constructor() {
@@ -56,7 +57,7 @@ export default class Phase1Controls extends Component {
         alertDialogState: false,
         resultsInView: false,
         resultsUnavailable: false,
-        majorityMinorityRows: [['-', '-']],
+        majorityMinorityRows: [['-', '-', '-', '-', '-']],
         phase1ButtonText: "Start Phase 1",
         phase1ControlsDisabled: false,
     };
@@ -69,7 +70,7 @@ export default class Phase1Controls extends Component {
 
         this.setState({phase1RunButtonDisabled: true});
         this.setState({resultsUnavailable: true});
-        this.setState({phase1ControlsDisabled : true});
+        this.setState({phase1ControlsDisabled: true});
         this.props.togglePhase2Tab(true);
 
         let normalizedCompetitiveness = 0.1;
@@ -85,24 +86,24 @@ export default class Phase1Controls extends Component {
 
         /*Normalize Weights:
             Divide each number by the sum of all numbers [if sum is 0, set each number to 0.1 since each weighting]*/
-            let sum = this.state.competitivenessWeightValue + this.state.populationHomogeneityWeightValue + this.state.gerrymanderDemocratWeightValue
-                + this.state.gerrymanderRepublicanWeightValue + this.state.populationEqualityWeightValue
-                + this.state.edgeCompactnessWeightValue + this.state.efficiencyGapWeightValue
-                + this.state.reockCompactnessWeightValue + this.state.convexHullCompactnessWeightValue
-                + this.state.partisanFairnessWeightValue;
+        let sum = this.state.competitivenessWeightValue + this.state.populationHomogeneityWeightValue + this.state.gerrymanderDemocratWeightValue
+            + this.state.gerrymanderRepublicanWeightValue + this.state.populationEqualityWeightValue
+            + this.state.edgeCompactnessWeightValue + this.state.efficiencyGapWeightValue
+            + this.state.reockCompactnessWeightValue + this.state.convexHullCompactnessWeightValue
+            + this.state.partisanFairnessWeightValue;
 
-            if(sum !== 0) {
-                normalizedCompetitiveness = this.state.competitivenessWeightValue / sum;
-                normalizedPopulationHomogeneity = this.state.populationHomogeneityWeightValue / sum;
-                normalizedGerrymanderDemocrat = this.state.gerrymanderDemocratWeightValue / sum;
-                normalizedGerrymanderRepublican = this.state.gerrymanderRepublicanWeightValue / sum;
-                normalizedPopulationEquality = this.state.populationEqualityWeightValue / sum;
-                normalizedEdgeCompactness = this.state.edgeCompactnessWeightValue / sum;
-                normalizedEfficiencyGap = this.state.efficiencyGapWeightValue / sum;
-                normalizedReockCompactness = this.state.reockCompactnessWeightValue / sum;
-                normalizedConvexHullCompactness = this.state.convexHullCompactnessWeightValue / sum;
-                normalizedPartisanFairness = this.state.partisanFairnessWeightValue / sum;
-            }
+        if (sum !== 0) {
+            normalizedCompetitiveness = this.state.competitivenessWeightValue / sum;
+            normalizedPopulationHomogeneity = this.state.populationHomogeneityWeightValue / sum;
+            normalizedGerrymanderDemocrat = this.state.gerrymanderDemocratWeightValue / sum;
+            normalizedGerrymanderRepublican = this.state.gerrymanderRepublicanWeightValue / sum;
+            normalizedPopulationEquality = this.state.populationEqualityWeightValue / sum;
+            normalizedEdgeCompactness = this.state.edgeCompactnessWeightValue / sum;
+            normalizedEfficiencyGap = this.state.efficiencyGapWeightValue / sum;
+            normalizedReockCompactness = this.state.reockCompactnessWeightValue / sum;
+            normalizedConvexHullCompactness = this.state.convexHullCompactnessWeightValue / sum;
+            normalizedPartisanFairness = this.state.partisanFairnessWeightValue / sum;
+        }
 
         var phase1Dto = {
             config: {
@@ -139,8 +140,9 @@ export default class Phase1Controls extends Component {
         let that = this;
         await fetch("http://127.0.0.1:8080/phase1/start", {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Credentials': true, 'Access-Control-Allow-Origin': 'http://localhost:3000'},
             body: JSON.stringify(phase1Dto),
+            credentials: 'include',
         }).then(function (response) {
             if (response.status >= 400) {
                 throw new Error("Failed to load phase1 data from server");
@@ -149,40 +151,64 @@ export default class Phase1Controls extends Component {
         }).then(function (data) {
             that.props.initializePhase1Map(data);
 
-        that.setState({resultsUnavailable: false});
-        if(that.state.incremental) {
-            that.setState({phase1ButtonText: "Update Phase 1"});
-        }
-        that.props.handleGeneratedDistricts();
-        if(that.state.incremental) {
-            that.setState({phase1RunButtonDisabled: false});
-        }
-        else {
-            if(that.state.realtime) {
-                that.pollPhase1NonIncremental(1000); //every second
+            that.majorityMinorityDistrictsDisplay(data);
+
+            that.setState({resultsUnavailable: false});
+            if (that.state.incremental) {
+                that.setState({phase1ButtonText: "Update Phase 1"});
             }
-            else {
-                that.pollPhase1NonIncremental(40000); //every 40 seconds
+            that.props.handleGeneratedDistricts();
+            if (that.state.incremental) {
+                that.setState({phase1RunButtonDisabled: false});
+            } else {
+                if (that.state.realtime) {
+                    that.pollPhase1NonIncremental(1000); //every second
+                } else {
+                    that.pollPhase1NonIncremental(40000); //every 40 seconds
+                }
             }
-        }
         });
+    }
+
+    majorityMinorityDistrictsDisplay(data) {
+        let tempRows = this.state.majorityMinorityRows;
+        /*Remove districts that do not exist anymore*/
+        data.districtsToRemove.forEach(removeDistrict => {
+           tempRows = tempRows.filter(function(item) {
+               return item[0] !== removeDistrict;
+           });
+        });
+
+        /*Update districts already in list*/
+        data.districtUpdates.forEach(updatedDistrict => {
+           tempRows = tempRows.filter(function(item) {
+                if(tempRows[0] === updatedDistrict.PRENAME) {
+                    this.state.selectedMinorities.forEach(demographic => {
+                        
+                    });
+                }
+                else {
+                    return true;
+                }
+            });
+        });
+
+        /*Add districts not already in list*/
     }
 
     async pollPhase1NonIncremental(timeout) {
         var timesRun = 0;
-        var interval = setInterval(function(){
+        var interval = setInterval(function () {
             fetch("http://127.0.0.1:8080/phase1/poll").then(function (response) {
                 if (response.status >= 400) {
                     throw new Error("Failed to load phase 1 update from server");
                 }
                 return response.json();
             }).then(function (data) {
-                console.log(data);
-                if(data.districtUpdates === []) {
+                if (data.districtUpdates === []) {
                     this.endPhase1();
                     clearInterval(interval);
-                }
-                else {
+                } else {
                     this.props.phase1Update(data);
                 }
             });
@@ -191,17 +217,19 @@ export default class Phase1Controls extends Component {
 
     async pollPhase1Incremental() {
         this.setState({phase1RunButtonDisabled: true});
-        fetch("http://127.0.0.1:8080/phase1/poll").then(function (response) {
+        fetch("http://127.0.0.1:8080/phase1/poll", {
+            headers: {'Access-Control-Allow-Credentials': true, 'Access-Control-Allow-Origin': 'http://localhost:3000'},
+            credentials: 'include'
+        }).then(function (response) {
             if (response.status >= 400) {
                 throw new Error("Failed to load phase 1 update from server");
             }
             return response.json();
         }).then(function (data) {
             console.log(data);
-            if(data.districtUpdates === []) {
+            if (data.districtUpdates === []) {
                 this.endPhase1();
-            }
-            else {
+            } else {
                 this.props.phase1Update(data);
             }
         });
@@ -216,11 +244,10 @@ export default class Phase1Controls extends Component {
     }
 
     handlePhase1() {
-        if(this.state.phase1ButtonText === "Update Phase 1") {
+        if (this.state.phase1ButtonText === "Update Phase 1") {
             console.log("Incremental");
             this.pollPhase1Incremental()
-        }
-        else {
+        } else {
             console.log("run");
             this.runPhase1();
         }
@@ -231,23 +258,23 @@ export default class Phase1Controls extends Component {
     }
 
     handleNumberCongressionalDistricts(value) {
-        this.setState({ numCongressionalDistricts: value })
+        this.setState({numCongressionalDistricts: value})
     }
 
     handleNumberMajorityMinorityDistricts(value) {
-        this.setState({ numMajorityMinorityDistricts: value })
+        this.setState({numMajorityMinorityDistricts: value})
     }
 
     handleMinorityPopulationThreshold(value) {
-        this.setState({ minorityPopulationThresholdValues: value })
+        this.setState({minorityPopulationThresholdValues: value})
     }
 
     handleIncrementalClick(evt) {
-        this.setState({ incremental: evt.target.checked })
+        this.setState({incremental: evt.target.checked})
     }
 
     handleRealTimeClick(evt) {
-        this.setState({ realtime: evt.target.checked })
+        this.setState({realtime: evt.target.checked})
     }
 
     handleSelectedDemographics(updatedDemographics) {
@@ -255,49 +282,51 @@ export default class Phase1Controls extends Component {
             this.setState({selectedMinorities: Object.entries(updatedDemographics).filter(([d, chosen]) => chosen).map(([d, chosen]) => d)})
         }
     }
+
     handleEdgeCompactnessWeight(value) {
-        this.setState({ edgeCompactnessWeightValue: value })
+        this.setState({edgeCompactnessWeightValue: value})
     }
 
     handleConvexHullCompactnessWeight(value) {
-        this.setState({ convexHullCompactnessWeightValue: value })
+        this.setState({convexHullCompactnessWeightValue: value})
     }
 
     handleEfficiencyGapWeight(value) {
-        this.setState({ efficiencyGapWeightValue: value })
+        this.setState({efficiencyGapWeightValue: value})
     }
 
     handleReockCompactnessWeight(value) {
-        this.setState({ reockCompactnessWeightValue: value })
+        this.setState({reockCompactnessWeightValue: value})
     }
 
     handlePopulationEqualityWeight(value) {
-        this.setState({ populationEqualityWeightValue: value })
+        this.setState({populationEqualityWeightValue: value})
     }
 
     handlePartisanFairnessWeight(value) {
-        this.setState({ partisanFairnessWeightValue: value })
+        this.setState({partisanFairnessWeightValue: value})
     }
 
     handleCompetitivenessWeight(value) {
-        this.setState({ competitivenessWeightValue: value })
+        this.setState({competitivenessWeightValue: value})
     }
 
     handleGerrymanderRepublicanWeight(value) {
-        this.setState({ gerrymanderRepublicanWeightValue: value })
+        this.setState({gerrymanderRepublicanWeightValue: value})
     }
 
     handleGerrymanderDemocratWeight(value) {
-        this.setState({ gerrymanderDemocratWeightValue: value })
+        this.setState({gerrymanderDemocratWeightValue: value})
     }
 
     handlePopulationHomogeneityWeight(value) {
-        this.setState({ populationHomogeneityWeightValue: value })
+        this.setState({populationHomogeneityWeightValue: value})
     }
 
     resultsViewOn() {
         this.setState({resultsInView: true});
     }
+
     resultsViewOff() {
         this.setState({resultsInView: false});
     }
@@ -310,13 +339,11 @@ export default class Phase1Controls extends Component {
             marks = rhodeIslandMarks;
             min = 1;
             max = 2;
-        }
-        else if (this.props.chosenState === "Michigan") {
+        } else if (this.props.chosenState === "Michigan") {
             marks = michiganMarks;
             min = 1;
             max = 14;
-        }
-        else if (this.props.chosenState === "NorthCarolina") {
+        } else if (this.props.chosenState === "NorthCarolina") {
             marks = northCarolinaMarks;
             min = 1;
             max = 14;
@@ -331,7 +358,8 @@ export default class Phase1Controls extends Component {
                         {this.state.phase1ButtonText}
                     </Button>
                     <SwitchControl name="Incremental" exportIncremental={this.handleIncrementalClick}
-                                   exportRealTime={this.handleRealTimeClick} disabled={this.state.phase1ControlsDisabled}/>
+                                   exportRealTime={this.handleRealTimeClick}
+                                   disabled={this.state.phase1ControlsDisabled}/>
                     <Button variant="contained" color="primary" disabled={false}
                             style={{width: '25vw', marginTop: '2vw'}} onClick={this.resultsViewOn}>
                         View Results
@@ -344,77 +372,88 @@ export default class Phase1Controls extends Component {
                     </ControlGroup>
                     <ControlGroup id="majorityMinorityDistricts">
                         <label className="label">Majority-Minority Districts</label>
-                        <SliderControlSingleValue step={1} exportState={this.handleNumberMajorityMinorityDistricts} marks={marks}
+                        <SliderControlSingleValue step={1} exportState={this.handleNumberMajorityMinorityDistricts}
+                                                  marks={marks}
                                                   min={min} max={max} disabled={this.state.phase1ControlsDisabled}/>
                     </ControlGroup>
                     <ControlGroup id="minorityPopulationThreshold">
                         <label className="label">Minority Population Thresholds:</label>
                         <SliderControlUpperLowerValues disabled={this.state.phase1ControlsDisabled}
-                            exportState={this.handleMinorityPopulationThreshold}/>
+                                                       exportState={this.handleMinorityPopulationThreshold}/>
                     </ControlGroup>
                     <ControlGroup id="minorityPopulationThreshold">
                         <label className="ethnicLabel">Ethnic/Racial Groups:</label>
-                        <CheckboxControl exportState={this.handleSelectedDemographics} disabled={this.state.phase1ControlsDisabled}
-                                    helperText="Must select at least one demographic"/>
+                        <CheckboxControl exportState={this.handleSelectedDemographics}
+                                         disabled={this.state.phase1ControlsDisabled}
+                                         helperText="Must select at least one demographic"/>
                     </ControlGroup>
                     <ControlGroup>
                         <label className="label">Convex Hull Compactness Weighting:</label>
-                        <SliderControlSingleValue min={0} max={1} step={0.01} marks={OFMarks} disabled={this.state.phase1ControlsDisabled}
+                        <SliderControlSingleValue min={0} max={1} step={0.01} marks={OFMarks}
+                                                  disabled={this.state.phase1ControlsDisabled}
                                                   exportState={this.handleConvexHullCompactnessWeight}/>
                     </ControlGroup>
                     <ControlGroup>
                         <label className="label">Reock Compactness Weighting:</label>
-                        <SliderControlSingleValue min={0} max={1} step={0.01} marks={OFMarks} disabled={this.state.phase1ControlsDisabled}
+                        <SliderControlSingleValue min={0} max={1} step={0.01} marks={OFMarks}
+                                                  disabled={this.state.phase1ControlsDisabled}
                                                   exportState={this.handleReockCompactnessWeight}/>
                     </ControlGroup>
                     <ControlGroup>
                         <label className="label">Edge Compactness Weighting:</label>
-                        <SliderControlSingleValue min={0} max={1} step={0.01} marks={OFMarks} disabled={this.state.phase1ControlsDisabled}
+                        <SliderControlSingleValue min={0} max={1} step={0.01} marks={OFMarks}
+                                                  disabled={this.state.phase1ControlsDisabled}
                                                   exportState={this.handleEdgeCompactnessWeight}/>
                     </ControlGroup>
                     <ControlGroup>
                         <label className="label">Efficiency Gap Weighting:</label>
-                        <SliderControlSingleValue min={0} max={1} step={0.01} marks={OFMarks} disabled={this.state.phase1ControlsDisabled}
+                        <SliderControlSingleValue min={0} max={1} step={0.01} marks={OFMarks}
+                                                  disabled={this.state.phase1ControlsDisabled}
                                                   exportState={this.handleEfficiencyGapWeight}/>
                     </ControlGroup>
                     <ControlGroup>
                         <label className="label">Population Homogeneity Weighting:</label>
-                        <SliderControlSingleValue min={0} max={1} step={0.01} marks={OFMarks} disabled={this.state.phase1ControlsDisabled}
+                        <SliderControlSingleValue min={0} max={1} step={0.01} marks={OFMarks}
+                                                  disabled={this.state.phase1ControlsDisabled}
                                                   exportState={this.handlePopulationHomogeneityWeight}/>
                     </ControlGroup>
                     <ControlGroup>
                         <label className="label">Population Equality Weighting:</label>
-                        <SliderControlSingleValue min={0} max={1} step={0.01} marks={OFMarks} disabled={this.state.phase1ControlsDisabled}
+                        <SliderControlSingleValue min={0} max={1} step={0.01} marks={OFMarks}
+                                                  disabled={this.state.phase1ControlsDisabled}
                                                   exportState={this.handlePopulationEqualityWeight}/>
                     </ControlGroup>
                     <ControlGroup>
                         <label className="label">Partisan Fairness Weighting:</label>
-                        <SliderControlSingleValue min={0} max={1} step={0.01} marks={OFMarks} disabled={this.state.phase1ControlsDisabled}
+                        <SliderControlSingleValue min={0} max={1} step={0.01} marks={OFMarks}
+                                                  disabled={this.state.phase1ControlsDisabled}
                                                   exportState={this.handlePartisanFairnessWeight}/>
                     </ControlGroup>
                     <ControlGroup>
                         <label className="label">Competitiveness Weighting:</label>
-                        <SliderControlSingleValue min={0} max={1} step={0.01} marks={OFMarks} disabled={this.state.phase1ControlsDisabled}
+                        <SliderControlSingleValue min={0} max={1} step={0.01} marks={OFMarks}
+                                                  disabled={this.state.phase1ControlsDisabled}
                                                   exportState={this.handleCompetitivenessWeight}/>
                     </ControlGroup>
                     <ControlGroup>
                         <label className="label">Gerrymander Republican Weighting:</label>
-                        <SliderControlSingleValue min={0} max={1} step={0.01} marks={OFMarks} disabled={this.state.phase1ControlsDisabled}
+                        <SliderControlSingleValue min={0} max={1} step={0.01} marks={OFMarks}
+                                                  disabled={this.state.phase1ControlsDisabled}
                                                   exportState={this.handleGerrymanderRepublicanWeight}/>
                     </ControlGroup>
                     <ControlGroup>
                         <label className="label">Gerrymander Democrat Weighting:</label>
-                        <SliderControlSingleValue min={0} max={1} step={0.01} marks={OFMarks} disabled={this.state.phase1ControlsDisabled}
+                        <SliderControlSingleValue min={0} max={1} step={0.01} marks={OFMarks}
+                                                  disabled={this.state.phase1ControlsDisabled}
                                                   exportState={this.handleGerrymanderDemocratWeight}/>
                     </ControlGroup>
                 </Phase1Styles>
             );
-        }
-        else {
-            return(
+        } else {
+            return (
                 <Phase1Styles>
-            <Button variant="contained" color="primary" style={{ width: '25vw', marginBottom: '2vw' }}
-                    onClick={this.resultsViewOff}>Back to Controls</Button>
+                    <Button variant="contained" color="primary" style={{width: '25vw', marginBottom: '2vw'}}
+                            onClick={this.resultsViewOff}>Back to Controls</Button>
                     <h5>Majority-Minority Districts</h5>
                     <TableDisplay columns={columns} rows={this.state.majorityMinorityRows}></TableDisplay>
                 </Phase1Styles>
@@ -501,7 +540,7 @@ const northCarolinaMarks = [
     },
 ];
 
-const OFMarks =  [
+const OFMarks = [
     {
         value: 0,
         label: '0',
@@ -513,6 +552,9 @@ const OFMarks =  [
 ];
 
 const columns = [
-    { id: 'districtId', label: 'Name', },
-    { id: 'population', label: 'Population', },
+    {id: 'districtId', label: 'Name',},
+    {id: 'demographic', label: 'Demographic',},
+    {id: 'selectedPopulation', label: 'Demographic Population',},
+    {id: 'totalPopulation', label: 'Total Population',},
+    {id: 'populationPercentage', label: '%',},
 ];

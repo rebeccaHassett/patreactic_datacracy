@@ -9,17 +9,14 @@ import edu.sunysb.cs.patractic.datacracy.domain.models.RunPhase1Dto;
 import edu.sunysb.cs.patractic.datacracy.domain.persistence.StateDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-public class Phase1Controller {
+public class Phase1Controller extends HttpServlet {
     private final StateDao stateDao;
 
     @Autowired
@@ -28,10 +25,12 @@ public class Phase1Controller {
     }
 
     @PostMapping(path = "/phase1/start")
-    public Phase1UpdateDto startPhase1(@Autowired HttpSession httpSession, @RequestBody RunPhase1Dto runPhase1Dto) {
+    public Phase1UpdateDto startPhase1(HttpServletRequest request, HttpServletResponse response, @RequestBody RunPhase1Dto runPhase1Dto) {
         State copy = stateDao.getBaseState(runPhase1Dto.stateName).clone();
         String myAlgId = Algorithm.createInstance(copy, runPhase1Dto.config);
+        HttpSession httpSession = request.getSession();
         httpSession.setAttribute("sessionId", myAlgId);
+        System.out.println((String) httpSession.getAttribute("sessionId"));
         Algorithm myAlg = Algorithm.getInstance(myAlgId);
         List<String> oldDistricts = stateDao.getBaseState(runPhase1Dto.stateName).getDistricts()
                 .stream()
@@ -47,8 +46,10 @@ public class Phase1Controller {
     }
 
     @GetMapping(path = "/phase1/poll")
-    public ResponseEntity<Phase1UpdateDto> pollPhase1(@Autowired HttpSession httpSession) {
+    public ResponseEntity<Phase1UpdateDto> pollPhase1(HttpServletRequest request,  HttpServletResponse response) {
+        HttpSession httpSession = request.getSession(false);
         String id = (String) httpSession.getAttribute("sessionId");
+        System.out.println(id);
         if (id == null) {
             return ResponseEntity.badRequest().build();
         }

@@ -37,6 +37,8 @@ public class HibernateUtil {
                 settings.put(Environment.HBM2DDL_AUTO, "create-only");
 
                 configuration.setProperties(settings);
+                configuration.setProperty("hibernate.temp.use_jdbc_metadata_defaults","false");
+
                 configuration.addAnnotatedClass(ElectionId.class);
                 configuration.addAnnotatedClass(ElectionData.class);
                 configuration.addAnnotatedClass(Precinct.class);
