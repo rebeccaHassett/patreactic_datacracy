@@ -3,6 +3,7 @@ package edu.sunysb.cs.patractic.datacracy.domain.persistence;
 import edu.stonybrook.politech.annealing.models.concrete.State;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -10,13 +11,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
+@Scope(scopeName = "singleton")
 public class StateDao {
     private Map<String, State> states;
-    private Map<String, State> sessions;
 
     public StateDao() {
         states = new HashMap<>();
-        sessions = new HashMap<>();
     }
 
 
@@ -57,7 +57,7 @@ public class StateDao {
     @PostConstruct
     public void preloadStates() {
         getBaseState("RhodeIsland");
-//        getBaseState("Michigan");
+        getBaseState("Michigan");
 //        getBaseState("NorthCarolina");
     }
 }

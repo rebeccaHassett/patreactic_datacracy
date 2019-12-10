@@ -168,9 +168,9 @@ public class Algorithm extends MyAlgorithm {
                 MergeResult result = merge(smallestPop);
                 this.updatePhase1(result.district, result.removedId);
             }
+            lock.notify();
         }
         logger.info("Step finished.");
-        lock.notify();
     }
 
     private MergeResult merge(Edge e) {
