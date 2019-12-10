@@ -6,6 +6,8 @@ import edu.sunysb.cs.patractic.datacracy.domain.enums.ElectionType;
 import edu.sunysb.cs.patractic.datacracy.domain.enums.PoliticalParty;
 import edu.sunysb.cs.patractic.datacracy.domain.enums.Year;
 import edu.sunysb.cs.patractic.datacracy.domain.interfaces.IJurisdiction;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.util.HashMap;
@@ -22,6 +24,7 @@ public class ElectionData {
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "VotesByParty", joinColumns = {@JoinColumn(name = "electionDataId")})
     @MapKeyClass(PoliticalParty.class)
+    @Fetch(FetchMode.JOIN)
     private Map<PoliticalParty, Long> votesByParty;
     @Id
     private int id;

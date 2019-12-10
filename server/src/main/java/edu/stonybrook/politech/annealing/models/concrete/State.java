@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 
 @NamedQueries({
         @NamedQuery(name = "State_findByName",
-                query = "from State where name = :NAME")
+                query = "select s from State s join fetch s.precincts where s.name = :NAME")
 })
 
 @Entity

@@ -10,6 +10,8 @@ import edu.sunysb.cs.patractic.datacracy.domain.models.ElectionData;
 import edu.sunysb.cs.patractic.datacracy.domain.models.ElectionId;
 import edu.sunysb.cs.patractic.datacracy.domain.models.Threshold;
 import edu.sunysb.cs.patractic.datacracy.domain.models.VotingBlockDTO;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.io.ParseException;
 import org.locationtech.jts.io.geojson.GeoJsonReader;
@@ -69,8 +71,9 @@ public class Precinct
     @PostLoad
     public void postLoad() {
         try {
-            this.geometry = new GeoJsonReader().read(geometryJSON);
-        } catch (ParseException e) {
+            JsonNode parsed = jsonMapper.readTree(geometryJSON);
+            this.geometry = new GeoJsonReader().read(jsonMapper.writeValueAsString(parsed.get("geometry")));
+        } catch (ParseException | IOException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
@@ -172,6 +175,7 @@ public class Precinct
 
     @OneToMany(mappedBy = "precinctId", targetEntity = ElectionData.class, fetch = FetchType.EAGER)
     @MapKeyClass(value = ElectionId.class)
+    @Fetch(FetchMode.JOIN)
     protected Map<ElectionId, ElectionData> getElectionDataMap() {
         return electionDataMap;
     }
@@ -183,6 +187,7 @@ public class Precinct
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "PrecinctPopulations", joinColumns = {@JoinColumn(name = "precinctId")})
     @MapKeyClass(DemographicGroup.class)
+    @Fetch(FetchMode.JOIN)
     protected Map<DemographicGroup, Long> getPopulationMap() {
         return populationMap;
     }
