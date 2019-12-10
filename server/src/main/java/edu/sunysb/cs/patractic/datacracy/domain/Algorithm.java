@@ -137,18 +137,18 @@ public class Algorithm extends MyAlgorithm {
 
                 // Remove edges that duplicate districts
                 Set<District> districtsIncluded = new HashSet<>();
+                List<Edge> dedupedEdges = new ArrayList<>();
                 for (Edge e : sortedEdges) {
-                    if (districtsIncluded.contains(e.d1) || districtsIncluded.contains(e.d2)) {
-                        sortedEdges.remove(e);
-                    } else {
+                    if (!(districtsIncluded.contains(e.d1) || districtsIncluded.contains(e.d2))) {
                         districtsIncluded.add(e.d1);
                         districtsIncluded.add(e.d2);
+                        dedupedEdges.add(e);
                     }
                 }
 
                 // Merge candidate pairs
-                while (!sortedEdges.isEmpty() && state.numDistricts() != (config.numDistricts + 1)) {
-                    Edge e = sortedEdges.remove(0);
+                while (!dedupedEdges.isEmpty() && state.numDistricts() != (config.numDistricts + 1)) {
+                    Edge e = dedupedEdges.remove(0);
                     MergeResult result = merge(e);
                     this.updatePhase1(result.district, result.removedId);
                 }
