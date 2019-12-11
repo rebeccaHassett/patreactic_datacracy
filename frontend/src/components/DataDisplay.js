@@ -12,7 +12,7 @@ class DataDisplay extends React.Component {
     state = {
         laws: "",
         incumbents: [['-', '-']]
-    }
+    };
 
     createData(districtId, incumbent) {
         return { districtId, incumbent };
@@ -54,7 +54,7 @@ class DataDisplay extends React.Component {
                 incumbents={this.state.incumbents} laws={this.state.laws}
                       generatedDistricts={this.props.generatedDistricts} loadOriginalDistricts={this.props.loadOriginalDistricts}
                     removeOriginalDistricts={this.props.removeOriginalDistricts} demographicMapUpdate={this.props.demographicMapUpdate}
-                    demographicMapUpdateSelection={this.props.demographicMapUpdateSelection}/>
+                    demographicMapUpdateSelection={this.props.demographicMapUpdateSelection} election={this.props.election}/>
         );
     }
 }

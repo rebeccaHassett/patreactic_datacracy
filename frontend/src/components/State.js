@@ -41,7 +41,8 @@ export default class State extends Component {
             generatedDistrictMap: {},
             districtIds: null,
             generatedDistrictDataMap: {},
-            demographicsMapDisplay: []
+            demographicsMapDisplay: [],
+            majorityMinorityDistricts: [],
         };
         this.toggleBox = this.toggleBox.bind(this);
     }
@@ -98,7 +99,7 @@ export default class State extends Component {
                 generatedDistrictsArr.push(that.state.generatedDistrictMap[key]);
             });
             let layerGroup = L.featureGroup(generatedDistrictsArr);
-            that.addDistrictsToMap(layerGroup, false, that.state.generatedDistrictDataMap);
+            that.addDistrictsToMap(layerGroup, false, that.state.generatedDistrictDataMap, this.state.majorityMinorityDistricts);
         }
     }
 
@@ -154,7 +155,7 @@ export default class State extends Component {
             that.setState({originalDistrictLayer: layerGroup});
             that.setState({originalDistrictsLoaded: true});
 
-            this.addDistrictsToMap(layerGroup, true, {});
+            this.addDistrictsToMap(layerGroup, true, {}, []);
         });
 
         districtIds.map(districtId => {
@@ -225,6 +226,7 @@ export default class State extends Component {
             };
 
         });
+
         this.setState({generatedDistrictMap: updatedDistrictMap});
         this.setState({generatedDistrictDataMap: districtDataMap});
         let generatedDistrictsArr = [];
@@ -232,7 +234,8 @@ export default class State extends Component {
             generatedDistrictsArr.push(updatedDistrictMap[key]);
         });
         let layerGroup = L.featureGroup(generatedDistrictsArr);
-        this.addDistrictsToMap(layerGroup, false, districtDataMap);
+
+        this.addDistrictsToMap(layerGroup, false, districtDataMap, this.getMajorityMinorityDistrictIds(data));
         this.setState({originalDistrictsLoaded: false});
     }
 
@@ -295,9 +298,21 @@ export default class State extends Component {
         Object.keys(updatedDistrictMap).forEach(function (key) {
             generatedDistrictsArr.push(updatedDistrictMap[key]);
         });
+
         let layerGroup = L.featureGroup(generatedDistrictsArr);
-        this.addDistrictsToMap(layerGroup, false, districtDataMap);
+        this.addDistrictsToMap(layerGroup, false, districtDataMap, this.getMajorityMinorityDistrictIds(data));
         this.setState({originalDistrictsLoaded: false});
+    }
+
+    getMajorityMinorityDistrictIds(data) {
+        //rhassett
+        /*let majorityMinorityDistricts = [];
+        data.majMinDistricts.forEach((majMinDistrict) => {
+            majorityMinorityDistricts.push(majMinDistrict.districtId);
+        });
+        this.setState({majorityMinorityDistricts: majorityMinorityDistricts});
+        return majorityMinorityDistricts;*/
+        return [];
     }
 
     loadOriginalDistricts() {
@@ -311,7 +326,7 @@ export default class State extends Component {
                 this.map.removeLayer(layer);
             });
             this.setState({originalDistrictsLoaded: true});
-            this.addDistrictsToMap(this.state.originalDistrictLayer, true, {});
+            this.addDistrictsToMap(this.state.originalDistrictLayer, true, {}, []);
         }
     }
 
@@ -330,7 +345,7 @@ export default class State extends Component {
         });
     }
 
-    addDistrictsToMap(districtLayer, original, districtDataMap) {
+    addDistrictsToMap(districtLayer, original, districtDataMap, majorityMinorityDistricts) {
         districtLayer.addTo(this.map);
         let that = this;
         districtLayer.eachLayer(function (layer) {
@@ -358,16 +373,23 @@ export default class State extends Component {
             /*If no color field, then original districts and set color based on votes, else set color based on properties field*/
             let districtLayers = layer._layers;
             Object.keys(districtLayers).forEach(function (key) {
+                let opacity = 1;
+                let fillOpacity = 0.7;
+                let weight = 2;
+                if(majorityMinorityDistricts.includes(districtLayers[key].feature.properties.districtId)) {
+                    opacity = 1;
+                    fillOpacity = 1;
+                    weight = 3;
+                }
                 districtLayers[key].setStyle({
                     fillColor: districtLayers[key].feature.properties.COLOR,
-                    weight: 2,
+                    weight: weight,
                     color: 'white',
-                    opacity: 1,
-                    fillOpacity: 0.7
+                    opacity: opacity,
+                    fillOpacity: fillOpacity
                 });
             });
         });
-
     }
 
     getVotingColors(r, d) {
@@ -461,7 +483,7 @@ export default class State extends Component {
             that.setState({precinctsLoaded: false});
         }
         if (!this.state.originalDistrictsLoaded) {
-            this.addDistrictsToMap(this.state.originalDistrictLayer, true, {});
+            this.addDistrictsToMap(this.state.originalDistrictLayer, true, {}, []);
         }
         this.state.originalDistrictLayer.eachLayer(function (layer) {
             let districtLayers = layer._layers;

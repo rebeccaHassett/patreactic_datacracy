@@ -1,57 +1,11 @@
 import React, {Component} from 'react';
 import BarChart from "./BarChart";
 import PieChart from "./graphs/PieChart";
-import ElectionButtonsControl from "./controls/ElectionButtonsControl";
 import styled from "styled-components";
-import Button from '@material-ui/core/Button'
 import TableDisplay from "./controls/TableDisplay";
 
 
 export default class Statistics extends Component {
-    constructor() {
-        super();
-        this.state = {
-            electionType: 'Presidential',
-            electionYear: '2016',
-            election: 'Presidential 2016',
-        }
-        this.handleElectionChanges = this.handleElectionChanges.bind(this);
-    }
-
-
-    handleElectionChanges(event) {
-        if (event.target.value === "Congressional 2016") {
-            this.setState({
-                election: 'Congressional 2016'
-            })
-            this.setState({
-                electionYear: '2016'
-            })
-            this.setState({
-                electionType: 'Congressional'
-            })
-        } else if (event.target.value === "Congressional 2018") {
-            this.setState({
-                election: 'Congressional 2018'
-            })
-            this.setState({
-                electionYear: '2018'
-            })
-            this.setState({
-                electionType: 'Congressional'
-            })
-        } else if (event.target.value === "Presidential 2016") {
-            this.setState({
-                election: 'Presidential 2016'
-            })
-            this.setState({
-                electionYear: '2016'
-            })
-            this.setState({
-                electionType: 'Presidential'
-            })
-        }
-    }
 
     render() {
         var data = this.props.data;
@@ -120,14 +74,14 @@ export default class Statistics extends Component {
             var republicanCandidate;
             var democraticVotes;
             var democraticCandidate;
-            if (this.state.electionType === "Presidential") {
+            if (this.props.election.split(" ")[0] === "Presidential") {
                 republicanVotes = jsonData.PRES16R;
                 republicanCandidate = "Republican Donald Trump";
                 democraticVotes = jsonData.PRES16D;
                 democraticCandidate = "Democrat Hillary Clinton";
             } else {
                 var voting_data;
-                if (this.state.electionYear === '2016') {
+                if (this.props.election.split(" ")[1] === '2016') {
                     voting_data = jsonData.HOUSE_ELECTION_16;
                 } else {
                     voting_data = jsonData.HOUSE_ELECTION_18;
@@ -178,10 +132,8 @@ export default class Statistics extends Component {
 
         return (
             <StatisticsStyles>
-                <h3 className="bolden">Election Data</h3>
-                <ElectionButtonsControl exportState={this.handleElectionChanges}/>
                 <h4 className="bolden"> {wordCase(name)}</h4>
-                <h4 className="label">{wordCase(this.state.electionType)} {this.state.electionYear}</h4>
+                <h4 className="label">{wordCase(this.props.election.split(" ")[0])} {this.props.election.split(" ")[1]}</h4>
                 <h4 className="bolden">Votes Per Party</h4>
                 <h5>{democraticCandidate}: {democraticVotes.toLocaleString()} votes</h5>
                 <h5>{republicanCandidate}: {republicanVotes.toLocaleString()} votes</h5>

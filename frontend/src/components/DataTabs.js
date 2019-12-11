@@ -121,7 +121,7 @@ export default function DataTabs(props) {
                 <TableDisplay columns={incumbent_columns} rows={props.incumbents}/>
                 <h4 style={{ fontWeight: 'bold', textDecoration: 'underline' }}>Redistricting Laws:</h4>
                 <TextField variant = "filled" color="primary" value={props.laws} multiline={true} style={{width: "100%", marginBottom: '2vw'}}/>
-                <Statistics data={props.stateData} type="state"/>
+                <Statistics data={props.stateData} type="state" election={props.election}/>
                 </DataStyle>
             </TabPane>
             <TabPane value={value} index={1}>
@@ -131,7 +131,7 @@ export default function DataTabs(props) {
                         disabled={disableDistrictView}>
                     {districtView}
                 </Button>
-                <Statistics data={props.districtData} type="district"/>
+                <Statistics data={props.districtData} type="district" election={props.election}/>
                     <h4>Demographic Map Display</h4>
                     <CheckboxControl exportState={props.demographicMapUpdateSelection} disabled={!demographicDistributionEnabled}
                                      helperText=""/>
@@ -143,7 +143,7 @@ export default function DataTabs(props) {
                 </DataStyle>
             </TabPane>
             <TabPane value={value} index={2}>
-                <Statistics data={props.precinctData} type="precinct"/>
+                <Statistics data={props.precinctData} type="precinct" election={props.election}/>
             </TabPane>
         </div>
     );

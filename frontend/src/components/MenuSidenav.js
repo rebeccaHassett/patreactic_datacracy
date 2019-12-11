@@ -107,7 +107,8 @@ export default function MenuSidenav(props) {
                 <DataDisplay stateData={props.stateData} precinctData={props.precinctData} districtData={props.districtData}
                              chosenState={props.chosenState} generatedDistricts={generatedDistricts}
                             loadOriginalDistricts={props.loadOriginalDistricts} removeOriginalDistricts={props.removeOriginalDisrtricts}
-                            demographicMapUpdate={props.demographicMapUpdate} demographicMapUpdateSelection={props.demographicMapUpdateSelection}/>
+                            demographicMapUpdate={props.demographicMapUpdate} demographicMapUpdateSelection={props.demographicMapUpdateSelection}
+                            election={props.election}/>
             </TabPanel>
         </div>
     );

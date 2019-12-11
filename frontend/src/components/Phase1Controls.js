@@ -59,7 +59,7 @@ export default class Phase1Controls extends Component {
         alertDialogText: "Must Select At Least One Minority Group!",
         resultsInView: false,
         resultsUnavailable: false,
-        majorityMinorityRows: [['-', '-', '-', '-', '-']],
+        majorityMinorityRows: [['-', '-', '-', '-']],
         phase1ButtonText: "Start Phase 1",
         phase1ControlsDisabled: false,
     };
@@ -164,7 +164,7 @@ export default class Phase1Controls extends Component {
         }).then(function (data) {
             that.props.initializePhase1Map(data);
 
-            that.majorityMinorityDistrictsDisplay(data);
+            //rhassett that.majorityMinorityDistrictsDisplay(data);
 
             that.setState({resultsUnavailable: false});
             if (that.state.incremental) {
@@ -185,28 +185,16 @@ export default class Phase1Controls extends Component {
 
     majorityMinorityDistrictsDisplay(data) {
         let tempRows = this.state.majorityMinorityRows;
-        /*Remove districts that do not exist anymore*/
-        data.districtsToRemove.forEach(removeDistrict => {
-           tempRows = tempRows.filter(function(item) {
-               return item[0] !== removeDistrict;
-           });
+
+        data.majMinDistricts.forEach((majMinDistrict) => {
+            let districtId = majMinDistrict.districtId;
+            let demographicPopulation = majMinDistrict.demographicPopulation;
+            let totalPopulation = majMinDistrict.totalPopulation;
+            let percentage = (demographicPopulation/totalPopulation) * 100;
+            tempRows.append({districtId, demographicPopulation, totalPopulation, percentage});
         });
 
-        /*Update districts already in list*/
-        data.districtUpdates.forEach(updatedDistrict => {
-           tempRows = tempRows.filter(function(item) {
-                if(tempRows[0] === updatedDistrict.PRENAME) {
-                    this.state.selectedMinorities.forEach(demographic => {
-                        
-                    });
-                }
-                else {
-                    return true;
-                }
-            });
-        });
-
-        /*Add districts not already in list*/
+        this.setState({majorityMinorityRows: tempRows});
     }
 
     async pollPhase1NonIncremental(timeout) {
@@ -519,8 +507,7 @@ const OFMarks = [
 
 const columns = [
     {id: 'districtId', label: 'Name',},
-    {id: 'demographic', label: 'Demographic',},
-    {id: 'selectedPopulation', label: 'Demographic Population',},
+    {id: 'demographicPopulation', label: 'Demographic Population',},
     {id: 'totalPopulation', label: 'Total Population',},
-    {id: 'populationPercentage', label: '%',},
+    {id: 'percentage', label: '%',},
 ];
