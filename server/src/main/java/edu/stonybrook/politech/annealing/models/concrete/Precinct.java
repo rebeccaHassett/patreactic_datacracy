@@ -216,6 +216,7 @@ public class Precinct
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Precinct precinct = (Precinct) o;
+        System.out.println(stateName + "EQUALs" + precinct.stateName);
         return precinctId.equals(precinct.precinctId) &&
                 stateName.equals(precinct.stateName) &&
                 district.getDistrictId().equals(precinct.district.getDistrictId());

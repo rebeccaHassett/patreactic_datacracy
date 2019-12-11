@@ -59,6 +59,7 @@ public class Edge {
     public District peekCombined() {
         District combined = new District(d1.getDistrictId(), d1.getState());
         Set<Precinct> precincts = d1.getPrecincts().stream().map(Precinct::clone).collect(Collectors.toSet());
+        System.out.println("PRECINCTS" + d2.getPrecincts().stream().map(Precinct::clone).collect(Collectors.toSet()));
         precincts.addAll(d2.getPrecincts().stream().map(Precinct::clone).collect(Collectors.toSet()));
         precincts.forEach(combined::addPrecinct);
         return combined;

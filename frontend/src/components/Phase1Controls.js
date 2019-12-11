@@ -5,6 +5,7 @@ import SwitchControl from "./controls/SwitchControl";
 import CheckboxControl from "./controls/CheckboxControl";
 import styled from 'styled-components';
 import Button from '@material-ui/core/Button';
+import TextField from "@material-ui/core/TextField";
 import AlertDialogSlide from "./controls/AlertControl";
 import TableDisplay from "./controls/TableDisplay";
 
@@ -37,8 +38,8 @@ export default class Phase1Controls extends Component {
 
     /* For now, hardcoding election type but will set to phase 0 and data election type */
     state = {
-        numCongressionalDistricts: 0,
-        numMajorityMinorityDistricts: 0,
+        numCongressionalDistricts: 10,
+        numMajorityMinorityDistricts: 10,
         minorityPopulationThresholdValues: [],
         incremental: false,
         realtime: false,
@@ -55,6 +56,7 @@ export default class Phase1Controls extends Component {
         gerrymanderDemocratWeightValue: 0.1,
         phase1RunButtonDisabled: false,
         alertDialogState: false,
+        alertDialogText: "Must Select At Least One Minority Group!",
         resultsInView: false,
         resultsUnavailable: false,
         majorityMinorityRows: [['-', '-', '-', '-', '-']],
@@ -63,8 +65,19 @@ export default class Phase1Controls extends Component {
     };
 
     async runPhase1() {
+        if(!this.state.numCongressionalDistricts) {
+            this.setState({alertDialogState: true});
+            this.setState({alertDialogText: "Must Select Desired Number of Congressional Districts!"});
+            return;
+        }
+        if(!this.state.numMajorityMinorityDistricts) {
+            this.setState({alertDialogState: true});
+            this.setState({alertDialogText: "Must Select Desired Number of Majority-Minority Districts!"});
+            return;
+        }
         if (this.state.selectedMinorities.length === 0) {
             this.setState({alertDialogState: true});
+            this.setState({alertDialogText: "Must Select At Least One Minority Group!"});
             return;
         }
 
@@ -128,8 +141,8 @@ export default class Phase1Controls extends Component {
                 },
                 incremental: this.state.incremental,
                 realtime: this.state.realtime,
-                numDistricts: this.state.numCongressionalDistricts,
-                numMajMinDistricts: this.state.numMajorityMinorityDistricts,
+                numDistricts: Number(this.state.numCongressionalDistricts),
+                numMajMinDistricts: Number(this.state.numMajorityMinorityDistricts),
                 selectedMinorities: this.state.selectedMinorities,
                 year: this.props.election.split(" ")[1],
                 type: this.props.election.split(" ")[0]
@@ -256,13 +269,19 @@ export default class Phase1Controls extends Component {
         this.setState({alertDialogState: value});
     }
 
-    handleNumberCongressionalDistricts(value) {
-        this.setState({numCongressionalDistricts: value})
+    handleNumberCongressionalDistricts(event) {
+        if((Number(event.target.value) >= 1 && Number(event.target.value) <= 60) || !event.target.value) {
+            this.setState({numCongressionalDistricts: event.target.value})
+        }
+        if(Number(event.target.value) < Number(this.state.numMajorityMinorityDistricts)) {
+            this.setState({numMajorityMinorityDistricts: event.target.value});
+        }
     }
 
-    handleNumberMajorityMinorityDistricts(value) {
-        this.setState({numMajorityMinorityDistricts: value})
-    }
+    handleNumberMajorityMinorityDistricts(event) {
+        if((Number(event.target.value) >= 1 && Number(event.target.value) <= Number(this.state.numCongressionalDistricts)) || !event.target.value) {
+            this.setState({numMajorityMinorityDistricts: event.target.value})
+        }    }
 
     handleMinorityPopulationThreshold(value) {
         this.setState({minorityPopulationThresholdValues: value})
@@ -350,7 +369,7 @@ export default class Phase1Controls extends Component {
             return (
                 <Phase1Styles>
                     <AlertDialogSlide exportState={this.handleAlertDialogState} open={this.state.alertDialogState}
-                                      alert="Must Select At Least One Minority Group!"/>
+                                      alert={this.state.alertDialogText}/>
                     <Button variant="contained" color="primary" disabled={this.state.phase1RunButtonDisabled}
                             onClick={this.handlePhase1} style={{width: '25vw', marginBottom: '2vw'}}>
                         {this.state.phase1ButtonText}
@@ -359,21 +378,27 @@ export default class Phase1Controls extends Component {
                                    exportRealTime={this.handleRealTimeClick}
                                    disabled={this.state.phase1ControlsDisabled}/>
                     <Button variant="contained" color="primary" disabled={false}
-                            style={{width: '25vw', marginTop: '2vw'}} onClick={this.resultsViewOn}>
+                            style={{width: '25vw', marginTop: '2vw', marginBottom: '3vw'}} onClick={this.resultsViewOn}>
                         View Results
                     </Button>
-                    <ControlGroup id="numberDistricts">
-                        <label className="label">Congressional Districts:</label>
-                        <SliderControlSingleValue step={1}
-                                                  exportState={this.handleNumberCongressionalDistricts} marks={marks}
-                                                  min={1} max={this.props.numOriginalPrecincts} disabled={this.state.phase1ControlsDisabled}/>
-                    </ControlGroup>
-                    <ControlGroup id="majorityMinorityDistricts">
-                        <label className="label">Majority-Minority Districts</label>
-                        <SliderControlSingleValue step={1} exportState={this.handleNumberMajorityMinorityDistricts}
-                                                  marks={marks}
-                                                  min={1} max={this.props.numOriginalPrecincts} disabled={this.state.phase1ControlsDisabled}/>
-                    </ControlGroup>
+                    <TextField
+                        id="outlined-number"
+                        label="Congressional Districts"
+                        type="number"
+                        style={{ margin: 15, width: '25vw' }}
+                        onChange={this.handleNumberCongressionalDistricts}
+                        variant="filled"
+                        value={this.state.numCongressionalDistricts}
+                    />
+                    <TextField
+                        id="outlined-number"
+                        label="Majority-Minority Districts"
+                        type="number"
+                        style={{ margin: 15, width: '25vw' }}
+                        onChange={this.handleNumberMajorityMinorityDistricts}
+                        variant="filled"
+                        value={this.state.numMajorityMinorityDistricts}
+                    />
                     <ControlGroup id="minorityPopulationThreshold">
                         <label className="label">Minority Population Thresholds:</label>
                         <SliderControlUpperLowerValues disabled={this.state.phase1ControlsDisabled}
