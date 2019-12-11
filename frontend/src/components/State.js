@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
-import { CachedTileLayer } from '@yaga/leaflet-cached-tile-layer';
+import React, {Component} from 'react';
+import {CachedTileLayer} from '@yaga/leaflet-cached-tile-layer';
 import L from 'leaflet';
 import easyButton from 'leaflet-easybutton';
-import { Row, Col} from "react-bootstrap";
+import {Row, Col} from "react-bootstrap";
 import styled from 'styled-components';
 import MenuSidenav from "./MenuSidenav";
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import {MuiThemeProvider, createMuiTheme} from '@material-ui/core/styles';
 import 'colorsys';
 
 var ZOOM = 7;
@@ -33,6 +33,8 @@ export default class State extends Component {
             chosenState: window.location.pathname.split("/").pop(),
             precinctsLoaded: false,
             precinctMap: {},
+            numOriginalPrecincts: 1,
+            precinctIds: [],
             originalDistrictLayer: null,
             originalDistrictsLoaded: false,
             originalDistrictDataMap: {},
@@ -87,12 +89,12 @@ export default class State extends Component {
     }
 
     removeOriginalDistrictLayer() {
-        if(this.state.originalDistrictsLoaded) {
+        if (this.state.originalDistrictsLoaded) {
             this.map.removeLayer(this.state.originalDistrictLayer);
             this.setState({originalDistrictsLoaded: false});
             let generatedDistrictsArr = [];
             let that = this;
-            Object.keys(this.state.generatedDistrictMap).forEach(function(key) {
+            Object.keys(this.state.generatedDistrictMap).forEach(function (key) {
                 generatedDistrictsArr.push(that.state.generatedDistrictMap[key]);
             });
             let layerGroup = L.featureGroup(generatedDistrictsArr);
@@ -134,17 +136,17 @@ export default class State extends Component {
         let districtLayerArr = [];
 
         let districtPromises = districtIds.map(districtId => fetch(districtUrl + districtId).then(function (response) {
-                if (response.status >= 400) {
-                    throw new Error("District geographic data not incrementally loaded from server successfully");
-                }
-                return response.json();
-            }).then(function (data) {
-                let layers = L.geoJSON(data);
-                layers.eachLayer(function(layer) {
-                    layer.feature.properties.districtId = districtId;
-                });
-                districtLayerArr.push(layers);
-            }));
+            if (response.status >= 400) {
+                throw new Error("District geographic data not incrementally loaded from server successfully");
+            }
+            return response.json();
+        }).then(function (data) {
+            let layers = L.geoJSON(data);
+            layers.eachLayer(function (layer) {
+                layer.feature.properties.districtId = districtId;
+            });
+            districtLayerArr.push(layers);
+        }));
 
 
         await Promise.all(districtPromises).then(() => {
@@ -153,48 +155,39 @@ export default class State extends Component {
             that.setState({originalDistrictsLoaded: true});
 
             this.addDistrictsToMap(layerGroup, true, {});
-         });
+        });
 
         districtIds.map(districtId => {
             that.loadOriginalDistrictData(districtId, that);
         });
     }
 
-    async loadPrecinctsIncrementally(precinctIds, that) {
-        var precinctStyle = {
-            "color": "black"
-        };
-        var precinctLayerArr = [];
-        var precinctUrl = 'http://127.0.0.1:8080/borders/precinct/' + that.state.chosenState + '/';
-        let precinctMap = {};
 
-        let precinctPromises = precinctIds.map(precinctId => fetch(precinctUrl + precinctId).then(function (response) {
+    async loadPrecinctsIncrementally(precinctId, that) {
+        var precinctUrl = 'http://127.0.0.1:8080/borders/precinct/' + that.state.chosenState + '/';
+        let tempPrecinctMap = this.state.precinctMap;
+
+        return fetch(precinctUrl + precinctId).then(function (response) {
             if (response.status >= 400) {
                 throw new Error("Precinct geographic data not incrementally loaded from server successfully");
             }
             return response.json();
         }).then(function (data) {
-            let layer = L.geoJSON(data, {style: precinctStyle});
-            precinctLayerArr.push(layer);
-            precinctMap[precinctId] = layer;
-        }));
+            let layer = L.geoJSON(data);
 
-        await Promise.all(precinctPromises).then(() => {
-            this.setState({precinctMap: precinctMap});
-            let layerGroup = L.featureGroup(precinctLayerArr);
-            this.addPrecinctsToMap(layerGroup, this.map, that);
+            tempPrecinctMap[precinctId] = layer;
+
+            return {precinctId, layer};
         });
     }
 
-    contrastingColors(total)
-    {
+    contrastingColors(total) {
         var colorsys = require('colorsys');
 
         var i = 360 / (total - 1); // distribute the colors evenly on the hue range
         var r = []; // hold the generated colors
         //s = 80, v = 70 is brighter
-        for (var x=0; x<total; x++)
-        {
+        for (var x = 0; x < total; x++) {
             r.push(colorsys.hsvToRgb(i * x, 50, 50)); // you can also alternate the saturation and value for even more contrast between the colors
         }
         return r;
@@ -206,28 +199,36 @@ export default class State extends Component {
         this.map.removeLayer(this.state.originalDistrictLayer);
         let updatedDistrictMap = this.state.precinctMap;
         let districtDataMap = {};
-        console.log(data);
         data.districtUpdates.forEach((updatedDistrict, index) => {
             let updatedDistrictId = updatedDistrict.PRENAME;
             updatedDistrict.precinctIds.forEach(precinctId => {
                 let updatedDistrictLayers = updatedDistrictMap[precinctId]._layers;
-                Object.keys(updatedDistrictLayers).forEach(function(key) {
+                Object.keys(updatedDistrictLayers).forEach(function (key) {
                     updatedDistrictLayers[key].feature.properties.districtId = updatedDistrictId;
                     updatedDistrictLayers[key].feature.properties.COLOR = colorsys.rgb2Hex(contrastingColors[index]);
                 });
             });
 
             /*Initialize Generated District Data Map*/
-            districtDataMap[updatedDistrictId] = {"VAP" : updatedDistrict.VAP, "HVAP" : updatedDistrict.HVAP, "WVAP" : updatedDistrict.WVAP,
-                                            "BVAP" : updatedDistrict.BVAP, "AMINVAP" : updatedDistrict.AMINVAP, "ASIANVAP" : updatedDistrict.ASIANVAP,
-                                            "PRES16D" : updatedDistrict.PRES16D, "PRES16R" : updatedDistrict.PRES16R, "PRENAME" : updatedDistrict.PRENAME,
-                                            "HOUSE_ELECTION_16" : updatedDistrict.HOUSE_ELECTION_16, "HOUSE_ELECTION_18" : updatedDistrict.HOUSE_ELECTION_18};
+            districtDataMap[updatedDistrictId] = {
+                "VAP": updatedDistrict.VAP,
+                "HVAP": updatedDistrict.HVAP,
+                "WVAP": updatedDistrict.WVAP,
+                "BVAP": updatedDistrict.BVAP,
+                "AMINVAP": updatedDistrict.AMINVAP,
+                "ASIANVAP": updatedDistrict.ASIANVAP,
+                "PRES16D": updatedDistrict.PRES16D,
+                "PRES16R": updatedDistrict.PRES16R,
+                "PRENAME": updatedDistrict.PRENAME,
+                "HOUSE_ELECTION_16": updatedDistrict.HOUSE_ELECTION_16,
+                "HOUSE_ELECTION_18": updatedDistrict.HOUSE_ELECTION_18
+            };
 
         });
         this.setState({generatedDistrictMap: updatedDistrictMap});
-        this.setState({generatedDistrictDataMap : districtDataMap});
+        this.setState({generatedDistrictDataMap: districtDataMap});
         let generatedDistrictsArr = [];
-        Object.keys(updatedDistrictMap).forEach(function(key) {
+        Object.keys(updatedDistrictMap).forEach(function (key) {
             generatedDistrictsArr.push(updatedDistrictMap[key]);
         });
         let layerGroup = L.featureGroup(generatedDistrictsArr);
@@ -237,34 +238,61 @@ export default class State extends Component {
 
 
     phase1Update(data) {
-        if(this.state.originalDistrictsLoaded) {
+        if (this.state.originalDistrictsLoaded) {
             this.map.removeLayer(this.state.originalDistrictLayer);
         }
         let updatedDistrictMap = this.state.generatedDistrictMap;
+        let districtDataMap = this.state.generatedDistrictDataMap;
+
         data.districtUpdates.forEach((updatedDistrict) => {
             let updatedDistrictId = updatedDistrict.PRENAME;
-            let mergedIntoPrecinctIds = data.precinctIds.filter(x => !data.districtsToRemove.includes(x));
-            let updateColor = updatedDistrictMap[mergedIntoPrecinctIds[0]].feature.properties.COLOR;
+
+            /* Get color of updated cluster that the removed cluster is being merged into */
+            let mergedIntoPrecinctIds = updatedDistrict.precinctIds.filter(x => !data.districtsToRemove.includes(x));
+            let mergedIntoDistrictLayers = updatedDistrictMap[mergedIntoPrecinctIds[0]]._layers;
+            let updateColor;
+            Object.keys(mergedIntoDistrictLayers).forEach(function (key) {
+                updateColor = mergedIntoDistrictLayers[key].feature.properties.COLOR;
+            });
+
+            /* Update the district Id and color of the removed district precincts */
             updatedDistrict.precinctIds.forEach(precinctId => {
-                updatedDistrictMap[precinctId].feature.properties.districtId = updatedDistrictId;
-                updatedDistrictMap[precinctId].feature.properties.COLOR = updateColor;
+                let clusterLayers = updatedDistrictMap[precinctId]._layers;
+                Object.keys(clusterLayers).forEach(function (key) {
+                    clusterLayers[key].feature.properties.districtId = updatedDistrictId;
+                    clusterLayers[key].feature.properties.COLOR = updateColor;
+                });
             });
 
             /*Initialize Generated District Data Map*/
-            districtDataMap[updatedDistrictId] = {"VAP" : updatedDistrict.VAP, "HVAP" : updatedDistrict.HVAP, "WVAP" : updatedDistrict.WVAP,
-                "BVAP" : updatedDistrict.BVAP, "AMINVAP" : updatedDistrict.AMINVAP, "ASIANVAP" : updatedDistrict.ASIANVAP,
-                "PRES16D" : updatedDistrict.PRES16D, "PRES16R" : updatedDistrict.PRES16R, "PRENAME" : updatedDistrict.PRENAME,
-                "HOUSE_ELECTION_16" : updatedDistrict.HOUSE_ELECTION_16, "HOUSE_ELECTION_18" : updatedDistrict.HOUSE_ELECTION_18};
+            districtDataMap[updatedDistrictId] = {
+                "VAP": updatedDistrict.VAP,
+                "HVAP": updatedDistrict.HVAP,
+                "WVAP": updatedDistrict.WVAP,
+                "BVAP": updatedDistrict.BVAP,
+                "AMINVAP": updatedDistrict.AMINVAP,
+                "ASIANVAP": updatedDistrict.ASIANVAP,
+                "PRES16D": updatedDistrict.PRES16D,
+                "PRES16R": updatedDistrict.PRES16R,
+                "PRENAME": updatedDistrict.PRENAME,
+                "HOUSE_ELECTION_16": updatedDistrict.HOUSE_ELECTION_16,
+                "HOUSE_ELECTION_18": updatedDistrict.HOUSE_ELECTION_18
+            };
 
         });
-        let districtDataMap = this.state.generatedDistrictDataMap;
-        data.districtsToRemove.forEach(removeDistrict => {
-            districtDataMap.delete(removeDistrict);
-        });
+
+        /* Remove Data Associated with Removed Districts */
+        districtDataMap = Object.keys(districtDataMap)
+            .filter(key => !(data.districtsToRemove.includes(key)))
+            .reduce((obj, key) => {
+                obj[key] = districtDataMap[key];
+                return obj;
+            }, {});
+
         this.setState({generatedDistrictMap: updatedDistrictMap});
-        this.setState({generatedDistrictDataMap : districtDataMap});
+        this.setState({generatedDistrictDataMap: districtDataMap});
         let generatedDistrictsArr = [];
-        Object.keys(updatedDistrictMap).forEach(function(key) {
+        Object.keys(updatedDistrictMap).forEach(function (key) {
             generatedDistrictsArr.push(updatedDistrictMap[key]);
         });
         let layerGroup = L.featureGroup(generatedDistrictsArr);
@@ -274,13 +302,13 @@ export default class State extends Component {
 
     loadOriginalDistricts() {
         let that = this;
-        if(!this.state.originalDistrictsLoaded) {
+        if (!this.state.originalDistrictsLoaded) {
             let districtArr = [];
-            Object.keys(this.state.generatedDistrictMap).forEach(function(key) {
+            Object.keys(this.state.generatedDistrictMap).forEach(function (key) {
                 districtArr.push(that.state.generatedDistrictMap[key]);
             });
             districtArr.forEach(layer => {
-               this.map.removeLayer(layer);
+                this.map.removeLayer(layer);
             });
             this.setState({originalDistrictsLoaded: true});
             this.addDistrictsToMap(this.state.originalDistrictLayer, true, {});
@@ -321,17 +349,16 @@ export default class State extends Component {
             layer.on('mouseover', function (event) {
                 let districtId = "";
                 districtId = event.layer.feature.properties.districtId;
-                if(original) {
+                if (original) {
                     that.setState({districtData: that.state.originalDistrictDataMap[districtId]});
-                }
-                else {
+                } else {
                     that.setState({districtData: districtDataMap[districtId]});
                 }
             });
             /*If no color field, then original districts and set color based on votes, else set color based on properties field*/
             let districtLayers = layer._layers;
-            Object.keys(districtLayers).forEach(function(key) {
-                districtLayers[key].setStyle( {
+            Object.keys(districtLayers).forEach(function (key) {
+                districtLayers[key].setStyle({
                     fillColor: districtLayers[key].feature.properties.COLOR,
                     weight: 2,
                     color: 'white',
@@ -341,99 +368,91 @@ export default class State extends Component {
             });
         });
 
-        }
+    }
 
-        getVotingColors(r, d) {
-        if(r > d) {
-            console.log(r/(r+d) * 100);
-            return (r/(r+d) * 100) > 90 ? '#67000d' :
-                (r/(r+d) * 100) > 80 ? '#a50f15' :
-                    (r/(r+d) * 100) > 70 ? '#cb181d' :
-                        (r/(r+d) * 100) > 60 ? '#ef3b2c' :
-                                        '#fb6a4a';
+    getVotingColors(r, d) {
+        if (r > d) {
+            return (r / (r + d) * 100) > 90 ? '#67000d' :
+                (r / (r + d) * 100) > 80 ? '#a50f15' :
+                    (r / (r + d) * 100) > 70 ? '#cb181d' :
+                        (r / (r + d) * 100) > 60 ? '#ef3b2c' :
+                            '#fb6a4a';
+        } else {
+            return (d / (r + d) * 100) > 90 ? '#084594' :
+                (d / (r + d) * 100) > 80 ? '#2171b5' :
+                    (d / (r + d) * 100) > 70 ? '#4292c6' :
+                        (d / (r + d) * 100) > 60 ? '#6baed6' :
+                            '#9ecae1';
         }
-        else {
-            console.log(d/(r+d) *100);
-            return (d /(r+d)* 100) > 90? '#084594' :
-                (d /(r+d)* 100) > 80 ? '#2171b5' :
-                    (d /(r+d)* 100) > 70 ? '#4292c6' :
-                        (d /(r+d)* 100) > 60 ? '#6baed6' :
-                                        '#9ecae1';
-        }
-        }
+    }
 
-        addPrecinctsToMap(layerGroup, map, that) {
-            map.on("zoomend", function (event) {
-                if (this.getZoom() >= ZOOM  && !that.state.precinctsLoaded) {
-                    that.removeOriginalDistrictLayer();
-                    layerGroup.addTo(map);
-                    that.setState({precinctsLoaded: true});
-                    layerGroup.bringToFront();
-                    layerGroup.eachLayer(function (layer) {
-                        let precinctLayers = layer._layers;
-                        let republicanElectionData;
-                        let democraticElectionData;
-                        Object.keys(precinctLayers).forEach(function(key) {
-                            if(that.state.election === "Presidential 2016") {
-                                republicanElectionData = precinctLayers[key].feature.properties.PRES16R;
-                                democraticElectionData = precinctLayers[key].feature.properties.PRES16D;
+    addPrecinctsToMap(layerGroup, map, that) {
+        map.on("zoomend", function (event) {
+            if (this.getZoom() >= ZOOM && !that.state.precinctsLoaded) {
+                that.removeOriginalDistrictLayer();
+                layerGroup.addTo(map);
+                that.setState({precinctsLoaded: true});
+                layerGroup.bringToFront();
+                layerGroup.eachLayer(function (layer) {
+                    let precinctLayers = layer._layers;
+                    let republicanElectionData;
+                    let democraticElectionData;
+                    Object.keys(precinctLayers).forEach(function (key) {
+                        if (that.state.election === "Presidential 2016") {
+                            republicanElectionData = precinctLayers[key].feature.properties.PRES16R;
+                            democraticElectionData = precinctLayers[key].feature.properties.PRES16D;
+                        } else if (that.state.election.split(" ")[0] === "Congressional") {
+                            let houseElection;
+                            if (that.state.election.split(" ")[1] === "2016") {
+                                houseElection = precinctLayers[key].feature.properties.HOUSE_ELECTION_16;
+                            } else if (that.state.election.split(" ")[1] === "2018") {
+                                houseElection = precinctLayers[key].feature.properties.HOUSE_ELECTION_18;
                             }
-                            else if(that.state.election.split(" ")[0] === "Congressional") {
-                                let houseElection;
-                                if(that.state.election.split(" ")[1] === "2016") {
-                                    houseElection = precinctLayers[key].feature.properties.HOUSE_ELECTION_16;
-                                }
-                                else if(that.state.election.split(" ")[1] === "2018") {
-                                    houseElection = precinctLayers[key].feature.properties.HOUSE_ELECTION_18;
-                                }
-                                for(var candidate in houseElection) {
-                                    if(candidate.endsWith("_D")) {
-                                        democraticElectionData = houseElection[candidate];
-                                    }
-                                    else if(candidate.endsWith("_R")) {
-                                        republicanElectionData = houseElection[candidate];
-                                    }
+                            for (var candidate in houseElection) {
+                                if (candidate.endsWith("_D")) {
+                                    democraticElectionData = houseElection[candidate];
+                                } else if (candidate.endsWith("_R")) {
+                                    republicanElectionData = houseElection[candidate];
                                 }
                             }
-                            precinctLayers[key].setStyle( {
-                                fillColor: that.getVotingColors(republicanElectionData, democraticElectionData),
-                                opacity: 1,
-                                fillOpacity: 0.8,
-                                weight: 2,
-                                color: 'white',
-                            });
-                        });
-                        layer.on('mouseover', function (event) {
-                            /*CD property is original congressional district that precinct is in, districtId is the assigned district*/
-                            that.setState({districtData: that.state.originalDistrictDataMap[event.layer.feature.properties.CD]});
-                            that.setState({precinctData: JSON.stringify(event.layer.feature.properties)})
+                        }
+                        precinctLayers[key].setStyle({
+                            fillColor: that.getVotingColors(republicanElectionData, democraticElectionData),
+                            opacity: 1,
+                            fillOpacity: 0.8,
+                            weight: 2,
+                            color: 'white',
                         });
                     });
-                    return true;
+                    layer.on('mouseover', function (event) {
+                        /*CD property is original congressional district that precinct is in, districtId is the assigned district*/
+                        that.setState({districtData: that.state.originalDistrictDataMap[event.layer.feature.properties.CD]});
+                        that.setState({precinctData: JSON.stringify(event.layer.feature.properties)})
+                    });
+                });
+                return true;
+            } else {
+                if (this.getZoom() < ZOOM && that.state.precinctsLoaded) {
+                    let precinctArr = [];
+                    Object.keys(that.state.precinctMap).forEach(function (key) {
+                        precinctArr.push(that.state.precinctMap[key]);
+                    });
+                    precinctArr.forEach(layer => {
+                        that.map.removeLayer(layerGroup)
+                    });
+                    that.setState({precinctsLoaded: false});
+                    that.loadOriginalDistricts();
                 }
-                else {
-                    if (this.getZoom() < ZOOM && that.state.precinctsLoaded) {
-                        let precinctArr = [];
-                        Object.keys(that.state.precinctMap).forEach(function(key) {
-                            precinctArr.push(that.state.precinctMap[key]);
-                        });
-                        precinctArr.forEach(layer => {
-                            that.map.removeLayer(layerGroup)
-                        });
-                        that.setState({precinctsLoaded: false});
-                        that.loadOriginalDistricts();
-                    }
-                }
-            })
-        }
+            }
+        })
+    }
 
     /*Updates Population Distribution in Map*/
     demographicMapUpdate() {
-        console.log(this.state.demographicsMapDisplay);
         let that = this;
-        if(this.state.precinctsLoaded) {
+        if (this.state.precinctsLoaded) {
             let precinctArr = [];
-            Object.keys(that.state.precinctMap).forEach(function(key) {
+            Object.keys(that.state.precinctMap).forEach(function (key) {
                 precinctArr.push(that.state.precinctMap[key]);
             });
             precinctArr.forEach(layer => {
@@ -441,31 +460,26 @@ export default class State extends Component {
             });
             that.setState({precinctsLoaded: false});
         }
-        if(!this.state.originalDistrictsLoaded) {
+        if (!this.state.originalDistrictsLoaded) {
             this.addDistrictsToMap(this.state.originalDistrictLayer, true, {});
         }
         this.state.originalDistrictLayer.eachLayer(function (layer) {
             let districtLayers = layer._layers;
-            console.log(layer);
-            Object.keys(districtLayers).forEach(function(key) {
+            Object.keys(districtLayers).forEach(function (key) {
                 let combinedPopulation = 0;
                 let districtData = that.state.originalDistrictDataMap[districtLayers[key].feature.properties.districtId];
                 that.state.demographicsMapDisplay.forEach(demographic => {
-                   if(demographic === "WHITE") {
-                       combinedPopulation = combinedPopulation + districtData.WVAP;
-                   }
-                   else if(demographic === "BLACK") {
-                       combinedPopulation = combinedPopulation + districtData.BVAP;
-                   }
-                   else if(demographic === "ASIAN") {
-                       combinedPopulation = combinedPopulation + districtData.ASIANVAP;
-                   }
-                   else if(demographic === "HISPANIC") {
-                       combinedPopulation = combinedPopulation + districtData.HVAP;
-                   }
-                   else if(demographic === "NATIVE_AMERICAN") {
-                       combinedPopulation = combinedPopulation + districtData.AMINVAP;
-                   }
+                    if (demographic === "WHITE") {
+                        combinedPopulation = combinedPopulation + districtData.WVAP;
+                    } else if (demographic === "BLACK") {
+                        combinedPopulation = combinedPopulation + districtData.BVAP;
+                    } else if (demographic === "ASIAN") {
+                        combinedPopulation = combinedPopulation + districtData.ASIANVAP;
+                    } else if (demographic === "HISPANIC") {
+                        combinedPopulation = combinedPopulation + districtData.HVAP;
+                    } else if (demographic === "NATIVE_AMERICAN") {
+                        combinedPopulation = combinedPopulation + districtData.AMINVAP;
+                    }
                 });
                 districtLayers[key].setStyle({
                     fillColor: that.getDemographicColors(combinedPopulation, districtData.VAP),
@@ -486,33 +500,33 @@ export default class State extends Component {
 
 
     getDemographicColors(demographicTotal, overall) {
-            return (demographicTotal/overall)*100 > 80 ? '#49006a' :
-                (demographicTotal/overall)*100 > 70 ? '#7a0177' :
-                    (demographicTotal/overall)*100 > 60 ? '#ae017e' :
-                        (demographicTotal/overall)*100 > 50 ? '#dd3497' :
-                            (demographicTotal/overall)*100 > 40 ? '#f768a1' :
-                                (demographicTotal/overall)*100 > 30 ? '#fa9fb5' :
-                                    (demographicTotal/overall)*100 > 20 ? '#fcc5c0' :
-                                        (demographicTotal/overall)*100 > 10 ? '#fde0dd' :
-                                            '#fff7f3';
+        return (demographicTotal / overall) * 100 > 80 ? '#49006a' :
+            (demographicTotal / overall) * 100 > 70 ? '#7a0177' :
+                (demographicTotal / overall) * 100 > 60 ? '#ae017e' :
+                    (demographicTotal / overall) * 100 > 50 ? '#dd3497' :
+                        (demographicTotal / overall) * 100 > 40 ? '#f768a1' :
+                            (demographicTotal / overall) * 100 > 30 ? '#fa9fb5' :
+                                (demographicTotal / overall) * 100 > 20 ? '#fcc5c0' :
+                                    (demographicTotal / overall) * 100 > 10 ? '#fde0dd' :
+                                        '#fff7f3';
     }
 
-        toggleBox() {
-            this.setState(oldState => ({ sidebar: !oldState.sidebar }));
-        }
+    toggleBox() {
+        this.setState(oldState => ({sidebar: !oldState.sidebar}));
+    }
 
-        componentDidMount() {
-            var maxBounds;
-            var minZoom;
-            var chosenState = window.location.pathname.split("/").pop();
-            var clustersUrl;
+    componentDidMount() {
+        var maxBounds;
+        var minZoom;
+        var chosenState = window.location.pathname.split("/").pop();
+        var clustersUrl;
 
-            this.setState({ chosenState: chosenState });
+        this.setState({chosenState: chosenState});
 
-            if (chosenState === "NorthCarolina") {
-                clustersUrl = 'http://127.0.0.1:8080/District_Borders?name=North_Carolina';
-                maxBounds = [
-                    [37, -71],               /* North East */
+        if (chosenState === "NorthCarolina") {
+            clustersUrl = 'http://127.0.0.1:8080/District_Borders?name=North_Carolina';
+            maxBounds = [
+                [37, -71],               /* North East */
                 [33, -84]                /* South West */
             ];
             minZoom = 6;
@@ -547,19 +561,46 @@ export default class State extends Component {
             ]
         }).fitBounds(maxBounds);
 
-        L.easyButton('<h5>Back to US Map</h5>', function() {
+        L.easyButton('<h5>Back to US Map</h5>', function () {
             window.location.replace("/map");
-        },  {position: 'topright'}).addTo(this.map);
+        }, {position: 'topright'}).addTo(this.map);
 
-        var that = this;
+        let that = this;
 
-        this.loadDistrictNumber().then(districtIds =>
-        {
+        this.loadDistrictNumber().then(districtIds => {
             this.loadOriginalDistrictsIncrementally(this.map, districtIds, that)
         }).then(() => {
-            this.loadStateData().then(precinctIds =>
-            {
-                this.loadPrecinctsIncrementally(precinctIds, that);
+            this.loadStateData().then(async precinctIds => {
+                this.setState({numOriginalPrecincts: precinctIds.length});
+
+                let precinctPromises = {};
+
+                precinctIds.splice(0, 10).forEach((precinctId) => {
+                    precinctPromises[precinctId] = this.loadPrecinctsIncrementally(precinctId, that);
+                });
+
+                let precinctMap = {};
+                while (precinctIds.length > 0) {
+                    let resolved = await Promise.race(Object.values(precinctPromises));
+                    delete precinctPromises[resolved.precinctId];
+                    precinctMap[resolved.precinctId] = resolved.layer;
+                    let queuedPrecinctId = precinctIds.shift();
+                    precinctPromises[queuedPrecinctId] = this.loadPrecinctsIncrementally(queuedPrecinctId, that);
+                }
+
+                while (Object.values(precinctPromises).length > 0) {
+                    let resolved = await Promise.race(Object.values(precinctPromises));
+                    delete precinctPromises[resolved.precinctId];
+                    precinctMap[resolved.precinctId] = resolved.layer;
+                }
+
+                let precinctLayerArr = [];
+                Object.keys(precinctMap).forEach(function (key) {
+                    precinctLayerArr.push(precinctMap[key]);
+                });
+                let layerGroup = L.featureGroup(precinctLayerArr);
+                that.setState({precinctMap: precinctMap});
+                that.addPrecinctsToMap(layerGroup, this.map, that);
             });
         });
     }
@@ -567,12 +608,12 @@ export default class State extends Component {
     render() {
 
         const theme = createMuiTheme({
-            palette: {
-                primary: {
-                    main: '#1E90FF'
+                palette: {
+                    primary: {
+                        main: '#1E90FF'
+                    }
                 }
-            }
-        },
+            },
         )
         return (
             <MuiThemeProvider theme={theme}>
@@ -580,12 +621,17 @@ export default class State extends Component {
                     <Row>
                         <Col className="menu" xs={5}>
                             <MenuSidenav chosenState={this.state.chosenState} precinctData={this.state.precinctData}
-                                districtData={this.state.districtData} stateData={this.state.stateData}
-                                removeOriginalDisrtricts={this.removeOriginalDistrictLayer} precinctLayer={this.state.precinctLayer}
-                                loadOriginalDistricts={this.loadOriginalDistricts} initializePhase1Map={this.initializePhase1Map}
-                                phase1Update={this.phase1Update} phase0SelectedElection={this.phase0SelectedElection}
-                                demographicMapUpdate={this.demographicMapUpdate} demographicMapUpdateSelection={this.demographicMapUpdateSelection}
-                                election={this.state.election}/>
+                                         districtData={this.state.districtData} stateData={this.state.stateData}
+                                         removeOriginalDisrtricts={this.removeOriginalDistrictLayer}
+                                         precinctLayer={this.state.precinctLayer}
+                                         loadOriginalDistricts={this.loadOriginalDistricts}
+                                         initializePhase1Map={this.initializePhase1Map}
+                                         phase1Update={this.phase1Update}
+                                         phase0SelectedElection={this.phase0SelectedElection}
+                                         demographicMapUpdate={this.demographicMapUpdate}
+                                         demographicMapUpdateSelection={this.demographicMapUpdateSelection}
+                                         election={this.state.election}
+                                         numOriginalPrecincts={this.state.numOriginalPrecincts}/>
                         </Col>
                         <Col className="mapContainer" xs={7}>
                             <div id='map'></div>

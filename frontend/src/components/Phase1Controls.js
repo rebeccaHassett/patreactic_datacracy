@@ -7,7 +7,7 @@ import styled from 'styled-components';
 import Button from '@material-ui/core/Button';
 import AlertDialogSlide from "./controls/AlertControl";
 import TableDisplay from "./controls/TableDisplay";
-import {forEach} from "react-bootstrap/cjs/ElementChildren";
+
 
 export default class Phase1Controls extends Component {
     constructor() {
@@ -197,6 +197,7 @@ export default class Phase1Controls extends Component {
     }
 
     async pollPhase1NonIncremental(timeout) {
+        let that = this;
         var timesRun = 0;
         var interval = setInterval(function () {
             fetch("http://127.0.0.1:8080/phase1/poll").then(function (response) {
@@ -206,10 +207,10 @@ export default class Phase1Controls extends Component {
                 return response.json();
             }).then(function (data) {
                 if (data.districtUpdates === []) {
-                    this.endPhase1();
+                    that.endPhase1();
                     clearInterval(interval);
                 } else {
-                    this.props.phase1Update(data);
+                    that.props.phase1Update(data);
                 }
             });
         }, timeout);
@@ -217,6 +218,7 @@ export default class Phase1Controls extends Component {
 
     async pollPhase1Incremental() {
         this.setState({phase1RunButtonDisabled: true});
+        let that = this;
         fetch("http://127.0.0.1:8080/phase1/poll", {
             headers: {'Access-Control-Allow-Credentials': true, 'Access-Control-Allow-Origin': 'http://localhost:3000'},
             credentials: 'include'
@@ -226,14 +228,13 @@ export default class Phase1Controls extends Component {
             }
             return response.json();
         }).then(function (data) {
-            console.log(data);
             if (data.districtUpdates === []) {
-                this.endPhase1();
+                that.endPhase1();
             } else {
-                this.props.phase1Update(data);
+                that.props.phase1Update(data);
             }
+            that.setState({phase1RunButtonDisabled: false});
         });
-        this.setState({phase1RunButtonDisabled: false});
     }
 
     endPhase1() {
@@ -245,10 +246,8 @@ export default class Phase1Controls extends Component {
 
     handlePhase1() {
         if (this.state.phase1ButtonText === "Update Phase 1") {
-            console.log("Incremental");
             this.pollPhase1Incremental()
         } else {
-            console.log("run");
             this.runPhase1();
         }
     }
@@ -331,23 +330,22 @@ export default class Phase1Controls extends Component {
         this.setState({resultsInView: false});
     }
 
+
     render() {
-        let marks;
-        let min;
-        let max;
-        if (this.props.chosenState === "RhodeIsland") {
-            marks = rhodeIslandMarks;
-            min = 1;
-            max = 2;
-        } else if (this.props.chosenState === "Michigan") {
-            marks = michiganMarks;
-            min = 1;
-            max = 14;
-        } else if (this.props.chosenState === "NorthCarolina") {
-            marks = northCarolinaMarks;
-            min = 1;
-            max = 14;
+        let marks = [];
+        marks.push({
+            value: 1,
+            label: '1',
+        });
+        for(let i = 100; i < this.props.numOriginalPrecincts; i+= 100) {
+            marks.push(
+                {
+                    value: i,
+                    label: i.toString(),
+                }
+            );
         }
+
         if (this.state.resultsUnavailable === true || this.state.resultsInView === false) {
             return (
                 <Phase1Styles>
@@ -368,13 +366,13 @@ export default class Phase1Controls extends Component {
                         <label className="label">Congressional Districts:</label>
                         <SliderControlSingleValue step={1}
                                                   exportState={this.handleNumberCongressionalDistricts} marks={marks}
-                                                  min={min} max={max} disabled={this.state.phase1ControlsDisabled}/>
+                                                  min={1} max={this.props.numOriginalPrecincts} disabled={this.state.phase1ControlsDisabled}/>
                     </ControlGroup>
                     <ControlGroup id="majorityMinorityDistricts">
                         <label className="label">Majority-Minority Districts</label>
                         <SliderControlSingleValue step={1} exportState={this.handleNumberMajorityMinorityDistricts}
                                                   marks={marks}
-                                                  min={min} max={max} disabled={this.state.phase1ControlsDisabled}/>
+                                                  min={1} max={this.props.numOriginalPrecincts} disabled={this.state.phase1ControlsDisabled}/>
                     </ControlGroup>
                     <ControlGroup id="minorityPopulationThreshold">
                         <label className="label">Minority Population Thresholds:</label>
@@ -482,63 +480,6 @@ const ControlGroup = styled.div`
     width: 80%;
 `;
 
-const rhodeIslandMarks = [
-    {
-        value: 1,
-        label: '1',
-    },
-    {
-        value: 2,
-        label: '2',
-    },
-];
-
-const michiganMarks = [
-    {
-        value: 1,
-        label: '1',
-    },
-    {
-        value: 4,
-        label: '4',
-    },
-    {
-        value: 7,
-        label: '7',
-    },
-    {
-        value: 10,
-        label: '10',
-    },
-    {
-        value: 14,
-        label: '14',
-    },
-];
-
-
-const northCarolinaMarks = [
-    {
-        value: 1,
-        label: '1',
-    },
-    {
-        value: 4,
-        label: '4',
-    },
-    {
-        value: 7,
-        label: '7',
-    },
-    {
-        value: 10,
-        label: '10',
-    },
-    {
-        value: 13,
-        label: '13',
-    },
-];
 
 const OFMarks = [
     {

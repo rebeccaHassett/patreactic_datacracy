@@ -36,7 +36,9 @@ export default class Phase2Controls extends Component {
         gerrymanderRepublicanWeightValue: 1,
         populationHomogeneityWeightValue: 1,
         gerrymanderDemocratWeightValue: 1,
-    }
+        resultsInView: false,
+        resultsUnavailable: false,
+    };
 
     async runPhase2() {
     }
@@ -95,6 +97,10 @@ export default class Phase2Controls extends Component {
             <Phase2Styles>
                 <Button  variant="contained" color="primary" onClick={this.runPhase2} style={{ width: '25vw', marginBottom: '2vw' }}>Start Phase 2</Button>
                 <SwitchControl name="Incremental" exportIncremental={this.handleIncrementalClick} exportRealTime={this.handleRealTimeClick} />
+                <Button variant="contained" color="primary" disabled={false}
+                        style={{width: '25vw', marginTop: '2vw'}} onClick={this.resultsViewOn}>
+                    View Results
+                </Button>
                 <ControlGroup>
                     <label className="label">Convex Hull Compactness Weighting:</label>
                     <SliderControlSingleValue min={0} max={1} step={0.01} marks={OFMarks}

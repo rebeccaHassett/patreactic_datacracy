@@ -98,7 +98,7 @@ export default function MenuSidenav(props) {
                 <Phase1Controls chosenState={props.chosenState} removeOriginalDisrtricts={props.removeOriginalDisrtricts} removePrecinctLayer={props.removePrecinctLayer} precinctLayer={props.precinctLayer}
                                 handlePrecinctFeatures={props.handlePrecinctFeatures} handleGeneratedDistricts={handleGeneratedDistricts}
                                 initializePhase1Map={props.initializePhase1Map} phase1Update={props.phase1Update} togglePhase2Tab={togglePhase2Tab}
-                                election={props.election}/>
+                                election={props.election} numOriginalPrecincts={props.numOriginalPrecincts}/>
             </TabPanel>
             <TabPanel value={value} index={2}>
                 <Phase2Controls/>

@@ -83,7 +83,6 @@ export default function VotingBlocSummaryDialog(props) {
 
     props.data.forEach(row => {
            if(row.demographic === demographicMostVB && row.winningParty === winningPartyOverall) {
-               console.log(row.totalVotes);
                winningPartyOverallPrecinctsTotalVotes = winningPartyOverallPrecinctsTotalVotes + row.totalVotes;
                votesWinningPartyOverall = votesWinningPartyOverall + row.winningVotes;
            }
