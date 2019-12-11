@@ -29,6 +29,24 @@ export default class State extends Component {
             precinctData: "",
             districtData: "",
             stateData: "",
+            originalStateGerrymandering: {
+                efficiencyGap: {pres2016: null, house2016: null, house2018: null},
+                lopsidedMargins: {pres2016: null, house2016: null, house2018: null},
+                meanMedianDiff: {pres2016: null, house2016: null, house2018: null},
+                winningParty: {pres2016: null, house2016: null, house2018: null},
+            },
+            generatedStateGerrymandering:  {
+                efficiencyGap: {pres2016: null, house2016: null, house2018: null},
+                lopsidedMargins: {pres2016: null, house2016: null, house2018: null},
+                meanMedianDiff: {pres2016: null, house2016: null, house2018: null},
+                winningParty: {pres2016: null, house2016: null, house2018: null},
+            },
+            gerrymanderingScores:  {
+                efficiencyGap: {pres2016: null, house2016: null, house2018: null},
+                lopsidedMargins: {pres2016: null, house2016: null, house2018: null},
+                meanMedianDiff: {pres2016: null, house2016: null, house2018: null},
+                winningParty: {pres2016: null, house2016: null, house2018: null},
+            },
             election: "Presidential 2016",
             chosenState: window.location.pathname.split("/").pop(),
             precinctsLoaded: false,
@@ -100,6 +118,7 @@ export default class State extends Component {
             });
             let layerGroup = L.featureGroup(generatedDistrictsArr);
             that.addDistrictsToMap(layerGroup, false, that.state.generatedDistrictDataMap, this.state.majorityMinorityDistricts);
+            that.setState({gerrymanderingScores: that.state.generatedStateGerrymandering});
         }
     }
 
@@ -235,6 +254,8 @@ export default class State extends Component {
         });
         let layerGroup = L.featureGroup(generatedDistrictsArr);
 
+        this.setState({gerrymanderingScores: data.gerrymanderingScores});
+        this.setState({generatedStateGerrymandering: data.gerrymanderingScores});
         this.addDistrictsToMap(layerGroup, false, districtDataMap, this.getMajorityMinorityDistrictIds(data));
         this.setState({originalDistrictsLoaded: false});
     }
@@ -299,6 +320,9 @@ export default class State extends Component {
             generatedDistrictsArr.push(updatedDistrictMap[key]);
         });
 
+        this.setState({gerrymanderingScores: data.gerrymanderingScores});
+        this.setState({generatedStateGerrymandering: data.gerrymanderingScores});
+
         let layerGroup = L.featureGroup(generatedDistrictsArr);
         this.addDistrictsToMap(layerGroup, false, districtDataMap, this.getMajorityMinorityDistrictIds(data));
         this.setState({originalDistrictsLoaded: false});
@@ -326,6 +350,7 @@ export default class State extends Component {
                 this.map.removeLayer(layer);
             });
             this.setState({originalDistrictsLoaded: true});
+            this.setState({gerrymanderingScores: this.state.originalStateGerrymandering});
             this.addDistrictsToMap(this.state.originalDistrictLayer, true, {}, []);
         }
     }
@@ -339,6 +364,8 @@ export default class State extends Component {
             }
             return response.json();
         }).then(function (data) {
+            that.setState({originalStateGerrymandering: data.gerrymanderingScores});
+            that.setState({gerrymanderingScores: data.gerrymanderingScores});
             that.setState({stateData: data});
             that.setState({precinctIds: data.precinctIds});
             return data.precinctIds;
@@ -653,7 +680,8 @@ export default class State extends Component {
                                          demographicMapUpdate={this.demographicMapUpdate}
                                          demographicMapUpdateSelection={this.demographicMapUpdateSelection}
                                          election={this.state.election}
-                                         numOriginalPrecincts={this.state.numOriginalPrecincts}/>
+                                         numOriginalPrecincts={this.state.numOriginalPrecincts}
+                                        gerrymanderingScores={this.state.gerrymanderingScores}/>
                         </Col>
                         <Col className="mapContainer" xs={7}>
                             <div id='map'></div>

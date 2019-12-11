@@ -108,7 +108,7 @@ export default function MenuSidenav(props) {
                              chosenState={props.chosenState} generatedDistricts={generatedDistricts}
                             loadOriginalDistricts={props.loadOriginalDistricts} removeOriginalDistricts={props.removeOriginalDisrtricts}
                             demographicMapUpdate={props.demographicMapUpdate} demographicMapUpdateSelection={props.demographicMapUpdateSelection}
-                            election={props.election}/>
+                            election={props.election} gerrymanderingScores={props.gerrymanderingScores}/>
             </TabPanel>
         </div>
     );

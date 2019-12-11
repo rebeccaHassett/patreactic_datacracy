@@ -75,7 +75,7 @@ def read_geojson_file(file_name):
 def load_precinct_values(connection, cursor, features, query, stateName):
     for feature in features:
         precinctId = feature["properties"]["PRENAME"]
-        geojson = json.dumps(feature["geometry"])
+        geojson = json.dumps(feature)
         districtId = feature["properties"]["CD"]
         data_tuple = (precinctId, geojson, districtId, stateName)
 
@@ -95,17 +95,17 @@ def load_precinct_data(connection):
     michigan_features = read_geojson_file('MI_Precincts_MAPPED.geojson')
     north_carolina_features = read_geojson_file('NC_VDT_MAPPED.geojson')
 
-    load_precinct_values(connection, cursor, rhode_island_features, precinct_insert_query, "RhodeIsland")
-    load_precinct_values(connection, cursor, michigan_features, precinct_insert_query, "Michigan")
-    # load_precinct_values(connection, cursor, north_carolina_features, precinct_insert_query, "NorthCarolina")
+    #load_precinct_values(connection, cursor, rhode_island_features, precinct_insert_query, "RhodeIsland")
+    #load_precinct_values(connection, cursor, michigan_features, precinct_insert_query, "Michigan")
+    load_precinct_values(connection, cursor, north_carolina_features, precinct_insert_query, "NorthCarolina")
 
-    load_precinct_population_data(connection, cursor, rhode_island_features)
-    load_precinct_population_data(connection, cursor, michigan_features)
-    # load_precinct_population_data(connection, cursor, north_carolina_features)
+    #load_precinct_population_data(connection, cursor, rhode_island_features)
+    #load_precinct_population_data(connection, cursor, michigan_features)
+    load_precinct_population_data(connection, cursor, north_carolina_features)
 
-    id = load_election_data(connection, rhode_island_features, 0)
-    id = load_election_data(connection, michigan_features, id)
-    # load_election_data(connection, north_carolina_features, id)
+    #id = load_election_data(connection, rhode_island_features, 0)
+    #id = load_election_data(connection, michigan_features, id)
+    load_election_data(connection, north_carolina_features, id)
 
     connection.commit()
 
@@ -285,14 +285,14 @@ def load_data():
     try:
     #     print("loading state data...")
     #     load_state_data(connection)
-    #    print("loading precinct data...")
-    #    load_precinct_data(connection)
+        print("loading precinct data...")
+        load_precinct_data(connection)
     #     print("loading incumbent data...")
     #     load_incumbent_data(connection)
     #     print("loading precinct neighbor data...")
     #     load_precinct_neighbors(connection)
         #print("loading district data...")
-        load_district_borders(connection)
+        #load_district_borders(connection)
     finally:
         connection.close()
 

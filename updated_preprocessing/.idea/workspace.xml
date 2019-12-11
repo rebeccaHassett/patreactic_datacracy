@@ -2,10 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="da7513d8-167f-45a0-92b8-c16a264abf58" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/../frontend/src/components/State.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/State.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../server/src/main/java/edu/stonybrook/politech/annealing/models/concrete/Precinct.java" beforeDir="false" afterPath="$PROJECT_DIR$/../server/src/main/java/edu/stonybrook/politech/annealing/models/concrete/Precinct.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/components/DataTabs.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/DataTabs.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/clean_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/clean_data.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/load_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/load_data.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mapped_data/NC_VDT_MAPPED.geojson" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -38,6 +39,8 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\bhass\patreactic_datacracy_master\patreactic_datacracy\updated_preprocessing" />
+      <recent name="C:\Users\bhass\patreactic_datacracy_master\patreactic_datacracy\updated_preprocessing\mapped_data" />
       <recent name="C:\Users\Rebecca Hassett\WebstormProjects\patreactic_datacracy\updated_preprocessing\mapped_data" />
       <recent name="C:\Users\Rebecca Hassett\WebstormProjects\patreactic_datacracy\updated_preprocessing\original_data" />
     </key>
@@ -54,7 +57,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.load_data">
+  <component name="RunManager" selected="Python.map_precinct_to_district">
     <configuration name="clean_data" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="updated_preprocessing" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -69,7 +72,7 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/clean_data.py" />
-      <option name="PARAMETERS" value="" />
+      <option name="PARAMETERS" value="3" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
@@ -121,6 +124,28 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="map_precinct_to_district" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="updated_preprocessing" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/map_precinct_to_district.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="precinct_adjacency" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="updated_preprocessing" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -143,11 +168,19 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <list>
+      <item itemvalue="Python.clean_data" />
+      <item itemvalue="Python.load_data" />
+      <item itemvalue="Python.map_election_geographic_data" />
+      <item itemvalue="Python.precinct_adjacency" />
+      <item itemvalue="Python.map_precinct_to_district" />
+    </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.map_precinct_to_district" />
+        <item itemvalue="Python.clean_data" />
         <item itemvalue="Python.load_data" />
         <item itemvalue="Python.precinct_adjacency" />
-        <item itemvalue="Python.clean_data" />
         <item itemvalue="Python.map_election_geographic_data" />
       </list>
     </recent_temporary>
@@ -163,7 +196,12 @@
       <option name="presentableId" value="Default" />
       <updated>1573675887062</updated>
       <workItem from="1575154293575" duration="1877000" />
-      <workItem from="1575834187438" duration="6347000" />
+      <workItem from="1575834187438" duration="6624000" />
+      <workItem from="1575872445838" duration="138000" />
+      <workItem from="1576019360317" duration="2630000" />
+      <workItem from="1576099717547" duration="2677000" />
+      <workItem from="1576102693914" duration="2569000" />
+      <workItem from="1576105288522" duration="988000" />
     </task>
     <servers />
   </component>
@@ -201,6 +239,8 @@
     </option>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/updated_preprocessing$load_data.coverage" NAME="load_data Coverage Results" MODIFIED="1575842581211" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/updated_preprocessing$map_precinct_to_district.coverage" NAME="map_precinct_to_district Coverage Results" MODIFIED="1576107402176" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/updated_preprocessing$clean_data.coverage" NAME="clean_data Coverage Results" MODIFIED="1576105158819" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/updated_preprocessing$load_data.coverage" NAME="load_data Coverage Results" MODIFIED="1576100579899" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

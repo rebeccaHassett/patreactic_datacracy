@@ -12,7 +12,7 @@ import Button from "@material-ui/core/Button";
 import styled from "styled-components";
 import TextField from '@material-ui/core/TextField';
 import CheckboxControl from "./controls/CheckboxControl";
-
+import GerrymanderingTabs from "./GerrymanderingTabs";
 
 function TabPane(props) {
     const { children, value, index, ...other } = props;
@@ -122,6 +122,8 @@ export default function DataTabs(props) {
                 <h4 style={{ fontWeight: 'bold', textDecoration: 'underline' }}>Redistricting Laws:</h4>
                 <TextField variant = "filled" color="primary" value={props.laws} multiline={true} style={{width: "100%", marginBottom: '2vw'}}/>
                 <Statistics data={props.stateData} type="state" election={props.election}/>
+                <h4 style={{marginBottom: '1vw', marginTop: '3vw'}}>Gerrymandering Scores</h4>
+                <GerrymanderingTabs gerrymanderingScores={props.gerrymanderingScores} election={props.election}/>
                 </DataStyle>
             </TabPane>
             <TabPane value={value} index={1}>
@@ -158,4 +160,4 @@ const DataStyle = styled.div`
         margin-bottom: 1vw;
         margin-top: 1vw;
     }
-`
+`;

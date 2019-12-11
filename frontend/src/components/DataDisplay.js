@@ -54,7 +54,8 @@ class DataDisplay extends React.Component {
                 incumbents={this.state.incumbents} laws={this.state.laws}
                       generatedDistricts={this.props.generatedDistricts} loadOriginalDistricts={this.props.loadOriginalDistricts}
                     removeOriginalDistricts={this.props.removeOriginalDistricts} demographicMapUpdate={this.props.demographicMapUpdate}
-                    demographicMapUpdateSelection={this.props.demographicMapUpdateSelection} election={this.props.election}/>
+                    demographicMapUpdateSelection={this.props.demographicMapUpdateSelection} election={this.props.election}
+                    gerrymanderingScores={this.props.gerrymanderingScores}/>
         );
     }
 }
