@@ -218,23 +218,22 @@ def load_election_data(connection, features, election_data_id):
 def load_district_borders(connection):
     query = "INSERT INTO OriginalDistrictBorders (stateName, districtId, borders) VALUES (%s, %s, %s);"
 
-    folder_path = "../original_data/district_geographical_data/"
     states = [{
         "name": "RhodeIsland",
-        "filename": "Rhode_Island/Rhode_Island_U.S_Congressional_Districts_Geography.json",
+        "filename": "../original_data/district_geographical_data/Rhode_Island/Rhode_Island_U.S_Congressional_Districts_Geography.json",
         "district_id_key": "CD115FP"
     },{
         "name": "Michigan",
-        "filename": "Michigan/Michigan_U.S._Congressional_Districts_v17a.geojson",
+        "filename": "simplified/Michigan_Districts.json",
         "district_id_key": "NAME"
     },{
         "name": "NorthCarolina",
-        "filename": "North_Carolina/North_Carolina_U.S_Congressional_Districts_Geography.json",
+        "filename": "../original_data/district_geographical_data/North_Carolina/North_Carolina_U.S_Congressional_Districts_Geography.json",
         "district_id_key": "CD116FP"
     }]
 
     for state in states:
-        with open(folder_path + state["filename"], "r+") as f:
+        with open(state["filename"], "r+") as f:
             state["features"] = json.load(f)["features"]
     for state in states:
         cursor = connection.cursor()
@@ -286,14 +285,14 @@ def load_data():
     try:
     #     print("loading state data...")
     #     load_state_data(connection)
-        print("loading precinct data...")
-        load_precinct_data(connection)
+    #    print("loading precinct data...")
+    #    load_precinct_data(connection)
     #     print("loading incumbent data...")
     #     load_incumbent_data(connection)
     #     print("loading precinct neighbor data...")
     #     load_precinct_neighbors(connection)
         #print("loading district data...")
-        #load_district_borders(connection)
+        load_district_borders(connection)
     finally:
         connection.close()
 
