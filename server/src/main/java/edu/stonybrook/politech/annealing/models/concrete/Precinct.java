@@ -38,6 +38,7 @@ public class Precinct
     private Geometry geometry;
     private String geometryJSON;
     private String originalDistrictID;
+    private String county;
     private District district;
     private Map<ElectionId, ElectionData> electionDataMap;
     private Map<DemographicGroup, Long> populationMap;
@@ -58,12 +59,7 @@ public class Precinct
         this.district = district;
         this.electionDataMap = electionDataMap;
         this.populationMap = populationMap;
-        try {
-            this.geometry = new GeoJsonReader().read(geometryJSON);
-        } catch (ParseException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        }
+        this.postLoad();
         this.originalDistrictID = districtID;
         this.neighborIDs = neighborIDs;
     }
@@ -260,5 +256,14 @@ public class Precinct
                 electionDataMap,
                 populationMap,
                 new HashSet<>(neighborIDs));
+    }
+
+    @Column(name = "county")
+    public String getCounty() {
+        return county;
+    }
+
+    public void setCounty(String county) {
+        this.county = county;
     }
 }
