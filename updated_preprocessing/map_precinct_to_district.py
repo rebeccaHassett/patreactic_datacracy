@@ -27,7 +27,7 @@ def map_precincts_to_districts(features, precinct_features):
         min_diff_dist = diffs_by_dist.index(min_diff_area)
         # Put precinct in that district
         district = features[min_diff_dist]
-        precinct['properties']['CD'] = district["properties"]["DISTRICT"]
+        precinct['properties']['CD'] = district["properties"]["CD116FP"] # north carolina district id identifier
         complete_precinct_features.append(precinct)
 
     print("Unmapped List Length: " + str(len(precinct_features)))
@@ -77,7 +77,7 @@ def main():
 
     elif(args.state_number == 3):
         print("North Carolina")
-        with open("../original_data/district_geographical_data/North_Carolina/North_Carolina_U.S_Congressional_Districts_Geography_CLEAN.json") as f:
+        with open("../original_data/district_geographical_data/North_Carolina/North_Carolina_U.S_Congressional_Districts_Geography.json") as f:
             district_features = json.load(f)["features"]
 
         with open("mapped_data/NC_VDT_MAPPED.json") as f:
