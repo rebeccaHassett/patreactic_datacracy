@@ -3,6 +3,7 @@ from mysql.connector import Error
 from mysql.connector import errorcode
 import json
 import incumbents
+import math
 
 white = 0
 black = 1
@@ -77,7 +78,7 @@ def load_precinct_values(connection, cursor, features, query, stateName):
         precinctId = feature["properties"]["PRENAME"]
         geojson = json.dumps(feature)
         districtId = feature["properties"]["CD"]
-        data_tuple = (precinctId, geojson, districtId, stateName)
+        data_tuple = (precinctId, "", geojson, districtId, stateName)
 
         cursor.execute(query, data_tuple)
 
@@ -87,24 +88,24 @@ def load_precinct_values(connection, cursor, features, query, stateName):
 def load_precinct_data(connection):
     cursor = connection.cursor()
 
-    precinct_insert_query = """INSERT INTO Precinct (precinctId, geojson, districtId, stateName) 
+    precinct_insert_query = """INSERT INTO Precinct (precinctId, county, geojson, districtId, stateName) 
                            VALUES 
-                           (%s, %s, %s, %s) """
+                           (%s, %s, %s, %s, %s) """
 
     rhode_island_features = read_geojson_file('RI_Precincts_MAPPED_ManualUpdates.geojson')
     michigan_features = read_geojson_file('MI_Precincts_MAPPED.geojson')
-    north_carolina_features = read_geojson_file('NC_VDT_MAPPED.geojson')
+    north_carolina_features = read_geojson_file('NC_VDT_MAPPED_FINAL_HOPEFULLY.json')
 
-    #load_precinct_values(connection, cursor, rhode_island_features, precinct_insert_query, "RhodeIsland")
-    #load_precinct_values(connection, cursor, michigan_features, precinct_insert_query, "Michigan")
+    load_precinct_values(connection, cursor, rhode_island_features, precinct_insert_query, "RhodeIsland")
+    load_precinct_values(connection, cursor, michigan_features, precinct_insert_query, "Michigan")
     load_precinct_values(connection, cursor, north_carolina_features, precinct_insert_query, "NorthCarolina")
 
-    #load_precinct_population_data(connection, cursor, rhode_island_features)
-    #load_precinct_population_data(connection, cursor, michigan_features)
+    load_precinct_population_data(connection, cursor, rhode_island_features)
+    load_precinct_population_data(connection, cursor, michigan_features)
     load_precinct_population_data(connection, cursor, north_carolina_features)
 
-    #id = load_election_data(connection, rhode_island_features, 0)
-    #id = load_election_data(connection, michigan_features, id)
+    id = load_election_data(connection, rhode_island_features, 0)
+    id = load_election_data(connection, michigan_features, id)
     load_election_data(connection, north_carolina_features, id)
 
     connection.commit()
@@ -177,8 +178,16 @@ def load_election_data(connection, features, election_data_id):
     for feature in features:
         precinctId = feature["properties"]["PRENAME"]
         cursor.execute(election_data_insert_query, (election_data_id, presidential, Y2016, precinctId))
-        cursor.execute(votes_insert_query, (election_data_id, feature["properties"]["PRES16D"], democrat))
-        cursor.execute(votes_insert_query, (election_data_id, feature["properties"]["PRES16R"], republican))
+
+        if (math.isnan(feature["properties"]["PRES16D"])):
+            cursor.execute(votes_insert_query, (election_data_id, 0, democrat))
+        else:
+            cursor.execute(votes_insert_query, (election_data_id, feature["properties"]["PRES16D"], democrat))
+        if (math.isnan(feature["properties"]["PRES16R"])):
+            cursor.execute(votes_insert_query, (election_data_id, 0, republican))
+        else:
+            cursor.execute(votes_insert_query, (election_data_id, feature["properties"]["PRES16R"], republican))
+
         election_data_id = election_data_id + 1
         cursor.execute(election_data_insert_query, (election_data_id, congressional, Y2016, precinctId))
         demFound = False
@@ -186,13 +195,22 @@ def load_election_data(connection, features, election_data_id):
         indFound = False
         for candidate in feature["properties"]["HOUSE_ELECTION_16"]:
             if candidate.endswith('D') and demFound is False:
-                cursor.execute(votes_insert_query, (election_data_id, feature["properties"]["HOUSE_ELECTION_16"][candidate], democrat))
+                if(math.isnan(feature["properties"]["HOUSE_ELECTION_16"][candidate])):
+                    cursor.execute(votes_insert_query, (election_data_id, 0, democrat))
+                else:
+                    cursor.execute(votes_insert_query, (election_data_id, feature["properties"]["HOUSE_ELECTION_16"][candidate], democrat))
                 demFound = True
             elif candidate.endswith('R') and repFound is False:
-                cursor.execute(votes_insert_query, (election_data_id, feature["properties"]["HOUSE_ELECTION_16"][candidate], republican))
+                if(math.isnan(feature["properties"]["HOUSE_ELECTION_16"][candidate])):
+                    cursor.execute(votes_insert_query, (election_data_id, 0, republican))
+                else:
+                    cursor.execute(votes_insert_query, (election_data_id, feature["properties"]["HOUSE_ELECTION_16"][candidate], republican))
                 repFound = True
             elif candidate.endswith('I') and indFound is False:
-                cursor.execute(votes_insert_query, (election_data_id, feature["properties"]["HOUSE_ELECTION_16"][candidate], independent))
+                if(math.isnan(feature["properties"]["HOUSE_ELECTION_16"][candidate])):
+                    cursor.execute(votes_insert_query, (election_data_id, 0, independent))
+                else:
+                    cursor.execute(votes_insert_query, (election_data_id, feature["properties"]["HOUSE_ELECTION_16"][candidate], independent))
                 indFound = True
         election_data_id = election_data_id + 1
         cursor.execute(election_data_insert_query, (election_data_id, congressional, Y2018, precinctId))
@@ -201,13 +219,22 @@ def load_election_data(connection, features, election_data_id):
         indFound = False
         for candidate in feature["properties"]["HOUSE_ELECTION_18"]:
             if candidate.endswith('D') and demFound is False:
-                cursor.execute(votes_insert_query, (election_data_id, feature["properties"]["HOUSE_ELECTION_18"][candidate], democrat))
+                if(math.isnan(feature["properties"]["HOUSE_ELECTION_18"][candidate])):
+                    cursor.execute(votes_insert_query, (election_data_id, 0, democrat))
+                else:
+                    cursor.execute(votes_insert_query, (election_data_id, feature["properties"]["HOUSE_ELECTION_18"][candidate], democrat))
                 demFound = True
             elif candidate.endswith('R') and repFound is False:
-                cursor.execute(votes_insert_query, (election_data_id, feature["properties"]["HOUSE_ELECTION_18"][candidate], republican))
+                if(math.isnan(feature["properties"]["HOUSE_ELECTION_18"][candidate])):
+                    cursor.execute(votes_insert_query, (election_data_id, 0, democrat))
+                else:
+                    cursor.execute(votes_insert_query, (election_data_id, feature["properties"]["HOUSE_ELECTION_18"][candidate], republican))
                 repFound = True
             elif candidate.endswith('I') and indFound is False:
-                cursor.execute(votes_insert_query, (election_data_id, feature["properties"]["HOUSE_ELECTION_18"][candidate], independent))
+                if(math.isnan(feature["properties"]["HOUSE_ELECTION_18"][candidate])):
+                    cursor.execute(votes_insert_query, (election_data_id, 0, independent))
+                else:
+                    cursor.execute(votes_insert_query, (election_data_id, feature["properties"]["HOUSE_ELECTION_18"][candidate], independent))
                 indFound = True
         election_data_id = election_data_id + 1
 

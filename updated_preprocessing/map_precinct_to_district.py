@@ -20,13 +20,13 @@ def map_precincts_to_districts(features, precinct_features):
             # Make list of precinct/district area differences
             p_d_diff = precinct_polygon.difference(district_polygon).area
             diffs_by_dist[district_index] = p_d_diff
-            print("Precinct: " + str(precinct_index) + ", District: " + str(district_index))
 
         # Find minimum district from that list
         min_diff_area = min(diffs_by_dist)
         min_diff_dist = diffs_by_dist.index(min_diff_area)
         # Put precinct in that district
         district = features[min_diff_dist]
+        print("PRECINCT " + precinct['properties']['PRENAME'] + "DISTRICT " + district["properties"]["CD116FP"])
         precinct['properties']['CD'] = district["properties"]["CD116FP"] # north carolina district id identifier
         complete_precinct_features.append(precinct)
 
@@ -85,8 +85,8 @@ def main():
 
         complete_precinct_features = map_precincts_to_districts(district_features, precinct_features)
 
-        original_precinct_file = "mapped_data/NC_VDT_MAPPED.json"
-        new_precinct_file = "mapped_data/NC_VDT_MAPPED_and_Districts.json"
+        original_precinct_file = "mapped_data/NC_VDT_MAPPED_FINAL_HOPEFULLY.json"
+        new_precinct_file = "mapped_data/NC_VDT_MAPPED_FINAL.json"
 
     else:
         print("Wrong Input")
