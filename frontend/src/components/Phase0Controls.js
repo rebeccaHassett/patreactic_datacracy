@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import SliderControlUpperLowerValues from "./controls/SliderControlUpperLowerValues";
 import styled from "styled-components";
 import Button from '@material-ui/core/Button';
@@ -68,12 +68,12 @@ export default class Phase0Controls extends Component {
         var that = this;
         await fetch("http://127.0.0.1:8080/runPhase0", {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(phase0Dto),
-        }).then(function(data){
+        }).then(function (data) {
             return data.json();
-        }).then(function(vbdtoData) {
-            for(let i = 0; i < vbdtoData.length; i++){
+        }).then(function (vbdtoData) {
+            for (let i = 0; i < vbdtoData.length; i++) {
                 vbdtoData[i].precinctId = that.wordCase(vbdtoData[i].precinctId);
                 vbdtoData[i].demographic = that.wordCase(vbdtoData[i].demographic);
                 vbdtoData[i].winningParty = that.wordCase(vbdtoData[i].winningParty);
@@ -82,26 +82,25 @@ export default class Phase0Controls extends Component {
         });
 
 
-
-        this.setState({ resultsUnavailable: false });
-        this.setState({ resultsInView: true });
+        this.setState({resultsUnavailable: false});
+        this.setState({resultsInView: true});
     }
 
     resultsViewOn() {
-        this.setState({ resultsInView: true });
+        this.setState({resultsInView: true});
     }
 
     resultsViewOff() {
-        this.setState({ resultsInView: false });
+        this.setState({resultsInView: false});
     }
 
     handleBlocPopulationUpdate(value) {
-        this.setState({ blocPopulationValues: value })
+        this.setState({blocPopulationValues: value})
 
     }
 
     handleBlocVotingUpdate(value) {
-        this.setState({ blocVotingValues: value })
+        this.setState({blocVotingValues: value})
     }
 
     handleElectionChanges(event) {
@@ -118,44 +117,45 @@ export default class Phase0Controls extends Component {
                 election: 'Presidential 2016'
             });
         }
-        if(event.target.value !== undefined) {
+        if (event.target.value !== undefined) {
             this.props.phase0SelectedElection(event.target.value);
         }
     }
 
     render() {
-        if (this.state.resultsUnavailable === true || this.state.resultsInView === false) {
+        if (!this.state.resultsInView && !this.props.phase0Lock) {
             return (
                 <Phase0Styles>
                     <Button variant="contained" color="primary" onClick={this.runPhase0}
-                        style={{ width: '25vw', marginBottom: '2vw' }}>Start Phase 0</Button>
+                            style={{width: '25vw', marginBottom: '2vw'}}>Start Phase 0</Button>
                     <ControlGroup>
                         <label className="label">Bloc Population Thresholds:</label>
                         <SliderControlUpperLowerValues disabled={false}
-                            exportState={this.handleBlocPopulationUpdate} />
+                                                       exportState={this.handleBlocPopulationUpdate}/>
                     </ControlGroup>
                     <ControlGroup>
                         <label className="label">Bloc Voting Thresholds:</label>
                         <SliderControlUpperLowerValues disabled={false}
-                            exportState={this.handleBlocVotingUpdate} />
+                                                       exportState={this.handleBlocVotingUpdate}/>
                     </ControlGroup>
                     <ControlGroup>
                         <label className="electionLabel">Election Type:</label>
-                        <ElectionButtonsControl exportState={this.handleElectionChanges} />
+                        <ElectionButtonsControl exportState={this.handleElectionChanges}/>
                     </ControlGroup>
-                    <Button variant="contained" color="primary" style={{ width: '25vw', marginBottom: '2vw' }}
-                        disabled={this.state.resultsUnavailable} onClick={this.resultsViewOn}>View Results</Button>
+                    <Button variant="contained" color="primary" style={{width: '25vw', marginBottom: '2vw'}}
+                            disabled={this.state.resultsUnavailable} onClick={this.resultsViewOn}>View Results</Button>
                 </Phase0Styles>
             );
         } else {
             return (
-                <Phase0Styles style={{ paddingLeft: "10px", paddingRight: "10px" }}>
-                    <Button variant="contained" color="primary" style={{ width: '25vw', marginBottom: '2vw' }}
-                        onClick={this.resultsViewOff}>Back to Controls</Button>
+                <Phase0Styles style={{paddingLeft: "10px", paddingRight: "10px"}}>
+                    <Button variant="contained" color="primary" style={{width: '25vw', marginBottom: '2vw'}}
+                            onClick={this.resultsViewOff} disabled={this.props.phase0Lock}>Back to Controls</Button>
                     <VotingBlocSummaryDialog data={this.state.vbdtoRows}/>
                     <h5>Election Type: {this.state.election}</h5>
-                    <p>Population Thresholds: {this.state.blocPopulationValues[0]}% - {this.state.blocPopulationValues[1]}%<br/>
-                    Voting Thresholds: {this.state.blocVotingValues[0]}% - {this.state.blocVotingValues[1]}%</p>
+                    <p>Population Thresholds: {this.state.blocPopulationValues[0]}%
+                        - {this.state.blocPopulationValues[1]}%<br/>
+                        Voting Thresholds: {this.state.blocVotingValues[0]}% - {this.state.blocVotingValues[1]}%</p>
                     <h4>Voting Bloc Precincts</h4>
                     <TableDisplay columns={columns} rows={this.state.vbdtoRows}/>
                 </Phase0Styles>
@@ -190,8 +190,8 @@ const ControlGroup = styled.div`
 `;
 
 const columns = [
-    { id: 'precinctId', label: 'Name', },
-    { id: 'demographic', label: 'Demographic', },
+    {id: 'precinctId', label: 'Name',},
+    {id: 'demographic', label: 'Demographic',},
     {
         id: 'winningParty',
         label: 'Party',

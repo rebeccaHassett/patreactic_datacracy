@@ -5,8 +5,7 @@ import L from "leaflet";
 import SideNav, {NavItem, NavIcon, NavText} from '@trendmicro/react-sidenav';
 import '@trendmicro/react-sidenav/dist/react-sidenav.css';
 import {BrowserRouter as Router, Route} from 'react-router-dom';
-import { Place } from '@material-ui/icons';
-
+import {Place} from '@material-ui/icons';
 
 
 export default class Map extends Component {
@@ -81,7 +80,7 @@ export default class Map extends Component {
                     )}
                     />
                 </Router>
-                    <div id='map'></div>
+                <div id='map'></div>
             </MapStyle>
         );
     }

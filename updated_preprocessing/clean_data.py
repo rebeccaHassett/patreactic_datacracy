@@ -1,6 +1,7 @@
 import json
 import argparse
 import math
+import pandas as pd
 
 '''State Options: 1 = Rhode Island, 2 = Michigan, 3 = North Carolina'''
 
@@ -12,6 +13,7 @@ def main():
     args = parser.parse_args()
 
     features = {}
+    new_features = []
     original_precinct_file = None
     clean_precinct_file = None
     remove_fields = None
@@ -56,8 +58,8 @@ def main():
 
     elif(args.state_number == 3):
         print("North Carolina")
-        original_precinct_file = "mapped_data/NC_VDT_MAPPED_FINAL_NO_DUPLICATES.json" #"../original_data/precinct_geographical data/North_Carolina/NC_VTD.json"
-        clean_precinct_file = "mapped_data/NC_VDT_MAPPED_FINAL_HOPEFULLY.json"
+        original_precinct_file = "mapped_data/NC_VDT_FINAL_HOPEFULLY.json" #"../original_data/precinct_geographical data/North_Carolina/NC_VTD.json"
+        clean_precinct_file = "mapped_data/NC_VDT_FINAL_HOPEFULLY_HOPEFULLY.json"
 
         with open(original_precinct_file) as f:
             features = json.load(f)["features"]
@@ -78,44 +80,48 @@ def main():
         id = 1
         found_precinct = []
         for feature in features:
+            # if(feature["properties"]["PRENAME"] not in found_precinct):
+            #     found_precinct.append(feature["properties"]["PRENAME"])
+            #     new_features.append(feature)
             # feature["properties"]["OBJECTID"] = id
             # id = id + 1
             # county = county_info[county_info.code == int(feature["properties"]["County"])]
             # prename = county.name.values[0] + " " + feature["properties"]["VTD_Name"]
             # feature["properties"]["PRENAME"] = prename.upper()
-            if(feature["properties"]["PRENAME"] == "COLUMBUS P20"):
-                feature["properties"]["PRES16D"] = 0
-                feature["properties"]["PRES16R"] = 0
-                feature["properties"]["HOUSE_ELECTION_16"]["CANDIDATE_D"] = 0
-                feature["properties"]["HOUSE_ELECTION_16"]["CANDIDATE_R"] = 0
-                feature["properties"]["HOUSE_ELECTION_18"]["David_Rouzer_R"] = 134
-                feature["properties"]["HOUSE_ELECTION_18"]["Kyle_Horton_D"] = 250
-            if(feature["properties"]["PRENAME"] == "COLUMBUS P22"):
-                feature["properties"]["PRES16D"] = 0
-                feature["properties"]["PRES16R"] = 0
-                feature["properties"]["HOUSE_ELECTION_16"]["CANDIDATE_D"] = 0
-                feature["properties"]["HOUSE_ELECTION_16"]["CANDIDATE_R"] = 0
-                feature["properties"]["HOUSE_ELECTION_18"]["David Rouzer_R"] = 703
-                feature["properties"]["HOUSE_ELECTION_18"]["Kyle Horton_D"] = 317
+            # if(feature["properties"]["PRENAME"] == "COLUMBUS P20"):
+            #     feature["properties"]["PRES16D"] = 0
+            #     feature["properties"]["PRES16R"] = 0
+            #     feature["properties"]["HOUSE_ELECTION_16"]["CANDIDATE_D"] = 0
+            #     feature["properties"]["HOUSE_ELECTION_16"]["CANDIDATE_R"] = 0
+            #     feature["properties"]["HOUSE_ELECTION_18"]["David_Rouzer_R"] = 134
+            #     feature["properties"]["HOUSE_ELECTION_18"]["Kyle_Horton_D"] = 250
+            # if(feature["properties"]["PRENAME"] == "COLUMBUS P22"):
+            #     feature["properties"]["PRES16D"] = 0
+            #     feature["properties"]["PRES16R"] = 0
+            #     feature["properties"]["HOUSE_ELECTION_16"]["CANDIDATE_D"] = 0
+            #     feature["properties"]["HOUSE_ELECTION_16"]["CANDIDATE_R"] = 0
+            #     feature["properties"]["HOUSE_ELECTION_18"]["David Rouzer_R"] = 703
+            #     feature["properties"]["HOUSE_ELECTION_18"]["Kyle Horton_D"] = 317
 
-            for key, value in feature["properties"]["HOUSE_ELECTION_16"].items():
-                if(math.isnan(value)):
-                    feature["properties"]["HOUSE_ELECTION_16"][key] = 0
-
-            for key, value in feature["properties"]["HOUSE_ELECTION_18"].items():
-                if(math.isnan(value)):
-                    feature["properties"]["HOUSE_ELECTION_18"][key] = 0
-            # feature["properties"]["PRES16R"] = feature["properties"].pop("EL16G_PR_R")
-            # feature["properties"]["PRES16D"] = feature["properties"].pop("EL16G_PR_D")
-            # if("EL16G_PR_L" in feature["properties"]):
-            #     feature["properties"].pop("EL16G_PR_L")
-            #     feature["properties"].pop("EL16G_PR_W")
-            #     feature["properties"].pop("EL16G_PR_T")
+            # for key, value in feature["properties"]["HOUSE_ELECTION_16"].items():
+            #     if(math.isnan(value)):
+            #         feature["properties"]["HOUSE_ELECTION_16"][key] = 0
+            #
+            # for key, value in feature["properties"]["HOUSE_ELECTION_18"].items():
+            #     if(math.isnan(value)):
+            #         feature["properties"]["HOUSE_ELECTION_18"][key] = 0
+            if("PRES16R" not in feature["properties"]):
+                feature["properties"]["PRES16R"] = feature["properties"].pop("EL16G_PR_R")
+                feature["properties"]["PRES16D"] = feature["properties"].pop("EL16G_PR_D")
+            if("EL16G_PR_L" in feature["properties"]):
+                feature["properties"].pop("EL16G_PR_L")
+                feature["properties"].pop("EL16G_PR_W")
+                feature["properties"].pop("EL16G_PR_T")
     else:
         print("Wrong Input")
         exit()
 
-    # remove unnecessary fields
+    #remove unnecessary fields
     # for feature in features:
     #     for field in remove_fields:
     #         if field in feature["properties"]:

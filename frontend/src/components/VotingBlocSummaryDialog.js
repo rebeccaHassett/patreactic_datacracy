@@ -39,57 +39,47 @@ export default function VotingBlocSummaryDialog(props) {
         setOpen(false);
     };
 
-    const wordCase = (str) => {
-        var splitStr = str.toLowerCase().split(' ');
-        for (var i = 0; i < splitStr.length; i++) {
-
-            splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
-        }
-        return splitStr.join(' ');
-    };
 
     numVBPrecincts = props.data.length;
     props.data.forEach(row => {
         demographics.forEach(demographic => {
-            if(row.demographic === demographic) {
+            if (row.demographic === demographic) {
                 demographicsVBPrecincts[demographic] = demographicsVBPrecincts[demographic] + 1;
             }
         })
     });
 
     demographics.forEach(demographic => {
-        if(demographicsVBPrecincts[demographic] > numDemographicMostVB) {
+        if (demographicsVBPrecincts[demographic] > numDemographicMostVB) {
             numDemographicMostVB = demographicsVBPrecincts[demographic];
             demographicMostVB = demographic;
         }
     });
 
     props.data.forEach(row => {
-       if(row.demographic === demographicMostVB && row.winningParty === "Democrat") {
-           numDemocraticVBPrecincts = numDemocraticVBPrecincts + 1;
-       }
-       else if(row.demographic === demographicMostVB && row.winningParty === "Republican") {
-           numRepublicanVBPrecincts = numRepublicanVBPrecincts + 1;
-       }
+        if (row.demographic === demographicMostVB && row.winningParty === "Democrat") {
+            numDemocraticVBPrecincts = numDemocraticVBPrecincts + 1;
+        } else if (row.demographic === demographicMostVB && row.winningParty === "Republican") {
+            numRepublicanVBPrecincts = numRepublicanVBPrecincts + 1;
+        }
     });
 
 
-    if(numDemocraticVBPrecincts > numRepublicanVBPrecincts) {
+    if (numDemocraticVBPrecincts > numRepublicanVBPrecincts) {
         winningPartyOverall = "Democrat";
-    }
-    else {
+    } else {
         winningPartyOverall = "Republican";
     }
 
     props.data.forEach(row => {
-           if(row.demographic === demographicMostVB && row.winningParty === winningPartyOverall) {
-               winningPartyOverallPrecinctsTotalVotes = winningPartyOverallPrecinctsTotalVotes + row.totalVotes;
-               votesWinningPartyOverall = votesWinningPartyOverall + row.winningVotes;
-           }
+        if (row.demographic === demographicMostVB && row.winningParty === winningPartyOverall) {
+            winningPartyOverallPrecinctsTotalVotes = winningPartyOverallPrecinctsTotalVotes + row.totalVotes;
+            votesWinningPartyOverall = votesWinningPartyOverall + row.winningVotes;
+        }
     });
     votePercentageWinningPartyOverall = (votesWinningPartyOverall / winningPartyOverallPrecinctsTotalVotes) * 100;
 
-    if(demographicMostVB !== "None") {
+    if (demographicMostVB !== "None") {
         return (
             <div>
                 <Button variant="outlined" color="primary" onClick={handleClickOpen}
@@ -109,21 +99,33 @@ export default function VotingBlocSummaryDialog(props) {
                         <DialogContentText>
                             <h4>Total Voting Bloc Precincts: {numVBPrecincts.toLocaleString()}</h4>
                             <ul>
-                                <li>Total White Voting Bloc Precincts: {demographicsVBPrecincts["White"].toLocaleString()}</li>
-                                <li>Total Black Voting Bloc Precincts: {demographicsVBPrecincts["Black"].toLocaleString()}</li>
-                                <li>Total Asian Voting Bloc Precincts: {demographicsVBPrecincts["Asian"].toLocaleString()}</li>
-                                <li>Total Hispanic Voting Bloc Precincts: {demographicsVBPrecincts["Hispanic"].toLocaleString()}</li>
-                                <li>Total Native American Voting Bloc Precincts: {demographicsVBPrecincts["Native_American"].toLocaleString()}</li>
+                                <li>Total White Voting Bloc
+                                    Precincts: {demographicsVBPrecincts["White"].toLocaleString()}</li>
+                                <li>Total Black Voting Bloc
+                                    Precincts: {demographicsVBPrecincts["Black"].toLocaleString()}</li>
+                                <li>Total Asian Voting Bloc
+                                    Precincts: {demographicsVBPrecincts["Asian"].toLocaleString()}</li>
+                                <li>Total Hispanic Voting Bloc
+                                    Precincts: {demographicsVBPrecincts["Hispanic"].toLocaleString()}</li>
+                                <li>Total Native American Voting Bloc
+                                    Precincts: {demographicsVBPrecincts["Native_American"].toLocaleString()}</li>
                             </ul>
                             <h4>Most of the voting blocs are {demographicMostVB.toLocaleLowerCase()}</h4>
                             <ul>
-                                <li>{numDemocraticVBPrecincts.toLocaleString()} of these {demographicMostVB.toLocaleLowerCase()} voting bloc precincts voted Democrat</li>
-                                <li>{numRepublicanVBPrecincts.toLocaleString()} of these {demographicMostVB.toLocaleLowerCase()} voting bloc precincts voted Republican</li>
+                                <li>{numDemocraticVBPrecincts.toLocaleString()} of
+                                    these {demographicMostVB.toLocaleLowerCase()} voting bloc precincts voted Democrat
+                                </li>
+                                <li>{numRepublicanVBPrecincts.toLocaleString()} of
+                                    these {demographicMostVB.toLocaleLowerCase()} voting bloc precincts voted Republican
+                                </li>
                             </ul>
-                            <h4>Most {demographicMostVB.toLocaleLowerCase()} voting blocs voted {winningPartyOverall.toLocaleLowerCase()}</h4>
+                            <h4>Most {demographicMostVB.toLocaleLowerCase()} voting blocs
+                                voted {winningPartyOverall.toLocaleLowerCase()}</h4>
                             <ul>
-                            <li>{demographicMostVB} voting blocs had {votesWinningPartyOverall.toLocaleString()} votes out
-                                of {winningPartyOverallPrecinctsTotalVotes.toLocaleString()} total votes for {winningPartyOverall}s.</li>
+                                <li>{demographicMostVB} voting blocs
+                                    had {votesWinningPartyOverall.toLocaleString()} {winningPartyOverall} votes out
+                                    of {winningPartyOverallPrecinctsTotalVotes.toLocaleString()} total votes
+                                </li>
                                 <li>This is {Math.round(votePercentageWinningPartyOverall)}% of the votes</li>
                             </ul>
                         </DialogContentText>
@@ -136,8 +138,7 @@ export default function VotingBlocSummaryDialog(props) {
                 </Dialog>
             </div>
         );
-    }
-    else {
+    } else {
         return (
             <div>
                 <Button variant="outlined" color="primary" onClick={handleClickOpen}

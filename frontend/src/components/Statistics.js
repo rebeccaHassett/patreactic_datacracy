@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import BarChart from "./BarChart";
+import BarChart from "./graphs/BarChart";
 import PieChart from "./graphs/PieChart";
 import styled from "styled-components";
 import TableDisplay from "./controls/TableDisplay";
@@ -9,7 +9,7 @@ export default class Statistics extends Component {
 
     render() {
         var data = this.props.data;
-        if (data === "") {
+        if (data === "" || data === null) {
             return null;
         } else {
             let jsonData;
@@ -33,7 +33,7 @@ export default class Statistics extends Component {
 
             function createData(demographic, population, total) {
                 let percentage = ((population / total) * 100);
-                return { demographic, population, percentage};
+                return {demographic, population, percentage};
             }
 
             var rows = [
@@ -43,7 +43,6 @@ export default class Statistics extends Component {
                 createData('Hispanic', hispanicPopulation, totalPopulation),
                 createData('Native American', nativeAmericanPopulation, totalPopulation),
             ];
-
 
 
             var dataPie = {
@@ -68,7 +67,7 @@ export default class Statistics extends Component {
                         ]
                     }
                 ]
-            }
+            };
 
             var republicanVotes;
             var republicanCandidate;
@@ -147,6 +146,21 @@ export default class Statistics extends Component {
     };
 }
 
+const columns = [
+    {id: 'demographic', label: 'Demographic',},
+    {
+        id: 'population',
+        label: 'Population',
+        format: value => value.toLocaleString(),
+    },
+    {
+        id: 'percentage',
+        label: '%',
+        format: value => value.toLocaleString(),
+    },
+];
+
+
 const StatisticsStyles = styled.div`
     position: relative;
     display: flex;
@@ -167,17 +181,3 @@ const StatisticsStyles = styled.div`
     }
 
  `;
-
-const columns = [
-    { id: 'demographic', label: 'Demographic', },
-    {
-        id: 'population',
-        label: 'Population',
-        format: value => value.toLocaleString(),
-    },
-    {
-        id: 'percentage',
-        label: '%',
-        format: value => value.toLocaleString(),
-    },
-];

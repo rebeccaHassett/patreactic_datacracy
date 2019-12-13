@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
+import {makeStyles, withStyles} from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -10,10 +10,10 @@ import Phase0Controls from "./Phase0Controls";
 import Phase1Controls from "./Phase1Controls";
 import Phase2Controls from "./Phase2Controls";
 import DataDisplay from "./DataDisplay";
-import { spacing } from '@material-ui/system';
+import {spacing} from '@material-ui/system';
 
 function TabPanel(props) {
-    const { children, value, index, ...other } = props;
+    const {children, value, index, ...other} = props;
 
     return (
         <Typography
@@ -24,7 +24,8 @@ function TabPanel(props) {
             aria-labelledby={`scrollable-auto-tab-${index}`}
             {...other}
         >
-            <Box p={3} style={{ paddingLeft: '0', paddingRight: '0', overflow: 'scroll', height: '100vh'}}>{children}</Box>
+            <Box p={3}
+                 style={{paddingLeft: '0', paddingRight: '0', overflow: 'scroll', height: '100vh'}}>{children}</Box>
         </Typography>
     );
 }
@@ -57,6 +58,8 @@ export default function MenuSidenav(props) {
     const classes = useStyles();
     const [value, setValue] = React.useState(0);
     const [generatedDistricts, setGeneratedDistricts] = React.useState(false);
+    const [phase0Lock, setphase0Lock] = React.useState(false);
+    const [phase1Lock, setphase1Lock] = React.useState(false);
     const [phase2Tab, setPhase2Tab] = React.useState(true);
 
     const handleChange = (event, newValue) => {
@@ -64,11 +67,23 @@ export default function MenuSidenav(props) {
     };
 
     const handleGeneratedDistricts = (event) => {
-      setGeneratedDistricts(true);
+        setGeneratedDistricts(true);
     };
 
     const togglePhase2Tab = (value) => {
-      setPhase2Tab(value);
+        /*Sets to Phase 0 Tab*/
+        if (!value) {
+            setValue(0);
+        }
+        setPhase2Tab(value);
+    };
+
+    const togglephase0Lock = (value) => {
+        setphase0Lock(value);
+    };
+
+    const togglephase1Lock = (value) => {
+        setphase1Lock(value);
     };
 
     return (
@@ -79,36 +94,50 @@ export default function MenuSidenav(props) {
                     onChange={handleChange}
                     indicatorColor="primary"
                     textColor="primary"
-                    contentContainerStyle={{  display: 'flex',
+                    contentContainerStyle={{
+                        display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
                     }}
                     centered={true}
                 >
-                    <StyledTab label="Phase 0" />
-                    <StyledTab label="Phase 1" />
-                    <StyledTab label="Phase 2" disabled={true}/>
+                    <StyledTab label="Phase 0"/>
+                    <StyledTab label="Phase 1"/>
+                    <StyledTab label="Phase 2" disabled={phase2Tab}/>
                     <StyledTab label="Data"/>
                 </Tabs>
             </AppBar>
-            <TabPanel value={value} index={0} style={{marginLeft: '0px', paddingLeft: '0px', marginRight: '0px', paddingRight: '0px'}}>
-                <Phase0Controls state={props.chosenState} phase0SelectedElection={props.phase0SelectedElection}/>
+            <TabPanel value={value} index={0}
+                      style={{marginLeft: '0px', paddingLeft: '0px', marginRight: '0px', paddingRight: '0px'}}>
+                <Phase0Controls state={props.chosenState} phase0SelectedElection={props.phase0SelectedElection}
+                                phase0Lock={phase0Lock}/>
             </TabPanel>
             <TabPanel value={value} index={1}>
-                <Phase1Controls chosenState={props.chosenState} removeOriginalDisrtricts={props.removeOriginalDisrtricts} removePrecinctLayer={props.removePrecinctLayer} precinctLayer={props.precinctLayer}
-                                handlePrecinctFeatures={props.handlePrecinctFeatures} handleGeneratedDistricts={handleGeneratedDistricts}
-                                initializePhase1Map={props.initializePhase1Map} phase1Update={props.phase1Update} togglePhase2Tab={togglePhase2Tab}
-                                election={props.election} numOriginalPrecincts={props.numOriginalPrecincts}/>
+                <Phase1Controls chosenState={props.chosenState}
+                                removeOriginalDisrtricts={props.removeOriginalDisrtricts}
+                                removePrecinctLayer={props.removePrecinctLayer} precinctLayer={props.precinctLayer}
+                                handlePrecinctFeatures={props.handlePrecinctFeatures}
+                                handleGeneratedDistricts={handleGeneratedDistricts}
+                                initializePhase1Map={props.initializePhase1Map} phase1Update={props.phase1Update}
+                                togglePhase2Tab={togglePhase2Tab}
+                                election={props.election} numOriginalPrecincts={props.numOriginalPrecincts}
+                                togglephase0Lock={togglephase0Lock}
+                                phase1Lock={phase1Lock}/>
             </TabPanel>
             <TabPanel value={value} index={2}>
-                <Phase2Controls/>
+                <Phase2Controls togglePhase2Tab={togglePhase2Tab} togglephase0Lock={togglephase0Lock}
+                                phase2Update={props.phase2Update}
+                                togglePhase1Lock={togglephase1Lock}/>
             </TabPanel>
             <TabPanel value={value} index={3}>
-                <DataDisplay stateData={props.stateData} precinctData={props.precinctData} districtData={props.districtData}
+                <DataDisplay stateData={props.stateData} precinctData={props.precinctData}
+                             districtData={props.districtData}
                              chosenState={props.chosenState} generatedDistricts={generatedDistricts}
-                            loadOriginalDistricts={props.loadOriginalDistricts} removeOriginalDistricts={props.removeOriginalDisrtricts}
-                            demographicMapUpdate={props.demographicMapUpdate} demographicMapUpdateSelection={props.demographicMapUpdateSelection}
-                            election={props.election} gerrymanderingScores={props.gerrymanderingScores}/>
+                             loadOriginalDistricts={props.loadOriginalDistricts}
+                             removeOriginalDistricts={props.removeOriginalDisrtricts}
+                             demographicMapUpdate={props.demographicMapUpdate}
+                             demographicMapUpdateSelection={props.demographicMapUpdateSelection}
+                             election={props.election} gerrymanderingScores={props.gerrymanderingScores}/>
             </TabPanel>
         </div>
     );

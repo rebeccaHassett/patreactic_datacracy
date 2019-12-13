@@ -1,5 +1,5 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import {makeStyles} from '@material-ui/core/styles';
 import Slider from '@material-ui/core/Slider';
 
 const useStyles = makeStyles({
@@ -7,10 +7,6 @@ const useStyles = makeStyles({
         width: "100%",
     },
 });
-
-function valuetext(value) {
-    return `${value}°C`;
-}
 
 export default function SliderControlSingleValue(props) {
     const classes = useStyles();
@@ -26,12 +22,11 @@ export default function SliderControlSingleValue(props) {
                 }}
                 valueLabelDisplay="auto"
                 aria-labelledby="custom thumb label"
-                getAriaValueText={valuetext}
                 marks={props.marks}
                 min={props.min}
                 max={props.max}
                 step={props.step}
-                defaultValue={props.max}
+                defaultValue={props.min}
                 disabled={props.disabled}
             />
         </div>

@@ -1,13 +1,13 @@
 import React, {Component} from 'react';
 import SliderControlUpperLowerValues from "./controls/SliderControlUpperLowerValues";
 import SliderControlSingleValue from "./controls/SliderControlSingleValue";
-import SwitchControl from "./controls/SwitchControl";
 import CheckboxControl from "./controls/CheckboxControl";
 import styled from 'styled-components';
 import Button from '@material-ui/core/Button';
 import TextField from "@material-ui/core/TextField";
 import AlertDialogSlide from "./controls/AlertControl";
 import TableDisplay from "./controls/TableDisplay";
+import RunControls from "./controls/RunControls";
 
 
 export default class Phase1Controls extends Component {
@@ -17,7 +17,6 @@ export default class Phase1Controls extends Component {
         this.handleNumberMajorityMinorityDistricts = this.handleNumberMajorityMinorityDistricts.bind(this);
         this.handleMinorityPopulationThreshold = this.handleMinorityPopulationThreshold.bind(this);
         this.handleIncrementalClick = this.handleIncrementalClick.bind(this);
-        this.handleRealTimeClick = this.handleRealTimeClick.bind(this);
         this.resultsViewOff = this.resultsViewOff.bind(this);
         this.resultsViewOn = this.resultsViewOn.bind(this);
         this.runPhase1 = this.runPhase1.bind(this);
@@ -34,6 +33,7 @@ export default class Phase1Controls extends Component {
         this.handleGerrymanderRepublicanWeight = this.handleGerrymanderRepublicanWeight.bind(this);
         this.handlePopulationHomogeneityWeight = this.handlePopulationHomogeneityWeight.bind(this);
         this.handleGerrymanderDemocratWeight = this.handleGerrymanderDemocratWeight.bind(this);
+        this.handleMajorityMinorityWeight = this.handleMajorityMinorityWeight.bind(this);
     }
 
     /* For now, hardcoding election type but will set to phase 0 and data election type */
@@ -41,7 +41,7 @@ export default class Phase1Controls extends Component {
         numCongressionalDistricts: 10,
         numMajorityMinorityDistricts: 10,
         minorityPopulationThresholdValues: [],
-        incremental: false,
+        incremental: true,
         realtime: false,
         selectedMinorities: [],
         convexHullCompactnessWeightValue: 0.1,
@@ -54,23 +54,25 @@ export default class Phase1Controls extends Component {
         gerrymanderRepublicanWeightValue: 0.1,
         populationHomogeneityWeightValue: 0.1,
         gerrymanderDemocratWeightValue: 0.1,
+        majorityMinorityWeightValue: 0.1,
         phase1RunButtonDisabled: false,
         alertDialogState: false,
         alertDialogText: "Must Select At Least One Minority Group!",
         resultsInView: false,
-        resultsUnavailable: false,
+        resultsUnavailable: true,
         majorityMinorityRows: [['-', '-', '-', '-']],
         phase1ButtonText: "Start Phase 1",
         phase1ControlsDisabled: false,
+        restartButtonDisabled: true
     };
 
     async runPhase1() {
-        if(!this.state.numCongressionalDistricts) {
+        if (!this.state.numCongressionalDistricts) {
             this.setState({alertDialogState: true});
             this.setState({alertDialogText: "Must Select Desired Number of Congressional Districts!"});
             return;
         }
-        if(!this.state.numMajorityMinorityDistricts) {
+        if (!this.state.numMajorityMinorityDistricts) {
             this.setState({alertDialogState: true});
             this.setState({alertDialogText: "Must Select Desired Number of Majority-Minority Districts!"});
             return;
@@ -85,6 +87,7 @@ export default class Phase1Controls extends Component {
         this.setState({resultsUnavailable: true});
         this.setState({phase1ControlsDisabled: true});
         this.props.togglePhase2Tab(true);
+        this.props.togglephase0Lock(true);
 
         let normalizedCompetitiveness = 0.1;
         let normalizedPopulationHomogeneity = 0.1;
@@ -96,6 +99,7 @@ export default class Phase1Controls extends Component {
         let normalizedReockCompactness = 0.1;
         let normalizedConvexHullCompactness = 0.1;
         let normalizedPartisanFairness = 0.1;
+        let normalizedMajorityMinority = 0.1;
 
         /*Normalize Weights:
             Divide each number by the sum of all numbers [if sum is 0, set each number to 0.1 since each weighting]*/
@@ -103,7 +107,7 @@ export default class Phase1Controls extends Component {
             + this.state.gerrymanderRepublicanWeightValue + this.state.populationEqualityWeightValue
             + this.state.edgeCompactnessWeightValue + this.state.efficiencyGapWeightValue
             + this.state.reockCompactnessWeightValue + this.state.convexHullCompactnessWeightValue
-            + this.state.partisanFairnessWeightValue;
+            + this.state.partisanFairnessWeightValue + this.state.majorityMinorityWeightValue;
 
         if (sum !== 0) {
             normalizedCompetitiveness = this.state.competitivenessWeightValue / sum;
@@ -116,6 +120,7 @@ export default class Phase1Controls extends Component {
             normalizedReockCompactness = this.state.reockCompactnessWeightValue / sum;
             normalizedConvexHullCompactness = this.state.convexHullCompactnessWeightValue / sum;
             normalizedPartisanFairness = this.state.partisanFairnessWeightValue / sum;
+            normalizedMajorityMinority = this.state.majorityMinorityWeightValue / sum;
         }
 
         var phase1Dto = {
@@ -128,6 +133,7 @@ export default class Phase1Controls extends Component {
                         },
                 },
                 weights: {
+                    "MAJORITY_MINORITY": normalizedMajorityMinority,
                     "PARTISAN_FAIRNESS": normalizedPartisanFairness,
                     "REOCK_COMPACTNESS": normalizedReockCompactness,
                     "CONVEX_HULL_COMPACTNESS": normalizedConvexHullCompactness,
@@ -153,7 +159,11 @@ export default class Phase1Controls extends Component {
         let that = this;
         await fetch("http://127.0.0.1:8080/phase1/start", {
             method: 'POST',
-            headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Credentials': true, 'Access-Control-Allow-Origin': 'http://localhost:3000'},
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Credentials': true,
+                'Access-Control-Allow-Origin': 'http://localhost:3000'
+            },
             body: JSON.stringify(phase1Dto),
             credentials: 'include',
         }).then(function (response) {
@@ -175,9 +185,9 @@ export default class Phase1Controls extends Component {
                 that.setState({phase1RunButtonDisabled: false});
             } else {
                 if (that.state.realtime) {
-                    that.pollPhase1NonIncremental(1000); //every second
+                    that.pollPhase1NonIncrementalRealtime(); //update each iteration
                 } else {
-                    that.pollPhase1NonIncremental(40000); //every 40 seconds
+                    that.pollPhase1NonIncrementalUpdateEnd(); //update only at the end
                 }
             }
         });
@@ -190,32 +200,42 @@ export default class Phase1Controls extends Component {
             let districtId = majMinDistrict.districtId;
             let demographicPopulation = majMinDistrict.demographicPopulation;
             let totalPopulation = majMinDistrict.totalPopulation;
-            let percentage = (demographicPopulation/totalPopulation) * 100;
+            let percentage = (demographicPopulation / totalPopulation) * 100;
             tempRows.append({districtId, demographicPopulation, totalPopulation, percentage});
         });
 
         this.setState({majorityMinorityRows: tempRows});
     }
 
-    async pollPhase1NonIncremental(timeout) {
+    async pollPhase1NonIncrementalRealtime() {
         let that = this;
-        var timesRun = 0;
-        var interval = setInterval(function () {
-            fetch("http://127.0.0.1:8080/phase1/poll").then(function (response) {
-                if (response.status >= 400) {
-                    throw new Error("Failed to load phase 1 update from server");
-                }
-                return response.json();
-            }).then(function (data) {
-                if (data.districtUpdates === []) {
-                    that.endPhase1();
-                    clearInterval(interval);
-                } else {
-                    that.props.phase1Update(data);
-                }
-            });
-        }, timeout);
-    };
+        fetch("http://127.0.0.1:8080/phase1/poll").then(function (response) {
+            if (response.status >= 400) {
+                throw new Error("Failed to load phase 1 update from server");
+            }
+            return response.json();
+        }).then(function (data) {
+            if (data.districtUpdates === []) {
+                that.endPhase1();
+            } else {
+                that.props.phase1Update(data);
+                that.pollPhase1NonIncremental();
+            }
+        });
+    }
+
+    async pollPhase1NonIncrementalUpdateEnd() {
+        let that = this;
+        fetch("http://127.0.0.1:8080/phase1/complete").then(function (response) {
+            if (response.status >= 400) {
+                throw new Error("Failed to load phase 1 update from server");
+            }
+            return response.json();
+        }).then(function (data) {
+            that.props.initializePhase1Map(data);
+            that.endPhase1();
+        });
+    }
 
     async pollPhase1Incremental() {
         this.setState({phase1RunButtonDisabled: true});
@@ -243,6 +263,7 @@ export default class Phase1Controls extends Component {
         this.setState({phase1ControlsDisabled: false});
         this.props.togglePhase2Tab(false);
         this.setState({phase1RunButtonDisabled: false});
+        this.setState({restartButtonDisabled: false});
     }
 
     handlePhase1() {
@@ -258,29 +279,36 @@ export default class Phase1Controls extends Component {
     }
 
     handleNumberCongressionalDistricts(event) {
-        if((Number(event.target.value) >= 1 && Number(event.target.value) <= 60) || !event.target.value) {
+        if ((Number(event.target.value) >= 1 && Number(event.target.value) <= 60) || !event.target.value) {
             this.setState({numCongressionalDistricts: event.target.value})
         }
-        if(Number(event.target.value) < Number(this.state.numMajorityMinorityDistricts)) {
+        if (Number(event.target.value) < Number(this.state.numMajorityMinorityDistricts)) {
             this.setState({numMajorityMinorityDistricts: event.target.value});
         }
     }
 
     handleNumberMajorityMinorityDistricts(event) {
-        if((Number(event.target.value) >= 1 && Number(event.target.value) <= Number(this.state.numCongressionalDistricts)) || !event.target.value) {
+        if ((Number(event.target.value) >= 1 && Number(event.target.value) <= Number(this.state.numCongressionalDistricts)) || !event.target.value) {
             this.setState({numMajorityMinorityDistricts: event.target.value})
-        }    }
+        }
+    }
 
     handleMinorityPopulationThreshold(value) {
         this.setState({minorityPopulationThresholdValues: value})
     }
 
     handleIncrementalClick(evt) {
-        this.setState({incremental: evt.target.checked})
-    }
-
-    handleRealTimeClick(evt) {
-        this.setState({realtime: evt.target.checked})
+        console.log(evt.target.value);
+        if (evt.target.value === "incremental") {
+            this.setState({incremental: true});
+            this.setState({realtime: false});
+        } else if (evt.target.value === "nonIncrementalRealtime") {
+            this.setState({incremental: false});
+            this.setState({realtime: true});
+        } else if (evt.target.value === "nonIncrementalSingleUpdate") {
+            this.setState({incremental: false});
+            this.setState({realtime: false});
+        }
     }
 
     handleSelectedDemographics(updatedDemographics) {
@@ -337,6 +365,11 @@ export default class Phase1Controls extends Component {
         this.setState({resultsInView: false});
     }
 
+    restart() {
+        this.props.togglephase0Lock(false);
+        this.props.togglePhase2Tab(true);
+    }
+
 
     render() {
         let marks = [];
@@ -344,7 +377,7 @@ export default class Phase1Controls extends Component {
             value: 1,
             label: '1',
         });
-        for(let i = 100; i < this.props.numOriginalPrecincts; i+= 100) {
+        for (let i = 100; i < this.props.numOriginalPrecincts; i += 100) {
             marks.push(
                 {
                     value: i,
@@ -353,7 +386,19 @@ export default class Phase1Controls extends Component {
             );
         }
 
-        if (this.state.resultsUnavailable === true || this.state.resultsInView === false) {
+        let defaultDistricts;
+        if (this.props.chosenState === "RhodeIsland") {
+            this.setState({numCongressionalDistricts: 2});
+            this.setState({numMajMinDistricts: 1});
+        } else if (this.props.chosenState === "NorthCarolina") {
+            this.setState({numCongressionalDistricts: 13});
+            this.setState({numMajMinDistricts: 6});
+        } else {
+            this.setState({numCongressionalDistricts: 14});
+            this.setState({numMajMinDistricts: 7});
+        }
+
+        if (!this.state.resultsInView && !this.props.phase1Lock) {
             return (
                 <Phase1Styles>
                     <AlertDialogSlide exportState={this.handleAlertDialogState} open={this.state.alertDialogState}
@@ -362,18 +407,26 @@ export default class Phase1Controls extends Component {
                             onClick={this.handlePhase1} style={{width: '25vw', marginBottom: '2vw'}}>
                         {this.state.phase1ButtonText}
                     </Button>
-                    <SwitchControl name="Incremental" exportIncremental={this.handleIncrementalClick}
-                                   exportRealTime={this.handleRealTimeClick}
-                                   disabled={this.state.phase1ControlsDisabled}/>
-                    <Button variant="contained" color="primary" disabled={false}
-                            style={{width: '25vw', marginTop: '2vw', marginBottom: '3vw'}} onClick={this.resultsViewOn}>
-                        View Results
-                    </Button>
+                    <div className="row">
+                        <Button variant="contained" color="primary" disabled={this.state.resultsUnavailable}
+                                style={{height: '6vh', marginRight: '1vw'}} onClick={this.resultsViewOn}>
+                            View Results
+                        </Button>
+                        <Button variant="contained" color="primary" disabled={this.state.restartButtonDisabled}
+                                style={{height: '6vh'}} onClick={this.restart}>
+                            Restart Phase 0
+                        </Button>
+                    </div>
+                    <ControlGroup>
+                        <label className="runLabel">Run Controls:</label>
+                        <RunControls name="Incremental" exportState={this.handleIncrementalClick}
+                                     disabled={this.state.phase1ControlsDisabled}/>
+                    </ControlGroup>
                     <TextField
                         id="outlined-number"
                         label="Congressional Districts"
                         type="number"
-                        style={{ margin: 15, width: '25vw' }}
+                        style={{margin: 15, width: '25vw'}}
                         onChange={this.handleNumberCongressionalDistricts}
                         variant="filled"
                         value={this.state.numCongressionalDistricts}
@@ -382,21 +435,27 @@ export default class Phase1Controls extends Component {
                         id="outlined-number"
                         label="Majority-Minority Districts"
                         type="number"
-                        style={{ margin: 15, width: '25vw' }}
+                        style={{margin: 15, width: '25vw'}}
                         onChange={this.handleNumberMajorityMinorityDistricts}
                         variant="filled"
                         value={this.state.numMajorityMinorityDistricts}
                     />
                     <ControlGroup id="minorityPopulationThreshold">
-                        <label className="label">Minority Population Thresholds:</label>
-                        <SliderControlUpperLowerValues disabled={this.state.phase1ControlsDisabled}
-                                                       exportState={this.handleMinorityPopulationThreshold}/>
-                    </ControlGroup>
-                    <ControlGroup id="minorityPopulationThreshold">
                         <label className="ethnicLabel">Ethnic/Racial Groups:</label>
                         <CheckboxControl exportState={this.handleSelectedDemographics}
                                          disabled={this.state.phase1ControlsDisabled}
                                          helperText="Must select at least one demographic"/>
+                    </ControlGroup>
+                    <ControlGroup id="minorityPopulationThreshold">
+                        <label className="label">Minority Population Thresholds:</label>
+                        <SliderControlUpperLowerValues disabled={this.state.phase1ControlsDisabled}
+                                                       exportState={this.handleMinorityPopulationThreshold}/>
+                    </ControlGroup>
+                    <ControlGroup>
+                        <label className="label">Majority Minority Weighting:</label>
+                        <SliderControlSingleValue min={0} max={1} step={0.01} marks={OFMarks}
+                                                  disabled={this.state.phase1ControlsDisabled}
+                                                  exportState={this.handleMajorityMinorityWeight}/>
                     </ControlGroup>
                     <ControlGroup>
                         <label className="label">Convex Hull Compactness Weighting:</label>
@@ -464,7 +523,7 @@ export default class Phase1Controls extends Component {
             return (
                 <Phase1Styles>
                     <Button variant="contained" color="primary" style={{width: '25vw', marginBottom: '2vw'}}
-                            onClick={this.resultsViewOff}>Back to Controls</Button>
+                            onClick={this.resultsViewOff} disabled={this.props.phase1Lock}>Back to Controls</Button>
                     <h5>Majority-Minority Districts</h5>
                     <TableDisplay columns={columns} rows={this.state.majorityMinorityRows}></TableDisplay>
                 </Phase1Styles>
@@ -486,6 +545,10 @@ const Phase1Styles = styled.div`
     }
     .ethnicLabel {
       font-weight: bold;
+    }
+    .runLabel {
+        margin-top: 2vw;
+        font-weight: bold;
     }
 `;
 

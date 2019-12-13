@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
+import {makeStyles, withStyles} from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -9,7 +9,7 @@ import Box from '@material-ui/core/Box';
 import styled from "styled-components";
 
 function TabPane(props) {
-    const { children, value, index, ...other } = props;
+    const {children, value, index, ...other} = props;
 
     return (
         <Typography
@@ -20,7 +20,7 @@ function TabPane(props) {
             aria-labelledby={`scrollable-auto-tab-${index}`}
             {...other}
         >
-            <Box p={3} style={{ paddingLeft: '0', paddingRight: '0', }}>{children}</Box>
+            <Box p={3} style={{paddingLeft: '0', paddingRight: '0',}}>{children}</Box>
         </Typography>
     );
 }
@@ -60,17 +60,15 @@ export default function DataTabs(props) {
 
 
     let election;
-    if(props.election === "Presidential 2016"){
+    if (props.election === "Presidential 2016") {
         election = "pres2016";
-    }
-    else if(props.election === "Congressional 2016") {
+    } else if (props.election === "Congressional 2016") {
         election = "house2016"
-    }
-    else if(props.election === "Congressional 2018"){
+    } else if (props.election === "Congressional 2018") {
         election = "house 2018";
     }
 
-    if(props.gerrymanderingScores) {
+    if (props.gerrymanderingScores) {
         return (
             <div className={classes.root}>
                 <AppBar position="static" style={{width: '35vw', margin: 'auto'}} color="primary">
@@ -115,9 +113,8 @@ export default function DataTabs(props) {
                 </TabPane>
             </div>
         );
-    }
-    else {
-        return(<div/>);
+    } else {
+        return (<div/>);
     }
 }
 const DataStyle = styled.div`

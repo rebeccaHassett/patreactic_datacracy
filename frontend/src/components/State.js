@@ -19,13 +19,13 @@ export default class State extends Component {
         this.phase0SelectedElection = this.phase0SelectedElection.bind(this);
         this.initializePhase1Map = this.initializePhase1Map.bind(this);
         this.phase1Update = this.phase1Update.bind(this);
+        this.phase2Update = this.phase2Update.bind(this);
         this.demographicMapUpdate = this.demographicMapUpdate.bind(this);
         this.demographicMapUpdateSelection = this.demographicMapUpdateSelection.bind(this);
         this.addDistrictsToMap = this.addDistrictsToMap.bind(this);
         this.addPrecinctsToMap = this.addPrecinctsToMap.bind(this);
 
         this.state = {
-            sidebar: true,
             precinctData: "",
             districtData: "",
             stateData: "",
@@ -35,13 +35,13 @@ export default class State extends Component {
                 meanMedianDiff: {pres2016: null, house2016: null, house2018: null},
                 winningParty: {pres2016: null, house2016: null, house2018: null},
             },
-            generatedStateGerrymandering:  {
+            generatedStateGerrymandering: {
                 efficiencyGap: {pres2016: null, house2016: null, house2018: null},
                 lopsidedMargins: {pres2016: null, house2016: null, house2018: null},
                 meanMedianDiff: {pres2016: null, house2016: null, house2018: null},
                 winningParty: {pres2016: null, house2016: null, house2018: null},
             },
-            gerrymanderingScores:  {
+            gerrymanderingScores: {
                 efficiencyGap: {pres2016: null, house2016: null, house2018: null},
                 lopsidedMargins: {pres2016: null, house2016: null, house2018: null},
                 meanMedianDiff: {pres2016: null, house2016: null, house2018: null},
@@ -57,22 +57,23 @@ export default class State extends Component {
             originalDistrictsLoaded: false,
             originalDistrictDataMap: {},
             generatedDistrictMap: {},
-            districtIds: null,
             generatedDistrictDataMap: {},
             demographicsMapDisplay: [],
             majorityMinorityDistricts: [],
+            phase0Lock: false
         };
-        this.toggleBox = this.toggleBox.bind(this);
     }
 
     phase0SelectedElection(selectedElection) {
         this.setState({election: selectedElection});
+
         let precinctArr = [];
         let that = this;
         Object.keys(this.state.precinctMap).forEach(function (key) {
             precinctArr.push(that.state.precinctMap[key]);
         });
         let layerGroup = L.layerGroup(precinctArr);
+
         layerGroup.eachLayer(function (layer) {
             let precinctLayers = layer._layers;
             let republicanElectionData;
@@ -105,6 +106,62 @@ export default class State extends Component {
                 });
             });
         });
+    }
+
+    /*
+    * Phase 2 Update:
+    * For Each Move Object:
+    *   - Update color of precinct moved to new district
+    *   - Highlight precinct moved
+    *   - Update old district data
+    *   - Update new district data
+    *
+    * - Update gerrymandering scores
+     */
+
+    phase2Update(data) {
+        if (this.state.originalDistrictsLoaded) {
+            this.map.removeLayer(this.state.originalDistrictLayer);
+        }
+
+        let updatedDistrictMap = this.state.generatedDistrictMap;
+        let districtDataMap = this.state.generatedDistrictDataMap;
+
+        data.moves.forEach((move) => {
+            /*Get color of updated cluster that the precinct is moving to*/
+            let mergedIntoPrecinctIds = move.toDistrict.precinctIds.filter(x => !move.precinct.precinctId);
+            let mergedIntoDistrictLayers = updatedDistrictMap[mergedIntoPrecinctIds[0]]._layers;
+            let updateColor;
+            Object.keys(mergedIntoDistrictLayers).forEach(function (key) {
+                updateColor = mergedIntoDistrictLayers[key].feature.properties.COLOR;
+            });
+
+            /* Update the district Id and color of the moved precinct */
+            let clusterLayers = updatedDistrictMap[move.precinctId]._layers;
+            Object.keys(clusterLayers).forEach(function (key) {
+                clusterLayers[key].feature.properties.districtId = move.toDistrict.districtId;
+                clusterLayers[key].feature.properties.COLOR = updateColor;
+                clusterLayers[key].setStyle({border: 'red'})
+            });
+
+            /*Update Generated District Data Map*/
+            districtDataMap[move.toDistrict.districtId] = move.newDistrictData;
+            districtDataMap[move.fromDistrict.districtId] = move.oldDistrictData;
+        });
+        this.setState({gerrymanderingScores: data.gerrymanderingScores});
+        this.setState({generatedStateGerrymandering: data.gerrymanderingScores});
+
+        this.setState({generatedDistrictMap: updatedDistrictMap});
+        this.setState({generatedDistrictDataMap: districtDataMap});
+
+        let generatedDistrictsArr = [];
+        Object.keys(updatedDistrictMap).forEach(function (key) {
+            generatedDistrictsArr.push(updatedDistrictMap[key]);
+        });
+        let layerGroup = L.featureGroup(generatedDistrictsArr);
+
+        this.addDistrictsToMap(layerGroup, false, districtDataMap, this.getMajorityMinorityDistrictIds(data));
+        this.setState({originalDistrictsLoaded: false});
     }
 
     removeOriginalDistrictLayer() {
@@ -217,6 +274,10 @@ export default class State extends Component {
         var colorsys = require('colorsys');
         let contrastingColors = this.contrastingColors(Object.keys(this.state.precinctMap).length);
         this.map.removeLayer(this.state.originalDistrictLayer);
+        this.setState({phase0Lock: true});
+        this.setState({precinctData: ""});
+
+        /* Set initial colors for each cluster */
         let updatedDistrictMap = this.state.precinctMap;
         let districtDataMap = {};
         data.districtUpdates.forEach((updatedDistrict, index) => {
@@ -403,7 +464,7 @@ export default class State extends Component {
                 let opacity = 1;
                 let fillOpacity = 0.7;
                 let weight = 2;
-                if(majorityMinorityDistricts.includes(districtLayers[key].feature.properties.districtId)) {
+                if (majorityMinorityDistricts.includes(districtLayers[key].feature.properties.districtId)) {
                     opacity = 1;
                     fillOpacity = 1;
                     weight = 3;
@@ -437,7 +498,7 @@ export default class State extends Component {
 
     addPrecinctsToMap(layerGroup, map, that) {
         map.on("zoomend", function (event) {
-            if (this.getZoom() >= ZOOM && !that.state.precinctsLoaded) {
+            if (this.getZoom() >= ZOOM && !that.state.precinctsLoaded && !that.state.phase0Lock) {
                 that.removeOriginalDistrictLayer();
                 layerGroup.addTo(map);
                 that.setState({precinctsLoaded: true});
@@ -547,7 +608,6 @@ export default class State extends Component {
         }
     };
 
-
     getDemographicColors(demographicTotal, overall) {
         return (demographicTotal / overall) * 100 > 80 ? '#49006a' :
             (demographicTotal / overall) * 100 > 70 ? '#7a0177' :
@@ -558,10 +618,6 @@ export default class State extends Component {
                                 (demographicTotal / overall) * 100 > 20 ? '#fcc5c0' :
                                     (demographicTotal / overall) * 100 > 10 ? '#fde0dd' :
                                         '#fff7f3';
-    }
-
-    toggleBox() {
-        this.setState(oldState => ({sidebar: !oldState.sidebar}));
     }
 
     componentDidMount() {
@@ -663,7 +719,7 @@ export default class State extends Component {
                     }
                 }
             },
-        )
+        );
         return (
             <MuiThemeProvider theme={theme}>
                 <State_Style>
@@ -681,7 +737,8 @@ export default class State extends Component {
                                          demographicMapUpdateSelection={this.demographicMapUpdateSelection}
                                          election={this.state.election}
                                          numOriginalPrecincts={this.state.numOriginalPrecincts}
-                                        gerrymanderingScores={this.state.gerrymanderingScores}/>
+                                         gerrymanderingScores={this.state.gerrymanderingScores}
+                                         phase2Update={this.state.phase2Update}/>
                         </Col>
                         <Col className="mapContainer" xs={7}>
                             <div id='map'></div>

@@ -1,5 +1,4 @@
 import React from 'react';
-import styled from "styled-components";
 import DataTabs from "./DataTabs";
 
 class DataDisplay extends React.Component {
@@ -15,7 +14,7 @@ class DataDisplay extends React.Component {
     };
 
     createData(districtId, incumbent) {
-        return { districtId, incumbent };
+        return {districtId, incumbent};
     }
 
     setIncumbents(data) {
@@ -24,11 +23,11 @@ class DataDisplay extends React.Component {
             map.push(this.createData(incumbent.districtId, incumbent.incumbent))
         });
 
-        this.setState({ incumbents: map });
+        this.setState({incumbents: map});
     }
 
     setLaws(data) {
-        this.setState({ laws: data.laws });
+        this.setState({laws: data.laws});
     }
 
     componentDidMount() {
@@ -50,12 +49,15 @@ class DataDisplay extends React.Component {
     render() {
         return (
             <DataTabs stateData={this.props.stateData} districtData={this.props.districtData}
-                precinctData={this.props.precinctData}
-                incumbents={this.state.incumbents} laws={this.state.laws}
-                      generatedDistricts={this.props.generatedDistricts} loadOriginalDistricts={this.props.loadOriginalDistricts}
-                    removeOriginalDistricts={this.props.removeOriginalDistricts} demographicMapUpdate={this.props.demographicMapUpdate}
-                    demographicMapUpdateSelection={this.props.demographicMapUpdateSelection} election={this.props.election}
-                    gerrymanderingScores={this.props.gerrymanderingScores}/>
+                      precinctData={this.props.precinctData}
+                      incumbents={this.state.incumbents} laws={this.state.laws}
+                      generatedDistricts={this.props.generatedDistricts}
+                      loadOriginalDistricts={this.props.loadOriginalDistricts}
+                      removeOriginalDistricts={this.props.removeOriginalDistricts}
+                      demographicMapUpdate={this.props.demographicMapUpdate}
+                      demographicMapUpdateSelection={this.props.demographicMapUpdateSelection}
+                      election={this.props.election}
+                      gerrymanderingScores={this.props.gerrymanderingScores}/>
         );
     }
 }

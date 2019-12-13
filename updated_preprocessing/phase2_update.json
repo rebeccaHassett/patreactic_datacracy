@@ -1,0 +1,9 @@
+{
+  "phase2Update": {
+    "moves": [
+      {"toDistrict": , "fromDistrict": ,"precinct": , "oldDistrictData": {"VAP": 2, "WVAP": 10,...}, "newDistrictData": {"VAP": 2, "WVAP": 10,...}},
+      {"toDistrict": , "fromDistrict": ,"precinct": , "oldDistrictData": {"VAP": 2, "WVAP": 10,...}, "newDistrictData": {"VAP": 2, "WVAP": 10,...}}],
+    "gerrymanderingScores": {same structure},
+    "results": {structure given above}
+  }
+}

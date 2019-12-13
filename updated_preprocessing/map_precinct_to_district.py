@@ -80,13 +80,13 @@ def main():
         with open("../original_data/district_geographical_data/North_Carolina/North_Carolina_U.S_Congressional_Districts_Geography.json") as f:
             district_features = json.load(f)["features"]
 
-        with open("mapped_data/NC_VDT_MAPPED.json") as f:
+        with open("mapped_data/NC_VDT_FINAL_HOPEFULLY.json") as f:
             precinct_features = json.load(f)["features"]
 
         complete_precinct_features = map_precincts_to_districts(district_features, precinct_features)
 
-        original_precinct_file = "mapped_data/NC_VDT_MAPPED_FINAL_HOPEFULLY.json"
-        new_precinct_file = "mapped_data/NC_VDT_MAPPED_FINAL.json"
+        original_precinct_file = "mapped_data/NC_VDT_FINAL_HOPEFULLY.json"
+        new_precinct_file = "mapped_data/NC_VDT_FINAL_HOPEFULLY_HOPEFULLY.json"
 
     else:
         print("Wrong Input")
