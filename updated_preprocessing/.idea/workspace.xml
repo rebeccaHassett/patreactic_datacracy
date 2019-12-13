@@ -2,36 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="da7513d8-167f-45a0-92b8-c16a264abf58" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/../frontend/src/components/BarChart.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/graphs/BarChart.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/src/components/DataDisplay.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/DataDisplay.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/src/components/DataTabs.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/DataTabs.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/src/components/MenuSidenav.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/MenuSidenav.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/src/components/Phase0Controls.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/Phase0Controls.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../frontend/src/components/Phase1Controls.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/Phase1Controls.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../frontend/src/components/Phase2Controls.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/Phase2Controls.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../frontend/src/components/State.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/State.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/src/components/Statistics.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/Statistics.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/src/components/VotingBlocSummaryDialog.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/VotingBlocSummaryDialog.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/src/components/controls/AlertControl.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/controls/AlertControl.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/src/components/controls/BoxMenu.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/src/components/controls/CheckboxControl.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/controls/CheckboxControl.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/src/components/controls/ElectionButtonsControl.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/controls/ElectionButtonsControl.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/src/components/controls/SliderControlSingleValue.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/controls/SliderControlSingleValue.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/src/components/controls/SliderControlUpperLowerValues.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/controls/SliderControlUpperLowerValues.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/src/components/controls/SwitchControl.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/src/components/controls/TableDisplay.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/controls/TableDisplay.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/src/components/graphs/PieChart.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/graphs/PieChart.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/src/components/styles/App_Intro.css" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/styles/App_Intro.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../server/src/main/java/edu/stonybrook/politech/annealing/models/concrete/Precinct.java" beforeDir="false" afterPath="$PROJECT_DIR$/../server/src/main/java/edu/stonybrook/politech/annealing/models/concrete/Precinct.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../server/src/main/java/edu/sunysb/cs/patractic/datacracy/controller/BasicBorderController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../server/src/main/java/edu/sunysb/cs/patractic/datacracy/controller/BasicBorderController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../server/src/main/java/edu/sunysb/cs/patractic/datacracy/domain/persistence/HibernateUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/../server/src/main/java/edu/sunysb/cs/patractic/datacracy/domain/persistence/HibernateUtil.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/clean_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/clean_data.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/load_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/load_data.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/map_precinct_to_district.py" beforeDir="false" afterPath="$PROJECT_DIR$/map_precinct_to_district.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mapped_data/NC_VDT_MAPPED.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/mapped_data/NC_VDT_MAPPED_FINAL_HOPEFULLY.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/mapped_data/NC_VDT_MAPPED_FINAL_NO_DUPLICATES.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mapped_data/NC_VDT_FINAL_HOPEFULLY.json" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -229,7 +207,8 @@
       <workItem from="1576105288522" duration="1890000" />
       <workItem from="1576110595988" duration="13917000" />
       <workItem from="1576166126301" duration="15029000" />
-      <workItem from="1576213657775" duration="2855000" />
+      <workItem from="1576213657775" duration="3567000" />
+      <workItem from="1576220549441" duration="363000" />
     </task>
     <servers />
   </component>
