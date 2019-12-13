@@ -55,11 +55,35 @@ public class Precinct
             District district, Map<ElectionId, ElectionData> electionDataMap, Map<DemographicGroup, Long> populationMap, Set<String> neighborIDs) {
         this.precinctId = precinctId;
         this.state = state;
+        this.stateName = stateName;
         this.geometryJSON = geometryJSON;
         this.district = district;
         this.electionDataMap = electionDataMap;
         this.populationMap = populationMap;
         this.postLoad();
+        this.originalDistrictID = districtID;
+        this.neighborIDs = neighborIDs;
+    }
+
+    public Precinct(
+            String precinctId,
+            State state,
+            String stateName,
+            String geometryJSON,
+            String districtID,
+            District district,
+            Map<ElectionId, ElectionData> electionDataMap,
+            Map<DemographicGroup, Long> populationMap,
+            Set<String> neighborIDs,
+            Geometry geometry) {
+        this.precinctId = precinctId;
+        this.state = state;
+        this.stateName = stateName;
+        this.geometryJSON = geometryJSON;
+        this.district = district;
+        this.electionDataMap = electionDataMap;
+        this.populationMap = populationMap;
+        this.geometry = geometry;
         this.originalDistrictID = districtID;
         this.neighborIDs = neighborIDs;
     }
@@ -216,7 +240,6 @@ public class Precinct
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Precinct precinct = (Precinct) o;
-        System.out.println(stateName + "EQUALs" + precinct.stateName);
         return precinctId.equals(precinct.precinctId) &&
                 stateName.equals(precinct.stateName) &&
                 district.getDistrictId().equals(precinct.district.getDistrictId());
@@ -256,7 +279,8 @@ public class Precinct
                 null,
                 electionDataMap,
                 populationMap,
-                new HashSet<>(neighborIDs));
+                new HashSet<>(neighborIDs),
+                geometry);
     }
 
     @Column(name = "county")

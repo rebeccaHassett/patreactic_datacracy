@@ -286,4 +286,8 @@ public class District
     public int numPrecincts() {
         return precincts.size();
     }
+
+    public District clone() {
+        return new District(this.districtId, this.state);
+    }
 }

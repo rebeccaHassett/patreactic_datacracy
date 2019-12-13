@@ -28,13 +28,13 @@ public class HibernateUtil {
                 settings.put(Environment.USER, "patreactic_datacracy");
                 settings.put(Environment.PASS, "changeit");
                 settings.put(Environment.DIALECT, "org.hibernate.dialect.MySQL5Dialect");
-                settings.put(Environment.SHOW_SQL, "true");
+                settings.put(Environment.SHOW_SQL, "false");
                 settings.put(Environment.LOG_JDBC_WARNINGS, "true");
                 settings.put(Environment.CURRENT_SESSION_CONTEXT_CLASS, "thread");
 
 
                 // Configure how the schema should be created
-                settings.put(Environment.HBM2DDL_AUTO, "create-only");
+                settings.put(Environment.HBM2DDL_AUTO, "none");
 
                 configuration.setProperties(settings);
                 configuration.setProperty("hibernate.temp.use_jdbc_metadata_defaults","false");
