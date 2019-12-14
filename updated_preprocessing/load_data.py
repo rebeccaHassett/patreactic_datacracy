@@ -5,6 +5,8 @@ import json
 import incumbents
 import math
 
+from manual_neighbors import manual_neighbors
+
 white = 0
 black = 1
 asian = 2
@@ -254,10 +256,21 @@ Notice PrecinctId is not a primary key in the PrecinctNeighbors table
 @param String: precinct neighbors file name
 @return: A list of tuples (precinctId, neighbors string)
 """
-def read_neighbors_file(filename):
+def read_neighbors_file(state):
     neighbor_list = []
+    filename = f"precinct_neighbors_{state}.json"
+    manual = manual_neighbors[state]
+
     with open(filename) as json_file:
         data = json.load(json_file)
+        for precinctId, neighbors in manual.items():
+            if data.get(precinctId, None) is None:
+                data[precinctId] = []
+            data[precinctId] = list(set(data[precinctId] + manual[precinctId]))
+            for n in neighbors:
+                if data.get(n, None) is None:
+                    data[n] = []
+                data[n] = list(set(data[n] + [precinctId]))
         for precinctId in data:
             for neighbor in data[precinctId]:
                 neighbor_list.append((precinctId, neighbor))
@@ -269,8 +282,8 @@ def load_precinct_neighbors(connection):
                            VALUES 
                            (%s, %s) """
 
-    rhode_island_neighbors_data = read_neighbors_file("precinct_neighbors_RI.json")
-    michigan_neighbors_data = read_neighbors_file("precinct_neighbors_MI.json")
+    rhode_island_neighbors_data = read_neighbors_file("RI")
+    michigan_neighbors_data = read_neighbors_file("MI")
     #north_carolina_neighbors_data = read_neighbors_file("precinct_neighbors_NC.json")
 
     state_neighbor_data = [rhode_island_neighbors_data, michigan_neighbors_data]
@@ -278,8 +291,7 @@ def load_precinct_neighbors(connection):
     cursor = connection.cursor()
 
     for state in state_neighbor_data:
-        for neighbor_pair in state:
-            cursor.execute(neighbors_insert_query, neighbor_pair)
+        cursor.executemany(neighbors_insert_query, state)
 
     connection.commit()
 
@@ -289,12 +301,12 @@ def load_data():
     try:
     #     print("loading state data...")
     #     load_state_data(connection)
-        print("loading precinct data...")
-        load_precinct_data(connection)
+        # print("loading precinct data...")
+        # load_precinct_data(connection)
     #     print("loading incumbent data...")
     #     load_incumbent_data(connection)
-    #     print("loading precinct neighbor data...")
-    #     load_precinct_neighbors(connection)
+        print("loading precinct neighbor data...")
+        load_precinct_neighbors(connection)
         #print("loading district data...")
         #load_district_borders(connection)
     finally:
