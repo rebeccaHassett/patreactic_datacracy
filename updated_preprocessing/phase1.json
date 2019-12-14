@@ -1,0 +1,30 @@
+{
+	"config": {
+		"thresholds": {
+			"MINORITY_PERCENTAGE": {
+				"lower": 80,
+				"upper": 90
+			}
+		},
+		"weights": {
+			"PARTISAN_FAIRNESS": 0,
+			"REOCK_COMPACTNESS": 0,
+			"CONVEX_HULL_COMPACTNESS": 0,
+			"EDGE_COMPACTNESS": 0,
+			"EFFICIENCY_GAP": 0,
+			"POPULATION_EQUALITY": 0,
+			"COMPETITIVENESS": 0,
+			"GERRYMANDER_REPUBLICAN": 0,
+			"POPULATION_HOMOGENEITY": 0,
+			"GERRYMANDER_DEMOCRAT": 0
+		},
+		"incremental": true,
+		"realtime": false,
+		"numDistricts": 6,
+		"numMajMinDistricts": 3,
+		"selectedMinorities": ["HISPANIC"],
+		"year": "2016",
+		"type": "Presidential"
+	},
+	"stateName": "RhodeIsland"
+}

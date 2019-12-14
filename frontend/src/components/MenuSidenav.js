@@ -103,7 +103,7 @@ export default function MenuSidenav(props) {
                 >
                     <StyledTab label="Phase 0"/>
                     <StyledTab label="Phase 1"/>
-                    <StyledTab label="Phase 2" disabled={phase2Tab}/>
+                    <StyledTab label="Phase 2"/>
                     <StyledTab label="Data"/>
                 </Tabs>
             </AppBar>
@@ -127,7 +127,8 @@ export default function MenuSidenav(props) {
             <TabPanel value={value} index={2}>
                 <Phase2Controls togglePhase2Tab={togglePhase2Tab} togglephase0Lock={togglephase0Lock}
                                 phase2Update={props.phase2Update}
-                                togglePhase1Lock={togglephase1Lock}/>
+                                togglePhase1Lock={togglephase1Lock} originalStateGerrymandering={props.originalStateGerrymandering}
+                                phase2Tab={phase2Tab} selectedStateGerrymandering={props.selectedStateGerrymandering}/>
             </TabPanel>
             <TabPanel value={value} index={3}>
                 <DataDisplay stateData={props.stateData} precinctData={props.precinctData}
@@ -137,7 +138,7 @@ export default function MenuSidenav(props) {
                              removeOriginalDistricts={props.removeOriginalDisrtricts}
                              demographicMapUpdate={props.demographicMapUpdate}
                              demographicMapUpdateSelection={props.demographicMapUpdateSelection}
-                             election={props.election} gerrymanderingScores={props.gerrymanderingScores}/>
+                             election={props.election}/>
             </TabPanel>
         </div>
     );

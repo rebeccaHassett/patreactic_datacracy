@@ -16,11 +16,11 @@ const RunControls = (props) => {
         <div>
             <FormControl component="fieldset" color="primary">
                 <RadioGroup aria-label="run-type" name="Run Type" value={value} onClick={props.exportState}
-                            onChange={handleChange}>
-                    <FormControlLabel value="incremental" control={<Radio color="primary"/>} label="Incremental"/>
-                    <FormControlLabel value="nonIncrementalRealtime" control={<Radio color="primary"/>}
+                            onChange={handleChange} disabled={props.disabled}>
+                    <FormControlLabel value="incremental" control={<Radio color="primary" disabled={props.disabled}/>} label="Incremental"/>
+                    <FormControlLabel value="nonIncrementalRealtime" control={<Radio color="primary" disabled={props.disabled}/>}
                                       label="Non-Incremental Realtime"/>
-                    <FormControlLabel value="nonIncrementalSingleUpdate" control={<Radio color="primary"/>}
+                    <FormControlLabel value="nonIncrementalSingleUpdate" control={<Radio color="primary" disabled={props.disabled}/>}
                                       label="Non-Incremental Single Update"/>
                 </RadioGroup>
             </FormControl>

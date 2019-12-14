@@ -2,14 +2,24 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="da7513d8-167f-45a0-92b8-c16a264abf58" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/../frontend/src/components/DataDisplay.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/DataDisplay.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/components/DataTabs.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/DataTabs.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/components/GerrymanderingTabs.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/components/MenuSidenav.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/MenuSidenav.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../frontend/src/components/Phase1Controls.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/Phase1Controls.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../frontend/src/components/Phase2Controls.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/Phase2Controls.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../frontend/src/components/State.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/State.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/components/controls/RunControls.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/controls/RunControls.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../original_data/county_boundaries/Michigan/Michigan_Counties.json" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../server/src/main/java/edu/stonybrook/politech/annealing/models/concrete/Precinct.java" beforeDir="false" afterPath="$PROJECT_DIR$/../server/src/main/java/edu/stonybrook/politech/annealing/models/concrete/Precinct.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../server/src/main/java/edu/sunysb/cs/patractic/datacracy/controller/BasicBorderController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../server/src/main/java/edu/sunysb/cs/patractic/datacracy/controller/BasicBorderController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../server/src/main/java/edu/sunysb/cs/patractic/datacracy/domain/Algorithm.java" beforeDir="false" afterPath="$PROJECT_DIR$/../server/src/main/java/edu/sunysb/cs/patractic/datacracy/domain/Algorithm.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../server/src/main/java/edu/sunysb/cs/patractic/datacracy/domain/persistence/HibernateUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/../server/src/main/java/edu/sunysb/cs/patractic/datacracy/domain/persistence/HibernateUtil.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mapped_data/NC_VDT_FINAL_HOPEFULLY.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/load_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/load_data.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mapped_data/MI_Precincts_MAPPED.geojson" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mapped_data/NC_VDT_FINAL_HOPEFULLY_HOPEFULLY.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mapped_data/RI_Precincts_MAPPED.geojson" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -208,7 +218,9 @@
       <workItem from="1576110595988" duration="13917000" />
       <workItem from="1576166126301" duration="15029000" />
       <workItem from="1576213657775" duration="3567000" />
-      <workItem from="1576220549441" duration="363000" />
+      <workItem from="1576220549441" duration="1134000" />
+      <workItem from="1576261793217" duration="875000" />
+      <workItem from="1576266101035" duration="2340000" />
     </task>
     <servers />
   </component>
@@ -249,6 +261,6 @@
     <SUITE FILE_PATH="coverage/updated_preprocessing$map_precinct_to_district.coverage" NAME="map_precinct_to_district Coverage Results" MODIFIED="1576209479124" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/updated_preprocessing$convert_coordinates.coverage" NAME="convert_coordinates Coverage Results" MODIFIED="1576189877787" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/updated_preprocessing$clean_data.coverage" NAME="clean_data Coverage Results" MODIFIED="1576215466759" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/updated_preprocessing$load_data.coverage" NAME="load_data Coverage Results" MODIFIED="1576216017971" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/updated_preprocessing$load_data.coverage" NAME="load_data Coverage Results" MODIFIED="1576267013778" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

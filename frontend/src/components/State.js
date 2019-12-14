@@ -29,23 +29,53 @@ export default class State extends Component {
             precinctData: "",
             districtData: "",
             stateData: "",
+            originalObjFuncResults: {
+                convexHullCompactness: {pres2016: 0, house2016: 0, house2018: 0},
+                edgeCompactness: {pres2016: 0, house2016: 0, house2018: 0},
+                reockCompactness: {pres2016: 0, house2016: 0, house2018: 0},
+                efficiencyGap: {pres2016: 0, house2016: 0, house2018: 0},
+                populationEquality: {pres2016: 0, house2016: 0, house2018: 0},
+                partisanFairness: {pres2016: 0, house2016: 0, house2018: 0},
+                competitiveness: {pres2016: 0, house2016: 0, house2018: 0},
+                gerrymanderRepublican: {pres2016: 0, house2016: 0, house2018: 0},
+                populationHomogeneity: {pres2016: 0, house2016: 0, house2018: 0},
+                gerrymanderDemocrat: {pres2016: 0, house2016: 0, house2018: 0},
+            },
             originalStateGerrymandering: {
-                efficiencyGap: {pres2016: null, house2016: null, house2018: null},
-                lopsidedMargins: {pres2016: null, house2016: null, house2018: null},
-                meanMedianDiff: {pres2016: null, house2016: null, house2018: null},
-                winningParty: {pres2016: null, house2016: null, house2018: null},
+                convexHullCompactness: 0,
+                edgeCompactness: 0,
+                reockCompactness: 0,
+                efficiencyGap: 0,
+                populationEquality: 0,
+                partisanFairness: 0,
+                competitiveness: 0,
+                gerrymanderRepublican: 0,
+                populationHomogeneity: 0,
+                gerrymanderDemocrat: 0,
             },
             generatedStateGerrymandering: {
-                efficiencyGap: {pres2016: null, house2016: null, house2018: null},
-                lopsidedMargins: {pres2016: null, house2016: null, house2018: null},
-                meanMedianDiff: {pres2016: null, house2016: null, house2018: null},
-                winningParty: {pres2016: null, house2016: null, house2018: null},
+                convexHullCompactness: 0,
+                edgeCompactness: 0,
+                reockCompactness: 0,
+                efficiencyGap: 0,
+                populationEquality: 0,
+                partisanFairness: 0,
+                competitiveness: 0,
+                gerrymanderRepublican: 0,
+                populationHomogeneity: 0,
+                gerrymanderDemocrat: 0,
             },
-            gerrymanderingScores: {
-                efficiencyGap: {pres2016: null, house2016: null, house2018: null},
-                lopsidedMargins: {pres2016: null, house2016: null, house2018: null},
-                meanMedianDiff: {pres2016: null, house2016: null, house2018: null},
-                winningParty: {pres2016: null, house2016: null, house2018: null},
+            selectedStateGerrymandering: {
+                convexHullCompactness: 0,
+                edgeCompactness: 0,
+                reockCompactness: 0,
+                efficiencyGap: 0,
+                populationEquality: 0,
+                partisanFairness: 0,
+                competitiveness: 0,
+                gerrymanderRepublican: 0,
+                populationHomogeneity: 0,
+                gerrymanderDemocrat: 0,
             },
             election: "Presidential 2016",
             chosenState: window.location.pathname.split("/").pop(),
@@ -67,8 +97,23 @@ export default class State extends Component {
     phase0SelectedElection(selectedElection) {
         this.setState({election: selectedElection});
 
-        let precinctArr = [];
         let that = this;
+        /* Choose gerrymandering scores for new election */
+        let electionKey;
+        if (selectedElection === "Presidential 2016") {
+            electionKey = "pres2016";
+        } else if (selectedElection === "Congressional 2016") {
+            electionKey = "house2016";
+        } else {
+            electionKey = "house2018";
+        }
+        let originalStateGerrymandering = {};
+        Object.keys(that.state.originalObjFuncResults).forEach(function (key) {
+            originalStateGerrymandering[key] = that.state.originalObjFuncResults[key].electionKey;
+        });
+        that.setState({originalStateGerrymandering: originalStateGerrymandering});
+
+        let precinctArr = [];
         Object.keys(this.state.precinctMap).forEach(function (key) {
             precinctArr.push(that.state.precinctMap[key]);
         });
@@ -116,10 +161,10 @@ export default class State extends Component {
     *   - Update old district data
     *   - Update new district data
     *
-    * - Update gerrymandering scores
+    *
      */
 
-    phase2Update(data) {
+    phase2Update(data, objFuncResults) {
         if (this.state.originalDistrictsLoaded) {
             this.map.removeLayer(this.state.originalDistrictLayer);
         }
@@ -148,11 +193,11 @@ export default class State extends Component {
             districtDataMap[move.toDistrict.districtId] = move.newDistrictData;
             districtDataMap[move.fromDistrict.districtId] = move.oldDistrictData;
         });
-        this.setState({gerrymanderingScores: data.gerrymanderingScores});
-        this.setState({generatedStateGerrymandering: data.gerrymanderingScores});
 
         this.setState({generatedDistrictMap: updatedDistrictMap});
         this.setState({generatedDistrictDataMap: districtDataMap});
+        this.setState({generatedStateGerrymandering: objFuncResults});
+        this.setState({selectedStateGerrymandering: objFuncResults});
 
         let generatedDistrictsArr = [];
         Object.keys(updatedDistrictMap).forEach(function (key) {
@@ -168,6 +213,7 @@ export default class State extends Component {
         if (this.state.originalDistrictsLoaded) {
             this.map.removeLayer(this.state.originalDistrictLayer);
             this.setState({originalDistrictsLoaded: false});
+            this.setState({selectedStateGerrymandering: this.state.generatedStateGerrymandering});
             let generatedDistrictsArr = [];
             let that = this;
             Object.keys(this.state.generatedDistrictMap).forEach(function (key) {
@@ -175,7 +221,6 @@ export default class State extends Component {
             });
             let layerGroup = L.featureGroup(generatedDistrictsArr);
             that.addDistrictsToMap(layerGroup, false, that.state.generatedDistrictDataMap, this.state.majorityMinorityDistricts);
-            that.setState({gerrymanderingScores: that.state.generatedStateGerrymandering});
         }
     }
 
@@ -309,14 +354,15 @@ export default class State extends Component {
 
         this.setState({generatedDistrictMap: updatedDistrictMap});
         this.setState({generatedDistrictDataMap: districtDataMap});
+        /*rhassettthis.setState({generatedStateGerrymandering: data.objFuncResults});
+        this.setState({selectedStateGerrymandering: data.objFuncResults});*/
+
         let generatedDistrictsArr = [];
         Object.keys(updatedDistrictMap).forEach(function (key) {
             generatedDistrictsArr.push(updatedDistrictMap[key]);
         });
         let layerGroup = L.featureGroup(generatedDistrictsArr);
 
-        this.setState({gerrymanderingScores: data.gerrymanderingScores});
-        this.setState({generatedStateGerrymandering: data.gerrymanderingScores});
         this.addDistrictsToMap(layerGroup, false, districtDataMap, this.getMajorityMinorityDistrictIds(data));
         this.setState({originalDistrictsLoaded: false});
     }
@@ -376,13 +422,13 @@ export default class State extends Component {
 
         this.setState({generatedDistrictMap: updatedDistrictMap});
         this.setState({generatedDistrictDataMap: districtDataMap});
+        /*rhassettthis.setState({generatedStateGerrymandering: data.objFuncResults});
+        this.setState({selectedStateGerrymandering: data.objFuncResults});*/
+
         let generatedDistrictsArr = [];
         Object.keys(updatedDistrictMap).forEach(function (key) {
             generatedDistrictsArr.push(updatedDistrictMap[key]);
         });
-
-        this.setState({gerrymanderingScores: data.gerrymanderingScores});
-        this.setState({generatedStateGerrymandering: data.gerrymanderingScores});
 
         let layerGroup = L.featureGroup(generatedDistrictsArr);
         this.addDistrictsToMap(layerGroup, false, districtDataMap, this.getMajorityMinorityDistrictIds(data));
@@ -404,6 +450,7 @@ export default class State extends Component {
         let that = this;
         if (!this.state.originalDistrictsLoaded) {
             let districtArr = [];
+            this.setState({selectedStateGerrymandering: this.state.originalStateGerrymandering});
             Object.keys(this.state.generatedDistrictMap).forEach(function (key) {
                 districtArr.push(that.state.generatedDistrictMap[key]);
             });
@@ -411,7 +458,6 @@ export default class State extends Component {
                 this.map.removeLayer(layer);
             });
             this.setState({originalDistrictsLoaded: true});
-            this.setState({gerrymanderingScores: this.state.originalStateGerrymandering});
             this.addDistrictsToMap(this.state.originalDistrictLayer, true, {}, []);
         }
     }
@@ -425,8 +471,16 @@ export default class State extends Component {
             }
             return response.json();
         }).then(function (data) {
-            that.setState({originalStateGerrymandering: data.gerrymanderingScores});
-            that.setState({gerrymanderingScores: data.gerrymanderingScores});
+            //rhassett that.setState({originalObjFuncResults: data.originalObjFuncResults});
+
+            /* Choose gerrymandering scores for presidential 2016 */
+            let originalStateGerrymandering = {};
+            Object.keys(that.state.originalObjFuncResults).forEach(function (key) {
+                originalStateGerrymandering[key] = that.state.originalObjFuncResults[key].pres2016;
+            });
+            that.setState({originalStateGerrymandering: originalStateGerrymandering});
+            that.setState({selectedStateGerrymandering: originalStateGerrymandering});
+
             that.setState({stateData: data});
             that.setState({precinctIds: data.precinctIds});
             return data.precinctIds;
@@ -498,6 +552,7 @@ export default class State extends Component {
 
     addPrecinctsToMap(layerGroup, map, that) {
         map.on("zoomend", function (event) {
+            console.log(this.getZoom());
             if (this.getZoom() >= ZOOM && !that.state.precinctsLoaded && !that.state.phase0Lock) {
                 that.removeOriginalDistrictLayer();
                 layerGroup.addTo(map);
@@ -737,8 +792,8 @@ export default class State extends Component {
                                          demographicMapUpdateSelection={this.demographicMapUpdateSelection}
                                          election={this.state.election}
                                          numOriginalPrecincts={this.state.numOriginalPrecincts}
-                                         gerrymanderingScores={this.state.gerrymanderingScores}
-                                         phase2Update={this.state.phase2Update}/>
+                                         phase2Update={this.state.phase2Update}
+                                         selectedStateGerrymandering={this.state.selectedStateGerrymandering}/>
                         </Col>
                         <Col className="mapContainer" xs={7}>
                             <div id='map'></div>

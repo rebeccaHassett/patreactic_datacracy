@@ -35,20 +35,7 @@ export default class Phase2Controls extends Component {
         gerrymanderRepublicanWeightValue: 1,
         populationHomogeneityWeightValue: 1,
         gerrymanderDemocratWeightValue: 1,
-        objFuncResults: {
-            convexHullCompactness: 0,
-            edgeCompactness: 0,
-            reockCompactness: 0,
-            efficiencyGap: 0,
-            populationEquality: 0,
-            partisanFairness: 0,
-            competitiveness: 0,
-            gerrymanderRepublican: 0,
-            populationHomogeneity: 0,
-            gerrymanderDemocrat: 0
-        },
         resultsInView: false,
-        resultsUnavailable: false,
         phase2RunButtonDisabled: false,
         phase2ControlsDisabled: false,
         phase2ButtonText: "Start Phase 2"
@@ -56,7 +43,6 @@ export default class Phase2Controls extends Component {
 
     async runPhase2() {
         this.setState({phase2RunButtonDisabled: true});
-        this.setState({resultsUnavailable: true});
         this.setState({phase2ControlsDisabled: true});
         this.props.togglePhase1Lock(true);
 
@@ -93,23 +79,20 @@ export default class Phase2Controls extends Component {
         }
 
         var phase2Dto = {
-            config: {
-                thresholds: {},
-                weights: {
-                    "PARTISAN_FAIRNESS": normalizedPartisanFairness,
-                    "REOCK_COMPACTNESS": normalizedReockCompactness,
-                    "CONVEX_HULL_COMPACTNESS": normalizedConvexHullCompactness,
-                    "EDGE_COMPACTNESS": normalizedEdgeCompactness,
-                    "EFFICIENCY_GAP": normalizedEfficiencyGap,
-                    "POPULATION_EQUALITY": normalizedPopulationEquality,
-                    "COMPETITIVENESS": normalizedCompetitiveness,
-                    "GERRYMANDER_REPUBLICAN": normalizedGerrymanderRepublican,
-                    "POPULATION_HOMOGENEITY": normalizedPopulationHomogeneity,
-                    "GERRYMANDER_DEMOCRAT": normalizedGerrymanderDemocrat
-                },
-                incremental: this.state.incremental,
-                realtime: this.state.realtime,
+            weights: {
+                "PARTISAN_FAIRNESS": normalizedPartisanFairness,
+                "REOCK_COMPACTNESS": normalizedReockCompactness,
+                "CONVEX_HULL_COMPACTNESS": normalizedConvexHullCompactness,
+                "EDGE_COMPACTNESS": normalizedEdgeCompactness,
+                "EFFICIENCY_GAP": normalizedEfficiencyGap,
+                "POPULATION_EQUALITY": normalizedPopulationEquality,
+                "COMPETITIVENESS": normalizedCompetitiveness,
+                "GERRYMANDER_REPUBLICAN": normalizedGerrymanderRepublican,
+                "POPULATION_HOMOGENEITY": normalizedPopulationHomogeneity,
+                "GERRYMANDER_DEMOCRAT": normalizedGerrymanderDemocrat
             },
+            incremental: this.state.incremental,
+            realtime: this.state.realtime,
         };
 
         let that = this;
@@ -160,12 +143,7 @@ export default class Phase2Controls extends Component {
             populationHomogeneity: data.populationHomogeneity,
             gerrymanderDemocrat: data.gerrymanderDemocrat
         };
-
-        this.setState({objFuncResults: objFuncResults});
-
-        this.setState({resultsUnavailable: false});
-
-        this.props.phase2Update(data);
+        this.props.phase2Update(data, objFuncResults);
     }
 
     async pollPhase2NonIncrementalRealtime() {
@@ -296,7 +274,7 @@ export default class Phase2Controls extends Component {
 
 
     render() {
-        if (this.state.resultsUnavailable || !this.state.resultsInView) {
+        if (!this.state.resultsInView && this.props.phase2Tabs) {
             return (
                 <Phase2Styles>
                     <Button variant="contained" color="primary" onClick={this.handlePhase2}
@@ -371,18 +349,18 @@ export default class Phase2Controls extends Component {
             return (
                 <Phase2Styles>
                     <Button variant="contained" color="primary" style={{width: '25vw', marginBottom: '2vw'}}
-                            onClick={this.resultsViewOff}>Back to Controls</Button>
-                    <h4>Objective Function Calculations</h4>
-                    <h5>Convex Hull Compactness: </h5>
-                    <h5>Edge Compactness: </h5>
-                    <h5>Reock Compactness: </h5>
-                    <h5>Efficiency Gap: </h5>
-                    <h5>Population Equality: </h5>
-                    <h5>Partisan Fairness: </h5>
-                    <h5>Competitiveness: </h5>
-                    <h5>Gerrymander Republican: </h5>
-                    <h5>Population Homogeneity: </h5>
-                    <h5>Gerrymander Democrat: </h5>
+                            onClick={this.resultsViewOff} disabled={this.props.phase2Tab}>Back to Controls</Button>
+                    <h4>{this.state.objFuncType} Gerrymandering Calculations</h4>
+                    <h5>Convex Hull Compactness: {this.props.selectedStateGerrymandering.convexHullCompactness}</h5>
+                    <h5>Edge Compactness: {this.props.selectedStateGerrymandering.edgeCompactness}</h5>
+                    <h5>Reock Compactness: {this.props.selectedStateGerrymandering.reockCompactness}</h5>
+                    <h5>Efficiency Gap: {this.props.selectedStateGerrymandering.efficiencyGap}</h5>
+                    <h5>Population Equality: {this.props.selectedStateGerrymandering.populationEquality}</h5>
+                    <h5>Partisan Fairness: {this.props.selectedStateGerrymandering.partisanFairness}</h5>
+                    <h5>Competitiveness: {this.props.selectedStateGerrymandering.competitiveness}</h5>
+                    <h5>Gerrymander Republican: {this.props.selectedStateGerrymandering.gerrymanderRepublican}</h5>
+                    <h5>Population Homogeneity: {this.props.selectedStateGerrymandering.populationHomogeneity}</h5>
+                    <h5>Gerrymander Democrat: {this.props.selectedStateGerrymandering.gerrymanderDemocrat}</h5>
                 </Phase2Styles>
             );
         }

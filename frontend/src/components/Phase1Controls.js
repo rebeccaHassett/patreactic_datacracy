@@ -38,8 +38,8 @@ export default class Phase1Controls extends Component {
 
     /* For now, hardcoding election type but will set to phase 0 and data election type */
     state = {
-        numCongressionalDistricts: 10,
-        numMajorityMinorityDistricts: 10,
+        numCongressionalDistricts: 6,
+        numMajorityMinorityDistricts: 3,
         minorityPopulationThresholdValues: [],
         incremental: true,
         realtime: false,
@@ -133,7 +133,7 @@ export default class Phase1Controls extends Component {
                         },
                 },
                 weights: {
-                    "MAJORITY_MINORITY": normalizedMajorityMinority,
+                    //rhassett "MAJORITY_MINORITY": normalizedMajorityMinority,
                     "PARTISAN_FAIRNESS": normalizedPartisanFairness,
                     "REOCK_COMPACTNESS": normalizedReockCompactness,
                     "CONVEX_HULL_COMPACTNESS": normalizedConvexHullCompactness,
@@ -249,6 +249,7 @@ export default class Phase1Controls extends Component {
             }
             return response.json();
         }).then(function (data) {
+            console.log(data);
             if (data.districtUpdates === []) {
                 that.endPhase1();
             } else {
@@ -357,6 +358,10 @@ export default class Phase1Controls extends Component {
         this.setState({populationHomogeneityWeightValue: value})
     }
 
+    handleMajorityMinorityWeight(value) {
+        this.setState({majorityMinorityWeightValue: value})
+    }
+
     resultsViewOn() {
         this.setState({resultsInView: true});
     }
@@ -384,18 +389,6 @@ export default class Phase1Controls extends Component {
                     label: i.toString(),
                 }
             );
-        }
-
-        let defaultDistricts;
-        if (this.props.chosenState === "RhodeIsland") {
-            this.setState({numCongressionalDistricts: 2});
-            this.setState({numMajMinDistricts: 1});
-        } else if (this.props.chosenState === "NorthCarolina") {
-            this.setState({numCongressionalDistricts: 13});
-            this.setState({numMajMinDistricts: 6});
-        } else {
-            this.setState({numCongressionalDistricts: 14});
-            this.setState({numMajMinDistricts: 7});
         }
 
         if (!this.state.resultsInView && !this.props.phase1Lock) {

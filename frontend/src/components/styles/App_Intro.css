@@ -1,14 +1,19 @@
+
 #app {
     background-color: #F8F8F8;
+    overflow: hidden;
 }
 
 #details {
     position: relative;
     top: 13vw;
     font-family: "Helvetica";
+    height: 100vh;
+    width: 100vw;
 }
 
 #about {
+    margin-top: 2vh;
     text-decoration: underline;
 }
 
