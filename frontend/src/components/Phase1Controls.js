@@ -133,7 +133,6 @@ export default class Phase1Controls extends Component {
                         },
                 },
                 weights: {
-                    //rhassett "MAJORITY_MINORITY": normalizedMajorityMinority,
                     "PARTISAN_FAIRNESS": normalizedPartisanFairness,
                     "REOCK_COMPACTNESS": normalizedReockCompactness,
                     "CONVEX_HULL_COMPACTNESS": normalizedConvexHullCompactness,
@@ -151,7 +150,8 @@ export default class Phase1Controls extends Component {
                 numMajMinDistricts: Number(this.state.numMajorityMinorityDistricts),
                 selectedMinorities: this.state.selectedMinorities,
                 year: this.props.election.split(" ")[1],
-                type: this.props.election.split(" ")[0]
+                type: this.props.election.split(" ")[0],
+                majMinWeight: normalizedMajorityMinority,
             },
             stateName: this.props.chosenState,
         };
