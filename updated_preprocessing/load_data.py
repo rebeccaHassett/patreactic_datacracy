@@ -94,8 +94,8 @@ def load_precinct_data(connection):
                            (%s, %s, %s, %s, %s) """
 
     rhode_island_features = read_geojson_file('RI_Precincts_MAPPED_FINAL.geojson')
-    michigan_features = read_geojson_file('MI_Precincts_FINAL.geojson')
-    north_carolina_features = read_geojson_file('NC_VDT_FINAL_HOPEFULLY.json')
+    michigan_features = read_geojson_file('MI_Precincts_MAPPED_FINAL.geojson')
+    north_carolina_features = read_geojson_file('NC_Precincts_MAPPED_FINAL.geojson')
 
     load_precinct_values(connection, cursor, rhode_island_features, precinct_insert_query, "RhodeIsland")
     load_precinct_values(connection, cursor, michigan_features, precinct_insert_query, "Michigan")

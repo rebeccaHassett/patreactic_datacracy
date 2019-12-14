@@ -348,7 +348,7 @@ def __get_county(data, county_name):
 
 
 def merge_precincts(data, votes16, votes18, county_name, precinct_names, new_name):
-   """
+    """
     :param data: Geojson data
     :param votes16: Voting data related to 2016
     :param votes18: Voting data related to 2018
@@ -798,7 +798,7 @@ def _update_duplicate_precinct_names(data):
 
 
 if __name__ == '__main__':
-    __run(f'mapped_data/{sys.argv[3]}_Precincts_MAPPED.geojson', sys.argv[3], num_procs=int(sys.argv[1]), grid_filename=(sys.argv[2]), save_grid=(int(sys.argv[4]) == 1))
+    __run(f'mapped_data/{sys.argv[3]}_Precincts_MAPPED_FINAL.geojson', sys.argv[3], num_procs=int(sys.argv[1]), grid_filename=(sys.argv[2]), save_grid=(int(sys.argv[4]) == 1))
     """
     with open('NC_VDT_MAPPED.geojson') as f:
         data = json.load(f)
