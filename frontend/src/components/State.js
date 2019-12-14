@@ -492,15 +492,18 @@ export default class State extends Component {
         let that = this;
         districtLayer.eachLayer(function (layer) {
             layer.on('click', function (e) {
-                if (this.selected) {
-                    e.target.resetStyle(this.selected)
+                if (!that.state.originalDistrictsLoaded) {
+                    return;
                 }
-                this.selected = e.layer
-                this.selected.bringToFront();
-                this.selected.setStyle({
+                if (that.selected) {
+                    e.target.resetStyle(that.selected)
+                }
+                that.selected = e.layer
+                that.selected.bringToFront();
+                that.selected.setStyle({
                     'color': 'red'
                 });
-                this.map.fitBounds(e.layer.getBounds());
+                that.map.fitBounds(e.layer.getBounds());
             });
 
             layer.on('mouseover', function (event) {
