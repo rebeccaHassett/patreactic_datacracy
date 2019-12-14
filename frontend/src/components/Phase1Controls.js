@@ -99,7 +99,6 @@ export default class Phase1Controls extends Component {
         let normalizedReockCompactness = 0.1;
         let normalizedConvexHullCompactness = 0.1;
         let normalizedPartisanFairness = 0.1;
-        let normalizedMajorityMinority = 0.1;
 
         /*Normalize Weights:
             Divide each number by the sum of all numbers [if sum is 0, set each number to 0.1 since each weighting]*/
@@ -107,7 +106,7 @@ export default class Phase1Controls extends Component {
             + this.state.gerrymanderRepublicanWeightValue + this.state.populationEqualityWeightValue
             + this.state.edgeCompactnessWeightValue + this.state.efficiencyGapWeightValue
             + this.state.reockCompactnessWeightValue + this.state.convexHullCompactnessWeightValue
-            + this.state.partisanFairnessWeightValue + this.state.majorityMinorityWeightValue;
+            + this.state.partisanFairnessWeightValue;
 
         if (sum !== 0) {
             normalizedCompetitiveness = this.state.competitivenessWeightValue / sum;
@@ -120,7 +119,6 @@ export default class Phase1Controls extends Component {
             normalizedReockCompactness = this.state.reockCompactnessWeightValue / sum;
             normalizedConvexHullCompactness = this.state.convexHullCompactnessWeightValue / sum;
             normalizedPartisanFairness = this.state.partisanFairnessWeightValue / sum;
-            normalizedMajorityMinority = this.state.majorityMinorityWeightValue / sum;
         }
 
         var phase1Dto = {
@@ -151,7 +149,7 @@ export default class Phase1Controls extends Component {
                 selectedMinorities: this.state.selectedMinorities,
                 year: this.props.election.split(" ")[1],
                 type: this.props.election.split(" ")[0],
-                majMinWeight: normalizedMajorityMinority,
+                majMinWeight: this.state.majorityMinorityWeightValue,
             },
             stateName: this.props.chosenState,
         };
