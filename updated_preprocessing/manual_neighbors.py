@@ -96,6 +96,16 @@ manual_neighbors = {
             "CHARELSTOWN 0504",
             "SOUTH KINGSTOWN 3210",
             "NARRANGANSETT 2005"
+        ],
+        "NARRANGANSETT 2001": [
+            "NARRANGANSETT 2002",
+            "SOUTH KINGSTOWN 3201",
+            "NARANGANSETT 2004"
+        ],
+        "PROVIDENCE 2830": [
+            "PROVIDENCE 2828",
+            "PROVIDENCE 2868",
+            "PROVIDENCE 2833"
         ]
     },
     "MI": {

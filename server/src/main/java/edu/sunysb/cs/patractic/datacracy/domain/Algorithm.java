@@ -103,7 +103,7 @@ public class Algorithm extends MyAlgorithm {
         Phase1UpdateDto ret = null;
         while (ret == null) {
             synchronized (lock) {
-                if (!currentUpdates.isEmpty()) {
+                if (!currentUpdates.isEmpty() || phase1Complete) {
                     ret = new Phase1UpdateDto(new ArrayList<>(this.currentUpdates.values()), new ArrayList<>(currentDistrictsToRemove));
                     this.currentUpdates.clear();
                     this.currentDistrictsToRemove.clear();

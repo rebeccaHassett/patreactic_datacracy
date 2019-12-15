@@ -215,7 +215,7 @@ export default class Phase1Controls extends Component {
             }
             return response.json();
         }).then(function (data) {
-            if (data.districtUpdates === []) {
+            if (data.districtUpdates.length === 0) {
                 that.endPhase1();
             } else {
                 that.props.phase1Update(data);
