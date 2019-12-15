@@ -4,6 +4,7 @@ package edu.stonybrook.politech.annealing.models.concrete;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import edu.stonybrook.politech.annealing.measures.StateInterface;
+import edu.sunysb.cs.patractic.datacracy.domain.Algorithm;
 import edu.sunysb.cs.patractic.datacracy.domain.enums.Constraint;
 import edu.sunysb.cs.patractic.datacracy.domain.enums.DemographicGroup;
 import edu.sunysb.cs.patractic.datacracy.domain.enums.ElectionType;
@@ -220,8 +221,10 @@ public class State
 
     public Set<Edge> getMMEdges(Properties config) {
         Set<Edge> mmEdges = new HashSet<>();
-        for (District d : districts.values()) {
-            mmEdges.addAll(d.getMMEdges(config));
+        if (districts.values().stream().filter(d -> Algorithm.isMajMin(d, config)).count() < config.numMajMinDistricts) {
+            for (District d : districts.values()) {
+                mmEdges.addAll(d.getMMEdges(config));
+            }
         }
         if (mmEdges.isEmpty()) {
             for (District d : districts.values()) {

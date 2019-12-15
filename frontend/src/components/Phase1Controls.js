@@ -296,7 +296,7 @@ export default class Phase1Controls extends Component {
     }
 
     handleNumberMajorityMinorityDistricts(event) {
-        if ((Number(event.target.value) >= 1 && Number(event.target.value) <= Number(this.state.numCongressionalDistricts)) || !event.target.value) {
+        if ((Number(event.target.value) >= 0 && Number(event.target.value) <= Number(this.state.numCongressionalDistricts)) || !event.target.value) {
             this.setState({numMajorityMinorityDistricts: event.target.value})
         }
     }

@@ -257,10 +257,10 @@ public class District
     }
 
     public Set<Edge> getMMEdges(Properties config) {
-        return edges;
-//                .stream()
-//                .filter(e -> e.wouldImproveMM(config))
-//                .collect(Collectors.toSet());
+        return edges
+                .stream()
+                .filter(e -> e.wouldImproveMM(config))
+                .collect(Collectors.toSet());
     }
 
     /**

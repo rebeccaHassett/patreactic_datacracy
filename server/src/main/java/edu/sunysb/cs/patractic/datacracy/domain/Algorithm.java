@@ -1,9 +1,11 @@
 package edu.sunysb.cs.patractic.datacracy.domain;
 
+import com.fasterxml.jackson.databind.annotation.JsonAppend;
 import edu.stonybrook.politech.annealing.algorithm.MyAlgorithm;
 import edu.stonybrook.politech.annealing.measures.DefaultMeasures;
 import edu.stonybrook.politech.annealing.models.concrete.District;
 import edu.stonybrook.politech.annealing.models.concrete.State;
+import edu.sunysb.cs.patractic.datacracy.domain.enums.Constraint;
 import edu.sunysb.cs.patractic.datacracy.domain.models.Properties;
 import edu.sunysb.cs.patractic.datacracy.domain.models.*;
 import org.slf4j.Logger;
@@ -55,6 +57,12 @@ public class Algorithm extends MyAlgorithm {
         } else {
             return 1 - (majMinThresh.lower - percent);
         }
+    }
+
+    public static boolean isMajMin(District d, Properties config) {
+        return getMajMinScore(config.selectedMinorities.stream().mapToLong(d::getPopulation).sum(),
+                d.getPopulation(null),
+                config.thresholds.get(Constraint.MINORITY_PERCENTAGE)) == 1;
     }
 
     // PHASE 0
