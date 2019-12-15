@@ -59,10 +59,9 @@ const StyledDataTab = withStyles(theme => ({
 export default function DataTabs(props) {
     const classes = useDataStyles();
     const [value, setValue] = React.useState(0);
-    const [disableDistrictView, setDisableDistrictView] = React.useState(true);
     const [districtView, setDistrictView] = React.useState("View Original Districts");
     const [demographicMapMinorities, setDemographicMapMinorities] = React.useState([]);
-    const [demographicDistributionEnabled, setDemographicDistributionEnabled] = React.useState(true);
+    const [demographicDistributionDisabled, setDemographicDistributionDisabled] = React.useState(false);
     let [, setState] = React.useState();
     const incumbent_columns = [
         {id: 'districtId', label: 'District', format: value => value.toLocaleString(),},
@@ -77,22 +76,18 @@ export default function DataTabs(props) {
         if (districtView === "View Original Districts") {
             setDistrictView("View Generated Districts");
             props.loadOriginalDistricts();
-            setDemographicDistributionEnabled(true);
+            setDemographicDistributionDisabled(false);
         } else {
             setDistrictView("View Original Districts");
             props.removeOriginalDistricts();
-            setDemographicDistributionEnabled(false);
+            setDemographicDistributionDisabled(true);
         }
     };
 
-    if (props.generatedDistricts === true && disableDistrictView === true) {
-        setDisableDistrictView(false);
-        setDemographicDistributionEnabled(false);
-    }
 
     function initDemographicMapUpdate() {
         props.demographicMapUpdate();
-    };
+    }
 
     return (
         <div className={classes.root}>
@@ -123,24 +118,23 @@ export default function DataTabs(props) {
                     <TextField variant="filled" color="primary" value={props.laws} multiline={true}
                                style={{width: "100%", marginBottom: '2vw'}}/>
                     <Statistics data={props.stateData} type="state" election={props.election}/>
-                    <h4 style={{marginBottom: '1vw', marginTop: '3vw'}}>Gerrymandering Scores</h4>
                 </DataStyle>
             </TabPane>
             <TabPane value={value} index={1}>
                 <DataStyle>
                     <Button variant="contained" color="primary"
                             style={{width: '25vw', marginBottom: '2vw',}} onClick={handleDistrictView}
-                            disabled={disableDistrictView}>
+                            disabled={props.districtToggleDisabled}>
                         {districtView}
                     </Button>
                     <Statistics data={props.districtData} type="district" election={props.election}/>
                     <h4>Demographic Map Display</h4>
                     <CheckboxControl exportState={props.demographicMapUpdateSelection}
-                                     disabled={!demographicDistributionEnabled}
+                                     disabled={demographicDistributionDisabled}
                                      helperText=""/>
                     <Button variant="contained" color="primary"
                             style={{width: '25vw', marginBottom: '2vw',}} onClick={initDemographicMapUpdate}
-                            disabled={!demographicDistributionEnabled}>
+                            disabled={demographicDistributionDisabled}>
                         Display Demographics
                     </Button>
                 </DataStyle>

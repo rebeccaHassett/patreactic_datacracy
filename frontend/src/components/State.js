@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import MenuSidenav from "./MenuSidenav";
 import {MuiThemeProvider, createMuiTheme} from '@material-ui/core/styles';
 import 'colorsys';
+import {border} from "@material-ui/system";
 
 var ZOOM = 7;
 
@@ -134,7 +135,7 @@ export default class State extends Component {
                     } else if (selectedElection.split(" ")[1] === "2018") {
                         houseElection = precinctLayers[key].feature.properties.HOUSE_ELECTION_18;
                     }
-                    for (var candidate in houseElection) {
+                    for (let candidate in houseElection) {
                         if (candidate.endsWith("_D")) {
                             democraticElectionData = houseElection[candidate];
                         } else if (candidate.endsWith("_R")) {
@@ -318,6 +319,7 @@ export default class State extends Component {
     initializePhase1Map(data) {
         var colorsys = require('colorsys');
         let contrastingColors = this.contrastingColors(Object.keys(this.state.precinctMap).length);
+        console.log(contrastingColors);
         this.map.removeLayer(this.state.originalDistrictLayer);
         this.setState({phase0Lock: true});
         this.setState({precinctData: ""});
@@ -436,14 +438,12 @@ export default class State extends Component {
     }
 
     getMajorityMinorityDistrictIds(data) {
-        //rhassett
-        /*let majorityMinorityDistricts = [];
-        data.majMinDistricts.forEach((majMinDistrict) => {
+        let majorityMinorityDistricts = [];
+        data.majMinDistrictDtos.forEach((majMinDistrict) => {
             majorityMinorityDistricts.push(majMinDistrict.districtId);
         });
         this.setState({majorityMinorityDistricts: majorityMinorityDistricts});
-        return majorityMinorityDistricts;*/
-        return [];
+        return majorityMinorityDistricts;
     }
 
     loadOriginalDistricts() {
@@ -521,17 +521,29 @@ export default class State extends Component {
                 let opacity = 1;
                 let fillOpacity = 0.7;
                 let weight = 2;
+                let borderColor = 'white';
+                let pattern = null;
+                /*let stripes = new L.StripePattern();
+                stripes.addTo(that.map);*/
                 if (majorityMinorityDistricts.includes(districtLayers[key].feature.properties.districtId)) {
                     opacity = 1;
                     fillOpacity = 1;
                     weight = 3;
+                    //pattern = stripes;
                 }
+
+                if(!original) {
+                    borderColor = 'black';
+                    weight = 0.5;
+                }
+
                 districtLayers[key].setStyle({
                     fillColor: districtLayers[key].feature.properties.COLOR,
                     weight: weight,
-                    color: 'white',
+                    color: borderColor,
                     opacity: opacity,
-                    fillOpacity: fillOpacity
+                    fillOpacity: fillOpacity,
+                    fillPattern: pattern
                 });
             });
         });
@@ -682,12 +694,10 @@ export default class State extends Component {
         var maxBounds;
         var minZoom;
         var chosenState = window.location.pathname.split("/").pop();
-        var clustersUrl;
 
         this.setState({chosenState: chosenState});
 
         if (chosenState === "NorthCarolina") {
-            clustersUrl = 'http://127.0.0.1:8080/District_Borders?name=North_Carolina';
             maxBounds = [
                 [37, -71],               /* North East */
                 [33, -84]                /* South West */
@@ -695,7 +705,6 @@ export default class State extends Component {
             minZoom = 6;
             ZOOM = minZoom + 1;
         } else if (chosenState === "RhodeIsland") {
-            clustersUrl = 'http://127.0.0.1:8080/District_Borders?name=Rhode_Island';
             maxBounds = [
                 [43, -70],
                 [40, -71]
@@ -703,7 +712,6 @@ export default class State extends Component {
             minZoom = 9;
             ZOOM = minZoom + 1;
         } else if (chosenState === "Michigan") {
-            clustersUrl = 'http://127.0.0.1:8080/District_Borders?name=Michigan';
             maxBounds = [
                 [49, -70],
                 [40, -90]

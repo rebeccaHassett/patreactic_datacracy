@@ -8,6 +8,7 @@ import TextField from "@material-ui/core/TextField";
 import AlertDialogSlide from "./controls/AlertControl";
 import TableDisplay from "./controls/TableDisplay";
 import RunControls from "./controls/RunControls";
+import Phase1Dialog from "./Phase1Dialog";
 
 
 export default class Phase1Controls extends Component {
@@ -56,7 +57,7 @@ export default class Phase1Controls extends Component {
         populationHomogeneityWeightValue: 0.1,
         gerrymanderDemocratWeightValue: 0.1,
         countyJoinabilityWeightValue: 0.1,
-        majorityMinorityWeightValue: 0.1,
+        majorityMinorityWeightValue: 0.75,
         phase1RunButtonDisabled: false,
         alertDialogState: false,
         alertDialogText: "Must Select At Least One Minority Group!",
@@ -88,8 +89,10 @@ export default class Phase1Controls extends Component {
         this.setState({phase1RunButtonDisabled: true});
         this.setState({resultsUnavailable: true});
         this.setState({phase1ControlsDisabled: true});
-        this.props.togglePhase2Tab(true);
-        this.props.togglephase0Lock(true);
+        this.props.togglePhase2ControlsTabDisabled(true);
+        this.props.togglePhase0ControlsTabDisabled(true);
+        this.props.handleDistrictToggleDisabled(true);
+        this.setState({restartButtonDisabled: true});
 
         let normalizedCompetitiveness = (1/11);
         let normalizedPopulationHomogeneity = (1/11);
@@ -177,13 +180,12 @@ export default class Phase1Controls extends Component {
         }).then(function (data) {
             that.props.initializePhase1Map(data);
 
-            //rhassett that.majorityMinorityDistrictsDisplay(data);
+            that.majorityMinorityDistrictsDisplay(data);
 
             that.setState({resultsUnavailable: false});
             if (that.state.incremental) {
                 that.setState({phase1ButtonText: "Update Phase 1"});
             }
-            that.props.handleGeneratedDistricts();
             if (that.state.incremental) {
                 that.setState({phase1RunButtonDisabled: false});
             } else {
@@ -196,15 +198,21 @@ export default class Phase1Controls extends Component {
         });
     }
 
-    majorityMinorityDistrictsDisplay(data) {
-        let tempRows = this.state.majorityMinorityRows;
+    createData(districtId, minorityPopulation, totalPopulation) {
+        let percentage = ((minorityPopulation / totalPopulation) * 100);
+        return {districtId, minorityPopulation, totalPopulation, percentage};
+    }
 
-        data.majMinDistricts.forEach((majMinDistrict) => {
+    majorityMinorityDistrictsDisplay(data) {
+        let tempRows = [];
+
+        console.log("FRONTEND");
+        data.majMinDistrictDtos.forEach((majMinDistrict) => {
             let districtId = majMinDistrict.districtId;
-            let demographicPopulation = majMinDistrict.demographicPopulation;
+            let minorityPopulation = majMinDistrict.minorityPopulation;
+            console.log(minorityPopulation);
             let totalPopulation = majMinDistrict.totalPopulation;
-            let percentage = (demographicPopulation / totalPopulation) * 100;
-            tempRows.append({districtId, demographicPopulation, totalPopulation, percentage});
+            tempRows.push(this.createData(districtId, minorityPopulation, totalPopulation));
         });
 
         this.setState({majorityMinorityRows: tempRows});
@@ -256,8 +264,7 @@ export default class Phase1Controls extends Component {
             }
             return response.json();
         }).then(function (data) {
-            console.log(data);
-            if (data.districtUpdates === []) {
+            if (data.districtUpdates.length === 0) {
                 that.endPhase1();
             } else {
                 that.props.phase1Update(data);
@@ -269,7 +276,8 @@ export default class Phase1Controls extends Component {
     endPhase1() {
         this.setState({phase1ButtonText: "Start Phase 1"});
         this.setState({phase1ControlsDisabled: false});
-        this.props.togglePhase2Tab(false);
+        this.props.togglePhase2ControlsTabDisabled(false);
+        this.props.handleDistrictToggleDisabled(false);
         this.setState({phase1RunButtonDisabled: false});
         this.setState({restartButtonDisabled: false});
     }
@@ -365,6 +373,10 @@ export default class Phase1Controls extends Component {
         this.setState({populationHomogeneityWeightValue: value})
     }
 
+    handleCountyJoinabilityWeight(value) {
+        this.setState({countyJoinabilityWeightValue: value})
+    }
+
     handleMajorityMinorityWeight(value) {
         this.setState({majorityMinorityWeightValue: value})
     }
@@ -377,28 +389,16 @@ export default class Phase1Controls extends Component {
         this.setState({resultsInView: false});
     }
 
+    /* Restart will unlock phase 0, lock phase 2, lock district toggle, and switch to phase 0 tab */
     restart() {
-        this.props.togglephase0Lock(false);
-        this.props.togglePhase2Tab(true);
+        this.props.togglePhase0ControlsTabDisabled(false);
+        this.props.togglePhase2ControlsTabDisabled(true);
+        this.props.handleDistrictToggleDisabled(true);
+        this.props.restartPhase0Tab();
     }
 
-
     render() {
-        let marks = [];
-        marks.push({
-            value: 1,
-            label: '1',
-        });
-        for (let i = 100; i < this.props.numOriginalPrecincts; i += 100) {
-            marks.push(
-                {
-                    value: i,
-                    label: i.toString(),
-                }
-            );
-        }
-
-        if (!this.state.resultsInView && !this.props.phase1Lock) {
+        if (!this.state.resultsInView && !this.props.phase1ControlsTabDisabled) {
             return (
                 <Phase1Styles>
                     <AlertDialogSlide exportState={this.handleAlertDialogState} open={this.state.alertDialogState}
@@ -430,6 +430,7 @@ export default class Phase1Controls extends Component {
                         onChange={this.handleNumberCongressionalDistricts}
                         variant="filled"
                         value={this.state.numCongressionalDistricts}
+                        disabled={this.state.phase1ControlsDisabled}
                     />
                     <TextField
                         id="outlined-number"
@@ -439,6 +440,7 @@ export default class Phase1Controls extends Component {
                         onChange={this.handleNumberMajorityMinorityDistricts}
                         variant="filled"
                         value={this.state.numMajorityMinorityDistricts}
+                        disabled={this.state.phase1ControlsDisabled}
                     />
                     <ControlGroup id="minorityPopulationThreshold">
                         <label className="ethnicLabel">Ethnic/Racial Groups:</label>
@@ -446,6 +448,7 @@ export default class Phase1Controls extends Component {
                                          disabled={this.state.phase1ControlsDisabled}
                                          helperText="Must select at least one demographic"/>
                     </ControlGroup>
+                    <Phase1Dialog/>
                     <ControlGroup id="minorityPopulationThreshold">
                         <label className="label">Minority Population Thresholds:</label>
                         <SliderControlUpperLowerValues disabled={this.state.phase1ControlsDisabled}
@@ -453,7 +456,7 @@ export default class Phase1Controls extends Component {
                     </ControlGroup>
                     <ControlGroup>
                         <label className="label">Majority Minority Weighting:</label>
-                        <SliderControlSingleValue min={0} max={1} step={0.01} marks={OFMarks}
+                        <SliderControlSingleValue min={0.5} max={1} step={0.01} marks={OFMarks}
                                                   disabled={this.state.phase1ControlsDisabled}
                                                   exportState={this.handleMajorityMinorityWeight}/>
                     </ControlGroup>
@@ -529,9 +532,9 @@ export default class Phase1Controls extends Component {
             return (
                 <Phase1Styles>
                     <Button variant="contained" color="primary" style={{width: '25vw', marginBottom: '2vw'}}
-                            onClick={this.resultsViewOff} disabled={this.props.phase1Lock}>Back to Controls</Button>
+                            onClick={this.resultsViewOff} disabled={this.props.phase1ControlsTabDisabled}>Back to Controls</Button>
                     <h5>Majority-Minority Districts</h5>
-                    <TableDisplay columns={columns} rows={this.state.majorityMinorityRows}></TableDisplay>
+                    <TableDisplay columns={columns} rows={this.state.majorityMinorityRows}/>
                 </Phase1Styles>
             );
         }
@@ -569,14 +572,19 @@ const OFMarks = [
         label: '0',
     },
     {
+        value: 0.5,
+        label: '0.5',
+    },
+    {
         value: 1,
         label: '1',
     },
 ];
 
 const columns = [
-    {id: 'districtId', label: 'Name',},
-    {id: 'demographicPopulation', label: 'Demographic Population',},
-    {id: 'totalPopulation', label: 'Total Population',},
-    {id: 'percentage', label: '%',},
+    {id: 'districtId', label: 'Name', format: value => value.toLocaleString(),},
+    {id: 'minorityPopulation', label: 'Minority Population',format: value => value.toLocaleString(),},
+    {id: 'totalPopulation', label: 'Total Population', format: value => value.toLocaleString(),},
+    {id: 'percentage', label: '%', format: value => value.toLocaleString(),},
 ];
+

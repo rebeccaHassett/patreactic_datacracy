@@ -38,13 +38,16 @@ export default class Phase2Controls extends Component {
         resultsInView: false,
         phase2RunButtonDisabled: false,
         phase2ControlsDisabled: false,
-        phase2ButtonText: "Start Phase 2"
+        phase2ButtonText: "Start Phase 2",
     };
 
     async runPhase2() {
         this.setState({phase2RunButtonDisabled: true});
         this.setState({phase2ControlsDisabled: true});
-        this.props.togglePhase1Lock(true);
+        this.props.togglePhase1ControlsTabDisabled(true);
+        this.props.togglePhase0ControlsTabDisabled(true);
+        this.props.togglePhase2ControlsTabDisabled(true);
+        this.props.handleDistrictToggleDisabled(true);
 
         let normalizedCompetitiveness = 0.1;
         let normalizedPopulationHomogeneity = 0.1;
@@ -202,7 +205,9 @@ export default class Phase2Controls extends Component {
         this.setState({phase2ControlsDisabled: false});
         this.setState({phase2RunButtonDisabled: false});
         this.setState({restartButtonDisabled: false});
-        this.props.togglePhase1Lock(true);
+        this.props.togglePhase1ControlsTabDisabled(false);
+        this.props.togglePhase2ControlsTabDisabled(false);
+        this.props.handleDistrictToggleDisabled(false);
     }
 
     handlePhase2() {
@@ -268,13 +273,15 @@ export default class Phase2Controls extends Component {
     }
 
     restart() {
-        this.props.togglePhase2Tab(true);
-        this.props.togglephase0Lock(false);
+        this.props.phase2ControlsTabDisabled(true);
+        this.props.phase0ControlsTabDisabled(true);
+        this.props.handleDistrictToggleDisabled(true);
+        this.props.restartPhase0Tab();
     }
 
 
     render() {
-        if (!this.state.resultsInView && this.props.phase2Tabs) {
+        if (!this.state.resultsInView && !this.props.phase2ControlsTabDisabled) {
             return (
                 <Phase2Styles>
                     <Button variant="contained" color="primary" onClick={this.handlePhase2}
@@ -346,21 +353,20 @@ export default class Phase2Controls extends Component {
                 </Phase2Styles>
             );
         } else {
+            let gerrymanderingRows = [['-', '-']];
+            let that = this;
+            Object.keys(this.props.selectedStateGerrymandering).forEach(function(key) {
+                let measure = key;
+                let value = that.props.selectedStateGerrymandering[key];
+                gerrymanderingRows.push([measure, value]);
+            });
+
             return (
                 <Phase2Styles>
                     <Button variant="contained" color="primary" style={{width: '25vw', marginBottom: '2vw'}}
-                            onClick={this.resultsViewOff} disabled={this.props.phase2Tab}>Back to Controls</Button>
+                            onClick={this.resultsViewOff} disabled={this.props.phase2ControlsTabDisabled}>Back to Controls</Button>
                     <h4>{this.state.objFuncType} Gerrymandering Calculations</h4>
-                    <h5>Convex Hull Compactness: {this.props.selectedStateGerrymandering.convexHullCompactness}</h5>
-                    <h5>Edge Compactness: {this.props.selectedStateGerrymandering.edgeCompactness}</h5>
-                    <h5>Reock Compactness: {this.props.selectedStateGerrymandering.reockCompactness}</h5>
-                    <h5>Efficiency Gap: {this.props.selectedStateGerrymandering.efficiencyGap}</h5>
-                    <h5>Population Equality: {this.props.selectedStateGerrymandering.populationEquality}</h5>
-                    <h5>Partisan Fairness: {this.props.selectedStateGerrymandering.partisanFairness}</h5>
-                    <h5>Competitiveness: {this.props.selectedStateGerrymandering.competitiveness}</h5>
-                    <h5>Gerrymander Republican: {this.props.selectedStateGerrymandering.gerrymanderRepublican}</h5>
-                    <h5>Population Homogeneity: {this.props.selectedStateGerrymandering.populationHomogeneity}</h5>
-                    <h5>Gerrymander Democrat: {this.props.selectedStateGerrymandering.gerrymanderDemocrat}</h5>
+                    <TableDisplay columns={columns} rows={gerrymanderingRows}/>
                 </Phase2Styles>
             );
         }
@@ -392,4 +398,9 @@ const OFMarks = [
         value: 1,
         label: '1',
     },
+];
+
+const columns = [
+    {id: 'measure', label: 'Measure',},
+    {id: 'value', label: 'Value',},
 ];

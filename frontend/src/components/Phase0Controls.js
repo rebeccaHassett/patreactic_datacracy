@@ -21,11 +21,9 @@ export default class Phase0Controls extends Component {
 
 
     state = {
-        phase1Tab: false,
         blocPopulationValues: [80, 90],
         blocVotingValues: [80, 90],
         election: 'Presidential 2016',
-        button2018: true,
         resultsUnavailable: true,
         resultsInView: false,
         vbdtoRows: [['-', '-', '-', '-', '-']]
@@ -104,26 +102,14 @@ export default class Phase0Controls extends Component {
     }
 
     handleElectionChanges(event) {
-        if (event.target.value === "Congressional 2016") {
-            this.setState({
-                election: 'Congressional 2016'
-            });
-        } else if (event.target.value === "Congressional 2018") {
-            this.setState({
-                election: 'Congressional 2018'
-            });
-        } else if (event.target.value === "Presidential 2016") {
-            this.setState({
-                election: 'Presidential 2016'
-            });
-        }
         if (event.target.value !== undefined) {
+            this.setState({election: event.target.value});
             this.props.phase0SelectedElection(event.target.value);
         }
     }
 
     render() {
-        if (!this.state.resultsInView && !this.props.phase0Lock) {
+        if (!this.state.resultsInView && !this.props.phase0ControlsTabDisabled) {
             return (
                 <Phase0Styles>
                     <Button variant="contained" color="primary" onClick={this.runPhase0}
@@ -150,7 +136,7 @@ export default class Phase0Controls extends Component {
             return (
                 <Phase0Styles style={{paddingLeft: "10px", paddingRight: "10px"}}>
                     <Button variant="contained" color="primary" style={{width: '25vw', marginBottom: '2vw'}}
-                            onClick={this.resultsViewOff} disabled={this.props.phase0Lock}>Back to Controls</Button>
+                            onClick={this.resultsViewOff} disabled={this.props.phase0ControlsTabDisabled}>Back to Controls</Button>
                     <VotingBlocSummaryDialog data={this.state.vbdtoRows}/>
                     <h5>Election Type: {this.state.election}</h5>
                     <p>Population Thresholds: {this.state.blocPopulationValues[0]}%

@@ -51,12 +51,11 @@ class DataDisplay extends React.Component {
             <DataTabs stateData={this.props.stateData} districtData={this.props.districtData}
                       precinctData={this.props.precinctData}
                       incumbents={this.state.incumbents} laws={this.state.laws}
-                      generatedDistricts={this.props.generatedDistricts}
                       loadOriginalDistricts={this.props.loadOriginalDistricts}
                       removeOriginalDistricts={this.props.removeOriginalDistricts}
                       demographicMapUpdate={this.props.demographicMapUpdate}
                       demographicMapUpdateSelection={this.props.demographicMapUpdateSelection}
-                      election={this.props.election} chosenState={this.props.chosenState}/>
+                      election={this.props.election} chosenState={this.props.chosenState} districtToggleDisabled={this.props.districtToggleDisabled}/>
         );
     }
 }

@@ -57,33 +57,33 @@ const StyledTab = withStyles(theme => ({
 export default function MenuSidenav(props) {
     const classes = useStyles();
     const [value, setValue] = React.useState(0);
-    const [generatedDistricts, setGeneratedDistricts] = React.useState(false);
-    const [phase0Lock, setphase0Lock] = React.useState(false);
-    const [phase1Lock, setphase1Lock] = React.useState(false);
-    const [phase2Tab, setPhase2Tab] = React.useState(true);
+    const [phase0ControlsTabDisabled, setPhase0ControlsTabDisabled] = React.useState(false); // phase 0 controls tab initially enabled
+    const [phase1ControlsTabDisabled, setPhase1ControlsTabDisabled] = React.useState(false); // phase 1 controls tab initially enabled
+    const [phase2ControlsTabDisabled, setPhase2ControlsTabDisabled] = React.useState(true); // phase 2 controls tab initially disabled
+    const [districtToggleDisabled, setDistrictToggleDisabled] = React.useState(true); // district toggle initially disabled
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
 
-    const handleGeneratedDistricts = (event) => {
-        setGeneratedDistricts(true);
+    const togglePhase2ControlsTabDisabled = (value) => {
+        setPhase2ControlsTabDisabled(value);
     };
 
-    const togglePhase2Tab = (value) => {
-        /*Sets to Phase 0 Tab*/
-        if (!value) {
-            setValue(0);
-        }
-        setPhase2Tab(value);
+    const togglePhase1ControlsTabDisabled = (value) => {
+        setPhase1ControlsTabDisabled(value);
     };
 
-    const togglephase0Lock = (value) => {
-        setphase0Lock(value);
+    const togglePhase0ControlsTabDisabled = (value) => {
+        setPhase0ControlsTabDisabled(value);
     };
 
-    const togglephase1Lock = (value) => {
-        setphase1Lock(value);
+    const handleDistrictToggleDisabled = (value) => {
+        setDistrictToggleDisabled(value);
+    };
+
+    const restartPhase0Tab = () => {
+        setValue(0);
     };
 
     return (
@@ -110,35 +110,40 @@ export default function MenuSidenav(props) {
             <TabPanel value={value} index={0}
                       style={{marginLeft: '0px', paddingLeft: '0px', marginRight: '0px', paddingRight: '0px'}}>
                 <Phase0Controls state={props.chosenState} phase0SelectedElection={props.phase0SelectedElection}
-                                phase0Lock={phase0Lock}/>
+                                phase0ControlsTabDisabled={phase0ControlsTabDisabled}/>
             </TabPanel>
             <TabPanel value={value} index={1}>
                 <Phase1Controls chosenState={props.chosenState}
                                 removeOriginalDisrtricts={props.removeOriginalDisrtricts}
                                 removePrecinctLayer={props.removePrecinctLayer} precinctLayer={props.precinctLayer}
                                 handlePrecinctFeatures={props.handlePrecinctFeatures}
-                                handleGeneratedDistricts={handleGeneratedDistricts}
                                 initializePhase1Map={props.initializePhase1Map} phase1Update={props.phase1Update}
-                                togglePhase2Tab={togglePhase2Tab}
                                 election={props.election} numOriginalPrecincts={props.numOriginalPrecincts}
-                                togglephase0Lock={togglephase0Lock}
-                                phase1Lock={phase1Lock}/>
+                                handleDistrictToggleDisabled={handleDistrictToggleDisabled} togglePhase0ControlsTabDisabled={togglePhase0ControlsTabDisabled}
+                                togglePhase2ControlsTabDisabled={togglePhase2ControlsTabDisabled}
+                                phase1ControlsTabDisabled={phase1ControlsTabDisabled}
+                                restartPhase0Tab={restartPhase0Tab}/>
             </TabPanel>
             <TabPanel value={value} index={2}>
-                <Phase2Controls togglePhase2Tab={togglePhase2Tab} togglephase0Lock={togglephase0Lock}
-                                phase2Update={props.phase2Update}
-                                togglePhase1Lock={togglephase1Lock} originalStateGerrymandering={props.originalStateGerrymandering}
-                                phase2Tab={phase2Tab} selectedStateGerrymandering={props.selectedStateGerrymandering}/>
+                <Phase2Controls phase2Update={props.phase2Update}
+                                originalStateGerrymandering={props.originalStateGerrymandering}
+                                selectedStateGerrymandering={props.selectedStateGerrymandering}
+                                phase2ControlsTabDisabled={phase2ControlsTabDisabled}
+                                togglePhase2ControlsTabDisabled={togglePhase2ControlsTabDisabled}
+                                togglePhase0ControlsTabDisabled={togglePhase0ControlsTabDisabled}
+                                togglePhase1ControlsTabDisabled={togglePhase1ControlsTabDisabled}
+                                handleDistrictToggleDisabled={handleDistrictToggleDisabled}
+                                restartPhase0Tab={restartPhase0Tab}/>
             </TabPanel>
             <TabPanel value={value} index={3}>
                 <DataDisplay stateData={props.stateData} precinctData={props.precinctData}
                              districtData={props.districtData}
-                             chosenState={props.chosenState} generatedDistricts={generatedDistricts}
+                             chosenState={props.chosenState}
                              loadOriginalDistricts={props.loadOriginalDistricts}
                              removeOriginalDistricts={props.removeOriginalDisrtricts}
                              demographicMapUpdate={props.demographicMapUpdate}
                              demographicMapUpdateSelection={props.demographicMapUpdateSelection}
-                             election={props.election} chosenState={props.chosenState}/>
+                             election={props.election} districtToggleDisabled={districtToggleDisabled}/>
             </TabPanel>
         </div>
     );
