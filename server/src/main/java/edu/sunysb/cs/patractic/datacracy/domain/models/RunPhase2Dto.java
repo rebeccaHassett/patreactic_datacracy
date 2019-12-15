@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Map;
 
 public class RunPhase2Dto {
-
     public final Map<String, Double> weights;
 
     @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)

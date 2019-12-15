@@ -4,6 +4,7 @@ import edu.stonybrook.politech.annealing.models.concrete.District;
 import edu.stonybrook.politech.annealing.models.concrete.State;
 import edu.sunysb.cs.patractic.datacracy.domain.Algorithm;
 import edu.sunysb.cs.patractic.datacracy.domain.models.JurisdictionDataDto;
+import edu.sunysb.cs.patractic.datacracy.domain.models.MajMinDistrictDto;
 import edu.sunysb.cs.patractic.datacracy.domain.models.Phase1UpdateDto;
 import edu.sunysb.cs.patractic.datacracy.domain.models.RunPhase1Dto;
 import edu.sunysb.cs.patractic.datacracy.domain.persistence.StateDao;
@@ -48,7 +49,10 @@ public class Phase1Controller extends HttpServlet {
         } else {
             newDistricts = myAlg.startAsync();
         }
-        return new Phase1UpdateDto(newDistricts, oldDistricts);
+        System.out.println(myAlg.getConfig().selectedMinorities);
+        List<MajMinDistrictDto> majMinDistrictDtos = myAlg.getMajMinDistricts(myAlg.getConfig());
+        System.out.println(majMinDistrictDtos);
+        return new Phase1UpdateDto(newDistricts, oldDistricts, majMinDistrictDtos);
     }
 
     @GetMapping(path = "/phase1/poll")

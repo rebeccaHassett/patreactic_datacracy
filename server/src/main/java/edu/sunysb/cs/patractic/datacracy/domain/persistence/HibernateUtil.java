@@ -28,7 +28,7 @@ public class HibernateUtil {
                 settings.put(Environment.USER, "patreactic_datacracy");
                 settings.put(Environment.PASS, "changeit");
                 settings.put(Environment.DIALECT, "org.hibernate.dialect.MySQL5Dialect");
-                settings.put(Environment.SHOW_SQL, "false");
+                settings.put(Environment.SHOW_SQL, "true");
                 settings.put(Environment.LOG_JDBC_WARNINGS, "true");
                 settings.put(Environment.CURRENT_SESSION_CONTEXT_CLASS, "thread");
 

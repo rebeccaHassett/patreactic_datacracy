@@ -2,24 +2,16 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="da7513d8-167f-45a0-92b8-c16a264abf58" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/../frontend/src/components/DataDisplay.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/DataDisplay.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/src/components/DataTabs.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/DataTabs.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/src/components/GerrymanderingTabs.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/src/components/MenuSidenav.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/MenuSidenav.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../frontend/src/components/Phase1Controls.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/Phase1Controls.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../frontend/src/components/Phase2Controls.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/Phase2Controls.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/src/components/State.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/State.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/src/components/controls/RunControls.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/controls/RunControls.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../original_data/county_boundaries/Michigan/Michigan_Counties.json" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../server/src/main/java/edu/stonybrook/politech/annealing/models/concrete/Precinct.java" beforeDir="false" afterPath="$PROJECT_DIR$/../server/src/main/java/edu/stonybrook/politech/annealing/models/concrete/Precinct.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../server/src/main/java/edu/sunysb/cs/patractic/datacracy/controller/BasicBorderController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../server/src/main/java/edu/sunysb/cs/patractic/datacracy/controller/BasicBorderController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../server/src/main/java/edu/sunysb/cs/patractic/datacracy/controller/Phase1Controller.java" beforeDir="false" afterPath="$PROJECT_DIR$/../server/src/main/java/edu/sunysb/cs/patractic/datacracy/controller/Phase1Controller.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../server/src/main/java/edu/sunysb/cs/patractic/datacracy/domain/Algorithm.java" beforeDir="false" afterPath="$PROJECT_DIR$/../server/src/main/java/edu/sunysb/cs/patractic/datacracy/domain/Algorithm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../server/src/main/java/edu/sunysb/cs/patractic/datacracy/domain/models/Edge.java" beforeDir="false" afterPath="$PROJECT_DIR$/../server/src/main/java/edu/sunysb/cs/patractic/datacracy/domain/models/Edge.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../server/src/main/java/edu/sunysb/cs/patractic/datacracy/domain/models/Phase1UpdateDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/../server/src/main/java/edu/sunysb/cs/patractic/datacracy/domain/models/Phase1UpdateDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../server/src/main/java/edu/sunysb/cs/patractic/datacracy/domain/models/RunPhase2Dto.java" beforeDir="false" afterPath="$PROJECT_DIR$/../server/src/main/java/edu/sunysb/cs/patractic/datacracy/domain/models/RunPhase2Dto.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../server/src/main/java/edu/sunysb/cs/patractic/datacracy/domain/persistence/HibernateUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/../server/src/main/java/edu/sunysb/cs/patractic/datacracy/domain/persistence/HibernateUtil.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/load_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/load_data.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mapped_data/MI_Precincts_MAPPED.geojson" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/mapped_data/NC_VDT_FINAL_HOPEFULLY_HOPEFULLY.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/mapped_data/RI_Precincts_MAPPED.geojson" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -183,10 +175,10 @@
     </configuration>
     <list>
       <item itemvalue="Python.clean_data" />
-      <item itemvalue="Python.load_data" />
-      <item itemvalue="Python.precinct_adjacency" />
-      <item itemvalue="Python.map_precinct_to_district" />
       <item itemvalue="Python.convert_coordinates" />
+      <item itemvalue="Python.load_data" />
+      <item itemvalue="Python.map_precinct_to_district" />
+      <item itemvalue="Python.precinct_adjacency" />
     </list>
     <recent_temporary>
       <list>
@@ -221,6 +213,7 @@
       <workItem from="1576220549441" duration="1134000" />
       <workItem from="1576261793217" duration="875000" />
       <workItem from="1576266101035" duration="2340000" />
+      <workItem from="1576426858222" duration="1584000" />
     </task>
     <servers />
   </component>

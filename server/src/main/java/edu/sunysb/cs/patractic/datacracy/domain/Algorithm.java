@@ -8,6 +8,7 @@ import edu.stonybrook.politech.annealing.models.concrete.District;
 import edu.stonybrook.politech.annealing.models.concrete.Precinct;
 import edu.stonybrook.politech.annealing.models.concrete.State;
 import edu.sunysb.cs.patractic.datacracy.domain.enums.Constraint;
+import edu.sunysb.cs.patractic.datacracy.domain.enums.DemographicGroup;
 import edu.sunysb.cs.patractic.datacracy.domain.models.Properties;
 import edu.sunysb.cs.patractic.datacracy.domain.models.*;
 import org.slf4j.Logger;
@@ -53,6 +54,8 @@ public class Algorithm extends MyAlgorithm {
 
     // UTILITY
     public static double getMajMinScore(Long minPop, Long totalPop, Threshold majMinThresh) {
+
+        System.out.println(majMinThresh.lower + "LOWERUpper" + majMinThresh.upper);
 
         double percent = (double) minPop / (double) totalPop;
         if (majMinThresh.isWithin(percent, true)) {
@@ -117,7 +120,9 @@ public class Algorithm extends MyAlgorithm {
         while (ret == null) {
             synchronized (lock) {
                 if (!currentDistrictUpdates.isEmpty() || phase1Complete) {
-                    ret = new Phase1UpdateDto(new ArrayList<>(this.currentDistrictUpdates.values()), new ArrayList<>(currentDistrictsToRemove));
+                    System.out.println(this.getConfig().selectedMinorities);
+                    List<MajMinDistrictDto> majMinDistrictDtos = getMajMinDistricts(this.getConfig());
+                    ret = new Phase1UpdateDto(new ArrayList<>(this.currentDistrictUpdates.values()), new ArrayList<>(currentDistrictsToRemove), majMinDistrictDtos);
                     this.currentDistrictUpdates.clear();
                     this.currentDistrictsToRemove.clear();
                 }
@@ -275,6 +280,24 @@ public class Algorithm extends MyAlgorithm {
             }
         }
         return update;
+    }
+
+    public List<MajMinDistrictDto> getMajMinDistricts(Properties config) {
+        List<MajMinDistrictDto> majMinDistrictDtos = new ArrayList<>();
+        state.getDistricts().forEach(district -> {
+            //Long minorityPopulation = config.selectedMinorities.stream().mapToLong(district::getPopulation).sum();
+            Long minorityPopulation = config.selectedMinorities.stream().mapToLong(dg -> district.getPopulation(dg)).sum();
+            Long totalPopulation = district.getPopulation(null);
+            double majMinScore = Algorithm.getMajMinScore(
+                    minorityPopulation,
+                    totalPopulation,
+                    config.thresholds.get(Constraint.MINORITY_PERCENTAGE));
+            if(majMinScore == 1) {
+                MajMinDistrictDto majMinDistrictDto = new MajMinDistrictDto(district.getDistrictId(), minorityPopulation, totalPopulation);
+                majMinDistrictDtos.add(majMinDistrictDto);
+            }
+        });
+        return majMinDistrictDtos;
     }
 
     public Properties getConfig() {

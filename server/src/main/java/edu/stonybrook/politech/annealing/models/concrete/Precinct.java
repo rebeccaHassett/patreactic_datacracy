@@ -52,7 +52,8 @@ public class Precinct
             State state, String stateName,
             String geometryJSON,
             String districtID,
-            District district, Map<ElectionId, ElectionData> electionDataMap, Map<DemographicGroup, Long> populationMap, Set<String> neighborIDs) {
+            District district, Map<ElectionId, ElectionData> electionDataMap, Map<DemographicGroup, Long> populationMap, Set<String> neighborIDs,
+            String county) {
         this.precinctId = precinctId;
         this.state = state;
         this.stateName = stateName;
@@ -63,6 +64,7 @@ public class Precinct
         this.postLoad();
         this.originalDistrictID = districtID;
         this.neighborIDs = neighborIDs;
+        this.county = county;
     }
 
     public Precinct(
@@ -75,7 +77,7 @@ public class Precinct
             Map<ElectionId, ElectionData> electionDataMap,
             Map<DemographicGroup, Long> populationMap,
             Set<String> neighborIDs,
-            Geometry geometry) {
+            Geometry geometry, String county) {
         this.precinctId = precinctId;
         this.state = state;
         this.stateName = stateName;
@@ -86,6 +88,7 @@ public class Precinct
         this.geometry = geometry;
         this.originalDistrictID = districtID;
         this.neighborIDs = neighborIDs;
+        this.county = county;
     }
 
     @PostLoad
@@ -280,7 +283,7 @@ public class Precinct
                 electionDataMap,
                 populationMap,
                 new HashSet<>(neighborIDs),
-                geometry);
+                geometry, county);
     }
 
     @Column(name = "county")
