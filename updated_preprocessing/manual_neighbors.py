@@ -97,17 +97,16 @@ manual_neighbors = {
             "THOMPSON TOWNSHIP 1 Schoolcraft County",
         ],
         "ST JAMES TOWNSHIP 13 Charlevoix County": [
-            "MUELLER TOWNSHIP 1 Schoolcraft County",
             "NEWTON TOWNSHIP 1 Mackinac County",
             "GARFIELD TOWNSHIP 2 Mackinac County",
-            "HUDSON TOWNSHIP 1 Lenawee County"
+            "HUDSON TOWNSHIP 1 Mackinac County"
         ],
-        "MACKINAC ISLAND CITY 1 Mackinac County": [ # checked
+        "MACKINAC ISLAND CITY 1 Mackinac County": [
             "BOIS BLANC TOWNSHIP 1 Mackinac County",
             "ST. IGNACE CITY 1 Mackinac County",
             "ST. IGNACE TOWNSHIP 1 Mackinac County",
         ],
-        "BOIS BLANC TOWNSHIP 1 Mackinac County": [ # checked
+        "BOIS BLANC TOWNSHIP 1 Mackinac County": [
             "BEAUGRAND TOWNSHIP 1 Cheboygan County",
             "CHEBOYGAN CITY 2 Cheboygan County",
             "BENTON TOWNSHIP 1 Cheboygan County"
@@ -134,5 +133,5 @@ manual_neighbors = {
             "CLAY TOWNSHIP 3 St. Clair County"
         ]
     },
-    "NC": {}
+    "NC": {} # none
 }
