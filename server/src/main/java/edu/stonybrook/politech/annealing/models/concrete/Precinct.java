@@ -276,7 +276,7 @@ public class Precinct
                 stateName,
                 geometryJSON,
                 originalDistrictID,
-                null,
+                district.clone(),
                 electionDataMap,
                 populationMap,
                 new HashSet<>(neighborIDs),

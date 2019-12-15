@@ -279,7 +279,7 @@ public class District
                 this.edges.add(e);
             }
         }
-        getState().removeDistrict(other);
+        getState().removeDistrict(other, this);
         return new MergeResult(this, other.getDistrictId());
     }
 
@@ -289,5 +289,10 @@ public class District
 
     public District clone() {
         return new District(this.districtId, this.state);
+    }
+
+    public void replaceDistrictInEdges(District other, District replacement) {
+        edges.forEach(e -> e.replaceDistrict(other, replacement));
+        edges.removeIf(e -> e.d1.equals(e.d2));
     }
 }

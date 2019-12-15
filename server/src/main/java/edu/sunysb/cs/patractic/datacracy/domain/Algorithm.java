@@ -151,6 +151,7 @@ public class Algorithm extends MyAlgorithm {
                     Edge e = dedupedEdges.remove(0);
                     MergeResult result = merge(e);
                     this.updatePhase1(result.district, result.removedId);
+                    dedupedEdges.removeIf(edge -> edge.hasDistrict(result.removedId));
                 }
             } else { // Final iteration
                 // Get all edges

@@ -207,7 +207,9 @@ export default class Phase1Controls extends Component {
 
     async pollPhase1NonIncrementalRealtime() {
         let that = this;
-        fetch("http://127.0.0.1:8080/phase1/poll").then(function (response) {
+        fetch("http://127.0.0.1:8080/phase1/poll", {
+            credentials: "include",
+        }).then(function (response) {
             if (response.status >= 400) {
                 throw new Error("Failed to load phase 1 update from server");
             }
@@ -217,14 +219,16 @@ export default class Phase1Controls extends Component {
                 that.endPhase1();
             } else {
                 that.props.phase1Update(data);
-                that.pollPhase1NonIncremental();
+                that.pollPhase1NonIncrementalRealtime();
             }
         });
     }
 
     async pollPhase1NonIncrementalUpdateEnd() {
         let that = this;
-        fetch("http://127.0.0.1:8080/phase1/complete").then(function (response) {
+        fetch("http://127.0.0.1:8080/phase1/complete", {
+            credentials: "include",
+        }).then(function (response) {
             if (response.status >= 400) {
                 throw new Error("Failed to load phase 1 update from server");
             }

@@ -231,8 +231,9 @@ public class State
         return mmEdges;
     }
 
-    public void removeDistrict(District other) {
+    public void removeDistrict(District other, District replacement) {
         districts.remove(other.getDistrictId());
+        districts.forEach((id, d) -> d.replaceDistrictInEdges(other, replacement));
     }
 
     @ElementCollection(fetch = FetchType.EAGER)
