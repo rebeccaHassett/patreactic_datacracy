@@ -88,6 +88,14 @@ manual_neighbors = {
         "EAST PROVIDENCE 1002": [
             "PROVIDENCE 2808",
             "PROVIDENCE 2805"
+        ],
+        "NEW SHOREHAM 2201": [
+            "WESTERLY 3605",
+            "WESTERLY 3604",
+            "CHARLESTOWN 0503",
+            "CHARELSTOWN 0504",
+            "SOUTH KINGSTOWN 3210",
+            "NARRANGANSETT 2005"
         ]
     },
     "MI": {
