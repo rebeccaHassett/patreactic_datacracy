@@ -17,10 +17,9 @@ public class Edge {
     public Edge(District d1, District d2) {
         this.d1 = d1;
         this.d2 = d2;
-        if(((Precinct)d1.getPrecincts().toArray()[0]).getCounty().equals(((Precinct)d2.getPrecincts().toArray()[0]).getCounty())) {
+        if (((Precinct) d1.getPrecincts().toArray()[0]).getCounty().equals(((Precinct) d2.getPrecincts().toArray()[0]).getCounty())) {
             this.countyJoinability = 1;
-        }
-        else {
+        } else {
             this.countyJoinability = 0;
         }
     }

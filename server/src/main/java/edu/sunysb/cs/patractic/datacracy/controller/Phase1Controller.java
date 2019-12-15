@@ -9,9 +9,15 @@ import edu.sunysb.cs.patractic.datacracy.domain.models.RunPhase1Dto;
 import edu.sunysb.cs.patractic.datacracy.domain.persistence.StateDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.*;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -46,10 +52,9 @@ public class Phase1Controller extends HttpServlet {
     }
 
     @GetMapping(path = "/phase1/poll")
-    public ResponseEntity<Phase1UpdateDto> pollPhase1(HttpServletRequest request,  HttpServletResponse response) {
+    public ResponseEntity<Phase1UpdateDto> pollPhase1(HttpServletRequest request, HttpServletResponse response) {
         HttpSession httpSession = request.getSession(false);
         String id = (String) httpSession.getAttribute("sessionId");
-        System.out.println(id);
         if (id == null) {
             return ResponseEntity.badRequest().build();
         }

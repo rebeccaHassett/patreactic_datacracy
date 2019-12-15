@@ -57,7 +57,7 @@ public class StateDao {
     @PostConstruct
     public void preloadStates() {
         getBaseState("RhodeIsland");
-        getBaseState("Michigan");
+//        getBaseState("Michigan");
 //        getBaseState("NorthCarolina");
     }
 }

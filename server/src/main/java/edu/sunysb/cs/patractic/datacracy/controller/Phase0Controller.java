@@ -1,6 +1,5 @@
 package edu.sunysb.cs.patractic.datacracy.controller;
 
-import edu.stonybrook.politech.annealing.models.concrete.State;
 import edu.sunysb.cs.patractic.datacracy.domain.Algorithm;
 import edu.sunysb.cs.patractic.datacracy.domain.models.Incumbent;
 import edu.sunysb.cs.patractic.datacracy.domain.models.RunPhase0Dto;
@@ -42,12 +41,12 @@ public class Phase0Controller {
     public Collection<Incumbent> getIncumbents(@PathVariable("state") String stateName) {
         return stateDao.getBaseState(stateName).getIncumbents().values();
     }
+
     @GetMapping(path = "/initialize", produces = "application/json")
     public String initialize() {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             return "Successfully Initialized Hibernate";
-        }
-        catch(Exception exception) {
+        } catch (Exception exception) {
             return "Failed to Initialize Hibernate";
         }
     }

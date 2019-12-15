@@ -285,7 +285,7 @@ public class District
         }
         getState().removeDistrict(other, this);
 
-        if(countyJoinability == 0) {
+        if (countyJoinability == 0) {
             this.getEdges().forEach(edge -> {
                 edge.setCountyJoinability(0);
             });
@@ -307,10 +307,11 @@ public class District
         edges.removeIf(e -> e.d1.equals(e.d2));
     }
 
-    public void setCountyJoinability(int countyJoinability) {
-        this.countyJoinability = countyJoinability;
-    }
     public int getCountyJoinability() {
         return this.countyJoinability;
+    }
+
+    public void setCountyJoinability(int countyJoinability) {
+        this.countyJoinability = countyJoinability;
     }
 }

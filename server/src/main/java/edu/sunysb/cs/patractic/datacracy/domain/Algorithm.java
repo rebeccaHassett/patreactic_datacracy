@@ -1,9 +1,10 @@
 package edu.sunysb.cs.patractic.datacracy.domain;
 
-import com.fasterxml.jackson.databind.annotation.JsonAppend;
+import edu.stonybrook.politech.annealing.Move;
 import edu.stonybrook.politech.annealing.algorithm.MyAlgorithm;
 import edu.stonybrook.politech.annealing.measures.DefaultMeasures;
 import edu.stonybrook.politech.annealing.models.concrete.District;
+import edu.stonybrook.politech.annealing.models.concrete.Precinct;
 import edu.stonybrook.politech.annealing.models.concrete.State;
 import edu.sunysb.cs.patractic.datacracy.domain.enums.Constraint;
 import edu.sunysb.cs.patractic.datacracy.domain.models.Properties;
@@ -22,11 +23,14 @@ public class Algorithm extends MyAlgorithm {
     // PHASE 1
     private final Object lock = new Object();
     private Properties config;
-    private Map<String, JurisdictionDataDto> currentUpdates;
+    private Map<String, JurisdictionDataDto> currentDistrictUpdates;
     private Set<String> currentDistrictsToRemove;
+    private List<Move<Precinct, District>> moves;
     private Thread thread;
     private boolean phase1Complete;
     private boolean phase1Started;
+    private boolean phase2Running;
+    private boolean phase2Completed;
 
     private Algorithm(State state, Properties config) {
         super(state, DefaultMeasures.defaultMeasuresWithWeights(config.weights), config.electionId);
@@ -74,7 +78,7 @@ public class Algorithm extends MyAlgorithm {
     public List<JurisdictionDataDto> start() {
         state.initPhase1();
         this.currentDistrictsToRemove = new HashSet<>();
-        this.currentUpdates = new HashMap<>();
+        this.currentDistrictUpdates = new HashMap<>();
         this.phase1Started = true;
         return state.getDistricts().stream()
                 .map(District::dto)
@@ -102,18 +106,18 @@ public class Algorithm extends MyAlgorithm {
      * @param districtRemoved the id of the district that was absorbed.
      */
     private void updatePhase1(District updated, String districtRemoved) {
-        currentUpdates.remove(districtRemoved);
+        currentDistrictUpdates.remove(districtRemoved);
         currentDistrictsToRemove.add(districtRemoved);
-        currentUpdates.put(updated.getDistrictId(), updated.dto());
+        currentDistrictUpdates.put(updated.getDistrictId(), updated.dto());
     }
 
     public Phase1UpdateDto getPhase1Update() {
         Phase1UpdateDto ret = null;
         while (ret == null) {
             synchronized (lock) {
-                if (!currentUpdates.isEmpty() || phase1Complete) {
-                    ret = new Phase1UpdateDto(new ArrayList<>(this.currentUpdates.values()), new ArrayList<>(currentDistrictsToRemove));
-                    this.currentUpdates.clear();
+                if (!currentDistrictUpdates.isEmpty() || phase1Complete) {
+                    ret = new Phase1UpdateDto(new ArrayList<>(this.currentDistrictUpdates.values()), new ArrayList<>(currentDistrictsToRemove));
+                    this.currentDistrictUpdates.clear();
                     this.currentDistrictsToRemove.clear();
                 }
             }
@@ -189,6 +193,81 @@ public class Algorithm extends MyAlgorithm {
         } else {
             return e.d2.merge(e.d1, e.countyJoinability);
         }
+    }
+
+    // PHASE 2
+    public boolean startPhase2() {
+        synchronized (lock) {
+            if (!phase1Complete || phase2Running || phase2Completed) {
+                return false;
+            }
+            phase2Running = true;
+            updateScores();
+            thread = new Thread(() -> {
+                boolean keepGoing = true;
+                while (keepGoing) {
+                    // do work
+                    synchronized (lock) {
+                        Move<Precinct, District> move = makeMove();
+                        // store results and check if we continue
+                        if (move == null) {
+                            phase2Running = false;
+                            phase2Completed = true;
+                        } else {
+                            moves.add(move);
+                            currentDistrictUpdates.put(move.getFrom().getDistrictId(), move.getFrom().dto());
+                            currentDistrictUpdates.put(move.getTo().getDistrictId(), move.getTo().dto());
+                        }
+                        keepGoing = phase2Running;
+                        lock.notify();
+                        logger.info("Made P2 move: {}", move.toString());
+                    }
+                }
+            });
+            thread.start();
+        }
+        return true;
+    }
+
+    public void stopPhase2() {
+        synchronized (lock) {
+            phase2Running = false;
+        }
+        while (thread.isAlive()) {
+            try {
+                lock.wait(200);
+            } catch (InterruptedException | IllegalMonitorStateException ignored) {
+            }
+        }
+    }
+
+    public Phase2UpdateDto getPhase2Update() {
+        synchronized (lock) {
+            if (moves.isEmpty() && !phase2Running) {
+                return null;
+            }
+        }
+
+        Phase2UpdateDto update = null;
+        while (update == null) {
+            synchronized (lock) {
+                if (!moves.isEmpty() || (!phase2Running && !thread.isAlive())) {
+                    update = new Phase2UpdateDto(
+                            new ArrayList<>(this.currentDistrictUpdates.values()),
+                            moves.stream().map(MoveDto::from).collect(Collectors.toList()),
+                            phase2Completed);
+                    moves.clear();
+                    currentDistrictUpdates.clear();
+                }
+            }
+            if (update == null) {
+                try {
+                    lock.wait(500);
+                } catch (InterruptedException | IllegalMonitorStateException ignored) {
+                }
+            }
+        }
+        return update;
     }
 
     public Properties getConfig() {

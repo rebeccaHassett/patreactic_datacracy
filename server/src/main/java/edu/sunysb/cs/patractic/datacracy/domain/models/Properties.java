@@ -47,4 +47,16 @@ public class Properties {
         }
         this.majMinWeight = majMinWeight;
     }
+
+    public Properties(Properties old, Map<String, Double> weights) {
+        this.thresholds = old.thresholds;
+        this.weights = new HashMap<>();
+        weights.forEach((measure, weight) -> this.weights.put(Measure.valueOf(measure), weight));
+        this.incremental = old.incremental;
+        this.numDistricts = old.numDistricts;
+        this.numMajMinDistricts = old.numMajMinDistricts;
+        this.selectedMinorities = old.selectedMinorities;
+        this.electionId = old.electionId;
+        this.majMinWeight = old.majMinWeight;
+    }
 }
