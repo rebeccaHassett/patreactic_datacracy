@@ -600,7 +600,7 @@ export default class State extends Component {
                 });
                 return true;
             } else {
-                if (this.getZoom() < ZOOM && that.state.precinctsLoaded) {
+                if (this.getZoom() < ZOOM && that.state.precinctsLoaded && !that.state.phase0Lock) {
                     let precinctArr = [];
                     Object.keys(that.state.precinctMap).forEach(function (key) {
                         precinctArr.push(that.state.precinctMap[key]);

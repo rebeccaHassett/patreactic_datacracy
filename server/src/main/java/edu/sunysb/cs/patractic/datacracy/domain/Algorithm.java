@@ -112,7 +112,7 @@ public class Algorithm extends MyAlgorithm {
             if (ret == null) {
                 try {
                     lock.wait(500);
-                } catch (InterruptedException ignored) {
+                } catch (InterruptedException | IllegalMonitorStateException ignored) {
 
                 }
             }
@@ -168,6 +168,7 @@ public class Algorithm extends MyAlgorithm {
                 Edge smallestPop = sortedEdges.get(0);
                 MergeResult result = merge(smallestPop);
                 this.updatePhase1(result.district, result.removedId);
+                phase1Complete = true;
             }
             lock.notify();
         }
