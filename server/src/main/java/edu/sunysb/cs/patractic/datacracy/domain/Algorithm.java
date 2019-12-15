@@ -1,6 +1,7 @@
 package edu.sunysb.cs.patractic.datacracy.domain;
 
 import edu.stonybrook.politech.annealing.Move;
+import edu.stonybrook.politech.annealing.algorithm.Measure;
 import edu.stonybrook.politech.annealing.algorithm.MyAlgorithm;
 import edu.stonybrook.politech.annealing.measures.DefaultMeasures;
 import edu.stonybrook.politech.annealing.models.concrete.District;
@@ -252,10 +253,16 @@ public class Algorithm extends MyAlgorithm {
         while (update == null) {
             synchronized (lock) {
                 if (!moves.isEmpty() || (!phase2Running && !thread.isAlive())) {
+                    Map<String, Double> results = new HashMap<>();
+                    for (Measure m : Measure.values()) {
+                        results.put(m.toString(), state.getDistricts().stream().mapToDouble(d -> m.calculateMeasure(d, config.electionId)).average().orElse(0));
+                    }
+
                     update = new Phase2UpdateDto(
                             new ArrayList<>(this.currentDistrictUpdates.values()),
                             moves.stream().map(MoveDto::from).collect(Collectors.toList()),
-                            phase2Completed);
+                            phase2Completed,
+                            results);
                     moves.clear();
                     currentDistrictUpdates.clear();
                 }
