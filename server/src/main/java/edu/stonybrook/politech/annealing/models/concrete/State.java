@@ -3,6 +3,7 @@ package edu.stonybrook.politech.annealing.models.concrete;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import edu.stonybrook.politech.annealing.algorithm.Measure;
 import edu.stonybrook.politech.annealing.measures.StateInterface;
 import edu.sunysb.cs.patractic.datacracy.domain.Algorithm;
 import edu.sunysb.cs.patractic.datacracy.domain.enums.Constraint;
@@ -216,7 +217,18 @@ public class State
         );
         ImmutableMap.Builder<ElectionId, ElectionData> builder = new ImmutableMap.Builder<>();
         electionIds.forEach(eId -> builder.put(eId, ElectionData.aggregateFromJurisdictions(this.getPrecinctSet().stream().map(p -> (IJurisdiction) p).collect(Collectors.toSet()), eId)));
-        return new JurisdictionDataDto(this.name, new ArrayList<>(this.precincts.keySet()), popMap, builder.build());
+
+        ImmutableMap.Builder<String, Map<String, Double>> objFuncResultsMapBuilder = new ImmutableMap.Builder<>();
+        for (Measure m : Measure.values()) {
+            ImmutableMap.Builder<String, Double> currentMeasureMapBuilder = new ImmutableMap.Builder<>();
+            for (ElectionId election : electionIds) {
+                Double res = districts.values().parallelStream().mapToDouble(d -> m.calculateMeasure(d, election)).average().orElse(0);
+                currentMeasureMapBuilder.put(election.toString(), res);
+            }
+            objFuncResultsMapBuilder.put(m.toString(), currentMeasureMapBuilder.build());
+        }
+
+        return new JurisdictionDataDto(this.name, new ArrayList<>(this.precincts.keySet()), popMap, builder.build(), objFuncResultsMapBuilder.build());
     }
 
     public Set<Edge> getMMEdges(Properties config) {

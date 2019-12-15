@@ -68,4 +68,15 @@ public class ElectionId {
     public int hashCode() {
         return Objects.hash(year, electionType);
     }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        if (electionType == ElectionType.CONGRESSIONAL) {
+            builder.append("house");
+        } else {
+            builder.append("pres");
+        }
+        return builder.append(year.toString().substring(1)).toString();
+    }
 }

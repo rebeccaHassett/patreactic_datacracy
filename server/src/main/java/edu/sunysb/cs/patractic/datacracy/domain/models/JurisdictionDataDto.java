@@ -22,8 +22,9 @@ public class JurisdictionDataDto {
     public final Long AMINVAP;
     public final Long ASIANVAP;
     public final List<String> precinctIds;
+    public final Map<String, Map<String, Double>> objFuncResults;
 
-    public JurisdictionDataDto(String jurisdictionId, List<String> precinctIds, Map<DemographicGroup, Long> populations, Map<ElectionId, ElectionData> electionDataMap) {
+    public JurisdictionDataDto(String jurisdictionId, List<String> precinctIds, Map<DemographicGroup, Long> populations, Map<ElectionId, ElectionData> electionDataMap, Map<String, Map<String, Double>> objFuncResults) {
         this.PRENAME = jurisdictionId;
         this.precinctIds = precinctIds;
         PRES16D = electionDataMap.get(new ElectionId(Year.Y2016, ElectionType.PRESIDENTIAL)).getVotes(PoliticalParty.DEMOCRAT);
@@ -42,5 +43,6 @@ public class JurisdictionDataDto {
         BVAP = populations.getOrDefault(DemographicGroup.BLACK, 0L);
         AMINVAP = populations.getOrDefault(DemographicGroup.NATIVE_AMERICAN, 0L);
         ASIANVAP = populations.getOrDefault(DemographicGroup.ASIAN, 0L);
+        this.objFuncResults = objFuncResults;
     }
 }
