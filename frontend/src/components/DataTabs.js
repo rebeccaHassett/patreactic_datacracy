@@ -146,7 +146,7 @@ export default function DataTabs(props) {
                 </DataStyle>
             </TabPane>
             <TabPane value={value} index={2}>
-                <Statistics data={props.precinctData} type="precinct" election={props.election}/>
+                <Statistics data={props.precinctData} type="precinct" election={props.election} chosenState={props.chosenState}/>
             </TabPane>
         </div>
     );

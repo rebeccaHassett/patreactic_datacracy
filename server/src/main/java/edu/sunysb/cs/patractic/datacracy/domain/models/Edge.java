@@ -12,10 +12,17 @@ import java.util.stream.Collectors;
 public class Edge {
     public District d1;
     public District d2;
+    public int countyJoinability;
 
     public Edge(District d1, District d2) {
         this.d1 = d1;
         this.d2 = d2;
+        if(((Precinct)d1.getPrecincts().toArray()[0]).getCounty().equals(((Precinct)d2.getPrecincts().toArray()[0]).getCounty())) {
+            this.countyJoinability = 1;
+        }
+        else {
+            this.countyJoinability = 0;
+        }
     }
 
     @Override
@@ -58,6 +65,7 @@ public class Edge {
 
     public District peekCombined() {
         District combined = new District(d1.getDistrictId(), d1.getState());
+        combined.setCountyJoinability(this.countyJoinability);
         Set<Precinct> precincts = d1.getPrecincts().stream().map(Precinct::clone).collect(Collectors.toSet());
         precincts.addAll(d2.getPrecincts().stream().map(Precinct::clone).collect(Collectors.toSet()));
         precincts.forEach(combined::addPrecinct);
@@ -79,5 +87,13 @@ public class Edge {
     @Override
     public String toString() {
         return String.format("(%s, %s)", d1.getDistrictId(), d2.getDistrictId());
+    }
+
+    public int getCountyJoinability() {
+        return this.countyJoinability;
+    }
+
+    public void setCountyJoinability(int countyJoinability) {
+        this.countyJoinability = countyJoinability;
     }
 }

@@ -8,6 +8,16 @@ import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.MultiPolygon;
 
 public enum Measure implements MeasureFunction<Precinct, District> {
+    COUNTY_JOINABILITY {
+        /**
+         * County_Joinability:
+         *
+         */
+        @Override
+        public double calculateMeasure(District d, ElectionId electionId) {
+            return d.getCountyJoinability();
+        }
+    },
     PARTISAN_FAIRNESS {
         /**
          * Partisan fairness:

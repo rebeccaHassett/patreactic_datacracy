@@ -177,9 +177,9 @@ public class Algorithm extends MyAlgorithm {
 
     private MergeResult merge(Edge e) {
         if (e.d1.numPrecincts() > e.d2.numPrecincts()) {
-            return e.d1.merge(e.d2);
+            return e.d1.merge(e.d2, e.countyJoinability);
         } else {
-            return e.d2.merge(e.d1);
+            return e.d2.merge(e.d1, e.countyJoinability);
         }
     }
 

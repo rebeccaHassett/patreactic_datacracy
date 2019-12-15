@@ -44,6 +44,8 @@ public class District
     private boolean multiPolygonUpdated = false;
     private boolean convexHullUpdated = false;
 
+    private int countyJoinability = 0;
+
     public District(String districtId, State state) {
         this.districtId = districtId;
         precincts = new HashMap<>();
@@ -268,10 +270,11 @@ public class District
      * - replace the other district with this one in all of its edges
      * - add other's edges to this district
      * - remove the other district from the state
+     * - set all edges county joinability to 0 if merged districts have a county joinability of 0
      *
      * @param other the district to absorb
      */
-    public MergeResult merge(District other) {
+    public MergeResult merge(District other, int countyJoinability) {
         other.getPrecincts().forEach(this::addPrecinct);
         this.edges.remove(getEdge(other.getDistrictId()));
         for (Edge e : other.getEdges()) {
@@ -281,6 +284,13 @@ public class District
             }
         }
         getState().removeDistrict(other, this);
+
+        if(countyJoinability == 0) {
+            this.getEdges().forEach(edge -> {
+                edge.setCountyJoinability(0);
+            });
+        }
+
         return new MergeResult(this, other.getDistrictId());
     }
 
@@ -295,5 +305,12 @@ public class District
     public void replaceDistrictInEdges(District other, District replacement) {
         edges.forEach(e -> e.replaceDistrict(other, replacement));
         edges.removeIf(e -> e.d1.equals(e.d2));
+    }
+
+    public void setCountyJoinability(int countyJoinability) {
+        this.countyJoinability = countyJoinability;
+    }
+    public int getCountyJoinability() {
+        return this.countyJoinability;
     }
 }

@@ -33,6 +33,7 @@ export default class Phase1Controls extends Component {
         this.handleGerrymanderRepublicanWeight = this.handleGerrymanderRepublicanWeight.bind(this);
         this.handlePopulationHomogeneityWeight = this.handlePopulationHomogeneityWeight.bind(this);
         this.handleGerrymanderDemocratWeight = this.handleGerrymanderDemocratWeight.bind(this);
+        this.handleCountyJoinabilityWeight = this.handleCountyJoinabilityWeight.bind(this);
         this.handleMajorityMinorityWeight = this.handleMajorityMinorityWeight.bind(this);
     }
 
@@ -54,6 +55,7 @@ export default class Phase1Controls extends Component {
         gerrymanderRepublicanWeightValue: 0.1,
         populationHomogeneityWeightValue: 0.1,
         gerrymanderDemocratWeightValue: 0.1,
+        countyJoinabilityWeightValue: 0.1,
         majorityMinorityWeightValue: 0.1,
         phase1RunButtonDisabled: false,
         alertDialogState: false,
@@ -89,16 +91,17 @@ export default class Phase1Controls extends Component {
         this.props.togglePhase2Tab(true);
         this.props.togglephase0Lock(true);
 
-        let normalizedCompetitiveness = 0.1;
-        let normalizedPopulationHomogeneity = 0.1;
-        let normalizedGerrymanderDemocrat = 0.1;
-        let normalizedGerrymanderRepublican = 0.1;
-        let normalizedPopulationEquality = 0.1;
-        let normalizedEdgeCompactness = 0.1;
-        let normalizedEfficiencyGap = 0.1;
-        let normalizedReockCompactness = 0.1;
-        let normalizedConvexHullCompactness = 0.1;
-        let normalizedPartisanFairness = 0.1;
+        let normalizedCompetitiveness = (1/11);
+        let normalizedPopulationHomogeneity = (1/11);
+        let normalizedGerrymanderDemocrat = (1/11);
+        let normalizedGerrymanderRepublican = (1/11);
+        let normalizedPopulationEquality = (1/11);
+        let normalizedEdgeCompactness = (1/11);
+        let normalizedEfficiencyGap = (1/11);
+        let normalizedReockCompactness = (1/11);
+        let normalizedConvexHullCompactness = (1/11);
+        let normalizedPartisanFairness = (1/11);
+        let normalizedCountyJoinability = (1/11);
 
         /*Normalize Weights:
             Divide each number by the sum of all numbers [if sum is 0, set each number to 0.1 since each weighting]*/
@@ -106,7 +109,7 @@ export default class Phase1Controls extends Component {
             + this.state.gerrymanderRepublicanWeightValue + this.state.populationEqualityWeightValue
             + this.state.edgeCompactnessWeightValue + this.state.efficiencyGapWeightValue
             + this.state.reockCompactnessWeightValue + this.state.convexHullCompactnessWeightValue
-            + this.state.partisanFairnessWeightValue;
+            + this.state.partisanFairnessWeightValue + this.state.countyJoinabilityWeightValue;
 
         if (sum !== 0) {
             normalizedCompetitiveness = this.state.competitivenessWeightValue / sum;
@@ -119,6 +122,7 @@ export default class Phase1Controls extends Component {
             normalizedReockCompactness = this.state.reockCompactnessWeightValue / sum;
             normalizedConvexHullCompactness = this.state.convexHullCompactnessWeightValue / sum;
             normalizedPartisanFairness = this.state.partisanFairnessWeightValue / sum;
+            normalizedCountyJoinability = this.state.countyJoinabilityWeightValue / sum;
         }
 
         var phase1Dto = {
@@ -140,7 +144,8 @@ export default class Phase1Controls extends Component {
                     "COMPETITIVENESS": normalizedCompetitiveness,
                     "GERRYMANDER_REPUBLICAN": normalizedGerrymanderRepublican,
                     "POPULATION_HOMOGENEITY": normalizedPopulationHomogeneity,
-                    "GERRYMANDER_DEMOCRAT": normalizedGerrymanderDemocrat
+                    "GERRYMANDER_DEMOCRAT": normalizedGerrymanderDemocrat,
+                    "COUNTY_JOINABILITY": normalizedCountyJoinability
                 },
                 incremental: this.state.incremental,
                 realtime: this.state.realtime,
@@ -451,6 +456,12 @@ export default class Phase1Controls extends Component {
                         <SliderControlSingleValue min={0} max={1} step={0.01} marks={OFMarks}
                                                   disabled={this.state.phase1ControlsDisabled}
                                                   exportState={this.handleMajorityMinorityWeight}/>
+                    </ControlGroup>
+                    <ControlGroup>
+                        <label className="label">County Joinability Weighting:</label>
+                        <SliderControlSingleValue min={0} max={1} step={0.01} marks={OFMarks}
+                                                  disabled={this.state.phase1ControlsDisabled}
+                                                  exportState={this.handleCountyJoinabilityWeight}/>
                     </ControlGroup>
                     <ControlGroup>
                         <label className="label">Convex Hull Compactness Weighting:</label>
