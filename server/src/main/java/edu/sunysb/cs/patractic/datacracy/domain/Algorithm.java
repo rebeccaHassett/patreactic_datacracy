@@ -284,7 +284,8 @@ public class Algorithm extends MyAlgorithm {
                             new ArrayList<>(this.currentDistrictUpdates.values()),
                             moves.stream().map(MoveDto::from).collect(Collectors.toList()),
                             phase2Completed,
-                            results);
+                            results,
+                            getMajMinDistricts(config));
                     moves.clear();
                     currentDistrictUpdates.clear();
                 }
