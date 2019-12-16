@@ -17,14 +17,14 @@ manual_neighbors = {
         "JAMESTOWN 1502": [
             "NORTH KINGSTOWN 2308",
             "NORTH KINGSTOWN 2307",
-            "NARRANGANSETT 2003"
+            "NARRAGANSETT 2003"
         ],
         "JAMESTOWN 1501": [
             "NEWPORT 2107",
             "NEWPORT 2106",
             "NEWPORT 2104",
             "NEWPORT 2102",
-            "MIDDLETOWN 1904"
+            "MIDDLETOWN 1904",
             "MIDDLETOWN 1905"
         ],
         "MIDDLETOWN 1901": [
@@ -93,14 +93,14 @@ manual_neighbors = {
             "WESTERLY 3605",
             "WESTERLY 3604",
             "CHARLESTOWN 0503",
-            "CHARELSTOWN 0504",
+            "CHARLESTOWN 0504",
             "SOUTH KINGSTOWN 3210",
-            "NARRANGANSETT 2005"
+            "NARRAGANSETT 2005"
         ],
-        "NARRANGANSETT 2001": [
-            "NARRANGANSETT 2002",
+        "NARRAGANSETT 2001": [
+            "NARRAGANSETT 2002",
             "SOUTH KINGSTOWN 3201",
-            "NARANGANSETT 2004"
+            "NARRAGANSETT 2004"
         ],
         "PROVIDENCE 2830": [
             "PROVIDENCE 2828",
