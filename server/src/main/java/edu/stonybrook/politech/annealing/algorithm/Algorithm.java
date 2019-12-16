@@ -102,15 +102,8 @@ public class Algorithm {
 
     // Determine the initial districts of precincts
     public void allocatePrecincts(State state) {
-        for(Precinct p : state.getPrecinctSet()) {
-            precinctDistrictMap.put(p.getPrecinctId(), p.getOriginalDistrictID());
-        }
-        for(District d : state.getDistricts()) {
-            for(Precinct p : state.getPrecinctSet()) {
-                if(d.getDistrictId().equals(precinctDistrictMap.get(p.getPrecinctId()))) {
-                    d.addPrecinct(p);
-                }
-            }
+        for (Precinct p : state.getPrecinctSet()) {
+            precinctDistrictMap.put(p.getPrecinctId(), p.getDistrict().getDistrictId());
         }
     }
 

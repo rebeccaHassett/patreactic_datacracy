@@ -19,6 +19,7 @@ export default class Phase2Controls extends Component {
         this.handlePopulationHomogeneityWeight = this.handlePopulationHomogeneityWeight.bind(this);
         this.handleGerrymanderDemocratWeight = this.handleGerrymanderDemocratWeight.bind(this);
         this.runPhase2 = this.runPhase2.bind(this);
+        this.handlePhase2 = this.handlePhase2.bind(this);
     }
 
     state = {
