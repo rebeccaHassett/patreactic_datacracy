@@ -175,6 +175,20 @@ manual_neighbors = {
             "MUNISING CITY 1 Alger County",
             "GRAND ISLAND TOWNSHIP 1 Alger County",
             "NAHMA TOWNSHIP 1 Delta County"
+        ],
+        "IRONWOOD TOWNSHIP 1 Gogebic County": [
+            "WAKEFIELD TOWNSHIP 1 Gogebic County",
+            "BESSEMER TOWNSHIP 1 Gogebic County",
+            "IRONWOOD CITY 3 Gogebic County",
+            "IRONWOOD CITY 1 Gogebic County",
+            "IRONWOOD CITY 2 Gogebic County",
+        ],
+        "MCMILLAN TOWNSHIP 1 Luce County": [
+            "COLUMBUS TOWNSHIP 1 Luce County",
+            "PENTLAND TOWNSHIP 1 Luce County",
+            "WHITEFISH TOWNSHIP 1 Chippewa County",
+            "BURT TOWNSHIP 1 Alger County Alger County",
+            "HULBERT TOWNSHIP 1 Chippewa County"
         ]
     },
     "NC": {} # none
