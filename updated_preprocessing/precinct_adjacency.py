@@ -796,6 +796,99 @@ def _update_duplicate_precinct_names(data):
     return features
 
 
+def mi(data):
+    # note: precinct1 is the shape that contains precinct2
+    # in the first case, WALTON TOWNSHIP 1 contains OLIVET CITY 1
+    data = update_precincts_MI(data, 'WALTON TOWNSHIP 1 Eaton County', 'OLIVET CITY 1 Eaton County')
+    data = update_precincts_MI(data, 'ODESSA TOWNSHIP 2 Ionia County', 'ODESSA TOWNSHIP 1 Ionia County')
+    data = update_precincts_MI(data, 'CALEDONIA TOWNSHIP 5 Kent County', 'CALEDONIA TOWNSHIP 1 Kent County')
+    data = update_precincts_MI(data, 'HARTFORD TOWNSHIP 1 Van Buren County', 'HARTFORD CITY 1 Van Buren County')
+    data = update_precincts_MI(data, 'WATERVLIET TOWNSHIP 1 Berrien County', 'WATERVLIET CITY 1 Berrien County')
+    data = update_precincts_MI(data, 'FAYETTE TOWNSHIP 1 Hillsdale County', 'JONESVILLE CITY 1 Hillsdale County')
+    data = update_precincts_MI(data, 'LITCHFIELD TOWNSHIP 1 Hillsdale County', 'LITCHFIELD CITY 1 Hillsdale County')
+    data = update_precincts_MI(data, 'SUMMERFIELD TOWNSHIP 1 Monroe County', 'PETERSBURG CITY 1 Monroe County')
+    data = update_precincts_MI(data, 'MANCHESTER TOWNSHIP 2 Washtenaw County', 'MANCHESTER TOWNSHIP 1 Washtenaw County')
+    data = update_precincts_MI(data, 'CHESANING TOWNSHIP 2 Saginaw County', 'CHESANING TOWNSHIP 1 Saginaw County')
+    data = update_precincts_MI(data, 'BIRCH RUN TOWNSHIP 1 Saginaw County', 'BIRCH RUN TOWNSHIP 2 Saginaw County')
+    data = update_precincts_MI(data, 'WARREN TOWNSHIP 1 Midland County', 'COLEMAN CITY 1 Midland County')
+    data = update_precincts_MI(data, 'PINCONNING TOWNSHIP 1 Bay County', 'PINCONNING CITY 1 Bay County')
+    data = update_precincts_MI(data, 'ARENAC TOWNSHIP 1 Arenac County', 'OMER CITY Ward 1 Precinct 1 Arenac County')
+    data = update_precincts_MI(data, 'BURLEIGH TOWNSHIP 1 Iosco County', 'WHITTEMORE CITY 1 Iosco County')
+    data = update_precincts_MI(data, 'KALKASKA TOWNSHIP 1 Kalkaska County', 'KALKASKA TOWNSHIP 2 Kalkaska County')
+    data = update_precincts_MI(data, 'READING TOWNSHIP 1 Hillsdale County', 'READING CITY 1 Hillsdale County')
+    data = update_precincts_MI(data, 'NOVI CITY 9 Oakland County', 'NOVI CITY 10 Oakland County')
+    data = update_precincts_MI(data, 'STEPHENSON TOWNSHIP 1 Menominee County', 'STEPHENSON CITY 1 Menominee County')
+    data = update_precincts_MI(data, 'LESLIE TOWNSHIP 1 Ingham County', 'LESLIE CITY 1 Ingham County')
+    data = update_precincts_MI(data, 'LEROY TOWNSHIP 1 Ingham County', 'LEROY TOWNSHIP 2 Ingham County')
+    data = update_precincts_MI(data, 'LEXINGTON TOWNSHIP 1 Sanilac County', 'CROSWELL CITY 1 Sanilac County')
+    data = update_precincts_MI(data, 'MARLETTE TOWNSHIP 1 Sanilac County', 'MARLETTE CITY 1 Sanilac County')
+    data = update_precincts_MI(data, 'BESSEMER TOWNSHIP 1 Gogebic County', 'BESSEMER CITY 1 Gogebic County')
+    data = update_precincts_MI(data, 'BROCKWAY TOWNSHIP 1 St. Clair County', 'YALE CITY 1 St. Clair County')
+    data = update_precincts_MI(data, 'HART TOWNSHIP 1 Oceana County', 'HART CITY 1 Oceana County')
+    data = update_precincts_MI(data, 'SOUTH ARM TOWNSHIP 14 Charlevoix County', 'EAST JORDAN CITY 21 Charlevoix County')
+    data = update_precincts_MI(data, 'RICHMOND TOWNSHIP 1 Osceola County', 'REED CITY 1 Osceola County')
+
+    with open('MI_NEW.geojson', 'w') as f:
+        json.dump(data, f)
+
+
+def update_precincts_MI(data, precinct1, precinct2):
+    """
+    :param data: Geojson data
+    :param precinct1: The prename of precinct1
+    :param precinct2: The prename of precinct2
+    :return: The updated precinct1, which contains the newly updated voting data. precinct2 will be deleted from data.
+    """
+
+    p1 = None
+    p2 = None
+    for f in data['features']:
+        prename = f['properties']['PRENAME']
+        if prename == precinct1:
+            p1 = f
+        if prename == precinct2:
+            p2 = f
+        if p1 != None and p2 != None:
+            break
+
+    prop1 = p1['properties']
+    prop2 = p2['properties']
+    p1['properties']['PRES16D'] = prop1['PRES16D'] + prop2['PRES16D']
+    p1['properties']['PRES16R'] = prop1['PRES16R'] + prop2['PRES16R']
+    p1['properties']['VAP'] = prop1['VAP'] + prop2['VAP']
+    p1['properties']['HVAP'] = prop1['HVAP'] + prop2['HVAP']
+    p1['properties']['WVAP'] = prop1['WVAP'] + prop2['WVAP']
+    p1['properties']['BVAP'] = prop1['BVAP'] + prop2['BVAP']
+    p1['properties']['AMINVAP'] = prop1['AMINVAP'] + prop2['AMINVAP']
+    p1['properties']['ASIANVAP'] = prop1['ASIANVAP'] + prop2['ASIANVAP']
+    p1['properties']['NHPIVAP'] = prop1['NHPIVAP'] + prop2['NHPIVAP']
+    p1['properties']['OTHERVAP'] = prop1['OTHERVAP'] + prop2['OTHERVAP']
+
+    # update house election data
+    p1_house16 = prop1['HOUSE_ELECTION_16'] # dictionary
+    p1_house18 = prop1['HOUSE_ELECTION_18']
+    p2_house16 = prop1['HOUSE_ELECTION_16'] # dictionary
+    p2_house18 = prop1['HOUSE_ELECTION_18']
+
+    for candidate in p1_house16.keys(): # check that candidate in p2 is in p1's list of candidates
+        if p2_house16.get(candidate) != None:
+            p1_house16[candidate] = p1_house16[candidate] + p2_house16[candidate]
+    for candidate in p2_house16.keys():
+        if p1_house16.get(candidate) == None: # if p2 has a unique candidate not in p1, add that candidate to p1's list
+            p1_house16[candidate] = p2_house16[candidate]
+    for candidate in p1_house18.keys():  # check that candidate in p2 is in p1's list of candidates
+        if p2_house18.get(candidate) != None:
+            p1_house18[candidate] = p1_house18[candidate] + p2_house18[candidate]
+    for candidate in p2_house18.keys():
+        if p1_house18.get(candidate) == None:  # if p2 has a unique candidate not in p1, add that candidate to p1's list
+            p1_house18[candidate] = p2_house18[candidate]
+
+    p1['properties']['HOUSE_ELECTION_16'] = p1_house16
+    p1['properties']['HOUSE_ELECTION_18'] = p1_house18
+
+    data['features'].remove(p2) # delete p2 entry from geojson file
+    return data
+
 
 if __name__ == '__main__':
     __run(f'mapped_data/{sys.argv[3]}_Precincts_MAPPED_FINAL.geojson', sys.argv[3], num_procs=int(sys.argv[1]), grid_filename=(sys.argv[2]), save_grid=(int(sys.argv[4]) == 1))
