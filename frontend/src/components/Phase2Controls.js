@@ -4,7 +4,7 @@ import SliderControlSingleValue from "./controls/SliderControlSingleValue";
 import Button from "@material-ui/core/Button";
 import TableDisplay from "./controls/TableDisplay";
 import RestartAlertDialog from "./controls/RestartAlertDialog"
-import MajorityMinoritySummaryDialog from "../MajorityMinoritySummaryDialog";
+import MajorityMinoritySummaryDialog from "./MajorityMinoritySummaryDialog";
 import GerrymanderingScoresSummaryDialog from "./GerrymanderingScoresSummaryDialog";
 
 export default class Phase2Controls extends Component {
@@ -28,6 +28,9 @@ export default class Phase2Controls extends Component {
         this.handleDistrictView = this.handleDistrictView.bind(this);
         this.createMajMinData = this.createMajMinData.bind(this);
         this.buildMajMinRows = this.buildMajMinRows.bind(this);
+        this.createGerrymanderingData = this.createGerrymanderingData.bind(this);
+        this.buildGerrymanderingRows = this.buildGerrymanderingRows.bind(this);
+        this.wordCase = this.wordCase.bind(this);
     }
 
     state = {
@@ -47,7 +50,8 @@ export default class Phase2Controls extends Component {
         districtView: "View Original Districts",
         currentDistrictView: "Original Districts",
         generatedMajMinDistrictDtos: [],
-        majorityMinorityRows: [['-', '-', '-', '-']]
+        majorityMinorityRows: [['-', '-', '-', '-']],
+        numOriginalCD: 0
     };
 
     async runPhase2() {
@@ -124,19 +128,7 @@ export default class Phase2Controls extends Component {
 
     phase2Update(data) {
         this.setState({generatedMajMinDistrictDtos: data.majMinDistrictDtos});
-        let objFuncResults = {
-            convexHullCompactness: data.CONVEX_HULL_COMPACTNESS,
-            edgeCompactness: data.EDGE_COMPACTNESS,
-            reockCompactness: data.REOCK_COMPACTNESS,
-            efficiencyGap: data.EFFICIENCY_GAP,
-            populationEquality: data.POPULATION_EQUALITY,
-            partisanFairness: data.PARTISAN_FAIRNESS,
-            competitiveness: data.COMPETITIVENESS,
-            gerrymanderRepublican: data.GERRYMANDER_REPUBLICAN,
-            populationHomogeneity: data.POPULATION_HOMOGENEITY,
-            gerrymanderDemocrat: data.GERRYMANDER_DEMOCRAT
-        };
-        this.props.phase2Update(data, objFuncResults);
+        this.props.phase2Update(data);
     }
 
     async pollPhase2NonIncrementalRealtime() {
@@ -149,8 +141,6 @@ export default class Phase2Controls extends Component {
             }
             return response.json();
         }).then(function (data) {
-            console.log("POLL");
-            console.log(data);
             if (!data.phase2Complete) {
                 that.phase2Update(data);
                 that.pollPhase2NonIncrementalRealtime();
@@ -269,14 +259,60 @@ export default class Phase2Controls extends Component {
             let districtId = majMinDistrict.districtId;
             let minorityPopulation = majMinDistrict.minorityPopulation;
             let totalPopulation = majMinDistrict.totalPopulation;
-            tempRows.push(this.createData(districtId, minorityPopulation, totalPopulation));
+            tempRows.push(this.createMajMinData(districtId, minorityPopulation, totalPopulation));
         });
 
         return tempRows;
     }
 
+    createGerrymanderingData(measure, value) {
+        return {measure, value};
+    }
+
+    buildGerrymanderingRows(selectedStateGerrymandering) {
+        let tempRows = [];
+
+        let that = this;
+        Object.keys(selectedStateGerrymandering).forEach(function (key) {
+            let measure = key;
+            let value = selectedStateGerrymandering[key];
+            tempRows.push(that.createGerrymanderingData(that.wordCase(measure.replace(/_/g, ' ')), value.toFixed(3)));
+        });
+
+        return tempRows;
+    }
+
+    wordCase(str) {
+        var splitStr = str.toLowerCase().split(' ');
+        for (var i = 0; i < splitStr.length; i++) {
+
+            splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
+        }
+        return splitStr.join(' ');
+    }
+
 render()
 {
+    if(this.props.originalDistrictDisplay && this.state.currentDistrictView === "Generated Districts") {
+        this.setState({districtView : "View Generated Districts"});
+        this.setState({currentDistrictView : "Original Districts"});
+    }
+    if(!this.props.originalDistrictDisplay && this.state.currentDistrictView === "Original Districts") {
+        this.setState({districtView: "View Original Districts"});
+        this.setState({currentDistrictView: "Generated Districts"});
+    }
+    if(this.state.numOriginalCD === 0) {
+        if(this.props.chosenState === "RhodeIsland") {
+            this.setState({numOriginalCD : 2});
+        }
+        else if(this.props.chosenState === "Michigan") {
+            this.setState({numOriginalCD : 14});
+        }
+        else if(this.props.chosenState === "NorthCarolina") {
+            this.setState({numOriginalCD: 13});
+        }
+    }
+
     if (!this.state.resultsInView && !this.props.phase2ControlsTabDisabled) {
         return (
             <Phase2Styles>
@@ -340,32 +376,32 @@ render()
         );
     } else {
         let gerrymanderingRows = [['-', '-']];
-        let that = this;
+        console.log(this.props.selectedStateGerrymandering);
         if (this.props.selectedStateGerrymandering !== null && this.props.selectedStateGerrymandering !== undefined) {
-            Object.keys(this.props.selectedStateGerrymandering).forEach(function (key) {
-                let measure = key;
-                let value = that.props.selectedStateGerrymandering[key];
-                gerrymanderingRows.push([measure, value]);
-            });
+            gerrymanderingRows = this.buildGerrymanderingRows(this.props.selectedStateGerrymandering)
         }
 
         return (
             <Phase2Styles>
-                <h3>Final Phase 2 Results: {this.state.currentDistrictView}</h3>
+                <h3 style={{fontWeight: 'bold', marginBottom: '2vh'}}>{this.state.currentDistrictView} Results</h3>
+                <div className="row">
                 <Button variant="contained" color="primary"
-                        style={{width: '25vw', marginBottom: '2vw', marginTop: '1vw'}}
+                        style={{width: '15vw', height: '7vh', marginRight: '1vw'}}
                         onClick={this.resultsViewOff} disabled={this.props.phase2ControlsTabDisabled}>Back to
                     Controls</Button>
                 <Button variant="contained" color="primary"
-                        style={{width: '25vw', marginBottom: '2vw',}} onClick={this.handleDistrictView}
+                        style={{width: '15vw', height: '7vh', marginLeft: '1vw'}} onClick={this.handleDistrictView}
                         disabled={this.props.districtToggleDisabled}>
                     {this.state.districtView}
                 </Button>
-                <h4>{this.state.objFuncType} Gerrymandering Calculations</h4>
+                </div>
+                <h4 style={{marginTop: '2vw'}}>{this.state.objFuncType} Gerrymandering Calculations</h4>
                 <GerrymanderingScoresSummaryDialog/>
                 <TableDisplay columns={columns} rows={gerrymanderingRows}/>
-                <h4 style={{marginTop: '1vw'}}>{this.state.currentDistrictView.split(" ")[0]} Majority-Minority Districts</h4>
-                <MajorityMinoritySummaryDialog/>
+                <h4 style={{marginTop: '4vh'}}>{this.state.currentDistrictView.split(" ")[0]} Majority-Minority Districts</h4>
+                <MajorityMinoritySummaryDialog
+                    originalMajMin={this.props.originalMajMinDistrictDtos} generatedMajMin={this.state.generatedMajMinDistrictDtos}
+                    originalCDNum={this.state.numOriginalCD} generatedCDNum={this.props.numGeneratedCD}/>
                 <TableDisplay columns={this.props.majMinColumns} rows={this.state.majorityMinorityRows}/>
                 <RestartAlertDialog restart={this.restart}
                                     districtToggleDisabled={this.props.districtToggleDisabled}

@@ -94,7 +94,8 @@ export default class State extends Component {
             generatedDistrictDataMap: {},
             demographicsMapDisplay: [],
             majorityMinorityDistricts: [],
-            phase0Lock: false // Used to determine if phase 0 controls are locked or not
+            phase0Lock: false, // Used to determine if phase 0 controls are locked or not,
+            generatedCDNum: 0
         };
     }
 
@@ -172,7 +173,7 @@ export default class State extends Component {
     *
      */
 
-    phase2Update(data, objFuncResults) {
+    phase2Update(data) {
         if (this.state.originalDistrictsLoaded) {
             this.setState({originalDistrictDisplay: false});
             this.map.removeLayer(this.state.originalDistrictLayer);
@@ -209,8 +210,8 @@ export default class State extends Component {
 
         this.setState({generatedDistrictMap: updatedDistrictMap});
         this.setState({generatedDistrictDataMap: districtDataMap});
-        this.setState({generatedStateGerrymandering: objFuncResults});
-        this.setState({selectedStateGerrymandering: objFuncResults});
+        this.setState({generatedStateGerrymandering: data.objFuncResults});
+        this.setState({selectedStateGerrymandering: data.objFuncResults});
 
         let generatedDistrictsArr = [];
         Object.keys(updatedDistrictMap).forEach(function (key) {
@@ -338,8 +339,9 @@ export default class State extends Component {
         this.setState({precinctData: ""});
         this.setState({originalDistrictDisplay: false});
 
-        /* Original Majority Minority Districts */
         console.log(data);
+
+        /* Original Majority Minority Districts */
         this.setState({originalMajMinDistrictDtos : data.originalMajMinDistrictDtos});
 
         /* Set initial colors for each cluster */
@@ -372,6 +374,9 @@ export default class State extends Component {
             };
 
         });
+
+        console.log("PHASE 1 DATA");
+        console.log(data);
 
         this.setState({generatedDistrictMap: updatedDistrictMap});
         this.setState({generatedDistrictDataMap: districtDataMap});
@@ -494,12 +499,15 @@ export default class State extends Component {
             }
             return response.json();
         }).then(function (data) {
+
+            console.log(data);
+
             /* Choose gerrymandering scores for presidential 2016 */
-            if(data.originalObjFuncResults !== null && data.originalObjFuncResults !== undefined) {
-                that.setState({originalObjFuncResults: data.originalObjFuncResults});
+            if(data.objFuncResults !== null && data.objFuncResults !== undefined) {
+                that.setState({originalObjFuncResults: data.objFuncResults});
                 let originalStateGerrymandering = {};
-                Object.keys(data.originalObjFuncResults).forEach(function (key) {
-                    originalStateGerrymandering[key] = that.state.originalObjFuncResults[key].pres2016;
+                Object.keys(data.objFuncResults).forEach(function (key) {
+                    originalStateGerrymandering[key] = data.objFuncResults[key].pres2016;
                 });
                 that.setState({originalStateGerrymandering: originalStateGerrymandering});
                 that.setState({selectedStateGerrymandering: originalStateGerrymandering});

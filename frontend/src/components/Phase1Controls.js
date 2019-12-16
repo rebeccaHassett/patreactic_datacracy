@@ -91,6 +91,7 @@ export default class Phase1Controls extends Component {
         this.props.togglePhase2ControlsTabDisabled(true);
         this.props.togglePhase0ControlsTabDisabled(true);
         this.props.handleDistrictToggleDisabled(true);
+        this.props.handleNumGeneratedCD(this.state.numCongressionalDistricts);
 
         let normalizedCompetitiveness = (1 / 11);
         let normalizedPopulationHomogeneity = (1 / 11);

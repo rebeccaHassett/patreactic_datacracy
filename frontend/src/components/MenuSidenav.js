@@ -57,6 +57,7 @@ const StyledTab = withStyles(theme => ({
 export default function MenuSidenav(props) {
     const classes = useStyles();
     const [value, setValue] = React.useState(0);
+    const [numGeneratedCD, setNumGeneratedCD] = React.useState(1);
     const [phase0ControlsTabDisabled, setPhase0ControlsTabDisabled] = React.useState(false); // phase 0 controls tab initially enabled
     const [phase1ControlsTabDisabled, setPhase1ControlsTabDisabled] = React.useState(false); // phase 1 controls tab initially enabled
     const [phase2ControlsTabDisabled, setPhase2ControlsTabDisabled] = React.useState(true); // phase 2 controls tab initially disabled
@@ -86,6 +87,10 @@ export default function MenuSidenav(props) {
 
     const restartPhase0Tab = () => {
         setValue(0);
+    };
+
+    const handleNumGeneratedCD = (value) => {
+        setNumGeneratedCD(value);
     };
 
 
@@ -135,7 +140,7 @@ export default function MenuSidenav(props) {
                                 handleDistrictToggleDisabled={handleDistrictToggleDisabled} togglePhase0ControlsTabDisabled={togglePhase0ControlsTabDisabled}
                                 togglePhase2ControlsTabDisabled={togglePhase2ControlsTabDisabled}
                                 phase1ControlsTabDisabled={phase1ControlsTabDisabled} phase0ControlsTabDisabled={phase0ControlsTabDisabled}
-                                majMinColumns={majMinColumns}/>
+                                majMinColumns={majMinColumns} handleNumGeneratedCD={handleNumGeneratedCD}/>
             </TabPanel>
             <TabPanel value={value} index={2}>
                 <Phase2Controls phase2Update={props.phase2Update}
@@ -151,7 +156,8 @@ export default function MenuSidenav(props) {
                                 loadOriginalDistricts={props.loadOriginalDistricts}
                                 majMinColumns={majMinColumns} removeOriginalDistricts={props.removeOriginalDisrtricts}
                                 demographicMapUpdate={props.demographicMapUpdate}
-                                originalMajMinDistrictDtos={props.originalMajMinDistrictDtos}/>
+                                originalMajMinDistrictDtos={props.originalMajMinDistrictDtos} chosenState={props.chosenState}
+                                originalDistrictDisplay={props.originalDistrictDisplay} numGeneratedCD={numGeneratedCD}/>
             </TabPanel>
             <TabPanel value={value} index={3}>
                 <DataDisplay stateData={props.stateData} precinctData={props.precinctData}
