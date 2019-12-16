@@ -87,6 +87,8 @@ export default function MenuSidenav(props) {
         setValue(0);
     };
 
+    console.log(props.demographicsSelected);
+
     return (
         <div className={classes.root}>
             <AppBar position="static" color="default">
@@ -146,7 +148,8 @@ export default function MenuSidenav(props) {
                              demographicMapUpdate={props.demographicMapUpdate}
                              demographicMapUpdateSelection={props.demographicMapUpdateSelection}
                              election={props.election} districtToggleDisabled={districtToggleDisabled}
-                            phase0ControlsTabDisabled={phase0ControlsTabDisabled}/>
+                            phase0ControlsTabDisabled={phase0ControlsTabDisabled}
+                            demographicsSelected={props.demographicsSelected}/>
             </TabPanel>
         </div>
     );

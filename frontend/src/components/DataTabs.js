@@ -12,7 +12,7 @@ import Button from "@material-ui/core/Button";
 import styled from "styled-components";
 import TextField from '@material-ui/core/TextField';
 import CheckboxControl from "./controls/CheckboxControl";
-
+import AlertDialogSlide from "./controls/AlertControl";
 
 function TabPane(props) {
     const {children, value, index, ...other} = props;
@@ -61,6 +61,8 @@ export default function DataTabs(props) {
     const [value, setValue] = React.useState(0);
     const [districtView, setDistrictView] = React.useState("View Original Districts");
     const [demographicDistributionDisabled, setDemographicDistributionDisabled] = React.useState(false);
+    const [originalColoringDisabled, setOriginalColoringDisabled] = React.useState(true);
+    const [alertDialogState, setAlertDialogState] = React.useState(false);
     let [, setState] = React.useState();
     const incumbent_columns = [
         {id: 'districtId', label: 'District', format: value => value.toLocaleString(),},
@@ -85,7 +87,22 @@ export default function DataTabs(props) {
 
 
     function initDemographicMapUpdate() {
-        props.demographicMapUpdate();
+        if(props.demographicsSelected.length === 0) {
+         setAlertDialogState(true);
+        }
+        else {
+            props.demographicMapUpdate(true);
+            setOriginalColoringDisabled(false);
+        }
+    }
+
+    function setOriginalColoring() {
+        props.demographicMapUpdate(false);
+        setOriginalColoringDisabled(true);
+    }
+
+    function handleAlertDialogState(value) {
+        setAlertDialogState(value);
     }
 
     /* Demographic Toggling is allowed during phase 0 and during phases 1 and 2 during district toggling when on original districts */
@@ -99,6 +116,8 @@ export default function DataTabs(props) {
 
     return (
         <div className={classes.root}>
+            <AlertDialogSlide exportState={handleAlertDialogState} open={alertDialogState}
+                              alert="Must Select At Least One Demographic"/>
             <AppBar position="static" style={{width: '35vw', margin: 'auto'}} color="primary">
                 <Tabs
                     value={value}
@@ -144,6 +163,11 @@ export default function DataTabs(props) {
                             style={{width: '25vw', marginBottom: '2vw',}} onClick={initDemographicMapUpdate}
                             disabled={demographicDistributionDisabled}>
                         Display Demographics
+                    </Button>
+                    <Button variant="contained" color="primary"
+                            style={{width: '25vw', marginBottom: '2vw',}} onClick={setOriginalColoring}
+                            disabled={originalColoringDisabled}>
+                        Revert Original Coloring
                     </Button>
                 </DataStyle>
             </TabPane>

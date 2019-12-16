@@ -25,7 +25,7 @@ export default class Statistics extends Component {
                 name = jsonData.PRENAME;
             }
             if(this.props.type === "precinct" && !(this.props.chosenState === "Michigan") ) {
-                name = jsonData.PRENAME + ", " + jsonData.COUNTY + "County";
+                name = jsonData.PRENAME + ", " + jsonData.COUNTY + " County";
             }
             var totalPopulation = jsonData.VAP;
             var hispanicPopulation = jsonData.HVAP;

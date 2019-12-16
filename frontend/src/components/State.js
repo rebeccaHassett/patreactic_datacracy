@@ -633,8 +633,12 @@ export default class State extends Component {
         })
     }
 
-    /*Updates Population Distribution in Map*/
-    demographicMapUpdate() {
+    /*Updates Population Distribution in Map
+    *  Param: demographicUpdate (boolean)
+    *      If true: choose demographic colors
+    *      If false: choose original colors
+    */
+    demographicMapUpdate(demographicUpdate) {
         let that = this;
         if (this.state.precinctsLoaded) {
             let precinctArr = [];
@@ -654,26 +658,37 @@ export default class State extends Component {
             Object.keys(districtLayers).forEach(function (key) {
                 let combinedPopulation = 0;
                 let districtData = that.state.originalDistrictDataMap[districtLayers[key].feature.properties.districtId];
-                that.state.demographicsMapDisplay.forEach(demographic => {
-                    if (demographic === "WHITE") {
-                        combinedPopulation = combinedPopulation + districtData.WVAP;
-                    } else if (demographic === "BLACK") {
-                        combinedPopulation = combinedPopulation + districtData.BVAP;
-                    } else if (demographic === "ASIAN") {
-                        combinedPopulation = combinedPopulation + districtData.ASIANVAP;
-                    } else if (demographic === "HISPANIC") {
-                        combinedPopulation = combinedPopulation + districtData.HVAP;
-                    } else if (demographic === "NATIVE_AMERICAN") {
-                        combinedPopulation = combinedPopulation + districtData.AMINVAP;
-                    }
-                });
-                districtLayers[key].setStyle({
-                    fillColor: that.getDemographicColors(combinedPopulation, districtData.VAP),
-                    opacity: 1,
-                    fillOpacity: 0.8,
-                    weight: 2,
-                    color: 'white',
-                });
+                if(demographicUpdate) {
+                    that.state.demographicsMapDisplay.forEach(demographic => {
+                        if (demographic === "WHITE") {
+                            combinedPopulation = combinedPopulation + districtData.WVAP;
+                        } else if (demographic === "BLACK") {
+                            combinedPopulation = combinedPopulation + districtData.BVAP;
+                        } else if (demographic === "ASIAN") {
+                            combinedPopulation = combinedPopulation + districtData.ASIANVAP;
+                        } else if (demographic === "HISPANIC") {
+                            combinedPopulation = combinedPopulation + districtData.HVAP;
+                        } else if (demographic === "NATIVE_AMERICAN") {
+                            combinedPopulation = combinedPopulation + districtData.AMINVAP;
+                        }
+                    });
+                    districtLayers[key].setStyle({
+                        fillColor: that.getDemographicColors(combinedPopulation, districtData.VAP),
+                        opacity: 1,
+                        fillOpacity: 0.8,
+                        weight: 2,
+                        color: 'white',
+                    });
+                }
+                else {
+                    districtLayers[key].setStyle({
+                        fillColor: districtLayers[key].feature.properties.COLOR,
+                        opacity: 1,
+                        fillOpacity: 0.8,
+                        weight: 2,
+                        color: 'white',
+                    });
+                }
             });
         });
     }
@@ -807,6 +822,7 @@ export default class State extends Component {
                                          phase0SelectedElection={this.phase0SelectedElection}
                                          demographicMapUpdate={this.demographicMapUpdate}
                                          demographicMapUpdateSelection={this.demographicMapUpdateSelection}
+                                         demographicsSelected={this.state.demographicsMapDisplay}
                                          election={this.state.election}
                                          numOriginalPrecincts={this.state.numOriginalPrecincts}
                                          phase2Update={this.state.phase2Update}

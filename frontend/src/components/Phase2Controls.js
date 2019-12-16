@@ -243,7 +243,7 @@ export default class Phase2Controls extends Component {
                     <Button variant="contained" color="primary" onClick={this.handlePhase2}
                             style={{width: '25vw', marginBottom: '2vw'}}>{this.state.phase2ButtonText}</Button>
                         <Button variant="contained" color="primary" disabled={this.state.resultsUnavailable}
-                                style={{width: '25vw', marginRight: '1vw'}} onClick={this.resultsViewOn}>
+                                style={{width: '25vw'}} onClick={this.resultsViewOn}>
                             View Results
                         </Button>
                     <ControlGroup>
