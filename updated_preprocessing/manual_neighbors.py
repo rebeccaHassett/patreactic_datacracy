@@ -189,6 +189,13 @@ manual_neighbors = {
             "WHITEFISH TOWNSHIP 1 Chippewa County",
             "BURT TOWNSHIP 1 Alger County Alger County",
             "HULBERT TOWNSHIP 1 Chippewa County"
+        ],
+        "IMLAY CITY 2 Lapeer County": [
+            "IMLAY TOWNSHIP 1 Lapeer County",
+            "IMLAY CITY 1 Lapeer County"
+        ],
+        "IMLAY CITY 1 Lapeer County": [
+            "IMLAY TOWNSHIP 1 Lapeer County"
         ]
     },
     "NC": {} # none
