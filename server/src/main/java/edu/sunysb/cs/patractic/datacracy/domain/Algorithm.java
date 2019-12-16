@@ -267,7 +267,7 @@ public class Algorithm extends MyAlgorithm {
 
     public Phase2UpdateDto getPhase2Update() {
         synchronized (lock) {
-            if (moves.isEmpty() && !phase2Running) {
+            if (moves.isEmpty() && !phase2Running && !phase2Completed) {
                 return null;
             }
         }
