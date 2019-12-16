@@ -518,11 +518,34 @@ manual_neighbors = {
             "MCDOWELL MAR-4",
             "MCDOWELL MAR-1"
         ],
+        "NEW HANOVER WB": [
+            "NEW HANOVER H09",
+            "NEW HANOVER H02",
+            "NEW HANOVER M02"
+        ],
         "NEW HANOVER W30": [
             "NEW HANOVER W26",
             "NEW HANOVER W16",
             "NEW HANOVER W21",
             "NEW HANOVER M03"
+        ],
+        "NEW HANOVER W29": [
+            "NEW HANOVER W27",
+            "NEW HANOVER W08",
+            "NEW HANOVER W03",
+            "NEW HANOVER W25"
+        ],
+        "NEW HANOVER CF01": [
+            "NEW HANOVER CF02",
+            "NEW HANOVER CF03",
+            "NEW HANOVER W25"
+        ],
+        "NEW HANOVER H04": [
+            "NEW HANOVER H03",
+            "NEW HANOVER H05"
+            "NEW HANOVER W24",
+            "NEW HANOVER W18",
+            "NEW HANOVER W13"
         ]
     }
 }
