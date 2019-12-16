@@ -317,6 +317,15 @@ manual_neighbors = {
             "PAMLICO 2OT",
             "PAMLICO 3BY",
             "BEAUFORT AUROR"
+        ],
+        "ONSLOW NE22": [
+            "ONSLOW MT24",
+            "ONSLOW HU20",
+            "ONSLOW JA01",
+            "ONSLOW MT24",
+            "ONSLOW BM08",
+            "ONSLOW EN03",
+            "ONSLOW MT23",
         ]
     }
 }
