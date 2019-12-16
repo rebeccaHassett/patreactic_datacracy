@@ -305,6 +305,18 @@ manual_neighbors = {
         "PASQUOTANK WEST": [
             "PASQUOTANK NIX",
             "PASQUOTANK MH"
+        ],
+        "PAMLICO 1AL": [
+            "PAMLICO 5AP",
+            "PAMLICO 2SW",
+            "PAMLICO 1RB",
+            "PAMLICO 3BY"
+        ],
+        "PAMLICO 4VM": [
+            "PAMLICO 4HB",
+            "PAMLICO 2OT",
+            "PAMLICO 3BY",
+            "BEAUFORT AUROR"
         ]
     }
 }
