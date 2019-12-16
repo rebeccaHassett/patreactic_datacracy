@@ -551,6 +551,12 @@ manual_neighbors = {
             "NEW HANOVER FP08",
             "NEW HANOVER FP01",
             "NEW HANOVER M03"
+        ],
+        "NEW HANOVER W17": [
+            "NEW HANOVER W18",
+            "NEW HANOVER W28",
+            "NEW HANOVER M04",
+            "NEW HANOVER W31",
         ]
     }
 }
