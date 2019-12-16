@@ -517,6 +517,12 @@ manual_neighbors = {
             "MCDOWELL WEST-M",
             "MCDOWELL MAR-4",
             "MCDOWELL MAR-1"
+        ],
+        "NEW HANOVER W30": [
+            "NEW HANOVER W26",
+            "NEW HANOVER W16",
+            "NEW HANOVER W21",
+            "NEW HANOVER M03"
         ]
     }
 }
