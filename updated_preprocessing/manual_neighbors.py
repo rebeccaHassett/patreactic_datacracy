@@ -326,6 +326,21 @@ manual_neighbors = {
             "ONSLOW BM08",
             "ONSLOW EN03",
             "ONSLOW MT23",
+        ],
+        "NORTHAMPTON LAKE G": [
+            "NORTHAMPTON GASTON",
+            "NORTHAMPTON LIT 2",
+            "WARREN 1",
+            "WARREN 12"
+        ],
+        "NORTHAMPTON RICH S": [
+            "BERTIE RX",
+            "NORTHAMPTON REHOBE",
+            "NORTHAMPTON LASKER",
+            "NORTHAMPTON WOODLA",
+            "HALIFAX HPR",
+            "HALIFAX SN",
+            "HALIFAX CONC"
         ]
     }
 }
