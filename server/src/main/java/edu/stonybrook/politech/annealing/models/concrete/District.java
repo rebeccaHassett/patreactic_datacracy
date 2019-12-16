@@ -41,6 +41,9 @@ public class District
     private Geometry boundingCircle;
     private Geometry convexHull;
 
+    private Map<ElectionId, ElectionData> electionDataMap = new HashMap<>();
+    private Map<DemographicGroup, Long> populationMap = new HashMap<>();
+
     private boolean boundingCircleUpdated = false;
     private boolean multiPolygonUpdated = false;
     private boolean convexHullUpdated = false;
@@ -132,12 +135,15 @@ public class District
         internalEdges += newInternalEdges;
         externalEdges -= newInternalEdges;
         externalEdges += (p.getNeighborIDs().size() - newInternalEdges);
-        newInternalNeighbors.removeIf(
-                this::isBorderPrecinct
-        );
+        newInternalNeighbors.removeIf(this::isBorderPrecinct);
         borderPrecincts.removeAll(newInternalNeighbors);
 
         p.setDistrict(this);
+
+        electionDataMap.clear();
+        for (DemographicGroup dg : DemographicGroup.values()) {
+            populationMap.put(dg, populationMap.getOrDefault(dg, 0L) + p.getPopulation(dg));
+        }
 
         this.multiPolygonUpdated = false;
         this.convexHullUpdated = false;
@@ -155,6 +161,11 @@ public class District
         borderPrecincts.addAll(lostInternalNeighbors);
 
         p.setDistrict(null);
+
+        electionDataMap.clear();
+        for (DemographicGroup dg : DemographicGroup.values()) {
+            populationMap.put(dg, populationMap.getOrDefault(dg, 0L) - p.getPopulation(dg));
+        }
 
         this.multiPolygonUpdated = false;
         this.convexHullUpdated = false;
@@ -206,7 +217,10 @@ public class District
 
     @Override
     public ElectionData getElectionData(ElectionId electionId) {
-        return ElectionData.aggregateFromJurisdictions(getPrecinctsAsJurisdictions(), electionId);
+        if (!electionDataMap.containsKey(electionId)) {
+            electionDataMap.put(electionId, ElectionData.aggregateFromJurisdictions(getPrecinctsAsJurisdictions(), electionId));
+        }
+        return electionDataMap.get(electionId);
     }
 
     private Set<IJurisdiction> getPrecinctsAsJurisdictions() {
@@ -215,7 +229,10 @@ public class District
 
     @Override
     public long getPopulation(DemographicGroup demographic) {
-        return getPrecincts().stream().map(p -> p.getPopulation(demographic)).reduce(0L, Long::sum);
+        if (demographic == null) {
+            return populationMap.values().stream().reduce(0L, Long::sum);
+        }
+        return populationMap.getOrDefault(demographic, 0L);
     }
 
     public Set<Edge> getEdges() {

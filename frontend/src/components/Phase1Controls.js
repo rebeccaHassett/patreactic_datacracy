@@ -456,7 +456,7 @@ export default class Phase1Controls extends Component {
                     </ControlGroup>
                     <ControlGroup>
                         <label className="label">Majority Minority Weighting:</label>
-                        <SliderControlSingleValue min={0.5} max={1} step={0.01} marks={OFMarks}
+                        <SliderControlSingleValue min={0} max={1} step={0.01} marks={OFMarks}
                                                   disabled={this.state.phase1ControlsDisabled}
                                                   exportState={this.handleMajorityMinorityWeight}/>
                     </ControlGroup>
