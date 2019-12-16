@@ -526,8 +526,8 @@ export default class Phase1Controls extends Component {
                     <Button variant="contained" color="primary" style={{width: '25vw', marginBottom: '2vw'}}
                             onClick={this.resultsViewOff} disabled={this.props.phase1ControlsTabDisabled}>Back to
                         Controls</Button>
-                    <h5>Majority-Minority Districts</h5>
-                    <TableDisplay columns={columns} rows={this.state.majorityMinorityRows}/>
+                    <h5>Phase One Majority-Minority Districts</h5>
+                    <TableDisplay columns={this.props.majMinColumns} rows={this.state.majorityMinorityRows}/>
                 </Phase1Styles>
             );
         }
@@ -573,11 +573,3 @@ const OFMarks = [
         label: '1',
     },
 ];
-
-const columns = [
-    {id: 'districtId', label: 'Name', format: value => value.toLocaleString(),},
-    {id: 'minorityPopulation', label: 'Minority Population', format: value => value.toLocaleString(),},
-    {id: 'totalPopulation', label: 'Total Population', format: value => value.toLocaleString(),},
-    {id: 'percentage', label: '%', format: value => value.toLocaleString(),},
-];
-

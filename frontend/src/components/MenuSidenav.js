@@ -61,6 +61,7 @@ export default function MenuSidenav(props) {
     const [phase1ControlsTabDisabled, setPhase1ControlsTabDisabled] = React.useState(false); // phase 1 controls tab initially enabled
     const [phase2ControlsTabDisabled, setPhase2ControlsTabDisabled] = React.useState(true); // phase 2 controls tab initially disabled
     const [districtToggleDisabled, setDistrictToggleDisabled] = React.useState(true); // district toggle initially disabled
+    const [demographicDistributionDisabled, setDemographicDistributionDisabled] = React.useState(false);
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -86,6 +87,17 @@ export default function MenuSidenav(props) {
     const restartPhase0Tab = () => {
         setValue(0);
     };
+
+
+    /* Demographic Toggling is allowed during phase 0 and during phases 1 and 2 during district toggling when on original districts */
+    if(((!districtToggleDisabled && props.originalDistrictDisplay) || !phase0ControlsTabDisabled) && demographicDistributionDisabled) {
+        setDemographicDistributionDisabled(false);
+    }
+
+    /* Disable Demographic Toggling when phase 0 is disabled and district toggling is disabled (this means phase 1 or phase 2 must be running) or original districts are not loaded */
+    if(((districtToggleDisabled && phase0ControlsTabDisabled) || !props.originalDistrictDisplay) && !demographicDistributionDisabled) {
+        setDemographicDistributionDisabled(true);
+    }
 
     return (
         <div className={classes.root}>
@@ -122,7 +134,8 @@ export default function MenuSidenav(props) {
                                 election={props.election} numOriginalPrecincts={props.numOriginalPrecincts}
                                 handleDistrictToggleDisabled={handleDistrictToggleDisabled} togglePhase0ControlsTabDisabled={togglePhase0ControlsTabDisabled}
                                 togglePhase2ControlsTabDisabled={togglePhase2ControlsTabDisabled}
-                                phase1ControlsTabDisabled={phase1ControlsTabDisabled} phase0ControlsTabDisabled={phase0ControlsTabDisabled}/>
+                                phase1ControlsTabDisabled={phase1ControlsTabDisabled} phase0ControlsTabDisabled={phase0ControlsTabDisabled}
+                                majMinColumns={majMinColumns}/>
             </TabPanel>
             <TabPanel value={value} index={2}>
                 <Phase2Controls phase2Update={props.phase2Update}
@@ -135,7 +148,9 @@ export default function MenuSidenav(props) {
                                 handleDistrictToggleDisabled={handleDistrictToggleDisabled}
                                 restartPhase0Tab={restartPhase0Tab}
                                 districtToggleDisabled={districtToggleDisabled}
-                                loadOriginalDistricts={props.loadOriginalDistricts}/>
+                                loadOriginalDistricts={props.loadOriginalDistricts}
+                                majMinColumns={majMinColumns} removeOriginalDistricts={props.removeOriginalDisrtricts}
+                                demographicMapUpdate={props.demographicMapUpdate}/>
             </TabPanel>
             <TabPanel value={value} index={3}>
                 <DataDisplay stateData={props.stateData} precinctData={props.precinctData}
@@ -147,8 +162,16 @@ export default function MenuSidenav(props) {
                              demographicMapUpdateSelection={props.demographicMapUpdateSelection}
                              election={props.election} districtToggleDisabled={districtToggleDisabled}
                             phase0ControlsTabDisabled={phase0ControlsTabDisabled}
-                            demographicsSelected={props.demographicsSelected}/>
+                            demographicsSelected={props.demographicsSelected} demographicDistributionDisabled={demographicDistributionDisabled}/>
             </TabPanel>
         </div>
     );
 }
+
+const majMinColumns = [
+    {id: 'districtId', label: 'Name', format: value => value.toLocaleString(),},
+    {id: 'minorityPopulation', label: 'Minority Population', format: value => value.toLocaleString(),},
+    {id: 'totalPopulation', label: 'Total Population', format: value => value.toLocaleString(),},
+    {id: 'percentage', label: '%', format: value => value.toLocaleString(),},
+];
+

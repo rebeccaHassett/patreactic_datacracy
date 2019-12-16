@@ -86,7 +86,8 @@ export default class State extends Component {
             numOriginalPrecincts: 1,
             precinctIds: [],
             originalDistrictLayer: null,
-            originalDistrictsLoaded: false,
+            originalDistrictsLoaded: false, //used in checking if district loading is complete
+            originalDistrictDisplay: true, //used in checking if displaying original or generated districts
             originalDistrictDataMap: {},
             generatedDistrictMap: {},
             generatedDistrictDataMap: {},
@@ -172,6 +173,7 @@ export default class State extends Component {
 
     phase2Update(data, objFuncResults) {
         if (this.state.originalDistrictsLoaded) {
+            this.setState({originalDistrictDisplay: false});
             this.map.removeLayer(this.state.originalDistrictLayer);
         }
 
@@ -213,12 +215,14 @@ export default class State extends Component {
 
         this.addDistrictsToMap(layerGroup, false, districtDataMap, this.getMajorityMinorityDistrictIds(data));
         this.setState({originalDistrictsLoaded: false});
+        this.setState({originalDistrictDisplay: false});
     }
 
     removeOriginalDistrictLayer() {
         if (this.state.originalDistrictsLoaded) {
             this.map.removeLayer(this.state.originalDistrictLayer);
             this.setState({originalDistrictsLoaded: false});
+            this.setState({originalDistrictDisplay: false});
             this.setState({selectedStateGerrymandering: this.state.generatedStateGerrymandering});
             let generatedDistrictsArr = [];
             let that = this;
@@ -281,6 +285,7 @@ export default class State extends Component {
             let layerGroup = L.featureGroup(districtLayerArr);
             that.setState({originalDistrictLayer: layerGroup});
             that.setState({originalDistrictsLoaded: true});
+            this.setState({originalDistrictDisplay: true});
 
             this.addDistrictsToMap(layerGroup, true, {}, []);
         });
@@ -371,11 +376,13 @@ export default class State extends Component {
 
         this.addDistrictsToMap(layerGroup, false, districtDataMap, this.getMajorityMinorityDistrictIds(data));
         this.setState({originalDistrictsLoaded: false});
+        this.setState({originalDistrictDisplay: false});
     }
 
 
     phase1Update(data) {
         if (this.state.originalDistrictsLoaded) {
+            this.setState({originalDistrictDisplay: false});
             this.map.removeLayer(this.state.originalDistrictLayer);
         }
         let updatedDistrictMap = this.state.generatedDistrictMap;
@@ -439,6 +446,7 @@ export default class State extends Component {
         let layerGroup = L.featureGroup(generatedDistrictsArr);
         this.addDistrictsToMap(layerGroup, false, districtDataMap, this.getMajorityMinorityDistrictIds(data));
         this.setState({originalDistrictsLoaded: false});
+        this.setState({originalDistrictDisplay: false});
     }
 
     getMajorityMinorityDistrictIds(data) {
@@ -462,6 +470,7 @@ export default class State extends Component {
                 this.map.removeLayer(layer);
             });
             this.setState({originalDistrictsLoaded: true});
+            this.setState({originalDistrictDisplay: true});
             this.addDistrictsToMap(this.state.originalDistrictLayer, true, {}, []);
         }
     }
@@ -825,9 +834,10 @@ export default class State extends Component {
                                          demographicsSelected={this.state.demographicsMapDisplay}
                                          election={this.state.election}
                                          numOriginalPrecincts={this.state.numOriginalPrecincts}
-                                         phase2Update={this.state.phase2Update}
+                                         phase2Update={this.phase2Update}
                                          selectedStateGerrymandering={this.state.selectedStateGerrymandering}
-                                        phase0ControlsTabLocked={this.phase0ControlsTabLocked}/>
+                                        phase0ControlsTabLocked={this.phase0ControlsTabLocked}
+                                        originalDistrictDisplay={this.state.originalDistrictDisplay}/>
                         </Col>
                         <Col className="mapContainer" xs={7}>
                             <div id='map'></div>

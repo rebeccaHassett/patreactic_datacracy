@@ -4,6 +4,8 @@ import SliderControlSingleValue from "./controls/SliderControlSingleValue";
 import Button from "@material-ui/core/Button";
 import TableDisplay from "./controls/TableDisplay";
 import RestartAlertDialog from "./controls/RestartAlertDialog"
+import MajorityMinoritySummaryDialog from "../MajorityMinoritySummaryDialog";
+import GerrymanderingScoresSummaryDialog from "./GerrymanderingScoresSummaryDialog";
 
 export default class Phase2Controls extends Component {
     constructor() {
@@ -23,6 +25,7 @@ export default class Phase2Controls extends Component {
         this.restart = this.restart.bind(this);
         this.resultsViewOn = this.resultsViewOn.bind(this);
         this.resultsViewOff = this.resultsViewOff.bind(this);
+        this.handleDistrictView = this.handleDistrictView.bind(this);
     }
 
     state = {
@@ -40,6 +43,7 @@ export default class Phase2Controls extends Component {
         phase2RunButtonDisabled: false,
         phase2ControlsDisabled: false,
         phase2ButtonText: "Start Phase 2",
+        districtView: "View Original Districts"
     };
 
     async runPhase2() {
@@ -178,6 +182,16 @@ export default class Phase2Controls extends Component {
         }
     }
 
+    handleDistrictView() {
+        if (this.state.districtView === "View Original Districts") {
+            this.setState({districtView: "View Generated Districts"});
+            this.props.loadOriginalDistricts();
+        } else {
+            this.setState({districtView: "View Original Districts"});
+            this.props.removeOriginalDistricts();
+        }
+    };
+
     handleEdgeCompactnessWeight(value) {
         this.setState({edgeCompactnessWeightValue: value})
     }
@@ -224,6 +238,7 @@ export default class Phase2Controls extends Component {
         this.props.handleDistrictToggleDisabled(true);
         this.props.restartPhase0Tab();
         this.props.loadOriginalDistricts();
+        this.props.demographicMapUpdate(false);
         this.setState({restartButtonDisabled: true});
     }
 
@@ -313,8 +328,17 @@ export default class Phase2Controls extends Component {
                 <Phase2Styles>
                     <Button variant="contained" color="primary" style={{width: '25vw', marginBottom: '2vw'}}
                             onClick={this.resultsViewOff} disabled={this.props.phase2ControlsTabDisabled}>Back to Controls</Button>
+                    <Button variant="contained" color="primary"
+                            style={{width: '25vw', marginBottom: '2vw',}} onClick={this.handleDistrictView}
+                            disabled={this.props.districtToggleDisabled}>
+                        {this.state.districtView}
+                    </Button>
+                    <h3>Final Phase 2 Results</h3>
                     <h4>{this.state.objFuncType} Gerrymandering Calculations</h4>
+                    <GerrymanderingScoresSummaryDialog/>
                     <TableDisplay columns={columns} rows={gerrymanderingRows}/>
+                    <h4>Final Majority-Minority Districts</h4>
+                    <MajorityMinoritySummaryDialog/>
                     <RestartAlertDialog restart={this.restart} districtToggleDisabled={this.props.districtToggleDisabled} disableBackdropClick={true}/>
                 </Phase2Styles>
             );
