@@ -206,7 +206,6 @@ export default class Phase1Controls extends Component {
     majorityMinorityDistrictsDisplay(data) {
         let tempRows = [];
 
-        console.log(data.majMinDistrictDtos);
         data.majMinDistrictDtos.forEach((majMinDistrict) => {
             let districtId = majMinDistrict.districtId;
             let minorityPopulation = majMinDistrict.minorityPopulation;

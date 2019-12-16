@@ -183,7 +183,7 @@ export default class State extends Component {
 
         data.moves.forEach((move) => {
             /*Get color of updated cluster that the precinct is moving to*/
-            let mergedIntoPrecinctIds = move.toDistrict.precinctIds.filter(x => !move.precinct.precinctId);
+            let mergedIntoPrecinctIds = districtDataMap[move.toDistrict].precinctIds.filter(x => !move.precinctId);
             let mergedIntoDistrictLayers = updatedDistrictMap[mergedIntoPrecinctIds[0]]._layers;
             let updateColor;
             Object.keys(mergedIntoDistrictLayers).forEach(function (key) {
@@ -193,7 +193,7 @@ export default class State extends Component {
             /* Update the district Id and color of the moved precinct */
             let clusterLayers = updatedDistrictMap[move.precinctId]._layers;
             Object.keys(clusterLayers).forEach(function (key) {
-                clusterLayers[key].feature.properties.districtId = move.toDistrict.districtId;
+                clusterLayers[key].feature.properties.districtId = move.toDistrict;
                 clusterLayers[key].feature.properties.COLOR = updateColor;
                 clusterLayers[key].setStyle({border: 'red'})
             });
@@ -362,7 +362,8 @@ export default class State extends Component {
                 "PRES16R": updatedDistrict.PRES16R,
                 "PRENAME": updatedDistrict.PRENAME,
                 "HOUSE_ELECTION_16": updatedDistrict.HOUSE_ELECTION_16,
-                "HOUSE_ELECTION_18": updatedDistrict.HOUSE_ELECTION_18
+                "HOUSE_ELECTION_18": updatedDistrict.HOUSE_ELECTION_18,
+                precinctIds: updatedDistrict.precinctIds,
             };
 
         });
@@ -423,7 +424,8 @@ export default class State extends Component {
                 "PRES16R": updatedDistrict.PRES16R,
                 "PRENAME": updatedDistrict.PRENAME,
                 "HOUSE_ELECTION_16": updatedDistrict.HOUSE_ELECTION_16,
-                "HOUSE_ELECTION_18": updatedDistrict.HOUSE_ELECTION_18
+                "HOUSE_ELECTION_18": updatedDistrict.HOUSE_ELECTION_18,
+                precinctIds: updatedDistrict.precinctIds,
             };
 
         });
