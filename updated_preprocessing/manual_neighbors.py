@@ -149,6 +149,32 @@ manual_neighbors = {
         "CLAY TOWNSHIP 4 St. Clair County": [
             "CLAY TOWNSHIP 1 St. Clair County",
             "CLAY TOWNSHIP 3 St. Clair County"
+        ],
+        "BALDWIN TOWNSHIP 1 Iosco County": [
+            "AU SABLE TOWNSHIP 1 Iosco County",
+            "WILBER TOWNSHIP 1 Iosco County",
+            "TAWAS CITY 1 Iosco County",
+            "EAST TAWAS CITY 1 Iosco County",
+            "TAWAS TOWNSHIP 1 Iosco County"
+        ],
+        "GRANT TOWNSHIP 1 Keweenaw County": [
+            "EAGLE HARBOR TOWNSHIP 1 Keweenaw County",
+            "SHERMAN TOWNSHIP 1 Keweenaw County Keweenaw County"
+        ],
+        "CROSS VILLAGE TOWNSHIP 1 Emmet County": [
+            "READMOND TOWNSHIP 1 Emmet County",
+            "BLISS TOWNSHIP 1 Emmet County",
+            "CENTER TOWNSHIP 5 Emmet County"
+        ],
+        "AU TRAIN TOWNSHIP 1 Alger County": [
+            "ONOTA TOWNSHIP 1 Alger County",
+            "ROCK RIVER TOWNSHIP 1 Alger County",
+            "LIMESTONE TOWNSHIP 1 Alger County",
+            "MATHIAS TOWNSHIP 1 Alger County",
+            "MUNISING TOWNSHIP 1 Alger County",
+            "MUNISING CITY 1 Alger County",
+            "GRAND ISLAND TOWNSHIP 1 Alger County",
+            "NAHMA TOWNSHIP 1 Delta County"
         ]
     },
     "NC": {} # none
