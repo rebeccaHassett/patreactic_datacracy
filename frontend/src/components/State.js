@@ -855,7 +855,8 @@ export default class State extends Component {
                                          selectedStateGerrymandering={this.state.selectedStateGerrymandering}
                                         phase0ControlsTabLocked={this.phase0ControlsTabLocked}
                                         originalDistrictDisplay={this.state.originalDistrictDisplay}
-                                        originalMajMinDistrictDtos={this.state.originalMajMinDistrictDtos}/>
+                                        originalMajMinDistrictDtos={this.state.originalMajMinDistrictDtos}
+                                         originalDistrictDataMap={this.state.originalDistrictDataMap}/>
                         </Col>
                         <Col className="mapContainer" xs={7}>
                             <div id='map'></div>

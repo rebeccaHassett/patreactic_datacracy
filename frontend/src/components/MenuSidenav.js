@@ -169,7 +169,8 @@ export default function MenuSidenav(props) {
                              demographicMapUpdateSelection={props.demographicMapUpdateSelection}
                              election={props.election} districtToggleDisabled={districtToggleDisabled}
                             phase0ControlsTabDisabled={phase0ControlsTabDisabled}
-                            demographicsSelected={props.demographicsSelected} demographicDistributionDisabled={demographicDistributionDisabled}/>
+                            demographicsSelected={props.demographicsSelected} demographicDistributionDisabled={demographicDistributionDisabled}
+                             originalDistrictDataMap={props.originalDistrictDataMap}/>
             </TabPanel>
         </div>
     );

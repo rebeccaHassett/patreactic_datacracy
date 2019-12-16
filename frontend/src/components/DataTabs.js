@@ -13,6 +13,7 @@ import styled from "styled-components";
 import TextField from '@material-ui/core/TextField';
 import CheckboxControl from "./controls/CheckboxControl";
 import AlertDialogSlide from "./controls/AlertControl";
+import StatewideVotingPatterns from "../StatewideVotingPatterns";
 
 function TabPane(props) {
     const {children, value, index, ...other} = props;
@@ -125,6 +126,8 @@ export default function DataTabs(props) {
                     <TextField variant="filled" color="primary" value={props.laws} multiline={true}
                                style={{width: "100%", marginBottom: '2vw'}}/>
                     <Statistics data={props.stateData} type="state" election={props.election}/>
+                    <StatewideVotingPatterns stateData={props.stateData} districtData originalDistrictDataMap={props.originalDistrictDataMap}
+                                            election={props.election}/>
                 </DataStyle>
             </TabPane>
             <TabPane value={value} index={1}>
