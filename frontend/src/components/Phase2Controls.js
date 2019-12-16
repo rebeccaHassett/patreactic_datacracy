@@ -8,7 +8,6 @@ import RunControls from "./controls/RunControls";
 export default class Phase2Controls extends Component {
     constructor() {
         super();
-        this.handleIncrementalClick = this.handleIncrementalClick.bind(this);
         this.handleEfficiencyGapWeight = this.handleEfficiencyGapWeight.bind(this);
         this.handleConvexHullCompactnessWeight = this.handleConvexHullCompactnessWeight.bind(this);
         this.handleEdgeCompactnessWeight = this.handleEdgeCompactnessWeight.bind(this);
@@ -23,8 +22,6 @@ export default class Phase2Controls extends Component {
     }
 
     state = {
-        incremental: true,
-        realtime: false,
         convexHullCompactnessWeightValue: 1,
         edgeCompactnessWeightValue: 1,
         reockCompactnessWeightValue: 1,
@@ -48,6 +45,7 @@ export default class Phase2Controls extends Component {
         this.props.togglePhase0ControlsTabDisabled(true);
         this.props.togglePhase2ControlsTabDisabled(true);
         this.props.handleDistrictToggleDisabled(true);
+        this.setState({phase2ButtonText : "Stop Phase 2"});
 
         let normalizedCompetitiveness = 0.1;
         let normalizedPopulationHomogeneity = 0.1;
@@ -94,8 +92,6 @@ export default class Phase2Controls extends Component {
                 "POPULATION_HOMOGENEITY": normalizedPopulationHomogeneity,
                 "GERRYMANDER_DEMOCRAT": normalizedGerrymanderDemocrat
             },
-            incremental: this.state.incremental,
-            realtime: this.state.realtime,
         };
 
         let that = this;
@@ -112,96 +108,56 @@ export default class Phase2Controls extends Component {
             if (response.status >= 400) {
                 throw new Error("Failed to load phase2 data from server");
             }
-            return response.json();
-        }).then(function (data) {
-
-            that.phase2Update(data);
-
-            if (that.state.incremental) {
-                that.setState({phase2ButtonText: "Update Phase 2"});
-            }
-
-            if (that.state.incremental) {
-                that.setState({phase2RunButtonDisabled: false});
-            } else {
-                if (that.state.realtime) {
-                    that.pollPhase2NonIncrementalRealtime(); //update each iteration
-                } else {
-                    that.pollPhase2NonIncrementalUpdateEnd(); //update only at the end
-                }
-            }
+            that.pollPhase2NonIncrementalRealtime();
         });
     }
 
     phase2Update(data) {
         let objFuncResults = {
-            convexHullCompactness: data.convexHullCompactness,
-            edgeCompactness: data.edgeCompactness,
-            reockCompactness: data.reockCompactness,
-            efficiencyGap: data.efficiencyGap,
-            populationEquality: data.populationEquality,
-            partisanFairness: data.partisanFairness,
-            competitiveness: data.competitiveness,
-            gerrymanderRepublican: data.gerrymanderRepublican,
-            populationHomogeneity: data.populationHomogeneity,
-            gerrymanderDemocrat: data.gerrymanderDemocrat
+            convexHullCompactness: data.CONVEX_HULL_COMPACTNESS,
+            edgeCompactness: data.EDGE_COMPACTNESS,
+            reockCompactness: data.REOCK_COMPACTNESS,
+            efficiencyGap: data.EFFICIENCY_GAP,
+            populationEquality: data.POPULATION_EQUALITY,
+            partisanFairness: data.PARTISAN_FAIRNESS,
+            competitiveness: data.COMPETITIVENESS,
+            gerrymanderRepublican: data.GERRYMANDER_REPUBLICAN,
+            populationHomogeneity: data.POPULATION_HOMOGENEITY,
+            gerrymanderDemocrat: data.GERRYMANDER_DEMOCRAT
         };
         this.props.phase2Update(data, objFuncResults);
     }
 
     async pollPhase2NonIncrementalRealtime() {
         let that = this;
-        fetch("http://127.0.0.1:8080/phase2/poll").then(function (response) {
-            if (response.status >= 400) {
-                throw new Error("Failed to load phase 2 update from server");
-            }
-            return response.json();
-        }).then(function (data) {
-            if (data.moves === []) {
-                that.endPhase2();
-            } else {
-                that.props.phase2Update(data);
-                that.pollPhase2NonIncremental();
-            }
-        });
-    }
-
-    async pollPhase2NonIncrementalUpdateEnd() {
-        let that = this;
-        fetch("http://127.0.0.1:8080/phase2/complete").then(function (response) {
-            if (response.status >= 400) {
-                throw new Error("Failed to load phase 2 update from server");
-            }
-            return response.json();
-        }).then(function (data) {
-            that.props.phase2Update(data);
-            that.endPhase2();
-        });
-    }
-
-    async pollPhase2Incremental() {
-        this.setState({phase2RunButtonDisabled: true});
-        let that = this;
         fetch("http://127.0.0.1:8080/phase2/poll", {
-            headers: {'Access-Control-Allow-Credentials': true, 'Access-Control-Allow-Origin': 'http://localhost:3000'},
-            credentials: 'include'
+            credentials: "include",
         }).then(function (response) {
             if (response.status >= 400) {
                 throw new Error("Failed to load phase 2 update from server");
             }
             return response.json();
         }).then(function (data) {
-            if (data.moves === []) {
+            if (data.moves.length === 0) {
                 that.endPhase2();
             } else {
-                that.props.phase2Update(data);
+                that.phase2Update(data);
+                that.pollPhase2NonIncrementalRealtime();
             }
-            that.setState({phase2RunButtonDisabled: false});
         });
     }
 
-    endPhase2() {
-        this.setState({phase2ButtonText: "Start Phase 1"});
+    async endPhase2() {
+        let that = this;
+        await fetch("http://127.0.0.1:8080/phase2/stop", {
+            credentials: "include",
+        }).then(function (response) {
+            if (response.status >= 400) {
+                throw new Error("Failed to load phase2 data from server");
+            }
+        });
+
+        this.setState({phase2ButtonText: "Start Phase 2"});
         this.setState({phase2ControlsDisabled: false});
         this.setState({phase2RunButtonDisabled: false});
         this.setState({restartButtonDisabled: false});
@@ -211,12 +167,14 @@ export default class Phase2Controls extends Component {
     }
 
     handlePhase2() {
-        if (this.state.phase2ButtonText === "Update Phase 2") {
-            this.pollPhase2Incremental()
-        } else {
+        if (this.state.phase2ButtonText === "Stop Phase 2") {
+            this.endPhase2();
+        }
+        else if(this.state.phase2ButtonText === "Start Phase 2") {
             this.runPhase2();
         }
     }
+
 
 
     handleIncrementalClick(evt) {
@@ -297,10 +255,6 @@ export default class Phase2Controls extends Component {
                         </Button>
                     </div>
                     <ControlGroup>
-                        <label className="runLabel">Run Controls:</label>
-                        <RunControls name="Incremental" exportState={this.handleIncrementalClick}
-                                     disabled={this.state.phase2ControlsDisabled}/>
-                    </ControlGroup> <ControlGroup>
                     <label className="label">Convex Hull Compactness Weighting:</label>
                     <SliderControlSingleValue min={0} max={1} step={0.01} marks={OFMarks}
                                               exportState={this.handleConvexHullCompactnessWeight}/>

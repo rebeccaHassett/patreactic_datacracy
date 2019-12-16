@@ -42,7 +42,7 @@ export default class Phase1Controls extends Component {
     state = {
         numCongressionalDistricts: 6,
         numMajorityMinorityDistricts: 3,
-        minorityPopulationThresholdValues: [],
+        minorityPopulationThresholdValues: [80, 90],
         incremental: true,
         realtime: false,
         selectedMinorities: [],
@@ -57,7 +57,7 @@ export default class Phase1Controls extends Component {
         populationHomogeneityWeightValue: 0.1,
         gerrymanderDemocratWeightValue: 0.1,
         countyJoinabilityWeightValue: 0.1,
-        majorityMinorityWeightValue: 0.75,
+        majorityMinorityWeightValue: 0.1,
         phase1RunButtonDisabled: false,
         alertDialogState: false,
         alertDialogText: "Must Select At Least One Minority Group!",
@@ -127,6 +127,8 @@ export default class Phase1Controls extends Component {
             normalizedPartisanFairness = this.state.partisanFairnessWeightValue / sum;
             normalizedCountyJoinability = this.state.countyJoinabilityWeightValue / sum;
         }
+
+        console.log(this.state.numCongressionalDistricts);
 
         var phase1Dto = {
             config: {

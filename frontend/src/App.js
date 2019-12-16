@@ -15,6 +15,7 @@ function App() {
             />
             <link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css"/>
             <script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"></script>
+            <script src="../dist/leaflet.pattern-src.js"></script>
             <div className="App">
                 <Switch>
                     <Route exact path="/" component={AppIntro}/>

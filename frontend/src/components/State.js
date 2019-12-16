@@ -189,10 +189,10 @@ export default class State extends Component {
                 clusterLayers[key].feature.properties.COLOR = updateColor;
                 clusterLayers[key].setStyle({border: 'red'})
             });
+        });
 
-            /*Update Generated District Data Map*/
-            districtDataMap[move.toDistrict.districtId] = move.newDistrictData;
-            districtDataMap[move.fromDistrict.districtId] = move.oldDistrictData;
+        data.districtUpdates.forEach(update => {
+           districtDataMap[update.PRENAME] = update;
         });
 
         this.setState({generatedDistrictMap: updatedDistrictMap});
@@ -532,7 +532,7 @@ export default class State extends Component {
                     //pattern = stripes;
                 }
 
-                if(!original) {
+                if (!original) {
                     borderColor = 'black';
                     weight = 0.5;
                 }

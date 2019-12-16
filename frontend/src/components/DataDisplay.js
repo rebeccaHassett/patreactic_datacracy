@@ -55,7 +55,8 @@ class DataDisplay extends React.Component {
                       removeOriginalDistricts={this.props.removeOriginalDistricts}
                       demographicMapUpdate={this.props.demographicMapUpdate}
                       demographicMapUpdateSelection={this.props.demographicMapUpdateSelection}
-                      election={this.props.election} chosenState={this.props.chosenState} districtToggleDisabled={this.props.districtToggleDisabled}/>
+                      election={this.props.election} chosenState={this.props.chosenState} districtToggleDisabled={this.props.districtToggleDisabled}
+                    phase0ControlsTabDisabled={this.props.phase0ControlsTabDisabled}/>
         );
     }
 }

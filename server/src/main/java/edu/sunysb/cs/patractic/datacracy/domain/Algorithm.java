@@ -116,7 +116,6 @@ public class Algorithm extends MyAlgorithm {
         while (ret == null) {
             synchronized (lock) {
                 if (!currentDistrictUpdates.isEmpty() || phase1Complete) {
-                    System.out.println(this.getConfig().selectedMinorities);
                     List<MajMinDistrictDto> majMinDistrictDtos = getMajMinDistricts(this.getConfig());
                     ret = new Phase1UpdateDto(new ArrayList<>(this.currentDistrictUpdates.values()), new ArrayList<>(currentDistrictsToRemove), majMinDistrictDtos);
                     this.currentDistrictUpdates.clear();

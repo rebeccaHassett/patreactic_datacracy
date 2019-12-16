@@ -89,6 +89,12 @@ export default function DataTabs(props) {
         props.demographicMapUpdate();
     }
 
+    /* If phase 0 controls tab is disabled, that means that phase 1 or phase 2 are running and should not toggle between original
+    * and generated district demographics, PRE PHASE 0 TASK */
+    if(props.phase0ControlsTabDisabled && !demographicDistributionDisabled) {
+        setDemographicDistributionDisabled(true);
+    }
+
     return (
         <div className={classes.root}>
             <AppBar position="static" style={{width: '35vw', margin: 'auto'}} color="primary">

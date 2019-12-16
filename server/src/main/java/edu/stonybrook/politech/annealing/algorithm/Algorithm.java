@@ -102,103 +102,15 @@ public class Algorithm {
 
     // Determine the initial districts of precincts
     public void allocatePrecincts(State state) {
-        HashSet<Precinct> unallocatedPrecincts = new HashSet<Precinct>();
-        // Populate unallocated precincts
-        for (District d : state.getDistricts()) {
-            unallocatedPrecincts.addAll(d.getPrecincts());
+        for(Precinct p : state.getPrecinctSet()) {
+            precinctDistrictMap.put(p.getPrecinctId(), p.getOriginalDistrictID());
         }
-        // For each district, select a random precinct
-        HashSet<Precinct> seedPrecincts = new HashSet<Precinct>();
-        for (District d : state.getDistricts()) {
-            int selectedIndex = (int) Math.floor(Math.random() * unallocatedPrecincts.size());
-            Precinct selectedPrecinct = null;
-            int i = 0;
-            for (Precinct p : unallocatedPrecincts) {
-                if (i == selectedIndex) {
-                    seedPrecincts.add(p);
-                    selectedPrecinct = p;
-                    for (District dp : state.getDistricts()) {
-                        if (dp.getPrecincts().contains(p)) {
-                            dp.removePrecinct(p);
-                        }
-                    }
+        for(District d : state.getDistricts()) {
+            for(Precinct p : state.getPrecinctSet()) {
+                if(d.getDistrictId().equals(precinctDistrictMap.get(p.getPrecinctId()))) {
                     d.addPrecinct(p);
-                    precinctDistrictMap.put(p.getPrecinctId(), d.getDistrictId());
-                }
-                i++;
-            }
-            unallocatedPrecincts.remove(selectedPrecinct);
-        }
-        // Strip out all but one precinct from each district
-        for (District d : state.getDistricts()) {
-            for (Precinct p : d.getPrecincts()) {
-                if (!seedPrecincts.contains(p)) {
-                    d.removePrecinct(p);
                 }
             }
-        }
-        // For each district, add new precincts until a population threshold is met
-        System.out.println(unallocatedPrecincts.size() + " before initial alloc.");
-        int idealPop = state.getPopulation() / state.getDistricts().size();
-        boolean outOfMoves = false;
-        Set<District> ds = state.getDistricts();
-        int highestPop = -1;
-        while (outOfMoves == false) {
-            outOfMoves = true;
-            for (District d : ds) {
-                // Add precincts until population > highestPop
-                for (Precinct pd : d.getPrecincts()) {
-                    for (String s : pd.getNeighborIDs()) {
-                        Precinct p = state.getPrecinct(s);
-                        if (unallocatedPrecincts.contains(p)) {
-                            unallocatedPrecincts.remove(p);
-                            d.addPrecinct(p);
-                            precinctDistrictMap.put(p.getPrecinctId(), d.getDistrictId());
-                            outOfMoves = false;
-                            if (d.getPopulation() >= highestPop) {
-                                highestPop = d.getPopulation();
-                                break;
-                            }
-                        }
-                        if (d.getPopulation() >= highestPop) {
-                            highestPop = d.getPopulation();
-                            break;
-                        }
-                    }
-
-                }
-            }
-        }
-        // Allocate remaining unallocated precincts
-        System.out.println("Adding remaining precincts.");
-        int loopCheck = -1;
-        while (!unallocatedPrecincts.isEmpty()) {
-            if (loopCheck != unallocatedPrecincts.size()) {
-                loopCheck = unallocatedPrecincts.size();
-            } else {
-                // Set to default if all else fails.
-                for (Precinct p : unallocatedPrecincts) {
-                    precinctDistrictMap.put(p.getPrecinctId(), p.getOriginalDistrictID());
-                    state.getDistrict(p.getOriginalDistrictID()).addPrecinct(p);
-                }
-                unallocatedPrecincts.clear();
-            }
-            System.out.println(unallocatedPrecincts.size() + " left.");
-            HashSet<Precinct> newlyAdded = new HashSet<Precinct>();
-            for (Precinct p : unallocatedPrecincts) {
-                String myDistrict = null;
-                for (String s : p.getNeighborIDs()) {
-                    if (precinctDistrictMap.get(s) != null) {
-                        myDistrict = precinctDistrictMap.get(s);
-                    }
-                }
-                if (myDistrict != null) {
-                    precinctDistrictMap.put(p.getPrecinctId(), myDistrict);
-                    state.getDistrict(myDistrict).addPrecinct(p);
-                    newlyAdded.add(p);
-                }
-            }
-            unallocatedPrecincts.removeAll(newlyAdded);
         }
     }
 
