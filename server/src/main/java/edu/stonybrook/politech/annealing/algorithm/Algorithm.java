@@ -13,7 +13,6 @@ import java.util.Map.Entry;
 public class Algorithm {
     protected State state;
     protected ElectionId electionId;
-    private HashMap<String, String> precinctDistrictMap; //precinctID --> districtID
     //calculates an aggregate measure score (double) for a given district
     private MeasureFunction<Precinct, District> districtScoreFunction;
     private HashMap<District, Double> currentScores;
@@ -24,9 +23,7 @@ public class Algorithm {
                      ElectionId electionId) {
         this.state = state;
         this.electionId = electionId;
-        this.precinctDistrictMap = new HashMap<String, String>();
         this.districtScoreFunction = districtScoreFunction;
-        allocatePrecincts(state);
         updateScores();
     }
 
@@ -36,79 +33,6 @@ public class Algorithm {
 
     public void setDistrictScoreFunction(MeasureFunction<Precinct, District> districtScoreFunction) {
         this.districtScoreFunction = districtScoreFunction;
-    }
-
-    // Determine the initial districts of precincts using a bfs
-    // Very fast, but not ideal for compactness
-    // Experimental - use a modified breadth first search
-    public void allocatePrecinctsExp(State state) {
-        HashSet<Precinct> unallocatedPrecincts = new HashSet<Precinct>();
-        // Populate unallocated precincts
-        for (District d : state.getDistricts()) {
-            for (Precinct p : d.getPrecincts()) {
-                unallocatedPrecincts.add(p);
-            }
-        }
-        // Hash districts to numbers
-        HashMap<Integer, DistrictInterface> myDistricts = new HashMap<>();
-        int num_districts = 0;
-        for (District d : state.getDistricts()) {
-            myDistricts.put(num_districts, d);
-            num_districts += 1;
-        }
-        // Strip out all precincts from each district
-        for (District d : state.getDistricts()) {
-            for (Precinct p : d.getPrecincts()) {
-                d.removePrecinct(p);
-            }
-        }
-        // Go through precincts in a BFS and just add them to the district corresponding to
-        // (total_population / current_population) * num_districts
-        // Whenever we run out, just grab a new district from the set.
-        ArrayList<Precinct> ptp = new ArrayList<Precinct>();
-        int curPop = 0;
-        DistrictInterface prevDist = myDistricts.get(0);
-        while (!unallocatedPrecincts.isEmpty()) {
-            Precinct nextPrec = unallocatedPrecincts.iterator().next();
-            unallocatedPrecincts.remove(nextPrec);
-            ptp.add(nextPrec);
-            while (!ptp.isEmpty()) {
-                Precinct curPrec = ptp.get(0);
-                curPop += curPrec.getPopulation();
-                DistrictInterface curDist =
-                        myDistricts.get((int) Math.ceil((curPop * 1.0) / state.getPopulation() * num_districts) - 1);
-                // Add the current precinct to the current district
-                System.out.println(ptp.size() + " " + unallocatedPrecincts.size());
-                precinctDistrictMap.put(curPrec.getPrecinctId(), curDist.getDistrictId());
-
-                ptp.remove(0);
-                unallocatedPrecincts.remove(curPrec);
-                curDist.addPrecinct(curPrec);
-                // If we've moved on to a new district, discard our current queue
-                if (prevDist != curDist) {
-                    ptp = new ArrayList<Precinct>();
-                    prevDist = curDist;
-                }
-                // Add any new connections
-                for (String s : curPrec.getNeighborIDs()) {
-                    Precinct n = state.getPrecinct(s);
-                    if (unallocatedPrecincts.contains(n) && !ptp.contains(n)) {
-                        ptp.add(n);
-                    }
-                }
-            }
-        }
-    }
-
-    // Determine the initial districts of precincts
-    public void allocatePrecincts(State state) {
-        for (Precinct p : state.getPrecinctSet()) {
-            precinctDistrictMap.put(p.getPrecinctId(), p.getDistrict().getDistrictId());
-        }
-    }
-
-    public String getPrecinctDistrictID(Precinct p) {
-        return precinctDistrictMap.get(p.getPrecinctId());
     }
 
     public Move<Precinct, District> makeMove() {
@@ -130,7 +54,7 @@ public class Algorithm {
             Set<String> neighborIDs = p.getNeighborIDs();
             for (String n : neighborIDs) {
                 if (startDistrict.getPrecinct(n) == null) {
-                    District neighborDistrict = state.getDistrict(precinctDistrictMap.get(n));
+                    District neighborDistrict = state.getPrecinct(n).getDistrict();
                     //System.out.println("Start district: " + startDistrict.getID() + ", Neighbor District: " + neighborDistrict.getID() + ", Precinct: " + p.getID());
                     Move move = testMove(neighborDistrict, startDistrict, p);
                     if (move != null) {
@@ -170,13 +94,12 @@ public class Algorithm {
         }
         currentScores.put(to, to_score);
         currentScores.put(from, from_score);
-        precinctDistrictMap.put(p.getPrecinctId(), to.getDistrictId());
         return m;
     }
 
     // Manually force a move. Return true if both parameters are valid.
     public Move<Precinct, District> manualMove(String precinct, String district) {
-        District from = state.getDistrict(precinctDistrictMap.get(precinct));
+        District from = state.getPrecinct(precinct).getDistrict();
         if (from == null) {
             return null;
         }
@@ -195,7 +118,6 @@ public class Algorithm {
         double from_score = rateDistrict(from);
         currentScores.put(to, to_score);
         currentScores.put(from, from_score);
-        precinctDistrictMap.put(p.getPrecinctId(), to.getDistrictId());
         return m;
     }
 
@@ -276,8 +198,8 @@ public class Algorithm {
         // If a neighbor is in the district that's losing a precinct, we need to make sure they're still contiguous
         for (String p_id : p.getNeighborIDs()) {
             // If neighbor is in the district we're moving p out of
-            if ((precinctDistrictMap.get(p_id) != null) &&
-                    (precinctDistrictMap.get(p_id)).equals(d.getDistrictId())) {
+            if ((state.getPrecinct(p_id).getDistrict().getDistrictId() != null) &&
+                    (state.getPrecinct(p_id).getDistrict().getDistrictId().equals(d.getDistrictId()))) {
                 Precinct neighbor = d.getPrecinct(p_id);
                 precinctsToCheck.add(neighbor);
             }
@@ -297,7 +219,7 @@ public class Algorithm {
             Precinct precinctToExplore = neighborsToExplore.iterator().next();
             for (String p_id : precinctToExplore.getNeighborIDs()) {
                 // We only care about neighbors in our district, d.
-                if (precinctDistrictMap.get(p_id).equals(d.getDistrictId())) {
+                if (state.getPrecinct(p_id).getDistrict().getDistrictId().equals(d.getDistrictId())) {
                     Precinct neighbor = d.getPrecinct(p_id);
                     // If we've hit one of our needed precincts, check it off.
                     if (precinctsToCheck.contains(neighbor)) {
