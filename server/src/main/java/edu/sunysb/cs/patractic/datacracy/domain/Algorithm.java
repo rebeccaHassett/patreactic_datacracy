@@ -245,6 +245,7 @@ public class Algorithm extends MyAlgorithm {
                         keepGoing = phase2Running;
                         lock.notify();
                     }
+                    logger.info("Made move");
                 }
             });
             thread.start();
