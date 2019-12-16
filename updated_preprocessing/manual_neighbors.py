@@ -232,6 +232,28 @@ manual_neighbors = {
             "CLEVELAND OAKGR",
             "GASTON 20",
             "GASTON 21"
+        ],
+        "CLEVELAND S S": [
+            "CLEVELAND RIPPY",
+            "CLEVELAND BETHWR",
+            "CLEVELAND SHANGI",
+            "CLEVELAND S 5",
+            "CLEVELAND S C"
+        ],
+        "CLEVELAND S C": [
+            "CLEVELAND S 5",
+            "CLEVELAND S 4A"
+        ],
+        "CLEVELAND S 4A": [
+            "CLEVELAND S 5",
+            "CLEVELAND KINGST",
+            "CLEVELAND LATT",
+            "CLEVELAND LAWNDL"
+        ],
+        "CLEVELAND S 5": [
+            "CLEVELAND OAKGR",
+            "CLEVELAND WACO",
+            "CLEVELAND FALSTN"
         ]
-    } # none
+    }
 }
