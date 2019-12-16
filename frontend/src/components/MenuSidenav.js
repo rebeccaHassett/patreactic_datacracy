@@ -87,8 +87,6 @@ export default function MenuSidenav(props) {
         setValue(0);
     };
 
-    console.log(props.demographicsSelected);
-
     return (
         <div className={classes.root}>
             <AppBar position="static" color="default">
