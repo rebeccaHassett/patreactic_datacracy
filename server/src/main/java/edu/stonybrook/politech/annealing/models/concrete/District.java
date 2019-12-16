@@ -148,6 +148,7 @@ public class District
         this.multiPolygonUpdated = false;
         this.convexHullUpdated = false;
         this.boundingCircleUpdated = false;
+        this.edges.forEach(Edge::invalidateScoreCache);
     }
 
     public void removePrecinct(Precinct p) {
@@ -170,6 +171,8 @@ public class District
         this.multiPolygonUpdated = false;
         this.convexHullUpdated = false;
         this.boundingCircleUpdated = false;
+
+        this.edges.forEach(Edge::invalidateScoreCache);
     }
 
     public MultiPolygon computeMulti() {
@@ -336,6 +339,7 @@ public class District
     public void replaceDistrictInEdges(District other, District replacement) {
         edges.forEach(e -> e.replaceDistrict(other, replacement));
         edges.removeIf(e -> e.d1.equals(e.d2));
+        edges.forEach(Edge::invalidateScoreCache);
     }
 
     public int getCountyJoinability() {

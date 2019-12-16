@@ -13,6 +13,8 @@ public class Edge {
     public District d1;
     public District d2;
     public int countyJoinability;
+    private Double cachedScore = null;
+    private District cachedDistrict = null;
 
     public Edge(District d1, District d2) {
         this.d1 = d1;
@@ -63,12 +65,15 @@ public class Edge {
     }
 
     public District peekCombined() {
-        District combined = new District(d1.getDistrictId(), d1.getState());
-        combined.setCountyJoinability(this.countyJoinability);
-        Set<Precinct> precincts = d1.getPrecincts().stream().map(Precinct::clone).collect(Collectors.toSet());
-        precincts.addAll(d2.getPrecincts().stream().map(Precinct::clone).collect(Collectors.toSet()));
-        precincts.forEach(combined::addPrecinct);
-        return combined;
+        if (cachedDistrict == null) {
+            District combined = new District(d1.getDistrictId(), d1.getState());
+            combined.setCountyJoinability(this.countyJoinability);
+            Set<Precinct> precincts = d1.getPrecincts().stream().map(Precinct::clone).collect(Collectors.toSet());
+            precincts.addAll(d2.getPrecincts().stream().map(Precinct::clone).collect(Collectors.toSet()));
+            precincts.forEach(combined::addPrecinct);
+            cachedDistrict = combined;
+        }
+        return cachedDistrict;
     }
 
     public long combinedPopulation() {
@@ -81,6 +86,19 @@ public class Edge {
         } else if (d2.equals(toReplace)) {
             d2 = replacement;
         }
+        invalidateScoreCache();
+    }
+
+    public void invalidateScoreCache() {
+        cachedScore = null;
+        cachedDistrict = null;
+    }
+
+    public Double getScore(double objFuncWeight, double mmWeight, Algorithm algorithm) {
+        if (cachedScore == null) {
+            cachedScore = objFuncWeight * algorithm.rateDistrict(peekCombined()) + mmWeight * getCombinedMMScore(algorithm.getConfig());
+        }
+        return cachedScore;
     }
 
     @Override

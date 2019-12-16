@@ -1,6 +1,5 @@
 package edu.sunysb.cs.patractic.datacracy.domain;
 
-import edu.stonybrook.politech.annealing.models.concrete.District;
 import edu.sunysb.cs.patractic.datacracy.domain.models.Edge;
 
 import java.util.Comparator;
@@ -18,10 +17,7 @@ public class Phase1EdgeComparator implements Comparator<Edge> {
 
     @Override
     public int compare(Edge e1, Edge e2) {
-        District e1Combined = e1.peekCombined();
-        District e2Combined = e2.peekCombined();
-
-        double res = (OBJ_FUNC_WEIGHT * algorithm.rateDistrict(e1Combined) + MM_WEIGHT * e1.getCombinedMMScore(algorithm.getConfig())) - (OBJ_FUNC_WEIGHT * algorithm.rateDistrict(e2Combined) + MM_WEIGHT * e2.getCombinedMMScore(algorithm.getConfig()));
+        double res = e1.getScore(OBJ_FUNC_WEIGHT, MM_WEIGHT, algorithm) - e2.getScore(OBJ_FUNC_WEIGHT, MM_WEIGHT, algorithm);
 
         if (res > 0) {
             return 1;
