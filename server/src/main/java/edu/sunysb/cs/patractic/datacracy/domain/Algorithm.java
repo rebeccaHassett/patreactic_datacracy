@@ -118,7 +118,7 @@ public class Algorithm extends MyAlgorithm {
             synchronized (lock) {
                 if (!currentDistrictUpdates.isEmpty() || phase1Complete) {
                     List<MajMinDistrictDto> majMinDistrictDtos = getMajMinDistricts(this.getConfig());
-                    ret = new Phase1UpdateDto(new ArrayList<>(this.currentDistrictUpdates.values()), new ArrayList<>(currentDistrictsToRemove), majMinDistrictDtos);
+                    ret = new Phase1UpdateDto(new ArrayList<>(this.currentDistrictUpdates.values()), new ArrayList<>(currentDistrictsToRemove), majMinDistrictDtos, null);
                     this.currentDistrictUpdates.clear();
                     this.currentDistrictsToRemove.clear();
                 }

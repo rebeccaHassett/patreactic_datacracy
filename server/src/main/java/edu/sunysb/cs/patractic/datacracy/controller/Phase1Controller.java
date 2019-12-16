@@ -44,6 +44,7 @@ public class Phase1Controller extends HttpServlet {
                 .stream()
                 .map(District::getDistrictId)
                 .collect(Collectors.toList());
+        List<MajMinDistrictDto> originalMajMinDistrictDtos = myAlg.getMajMinDistricts(myAlg.getConfig());
         List<JurisdictionDataDto> newDistricts;
         if (runPhase1Dto.config.incremental) {
             newDistricts = myAlg.start();
@@ -51,7 +52,7 @@ public class Phase1Controller extends HttpServlet {
             newDistricts = myAlg.startAsync();
         }
         List<MajMinDistrictDto> majMinDistrictDtos = myAlg.getMajMinDistricts(myAlg.getConfig());
-        return new Phase1UpdateDto(newDistricts, oldDistricts, majMinDistrictDtos);
+        return new Phase1UpdateDto(newDistricts, oldDistricts, majMinDistrictDtos, originalMajMinDistrictDtos);
     }
 
     @GetMapping(path = "/phase1/poll")
