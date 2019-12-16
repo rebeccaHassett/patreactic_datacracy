@@ -341,6 +341,23 @@ manual_neighbors = {
             "HALIFAX HPR",
             "HALIFAX SN",
             "HALIFAX CONC"
+        ],
+        "MOORE EUR": [
+            "MOORE EWD",
+            "MOORE VSS",
+            "MOORE CAR"
+        ],
+        "MOORE KWD": [
+            "MOORE EUR",
+            "MOORE EWD"
+        ],
+        "MOORE PHA": [
+            "MOORE TLT",
+            "MOORE EWD",
+            "MOORE WND",
+            "MOORE WAB",
+            "MOORE PHC",
+            "MOORE PHB1"
         ]
     }
 }
