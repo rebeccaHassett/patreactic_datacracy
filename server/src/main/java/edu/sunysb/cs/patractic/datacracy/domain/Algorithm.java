@@ -219,10 +219,10 @@ public class Algorithm extends MyAlgorithm {
                             moves.add(move);
                             currentDistrictUpdates.put(move.getFrom().getDistrictId(), move.getFrom().dto(false));
                             currentDistrictUpdates.put(move.getTo().getDistrictId(), move.getTo().dto(false));
+                            logger.info("Made P2 move: {}", move.toString());
                         }
                         keepGoing = phase2Running;
                         lock.notify();
-                        logger.info("Made P2 move: {}", move.toString());
                     }
                 }
             });
