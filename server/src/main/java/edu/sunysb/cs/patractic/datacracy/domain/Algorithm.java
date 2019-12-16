@@ -196,6 +196,27 @@ public class Algorithm extends MyAlgorithm {
         }
     }
 
+    public Phase1UpdateDto completePhase1() {
+        if (!phase1Started || phase2Running) {
+            return null;
+        }
+        Phase1UpdateDto result = null;
+        while (result == null) {
+            synchronized (lock) {
+                if (phase1Complete && !thread.isAlive()) {
+                    result = getPhase1Update();
+                }
+            }
+            if (result == null) {
+                try {
+                    lock.wait(500);
+                } catch (InterruptedException | IllegalMonitorStateException ignored) {
+                }
+            }
+        }
+        return result;
+    }
+
     // PHASE 2
     public boolean startPhase2() {
         synchronized (lock) {

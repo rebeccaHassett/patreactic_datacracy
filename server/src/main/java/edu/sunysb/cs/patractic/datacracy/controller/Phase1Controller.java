@@ -55,7 +55,7 @@ public class Phase1Controller extends HttpServlet {
     }
 
     @GetMapping(path = "/phase1/poll")
-    public ResponseEntity<Phase1UpdateDto> pollPhase1(HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<Phase1UpdateDto> pollPhase1(HttpServletRequest request) {
         HttpSession httpSession = request.getSession(false);
         String id = (String) httpSession.getAttribute("sessionId");
         if (id == null) {
@@ -66,5 +66,18 @@ public class Phase1Controller extends HttpServlet {
             myAlg.runStep();
         }
         return ResponseEntity.ok(myAlg.getPhase1Update());
+    }
+
+    @GetMapping(path = "/phase1/complete")
+    public ResponseEntity<Phase1UpdateDto> completePhase1(HttpServletRequest request) {
+        HttpSession httpSession = request.getSession(false);
+        String id = (String) httpSession.getAttribute("sessionId");
+        if (id == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        Algorithm myAlg = Algorithm.getInstance(id);
+        Phase1UpdateDto result = myAlg.completePhase1();
+
+        return result == null ? ResponseEntity.badRequest().build() : ResponseEntity.ok(result);
     }
 }
