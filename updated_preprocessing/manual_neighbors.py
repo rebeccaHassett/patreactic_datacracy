@@ -286,6 +286,25 @@ manual_neighbors = {
             "PASQUOTANK MH",
             "PERQUIMANS PARKVI",
             "PERQUIMANS BETHEL"
+        ],
+        "PASQUOTANK EAST": [
+            "PASQUOTANK NIX",
+            "PASQUOTANK NORTH",
+            "PASQUOTANK SOUTH",
+            "PASQUOTANK WEST",
+            "CAMDEN CH",
+            "PASQUOTANK PRO"
+        ],
+        "PASQUOTANK NORTH": [
+            "PASQUOTANK PRO",
+            "CAMDEN CH",
+        ],
+        "PASQUOTANK SOUTH": [
+            "PASQUOTANK NIX"
+        ],
+        "PASQUOTANK WEST": [
+            "PASQUOTANK NIX",
+            "PASQUOTANK MH"
         ]
     }
 }
