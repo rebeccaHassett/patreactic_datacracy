@@ -38,6 +38,7 @@ public class Algorithm extends MyAlgorithm {
         this.config = config;
         this.phase1Complete = false;
         this.phase1Started = false;
+        this.moves = new ArrayList<>();
     }
 
     public static Algorithm getInstance(String sessionId) {
@@ -145,8 +146,8 @@ public class Algorithm extends MyAlgorithm {
                 logger.info("Got [{}] MM Edges: [{}]", mmEdges.size(), edgeList);
 
                 // Sort using objective function, descending
-                List<Edge> sortedEdges = new ArrayList<>(mmEdges);
-                sortedEdges.sort(new Phase1EdgeComparator(this).reversed());
+                PriorityQueue<Edge> sortedEdges = new PriorityQueue<>(new Phase1EdgeComparator(this).reversed());
+                sortedEdges.addAll(mmEdges);
 
                 // Remove edges that duplicate districts
                 Set<District> districtsIncluded = new HashSet<>();
@@ -302,7 +303,7 @@ public class Algorithm extends MyAlgorithm {
         List<MajMinDistrictDto> majMinDistrictDtos = new ArrayList<>();
         state.getDistricts().forEach(district -> {
             //Long minorityPopulation = config.selectedMinorities.stream().mapToLong(district::getPopulation).sum();
-            Long minorityPopulation = config.selectedMinorities.stream().mapToLong(dg -> district.getPopulation(dg)).sum();
+            Long minorityPopulation = config.selectedMinorities.stream().mapToLong(district::getPopulation).sum();
             Long totalPopulation = district.getPopulation(null);
             double majMinScore = Algorithm.getMajMinScore(
                     minorityPopulation,
