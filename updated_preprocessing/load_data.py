@@ -75,6 +75,11 @@ def read_geojson_file(file_name):
         features = json.load(f)["features"]
         return features
 
+def chunks(lst, n):
+    """Yield successive n-sized chunks from lst."""
+    for i in range(0, len(lst), n):
+        yield lst[i:i + n]
+
 def load_precinct_values(connection, cursor, features, query, stateName):
     print(f"load_precinct_values for state {stateName}")
     rows = []
@@ -84,8 +89,8 @@ def load_precinct_values(connection, cursor, features, query, stateName):
         districtId = feature["properties"]["CD"]
         county = feature["properties"]["COUNTY"]
         rows.append((precinctId, county, geojson, districtId, stateName))
-
-    cursor.executemany(query, rows)
+    for group in chunks(rows, 100):
+        cursor.executemany(query, group)
 
 
 
@@ -99,19 +104,19 @@ def load_precinct_data(connection):
 
     rhode_island_features = read_geojson_file('RI_Precincts_MAPPED_FINAL.geojson')
     michigan_features = read_geojson_file('MI_Precincts_MAPPED_FINAL.geojson')
-    #north_carolina_features = read_geojson_file('NC_Precincts_MAPPED_FINAL.geojson')
+    north_carolina_features = read_geojson_file('NC_VDT_FINAL_HOPEFULLY.json')
 
     load_precinct_values(connection, cursor, rhode_island_features, precinct_insert_query, "RhodeIsland")
     load_precinct_values(connection, cursor, michigan_features, precinct_insert_query, "Michigan")
-    #load_precinct_values(connection, cursor, north_carolina_features, precinct_insert_query, "NorthCarolina")
+    load_precinct_values(connection, cursor, north_carolina_features, precinct_insert_query, "NorthCarolina")
 
     load_precinct_population_data(connection, cursor, rhode_island_features, "RhodeIsland")
     load_precinct_population_data(connection, cursor, michigan_features, "Michigan")
-    #load_precinct_population_data(connection, cursor, north_carolina_features, "NorthCarolina")
+    load_precinct_population_data(connection, cursor, north_carolina_features, "NorthCarolina")
 
     id = load_election_data(connection, rhode_island_features, 0, "RhodeIsland")
     id = load_election_data(connection, michigan_features, id, "Michigan")
-    #load_election_data(connection, north_carolina_features, id, "NorthCarolina")
+    load_election_data(connection, north_carolina_features, id, "NorthCarolina")
 
     connection.commit()
 

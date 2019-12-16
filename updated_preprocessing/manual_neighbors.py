@@ -216,6 +216,9 @@ manual_neighbors = {
         "BUCHANAN TOWNSHIP 1 Berrien County": [
             "BUCHANAN CITY 1 Berrien County",
             "BUCHANAN CITY 2 Berrien County"
+        ],
+        "FAIRBANKS TOWNSHIP 1 Delta County": [
+            "GARDEN TOWNSHIP 1 Delta County"
         ]
     },
     "NC": {} # none
