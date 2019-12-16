@@ -8,7 +8,6 @@ import edu.stonybrook.politech.annealing.models.concrete.District;
 import edu.stonybrook.politech.annealing.models.concrete.Precinct;
 import edu.stonybrook.politech.annealing.models.concrete.State;
 import edu.sunysb.cs.patractic.datacracy.domain.enums.Constraint;
-import edu.sunysb.cs.patractic.datacracy.domain.enums.DemographicGroup;
 import edu.sunysb.cs.patractic.datacracy.domain.models.Properties;
 import edu.sunysb.cs.patractic.datacracy.domain.models.*;
 import org.slf4j.Logger;
@@ -54,9 +53,6 @@ public class Algorithm extends MyAlgorithm {
 
     // UTILITY
     public static double getMajMinScore(Long minPop, Long totalPop, Threshold majMinThresh) {
-
-        System.out.println(majMinThresh.lower + "LOWERUpper" + majMinThresh.upper);
-
         double percent = (double) minPop / (double) totalPop;
         if (majMinThresh.isWithin(percent, true)) {
             return 1;
@@ -85,7 +81,7 @@ public class Algorithm extends MyAlgorithm {
         this.currentDistrictUpdates = new HashMap<>();
         this.phase1Started = true;
         return state.getDistricts().stream()
-                .map(District::dto)
+                .map(d -> d.dto(false))
                 .collect(Collectors.toList());
     }
 
@@ -112,7 +108,7 @@ public class Algorithm extends MyAlgorithm {
     private void updatePhase1(District updated, String districtRemoved) {
         currentDistrictUpdates.remove(districtRemoved);
         currentDistrictsToRemove.add(districtRemoved);
-        currentDistrictUpdates.put(updated.getDistrictId(), updated.dto());
+        currentDistrictUpdates.put(updated.getDistrictId(), updated.dto(false));
     }
 
     public Phase1UpdateDto getPhase1Update() {
@@ -147,7 +143,7 @@ public class Algorithm extends MyAlgorithm {
 
                 StringBuilder edgeList = new StringBuilder();
                 mmEdges.stream().map(Edge::toString).forEach(s -> edgeList.append(s).append(","));
-                logger.info("Got MM Edges: [{}]", edgeList);
+                logger.info("Got [{}] MM Edges: [{}]", mmEdges.size(), edgeList);
 
                 // Sort using objective function, descending
                 List<Edge> sortedEdges = new ArrayList<>(mmEdges);
@@ -221,8 +217,8 @@ public class Algorithm extends MyAlgorithm {
                             phase2Completed = true;
                         } else {
                             moves.add(move);
-                            currentDistrictUpdates.put(move.getFrom().getDistrictId(), move.getFrom().dto());
-                            currentDistrictUpdates.put(move.getTo().getDistrictId(), move.getTo().dto());
+                            currentDistrictUpdates.put(move.getFrom().getDistrictId(), move.getFrom().dto(false));
+                            currentDistrictUpdates.put(move.getTo().getDistrictId(), move.getTo().dto(false));
                         }
                         keepGoing = phase2Running;
                         lock.notify();

@@ -23,7 +23,7 @@ public class OriginalDataController {
     @GetMapping(path = "/district/original/{state}/{district}")
     public JurisdictionDataDto getOriginalDistrictData(@PathVariable("state") String stateName,
                                                        @PathVariable("district") String districtId) {
-        return stateDao.getBaseState(stateName).getDistrict(districtId).dto();
+        return stateDao.getBaseState(stateName).getDistrict(districtId).dto(true);
     }
 
     @GetMapping(path = "/district/original/{state}")

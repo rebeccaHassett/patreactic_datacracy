@@ -242,7 +242,7 @@ public class District
         });
     }
 
-    public JurisdictionDataDto dto() {
+    public JurisdictionDataDto dto(boolean includeObjFuncScores) {
         Map<DemographicGroup, Long> popMap = new HashMap<>();
         for (DemographicGroup dg : DemographicGroup.values()) {
             popMap.put(dg, getPopulation(dg));
@@ -255,15 +255,19 @@ public class District
         ImmutableMap.Builder<ElectionId, ElectionData> electionDataMapBuilder = new ImmutableMap.Builder<>();
         electionIds.forEach(eId -> electionDataMapBuilder.put(eId, this.getElectionData(eId)));
 
-        ImmutableMap.Builder<String, Map<String, Double>> objFuncResultsMapBuilder = new ImmutableMap.Builder<>();
-        for (Measure m : Measure.values()) {
-            ImmutableMap.Builder<String, Double> currentMeasureMapBuilder = new ImmutableMap.Builder<>();
-            for (ElectionId election : electionIds) {
-                currentMeasureMapBuilder.put(election.toString(), m.calculateMeasure(this, election));
+        if (includeObjFuncScores) {
+            ImmutableMap.Builder<String, Map<String, Double>> objFuncResultsMapBuilder = new ImmutableMap.Builder<>();
+            for (Measure m : Measure.values()) {
+                ImmutableMap.Builder<String, Double> currentMeasureMapBuilder = new ImmutableMap.Builder<>();
+                for (ElectionId election : electionIds) {
+                    currentMeasureMapBuilder.put(election.toString(), m.calculateMeasure(this, election));
+                }
+                objFuncResultsMapBuilder.put(m.toString(), currentMeasureMapBuilder.build());
             }
-            objFuncResultsMapBuilder.put(m.toString(), currentMeasureMapBuilder.build());
+            return new JurisdictionDataDto(this.districtId, new ArrayList<>(this.precincts.keySet()), popMap, electionDataMapBuilder.build(), objFuncResultsMapBuilder.build());
         }
-        return new JurisdictionDataDto(this.districtId, new ArrayList<>(this.precincts.keySet()), popMap, electionDataMapBuilder.build(), objFuncResultsMapBuilder.build());
+        return new JurisdictionDataDto(this.districtId, new ArrayList<>(this.precincts.keySet()), popMap, electionDataMapBuilder.build(), null);
+
     }
 
     public Set<Edge> getMMEdges(Properties config) {

@@ -37,7 +37,7 @@ public class Phase1Controller extends HttpServlet {
         String myAlgId = Algorithm.createInstance(copy, runPhase1Dto.config);
         HttpSession httpSession = request.getSession();
         httpSession.setAttribute("sessionId", myAlgId);
-        System.out.println((String) httpSession.getAttribute("sessionId"));
+
         Algorithm myAlg = Algorithm.getInstance(myAlgId);
         List<String> oldDistricts = stateDao.getBaseState(runPhase1Dto.stateName).getDistricts()
                 .stream()
@@ -49,7 +49,7 @@ public class Phase1Controller extends HttpServlet {
         } else {
             newDistricts = myAlg.startAsync();
         }
-        System.out.println(myAlg.getConfig().selectedMinorities);
+
         List<MajMinDistrictDto> majMinDistrictDtos = myAlg.getMajMinDistricts(myAlg.getConfig());
         System.out.println(majMinDistrictDtos);
         return new Phase1UpdateDto(newDistricts, oldDistricts, majMinDistrictDtos);
