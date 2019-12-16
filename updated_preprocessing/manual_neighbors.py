@@ -221,5 +221,17 @@ manual_neighbors = {
             "GARDEN TOWNSHIP 1 Delta County"
         ]
     },
-    "NC": {} # none
+    "NC": {
+        "CLEVELAND KM S": [
+            "CLEVELAND GROVER",
+            "GASTON 22",
+            "CLEVELAND BETHWR",
+            "CLEVELAND KM N"
+        ],
+        "CLEVELAND KM N": [
+            "CLEVELAND OAKGR",
+            "GASTON 20",
+            "GASTON 21"
+        ]
+    } # none
 }
