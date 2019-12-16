@@ -358,6 +358,15 @@ manual_neighbors = {
             "MOORE WAB",
             "MOORE PHC",
             "MOORE PHB1"
+        ],
+        "LEE A": [
+            "LEE C",
+            "LEE E",
+            "LEE B",
+            "LEE D"
+        ],
+        "LEE C": [
+            "MOORE CAM"
         ]
     }
 }
