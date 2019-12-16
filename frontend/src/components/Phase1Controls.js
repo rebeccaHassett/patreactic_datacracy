@@ -36,6 +36,7 @@ export default class Phase1Controls extends Component {
         this.handleGerrymanderDemocratWeight = this.handleGerrymanderDemocratWeight.bind(this);
         this.handleCountyJoinabilityWeight = this.handleCountyJoinabilityWeight.bind(this);
         this.handleMajorityMinorityWeight = this.handleMajorityMinorityWeight.bind(this);
+        this.restart = this.restart.bind(this);
     }
 
     /* For now, hardcoding election type but will set to phase 0 and data election type */
@@ -208,11 +209,10 @@ export default class Phase1Controls extends Component {
     majorityMinorityDistrictsDisplay(data) {
         let tempRows = [];
 
-        console.log("FRONTEND");
+        console.log(data.majMinDistrictDtos);
         data.majMinDistrictDtos.forEach((majMinDistrict) => {
             let districtId = majMinDistrict.districtId;
             let minorityPopulation = majMinDistrict.minorityPopulation;
-            console.log(minorityPopulation);
             let totalPopulation = majMinDistrict.totalPopulation;
             tempRows.push(this.createData(districtId, minorityPopulation, totalPopulation));
         });
@@ -234,6 +234,7 @@ export default class Phase1Controls extends Component {
                 that.endPhase1();
             } else {
                 that.props.phase1Update(data);
+                that.majorityMinorityDistrictsDisplay(data);
                 that.pollPhase1NonIncrementalRealtime();
             }
         });
@@ -250,6 +251,7 @@ export default class Phase1Controls extends Component {
             return response.json();
         }).then(function (data) {
             that.props.initializePhase1Map(data);
+            that.majorityMinorityDistrictsDisplay(data);
             that.endPhase1();
         });
     }
@@ -270,6 +272,7 @@ export default class Phase1Controls extends Component {
                 that.endPhase1();
             } else {
                 that.props.phase1Update(data);
+                that.majorityMinorityDistrictsDisplay(data);
             }
             that.setState({phase1RunButtonDisabled: false});
         });

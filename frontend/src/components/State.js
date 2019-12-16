@@ -356,8 +356,8 @@ export default class State extends Component {
 
         this.setState({generatedDistrictMap: updatedDistrictMap});
         this.setState({generatedDistrictDataMap: districtDataMap});
-        /*rhassettthis.setState({generatedStateGerrymandering: data.objFuncResults});
-        this.setState({selectedStateGerrymandering: data.objFuncResults});*/
+        this.setState({generatedStateGerrymandering: data.objFuncResults});
+        this.setState({selectedStateGerrymandering: data.objFuncResults});
 
         let generatedDistrictsArr = [];
         Object.keys(updatedDistrictMap).forEach(function (key) {
@@ -424,8 +424,8 @@ export default class State extends Component {
 
         this.setState({generatedDistrictMap: updatedDistrictMap});
         this.setState({generatedDistrictDataMap: districtDataMap});
-        /*rhassettthis.setState({generatedStateGerrymandering: data.objFuncResults});
-        this.setState({selectedStateGerrymandering: data.objFuncResults});*/
+        this.setState({generatedStateGerrymandering: data.objFuncResults});
+        this.setState({selectedStateGerrymandering: data.objFuncResults});
 
         let generatedDistrictsArr = [];
         Object.keys(updatedDistrictMap).forEach(function (key) {
@@ -471,15 +471,17 @@ export default class State extends Component {
             }
             return response.json();
         }).then(function (data) {
-            //rhassett that.setState({originalObjFuncResults: data.originalObjFuncResults});
 
             /* Choose gerrymandering scores for presidential 2016 */
-            let originalStateGerrymandering = {};
-            Object.keys(that.state.originalObjFuncResults).forEach(function (key) {
-                originalStateGerrymandering[key] = that.state.originalObjFuncResults[key].pres2016;
-            });
-            that.setState({originalStateGerrymandering: originalStateGerrymandering});
-            that.setState({selectedStateGerrymandering: originalStateGerrymandering});
+            if(data.originalObjFuncResults !== null && data.originalObjFuncResults !== undefined) {
+                that.setState({originalObjFuncResults: data.originalObjFuncResults});
+                let originalStateGerrymandering = {};
+                Object.keys(data.originalObjFuncResults).forEach(function (key) {
+                    originalStateGerrymandering[key] = that.state.originalObjFuncResults[key].pres2016;
+                });
+                that.setState({originalStateGerrymandering: originalStateGerrymandering});
+                that.setState({selectedStateGerrymandering: originalStateGerrymandering});
+            }
 
             that.setState({stateData: data});
             that.setState({precinctIds: data.precinctIds});

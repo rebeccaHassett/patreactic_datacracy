@@ -20,6 +20,7 @@ export default class Phase2Controls extends Component {
         this.handleGerrymanderDemocratWeight = this.handleGerrymanderDemocratWeight.bind(this);
         this.runPhase2 = this.runPhase2.bind(this);
         this.handlePhase2 = this.handlePhase2.bind(this);
+        this.restart = this.restart.bind(this);
     }
 
     state = {
@@ -176,21 +177,6 @@ export default class Phase2Controls extends Component {
         }
     }
 
-
-
-    handleIncrementalClick(evt) {
-        if (evt.target.value === "incremental") {
-            this.setState({incremental: true});
-            this.setState({realtime: false});
-        } else if (evt.target.value === "nonIncrementalRealtime") {
-            this.setState({incremental: false});
-            this.setState({realtime: true});
-        } else if (evt.target.value === "nonIncrementalSingleUpdate") {
-            this.setState({incremental: false});
-            this.setState({realtime: false});
-        }
-    }
-
     handleEdgeCompactnessWeight(value) {
         this.setState({edgeCompactnessWeightValue: value})
     }
@@ -310,11 +296,13 @@ export default class Phase2Controls extends Component {
         } else {
             let gerrymanderingRows = [['-', '-']];
             let that = this;
-            Object.keys(this.props.selectedStateGerrymandering).forEach(function(key) {
-                let measure = key;
-                let value = that.props.selectedStateGerrymandering[key];
-                gerrymanderingRows.push([measure, value]);
-            });
+            if(this.props.selectedStateGerrymandering !== null && this.props.selectedStateGerrymandering !== undefined) {
+                Object.keys(this.props.selectedStateGerrymandering).forEach(function (key) {
+                    let measure = key;
+                    let value = that.props.selectedStateGerrymandering[key];
+                    gerrymanderingRows.push([measure, value]);
+                });
+            }
 
             return (
                 <Phase2Styles>
