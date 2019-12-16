@@ -89,6 +89,7 @@ export default class State extends Component {
             originalDistrictsLoaded: false, //used in checking if district loading is complete
             originalDistrictDisplay: true, //used in checking if displaying original or generated districts
             originalDistrictDataMap: {},
+            originalMajMinDistrictDtos: [],
             generatedDistrictMap: {},
             generatedDistrictDataMap: {},
             demographicsMapDisplay: [],
@@ -329,9 +330,12 @@ export default class State extends Component {
     initializePhase1Map(data) {
         var colorsys = require('colorsys');
         let contrastingColors = this.contrastingColors(Object.keys(this.state.precinctMap).length);
-        console.log(contrastingColors);
         this.map.removeLayer(this.state.originalDistrictLayer);
         this.setState({precinctData: ""});
+        this.setState({originalDistrictDisplay: false});
+
+        /* Original Majority Minority Districts */
+        this.setState({originalMajMinDistrictDtos : data.originalMajMinDistrictDtos});
 
         /* Set initial colors for each cluster */
         let updatedDistrictMap = this.state.precinctMap;
@@ -376,7 +380,6 @@ export default class State extends Component {
 
         this.addDistrictsToMap(layerGroup, false, districtDataMap, this.getMajorityMinorityDistrictIds(data));
         this.setState({originalDistrictsLoaded: false});
-        this.setState({originalDistrictDisplay: false});
     }
 
 

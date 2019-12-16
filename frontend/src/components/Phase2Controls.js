@@ -43,7 +43,8 @@ export default class Phase2Controls extends Component {
         phase2RunButtonDisabled: false,
         phase2ControlsDisabled: false,
         phase2ButtonText: "Start Phase 2",
-        districtView: "View Original Districts"
+        districtView: "View Original Districts",
+        currentDistrictView: "Original Districts"
     };
 
     async runPhase2() {
@@ -53,7 +54,7 @@ export default class Phase2Controls extends Component {
         this.props.togglePhase0ControlsTabDisabled(true);
         this.props.togglePhase2ControlsTabDisabled(true);
         this.props.handleDistrictToggleDisabled(true);
-        this.setState({phase2ButtonText : "Stop Phase 2"});
+        this.setState({phase2ButtonText: "Stop Phase 2"});
 
         let normalizedCompetitiveness = 0.1;
         let normalizedPopulationHomogeneity = 0.1;
@@ -176,8 +177,7 @@ export default class Phase2Controls extends Component {
     handlePhase2() {
         if (this.state.phase2ButtonText === "Stop Phase 2") {
             this.endPhase2();
-        }
-        else if(this.state.phase2ButtonText === "Start Phase 2") {
+        } else if (this.state.phase2ButtonText === "Start Phase 2") {
             this.runPhase2();
         }
     }
@@ -185,9 +185,11 @@ export default class Phase2Controls extends Component {
     handleDistrictView() {
         if (this.state.districtView === "View Original Districts") {
             this.setState({districtView: "View Generated Districts"});
+            this.setState({currentDistrictView: "Original Districts"});
             this.props.loadOriginalDistricts();
         } else {
             this.setState({districtView: "View Original Districts"});
+            this.setState({currentDistrictView: "Generated Districts"});
             this.props.removeOriginalDistricts();
         }
     };
@@ -257,15 +259,15 @@ export default class Phase2Controls extends Component {
                 <Phase2Styles>
                     <Button variant="contained" color="primary" onClick={this.handlePhase2}
                             style={{width: '25vw', marginBottom: '2vw'}}>{this.state.phase2ButtonText}</Button>
-                        <Button variant="contained" color="primary" disabled={this.state.resultsUnavailable}
-                                style={{width: '25vw'}} onClick={this.resultsViewOn}>
-                            View Results
-                        </Button>
+                    <Button variant="contained" color="primary" disabled={this.state.resultsUnavailable}
+                            style={{width: '25vw'}} onClick={this.resultsViewOn}>
+                        View Results
+                    </Button>
                     <ControlGroup>
-                    <label className="label">Convex Hull Compactness Weighting:</label>
-                    <SliderControlSingleValue min={0} max={1} step={0.01} marks={OFMarks}
-                                              exportState={this.handleConvexHullCompactnessWeight}/>
-                </ControlGroup>
+                        <label className="label">Convex Hull Compactness Weighting:</label>
+                        <SliderControlSingleValue min={0} max={1} step={0.01} marks={OFMarks}
+                                                  exportState={this.handleConvexHullCompactnessWeight}/>
+                    </ControlGroup>
                     <ControlGroup>
                         <label className="label">Reock Compactness Weighting:</label>
                         <SliderControlSingleValue min={0} max={1} step={0.01} marks={OFMarks}
@@ -316,7 +318,7 @@ export default class Phase2Controls extends Component {
         } else {
             let gerrymanderingRows = [['-', '-']];
             let that = this;
-            if(this.props.selectedStateGerrymandering !== null && this.props.selectedStateGerrymandering !== undefined) {
+            if (this.props.selectedStateGerrymandering !== null && this.props.selectedStateGerrymandering !== undefined) {
                 Object.keys(this.props.selectedStateGerrymandering).forEach(function (key) {
                     let measure = key;
                     let value = that.props.selectedStateGerrymandering[key];
@@ -326,20 +328,23 @@ export default class Phase2Controls extends Component {
 
             return (
                 <Phase2Styles>
-                    <Button variant="contained" color="primary" style={{width: '25vw', marginBottom: '2vw'}}
-                            onClick={this.resultsViewOff} disabled={this.props.phase2ControlsTabDisabled}>Back to Controls</Button>
+                    <h3>Final Phase 2 Results: {this.state.currentDistrictView}</h3>
+                    <Button variant="contained" color="primary" style={{width: '25vw', marginBottom: '2vw', marginTop: '1vw'}}
+                            onClick={this.resultsViewOff} disabled={this.props.phase2ControlsTabDisabled}>Back to
+                        Controls</Button>
                     <Button variant="contained" color="primary"
                             style={{width: '25vw', marginBottom: '2vw',}} onClick={this.handleDistrictView}
                             disabled={this.props.districtToggleDisabled}>
                         {this.state.districtView}
                     </Button>
-                    <h3>Final Phase 2 Results</h3>
                     <h4>{this.state.objFuncType} Gerrymandering Calculations</h4>
                     <GerrymanderingScoresSummaryDialog/>
                     <TableDisplay columns={columns} rows={gerrymanderingRows}/>
-                    <h4>Final Majority-Minority Districts</h4>
+                    <h4 style={{marginTop: '1vw'}}>Final Majority-Minority Districts</h4>
                     <MajorityMinoritySummaryDialog/>
-                    <RestartAlertDialog restart={this.restart} districtToggleDisabled={this.props.districtToggleDisabled} disableBackdropClick={true}/>
+                    <RestartAlertDialog restart={this.restart}
+                                        districtToggleDisabled={this.props.districtToggleDisabled}
+                                        disableBackdropClick={true}/>
                 </Phase2Styles>
             );
         }

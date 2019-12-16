@@ -90,12 +90,12 @@ export default function MenuSidenav(props) {
 
 
     /* Demographic Toggling is allowed during phase 0 and during phases 1 and 2 during district toggling when on original districts */
-    if(((!districtToggleDisabled && props.originalDistrictDisplay) || !phase0ControlsTabDisabled) && demographicDistributionDisabled) {
+    if(props.originalDistrictDisplay && demographicDistributionDisabled) {
         setDemographicDistributionDisabled(false);
     }
 
     /* Disable Demographic Toggling when phase 0 is disabled and district toggling is disabled (this means phase 1 or phase 2 must be running) or original districts are not loaded */
-    if(((districtToggleDisabled && phase0ControlsTabDisabled) || !props.originalDistrictDisplay) && !demographicDistributionDisabled) {
+    if(!props.originalDistrictDisplay && !demographicDistributionDisabled) {
         setDemographicDistributionDisabled(true);
     }
 

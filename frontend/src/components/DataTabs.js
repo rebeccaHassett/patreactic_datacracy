@@ -90,6 +90,10 @@ export default function DataTabs(props) {
         setAlertDialogState(value);
     }
 
+    if(props.demographicDistributionDisabled && !originalColoringDisabled) {
+        setOriginalColoringDisabled(true);
+    }
+
     return (
         <div className={classes.root}>
             <AlertDialogSlide exportState={handleAlertDialogState} open={alertDialogState}

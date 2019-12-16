@@ -36,7 +36,7 @@ export default function RestartDialog(props) {
     return (
         <div>
             <Button variant="contained" color="secondary" disabled={props.districtToggleDisabled} onClick={handleClickOpen}
-                    style={{width: '25vw', marginTop: '2vw'}}>
+                    style={{width: '25vw', marginTop: '2vw', marginBottom: '2vw'}}>
                 Restart
             </Button>
             <Dialog

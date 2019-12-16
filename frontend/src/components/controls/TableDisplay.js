@@ -10,7 +10,7 @@ import TableRow from '@material-ui/core/TableRow';
 
 const useStyles = makeStyles({
     root: {
-        width: '100%',
+        width: '95%',
         left: '10vw !',
         fontSize: '1vw',
     },
