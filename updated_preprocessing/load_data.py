@@ -296,9 +296,9 @@ def load_precinct_neighbors(connection):
 
     rhode_island_neighbors_data = read_neighbors_file("RI")
     michigan_neighbors_data = read_neighbors_file("MI")
-    #north_carolina_neighbors_data = read_neighbors_file("precinct_neighbors_NC.json")
+    north_carolina_neighbors_data = read_neighbors_file("NC")
 
-    state_neighbor_data = [rhode_island_neighbors_data, michigan_neighbors_data]
+    state_neighbor_data = [rhode_island_neighbors_data, michigan_neighbors_data, north_carolina_neighbors_data]
 
     cursor = connection.cursor()
 
