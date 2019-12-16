@@ -76,14 +76,16 @@ def read_geojson_file(file_name):
         return features
 
 def load_precinct_values(connection, cursor, features, query, stateName):
+    print(f"load_precinct_values for state {stateName}")
+    rows = []
     for feature in features:
         precinctId = feature["properties"]["PRENAME"]
         geojson = json.dumps(feature)
         districtId = feature["properties"]["CD"]
         county = feature["properties"]["COUNTY"]
-        data_tuple = (precinctId, county, geojson, districtId, stateName)
+        rows.append((precinctId, county, geojson, districtId, stateName))
 
-        cursor.execute(query, data_tuple)
+    cursor.executemany(query, rows)
 
 
 
@@ -97,19 +99,19 @@ def load_precinct_data(connection):
 
     rhode_island_features = read_geojson_file('RI_Precincts_MAPPED_FINAL.geojson')
     michigan_features = read_geojson_file('MI_Precincts_MAPPED_FINAL.geojson')
-    north_carolina_features = read_geojson_file('NC_Precincts_MAPPED_FINAL.geojson')
+    #north_carolina_features = read_geojson_file('NC_Precincts_MAPPED_FINAL.geojson')
 
     load_precinct_values(connection, cursor, rhode_island_features, precinct_insert_query, "RhodeIsland")
     load_precinct_values(connection, cursor, michigan_features, precinct_insert_query, "Michigan")
-    load_precinct_values(connection, cursor, north_carolina_features, precinct_insert_query, "NorthCarolina")
+    #load_precinct_values(connection, cursor, north_carolina_features, precinct_insert_query, "NorthCarolina")
 
-    load_precinct_population_data(connection, cursor, rhode_island_features)
-    load_precinct_population_data(connection, cursor, michigan_features)
-    load_precinct_population_data(connection, cursor, north_carolina_features)
+    load_precinct_population_data(connection, cursor, rhode_island_features, "RhodeIsland")
+    load_precinct_population_data(connection, cursor, michigan_features, "Michigan")
+    #load_precinct_population_data(connection, cursor, north_carolina_features, "NorthCarolina")
 
-    id = load_election_data(connection, rhode_island_features, 0)
-    id = load_election_data(connection, michigan_features, id)
-    load_election_data(connection, north_carolina_features, id)
+    id = load_election_data(connection, rhode_island_features, 0, "RhodeIsland")
+    id = load_election_data(connection, michigan_features, id, "Michigan")
+    #load_election_data(connection, north_carolina_features, id, "NorthCarolina")
 
     connection.commit()
 
@@ -144,13 +146,14 @@ def load_incumbent_data(connection):
     connection.commit()
     return cursor
 
-def load_precinct_population_data(connection, cursor, features):
+def load_precinct_population_data(connection, cursor, features, stateName):
+    print(f"load_precinct_population_data for {stateName}")
     population_insert_query = """INSERT INTO PrecinctPopulations (precinctId, populationMap, populationMap_KEY)
                            VALUES 
                            (%s, %s, %s) """
 
     id = ""
-
+    rows = []
     for feature in features:
         id = feature["properties"]["PRENAME"]
         white_population = feature["properties"]["WVAP"]
@@ -158,16 +161,16 @@ def load_precinct_population_data(connection, cursor, features):
         asian_population = feature["properties"]["ASIANVAP"]
         hispanic_population = feature["properties"]["HVAP"]
         native_american_population = feature["properties"]["AMINVAP"]
-        cursor.execute(population_insert_query, (id, white_population, white))
-        cursor.execute(population_insert_query, (id, black_population, black))
-        cursor.execute(population_insert_query, (id, asian_population, asian))
-        cursor.execute(population_insert_query, (id, hispanic_population, hispanic))
-        cursor.execute(population_insert_query, (id, native_american_population, native_american))
-
+        rows.append((id, white_population, white))
+        rows.append((id, black_population, black))
+        rows.append((id, asian_population, asian))
+        rows.append((id, hispanic_population, hispanic))
+        rows.append((id, native_american_population, native_american))
+    cursor.executemany(population_insert_query, rows)
     connection.commit()
 
-def load_election_data(connection, features, election_data_id):
-
+def load_election_data(connection, features, election_data_id, stateName):
+    print(f"load_election_data for {stateName}")
     election_data_insert_query = """INSERT INTO ElectionData (id, electionType, year, precinctId) 
                            VALUES 
                            (%s, %s, %s, %s) """
@@ -178,44 +181,48 @@ def load_election_data(connection, features, election_data_id):
     cursor = connection.cursor()
 
     precinctId = ""
+    election_data_rows = []
+    votes_rows = []
     for feature in features:
         precinctId = feature["properties"]["PRENAME"]
-        cursor.execute(election_data_insert_query, (election_data_id, presidential, Y2016, precinctId))
+        election_data_rows.append((election_data_id, presidential, Y2016, precinctId))
 
-        cursor.execute(votes_insert_query, (election_data_id, feature["properties"]["PRES16D"], democrat))
-        cursor.execute(votes_insert_query, (election_data_id, feature["properties"]["PRES16R"], republican))
+        votes_rows.append((election_data_id, feature["properties"]["PRES16D"], democrat))
+        votes_rows.append((election_data_id, feature["properties"]["PRES16R"], republican))
 
         election_data_id = election_data_id + 1
-        cursor.execute(election_data_insert_query, (election_data_id, congressional, Y2016, precinctId))
+        election_data_rows.append((election_data_id, congressional, Y2016, precinctId))
         demFound = False
         repFound = False
         indFound = False
         for candidate in feature["properties"]["HOUSE_ELECTION_16"]:
             if candidate.endswith('D') and demFound is False:
-                cursor.execute(votes_insert_query, (election_data_id, feature["properties"]["HOUSE_ELECTION_16"][candidate], democrat))
+                votes_rows.append((election_data_id, feature["properties"]["HOUSE_ELECTION_16"][candidate], democrat))
                 demFound = True
             elif candidate.endswith('R') and repFound is False:
-                cursor.execute(votes_insert_query, (election_data_id, feature["properties"]["HOUSE_ELECTION_16"][candidate], republican))
+                votes_rows.append((election_data_id, feature["properties"]["HOUSE_ELECTION_16"][candidate], republican))
                 repFound = True
             elif candidate.endswith('I') and indFound is False:
-                cursor.execute(votes_insert_query, (election_data_id, feature["properties"]["HOUSE_ELECTION_16"][candidate], independent))
+                votes_rows.append((election_data_id, feature["properties"]["HOUSE_ELECTION_16"][candidate], independent))
                 indFound = True
         election_data_id = election_data_id + 1
-        cursor.execute(election_data_insert_query, (election_data_id, congressional, Y2018, precinctId))
+        election_data_rows.append((election_data_id, congressional, Y2018, precinctId))
         demFound = False
         repFound = False
         indFound = False
         for candidate in feature["properties"]["HOUSE_ELECTION_18"]:
             if candidate.endswith('D') and demFound is False:
-                cursor.execute(votes_insert_query, (election_data_id, feature["properties"]["HOUSE_ELECTION_18"][candidate], democrat))
+                votes_rows.append((election_data_id, feature["properties"]["HOUSE_ELECTION_18"][candidate], democrat))
                 demFound = True
             elif candidate.endswith('R') and repFound is False:
-                cursor.execute(votes_insert_query, (election_data_id, feature["properties"]["HOUSE_ELECTION_18"][candidate], republican))
+                votes_rows.append((election_data_id, feature["properties"]["HOUSE_ELECTION_18"][candidate], republican))
                 repFound = True
             elif candidate.endswith('I') and indFound is False:
-                cursor.execute(votes_insert_query, (election_data_id, feature["properties"]["HOUSE_ELECTION_18"][candidate], independent))
+                votes_rows.append((election_data_id, feature["properties"]["HOUSE_ELECTION_18"][candidate], independent))
                 indFound = True
         election_data_id = election_data_id + 1
+    cursor.executemany(election_data_insert_query, election_data_rows)
+    cursor.executemany(votes_insert_query,  votes_rows)
 
     connection.commit()
     return election_data_id
@@ -301,8 +308,8 @@ def load_data():
     try:
     #     print("loading state data...")
     #     load_state_data(connection)
-        # print("loading precinct data...")
-        # load_precinct_data(connection)
+        print("loading precinct data...")
+        load_precinct_data(connection)
     #     print("loading incumbent data...")
     #     load_incumbent_data(connection)
         print("loading precinct neighbor data...")
