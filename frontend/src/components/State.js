@@ -25,6 +25,7 @@ export default class State extends Component {
         this.demographicMapUpdateSelection = this.demographicMapUpdateSelection.bind(this);
         this.addDistrictsToMap = this.addDistrictsToMap.bind(this);
         this.addPrecinctsToMap = this.addPrecinctsToMap.bind(this);
+        this.phase0ControlsTabLocked = this.phase0ControlsTabLocked.bind(this);
 
         this.state = {
             precinctData: "",
@@ -91,8 +92,12 @@ export default class State extends Component {
             generatedDistrictDataMap: {},
             demographicsMapDisplay: [],
             majorityMinorityDistricts: [],
-            phase0Lock: false
+            phase0Lock: false // Used to determine if phase 0 controls are locked or not
         };
+    }
+
+    phase0ControlsTabLocked(value) {
+        this.setState({phase0Lock : value});
     }
 
     phase0SelectedElection(selectedElection) {
@@ -321,7 +326,6 @@ export default class State extends Component {
         let contrastingColors = this.contrastingColors(Object.keys(this.state.precinctMap).length);
         console.log(contrastingColors);
         this.map.removeLayer(this.state.originalDistrictLayer);
-        this.setState({phase0Lock: true});
         this.setState({precinctData: ""});
 
         /* Set initial colors for each cluster */
@@ -806,7 +810,8 @@ export default class State extends Component {
                                          election={this.state.election}
                                          numOriginalPrecincts={this.state.numOriginalPrecincts}
                                          phase2Update={this.state.phase2Update}
-                                         selectedStateGerrymandering={this.state.selectedStateGerrymandering}/>
+                                         selectedStateGerrymandering={this.state.selectedStateGerrymandering}
+                                        phase0ControlsTabLocked={this.phase0ControlsTabLocked}/>
                         </Col>
                         <Col className="mapContainer" xs={7}>
                             <div id='map'></div>

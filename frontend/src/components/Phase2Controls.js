@@ -3,7 +3,7 @@ import styled from "styled-components";
 import SliderControlSingleValue from "./controls/SliderControlSingleValue";
 import Button from "@material-ui/core/Button";
 import TableDisplay from "./controls/TableDisplay";
-import RunControls from "./controls/RunControls";
+import RestartAlertDialog from "./controls/RestartAlertDialog"
 
 export default class Phase2Controls extends Component {
     constructor() {
@@ -21,6 +21,8 @@ export default class Phase2Controls extends Component {
         this.runPhase2 = this.runPhase2.bind(this);
         this.handlePhase2 = this.handlePhase2.bind(this);
         this.restart = this.restart.bind(this);
+        this.resultsViewOn = this.resultsViewOn.bind(this);
+        this.resultsViewOff = this.resultsViewOff.bind(this);
     }
 
     state = {
@@ -162,7 +164,6 @@ export default class Phase2Controls extends Component {
         this.setState({phase2ButtonText: "Start Phase 2"});
         this.setState({phase2ControlsDisabled: false});
         this.setState({phase2RunButtonDisabled: false});
-        this.setState({restartButtonDisabled: false});
         this.props.togglePhase1ControlsTabDisabled(false);
         this.props.togglePhase2ControlsTabDisabled(false);
         this.props.handleDistrictToggleDisabled(false);
@@ -218,10 +219,20 @@ export default class Phase2Controls extends Component {
     }
 
     restart() {
-        this.props.phase2ControlsTabDisabled(true);
-        this.props.phase0ControlsTabDisabled(true);
+        this.props.togglePhase2ControlsTabDisabled(true);
+        this.props.togglePhase0ControlsTabDisabled(false);
         this.props.handleDistrictToggleDisabled(true);
         this.props.restartPhase0Tab();
+        this.props.loadOriginalDistricts();
+        this.setState({restartButtonDisabled: true});
+    }
+
+    resultsViewOn() {
+        this.setState({resultsInView: true});
+    }
+
+    resultsViewOff() {
+        this.setState({resultsInView: false});
     }
 
 
@@ -231,16 +242,10 @@ export default class Phase2Controls extends Component {
                 <Phase2Styles>
                     <Button variant="contained" color="primary" onClick={this.handlePhase2}
                             style={{width: '25vw', marginBottom: '2vw'}}>{this.state.phase2ButtonText}</Button>
-                    <div className="row">
                         <Button variant="contained" color="primary" disabled={this.state.resultsUnavailable}
-                                style={{height: '6vh', marginRight: '1vw'}} onClick={this.resultsViewOn}>
+                                style={{width: '25vw', marginRight: '1vw'}} onClick={this.resultsViewOn}>
                             View Results
                         </Button>
-                        <Button variant="contained" color="primary" disabled={this.state.restartButtonDisabled}
-                                style={{height: '6vh'}} onClick={this.restart}>
-                            Restart Phase 0
-                        </Button>
-                    </div>
                     <ControlGroup>
                     <label className="label">Convex Hull Compactness Weighting:</label>
                     <SliderControlSingleValue min={0} max={1} step={0.01} marks={OFMarks}
@@ -310,6 +315,7 @@ export default class Phase2Controls extends Component {
                             onClick={this.resultsViewOff} disabled={this.props.phase2ControlsTabDisabled}>Back to Controls</Button>
                     <h4>{this.state.objFuncType} Gerrymandering Calculations</h4>
                     <TableDisplay columns={columns} rows={gerrymanderingRows}/>
+                    <RestartAlertDialog restart={this.restart} districtToggleDisabled={this.props.districtToggleDisabled} disableBackdropClick={true}/>
                 </Phase2Styles>
             );
         }

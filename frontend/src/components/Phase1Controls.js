@@ -36,7 +36,6 @@ export default class Phase1Controls extends Component {
         this.handleGerrymanderDemocratWeight = this.handleGerrymanderDemocratWeight.bind(this);
         this.handleCountyJoinabilityWeight = this.handleCountyJoinabilityWeight.bind(this);
         this.handleMajorityMinorityWeight = this.handleMajorityMinorityWeight.bind(this);
-        this.restart = this.restart.bind(this);
     }
 
     /* For now, hardcoding election type but will set to phase 0 and data election type */
@@ -67,7 +66,6 @@ export default class Phase1Controls extends Component {
         majorityMinorityRows: [['-', '-', '-', '-']],
         phase1ButtonText: "Start Phase 1",
         phase1ControlsDisabled: false,
-        restartButtonDisabled: true
     };
 
     async runPhase1() {
@@ -93,19 +91,18 @@ export default class Phase1Controls extends Component {
         this.props.togglePhase2ControlsTabDisabled(true);
         this.props.togglePhase0ControlsTabDisabled(true);
         this.props.handleDistrictToggleDisabled(true);
-        this.setState({restartButtonDisabled: true});
 
-        let normalizedCompetitiveness = (1/11);
-        let normalizedPopulationHomogeneity = (1/11);
-        let normalizedGerrymanderDemocrat = (1/11);
-        let normalizedGerrymanderRepublican = (1/11);
-        let normalizedPopulationEquality = (1/11);
-        let normalizedEdgeCompactness = (1/11);
-        let normalizedEfficiencyGap = (1/11);
-        let normalizedReockCompactness = (1/11);
-        let normalizedConvexHullCompactness = (1/11);
-        let normalizedPartisanFairness = (1/11);
-        let normalizedCountyJoinability = (1/11);
+        let normalizedCompetitiveness = (1 / 11);
+        let normalizedPopulationHomogeneity = (1 / 11);
+        let normalizedGerrymanderDemocrat = (1 / 11);
+        let normalizedGerrymanderRepublican = (1 / 11);
+        let normalizedPopulationEquality = (1 / 11);
+        let normalizedEdgeCompactness = (1 / 11);
+        let normalizedEfficiencyGap = (1 / 11);
+        let normalizedReockCompactness = (1 / 11);
+        let normalizedConvexHullCompactness = (1 / 11);
+        let normalizedPartisanFairness = (1 / 11);
+        let normalizedCountyJoinability = (1 / 11);
 
         /*Normalize Weights:
             Divide each number by the sum of all numbers [if sum is 0, set each number to 0.1 since each weighting]*/
@@ -284,7 +281,6 @@ export default class Phase1Controls extends Component {
         this.props.togglePhase2ControlsTabDisabled(false);
         this.props.handleDistrictToggleDisabled(false);
         this.setState({phase1RunButtonDisabled: false});
-        this.setState({restartButtonDisabled: false});
     }
 
     handlePhase1() {
@@ -394,15 +390,12 @@ export default class Phase1Controls extends Component {
         this.setState({resultsInView: false});
     }
 
-    /* Restart will unlock phase 0, lock phase 2, lock district toggle, and switch to phase 0 tab */
-    restart() {
-        this.props.togglePhase0ControlsTabDisabled(false);
-        this.props.togglePhase2ControlsTabDisabled(true);
-        this.props.handleDistrictToggleDisabled(true);
-        this.props.restartPhase0Tab();
-    }
-
     render() {
+
+        if(!this.props.phase0ControlsTabDisabled && !this.state.resultsUnavailable) {
+            this.setState({resultsUnavailable: true});
+        }
+
         if (!this.state.resultsInView && !this.props.phase1ControlsTabDisabled) {
             return (
                 <Phase1Styles>
@@ -412,16 +405,10 @@ export default class Phase1Controls extends Component {
                             onClick={this.handlePhase1} style={{width: '25vw', marginBottom: '2vw'}}>
                         {this.state.phase1ButtonText}
                     </Button>
-                    <div className="row">
-                        <Button variant="contained" color="primary" disabled={this.state.resultsUnavailable}
-                                style={{height: '6vh', marginRight: '1vw'}} onClick={this.resultsViewOn}>
-                            View Results
-                        </Button>
-                        <Button variant="contained" color="primary" disabled={this.state.restartButtonDisabled}
-                                style={{height: '6vh'}} onClick={this.restart}>
-                            Restart Phase 0
-                        </Button>
-                    </div>
+                    <Button variant="contained" color="primary" disabled={this.state.resultsUnavailable}
+                            style={{width: '25vw', marginBottom: '1vw'}} onClick={this.resultsViewOn}>
+                        View Results
+                    </Button>
                     <ControlGroup>
                         <label className="runLabel">Run Controls:</label>
                         <RunControls name="Incremental" exportState={this.handleIncrementalClick}
@@ -537,7 +524,8 @@ export default class Phase1Controls extends Component {
             return (
                 <Phase1Styles>
                     <Button variant="contained" color="primary" style={{width: '25vw', marginBottom: '2vw'}}
-                            onClick={this.resultsViewOff} disabled={this.props.phase1ControlsTabDisabled}>Back to Controls</Button>
+                            onClick={this.resultsViewOff} disabled={this.props.phase1ControlsTabDisabled}>Back to
+                        Controls</Button>
                     <h5>Majority-Minority Districts</h5>
                     <TableDisplay columns={columns} rows={this.state.majorityMinorityRows}/>
                 </Phase1Styles>
@@ -588,7 +576,7 @@ const OFMarks = [
 
 const columns = [
     {id: 'districtId', label: 'Name', format: value => value.toLocaleString(),},
-    {id: 'minorityPopulation', label: 'Minority Population',format: value => value.toLocaleString(),},
+    {id: 'minorityPopulation', label: 'Minority Population', format: value => value.toLocaleString(),},
     {id: 'totalPopulation', label: 'Total Population', format: value => value.toLocaleString(),},
     {id: 'percentage', label: '%', format: value => value.toLocaleString(),},
 ];

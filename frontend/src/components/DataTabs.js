@@ -60,7 +60,6 @@ export default function DataTabs(props) {
     const classes = useDataStyles();
     const [value, setValue] = React.useState(0);
     const [districtView, setDistrictView] = React.useState("View Original Districts");
-    const [demographicMapMinorities, setDemographicMapMinorities] = React.useState([]);
     const [demographicDistributionDisabled, setDemographicDistributionDisabled] = React.useState(false);
     let [, setState] = React.useState();
     const incumbent_columns = [
@@ -89,9 +88,12 @@ export default function DataTabs(props) {
         props.demographicMapUpdate();
     }
 
-    /* If phase 0 controls tab is disabled, that means that phase 1 or phase 2 are running and should not toggle between original
-    * and generated district demographics, PRE PHASE 0 TASK */
-    if(props.phase0ControlsTabDisabled && !demographicDistributionDisabled) {
+    /* Demographic Toggling is allowed during phase 0 and during phases 1 and 2 during district toggling when on original districts */
+    if(((!props.districtToggleDisabled && districtView === "View Generated Districts") || !props.phase0ControlsTabDisabled) && demographicDistributionDisabled) {
+        setDemographicDistributionDisabled(false);
+    }
+    /* Disable Demographic Toggling when phase 0 is disabled and district toggling is disabled */
+    if(props.districtToggleDisabled && props.phase0ControlsTabDisabled && !demographicDistributionDisabled) {
         setDemographicDistributionDisabled(true);
     }
 

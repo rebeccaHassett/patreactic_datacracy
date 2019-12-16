@@ -75,6 +75,7 @@ export default function MenuSidenav(props) {
     };
 
     const togglePhase0ControlsTabDisabled = (value) => {
+        props.phase0ControlsTabLocked(value);
         setPhase0ControlsTabDisabled(value);
     };
 
@@ -121,8 +122,7 @@ export default function MenuSidenav(props) {
                                 election={props.election} numOriginalPrecincts={props.numOriginalPrecincts}
                                 handleDistrictToggleDisabled={handleDistrictToggleDisabled} togglePhase0ControlsTabDisabled={togglePhase0ControlsTabDisabled}
                                 togglePhase2ControlsTabDisabled={togglePhase2ControlsTabDisabled}
-                                phase1ControlsTabDisabled={phase1ControlsTabDisabled}
-                                restartPhase0Tab={restartPhase0Tab}/>
+                                phase1ControlsTabDisabled={phase1ControlsTabDisabled} phase0ControlsTabDisabled={phase0ControlsTabDisabled}/>
             </TabPanel>
             <TabPanel value={value} index={2}>
                 <Phase2Controls phase2Update={props.phase2Update}
@@ -133,7 +133,9 @@ export default function MenuSidenav(props) {
                                 togglePhase0ControlsTabDisabled={togglePhase0ControlsTabDisabled}
                                 togglePhase1ControlsTabDisabled={togglePhase1ControlsTabDisabled}
                                 handleDistrictToggleDisabled={handleDistrictToggleDisabled}
-                                restartPhase0Tab={restartPhase0Tab}/>
+                                restartPhase0Tab={restartPhase0Tab}
+                                districtToggleDisabled={districtToggleDisabled}
+                                loadOriginalDistricts={props.loadOriginalDistricts}/>
             </TabPanel>
             <TabPanel value={value} index={3}>
                 <DataDisplay stateData={props.stateData} precinctData={props.precinctData}
