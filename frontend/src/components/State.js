@@ -191,7 +191,11 @@ export default class State extends Component {
             });
 
             /* Update the district Id and color of the moved precinct */
-            let clusterLayers = updatedDistrictMap[move.precinctId]._layers;
+            console.log(updateColor);
+            console.log(move);
+            console.log(move.precinct);
+            console.log(updatedDistrictMap);
+            let clusterLayers = updatedDistrictMap[move.precinct]._layers;
             Object.keys(clusterLayers).forEach(function (key) {
                 clusterLayers[key].feature.properties.districtId = move.toDistrict;
                 clusterLayers[key].feature.properties.COLOR = updateColor;

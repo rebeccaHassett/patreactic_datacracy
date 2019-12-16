@@ -42,7 +42,6 @@ export default class Phase2Controls extends Component {
         populationHomogeneityWeightValue: 1,
         gerrymanderDemocratWeightValue: 1,
         resultsInView: false,
-        phase2RunButtonDisabled: false,
         phase2ControlsDisabled: false,
         phase2ButtonText: "Start Phase 2",
         districtView: "View Original Districts",
@@ -52,11 +51,9 @@ export default class Phase2Controls extends Component {
     };
 
     async runPhase2() {
-        this.setState({phase2RunButtonDisabled: true});
         this.setState({phase2ControlsDisabled: true});
         this.props.togglePhase1ControlsTabDisabled(true);
         this.props.togglePhase0ControlsTabDisabled(true);
-        this.props.togglePhase2ControlsTabDisabled(true);
         this.props.handleDistrictToggleDisabled(true);
         this.setState({phase2ButtonText: "Stop Phase 2"});
 
@@ -152,9 +149,9 @@ export default class Phase2Controls extends Component {
             }
             return response.json();
         }).then(function (data) {
-            if (data.moves.length === 0) {
-                that.endPhase2();
-            } else {
+            console.log("POLL");
+            console.log(data);
+            if (!data.phase2Complete) {
                 that.phase2Update(data);
                 that.pollPhase2NonIncrementalRealtime();
             }
@@ -173,9 +170,7 @@ export default class Phase2Controls extends Component {
 
         this.setState({phase2ButtonText: "Start Phase 2"});
         this.setState({phase2ControlsDisabled: false});
-        this.setState({phase2RunButtonDisabled: false});
         this.props.togglePhase1ControlsTabDisabled(false);
-        this.props.togglePhase2ControlsTabDisabled(false);
         this.props.handleDistrictToggleDisabled(false);
     }
 
