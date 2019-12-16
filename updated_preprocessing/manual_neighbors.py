@@ -196,6 +196,26 @@ manual_neighbors = {
         ],
         "IMLAY CITY 1 Lapeer County": [
             "IMLAY TOWNSHIP 1 Lapeer County"
+        ],
+        "BINGHAM TOWNSHIP 1 Clinton County": [
+            "ST. JOHNS CITY 1 Clinton County",
+            "ST. JOHNS CITY 2 Clinton County",
+            "ST. JOHNS CITY 3 Clinton County"
+        ],
+        "OTISCO TOWNSHIP 1 Ionia County": [
+            "BELDING CITY 1 Ionia County",
+            "BELDING CITY 2 Ionia County",
+            "BELDING CITY 3 Ionia County"
+        ],
+        "BIG RAPIDS TOWNSHIP 1 Mecosta County": [
+            "BIG RAPIDS CITY 1 Mecosta County",
+            "BIG RAPIDS CITY 2 Mecosta County",
+            "BIG RAPIDS CITY 3 Mecosta County",
+            "BIG RAPIDS TOWNSHIP 2 Mecosta County",
+        ],
+        "BUCHANAN TOWNSHIP 1 Berrien County": [
+            "BUCHANAN CITY 1 Berrien County",
+            "BUCHANAN CITY 2 Berrien County"
         ]
     },
     "NC": {} # none
