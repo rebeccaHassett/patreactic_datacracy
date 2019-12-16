@@ -254,6 +254,38 @@ manual_neighbors = {
             "CLEVELAND OAKGR",
             "CLEVELAND WACO",
             "CLEVELAND FALSTN"
+        ],
+        "NEW HANOVER FP01": [
+            "NEW HANOVER FP04",
+            "NEW HANOVER M03",
+            "NEW HANOVER FP08",
+            "BRUNSWICK 07"
+        ],
+        "NEW HANOVER FP03": [
+            "NEW HANOVER FP08",
+            "BRUNSWICK 07",
+            "BRUNSWICK 22"
+        ],
+        "NEW HANOVER FP04": [ # NOT DONE
+            "NEW HANOVER FP08",
+        ],
+        "PERQUIMANS EAST H": [
+            "PERQUIMANS BETHEL",
+            "PERQUIMANS WEST H",
+            "PERQUIMANS PARKVI",
+            "CHOWAN 6"
+        ],
+        "PERQUIMANS WEST H": [
+            "PERQUIMANS BELVID",
+            "PERQUIMANS PARKVI",
+            "CHOWAN 4",
+            "CHOWAN 1"
+        ],
+        "PERQUIMANS NEW HO": [
+            "PASQUOTANK SAL",
+            "PASQUOTANK MH",
+            "PERQUIMANS PARKVI",
+            "PERQUIMANS BETHEL"
         ]
     }
 }
