@@ -335,6 +335,7 @@ export default class State extends Component {
         this.setState({originalDistrictDisplay: false});
 
         /* Original Majority Minority Districts */
+        console.log(data);
         this.setState({originalMajMinDistrictDtos : data.originalMajMinDistrictDtos});
 
         /* Set initial colors for each cluster */
@@ -489,7 +490,6 @@ export default class State extends Component {
             }
             return response.json();
         }).then(function (data) {
-
             /* Choose gerrymandering scores for presidential 2016 */
             if(data.originalObjFuncResults !== null && data.originalObjFuncResults !== undefined) {
                 that.setState({originalObjFuncResults: data.originalObjFuncResults});
@@ -842,7 +842,8 @@ export default class State extends Component {
                                          phase2Update={this.phase2Update}
                                          selectedStateGerrymandering={this.state.selectedStateGerrymandering}
                                         phase0ControlsTabLocked={this.phase0ControlsTabLocked}
-                                        originalDistrictDisplay={this.state.originalDistrictDisplay}/>
+                                        originalDistrictDisplay={this.state.originalDistrictDisplay}
+                                        originalMajMinDistrictDtos={this.state.originalMajMinDistrictDtos}/>
                         </Col>
                         <Col className="mapContainer" xs={7}>
                             <div id='map'></div>

@@ -150,7 +150,8 @@ export default function MenuSidenav(props) {
                                 districtToggleDisabled={districtToggleDisabled}
                                 loadOriginalDistricts={props.loadOriginalDistricts}
                                 majMinColumns={majMinColumns} removeOriginalDistricts={props.removeOriginalDisrtricts}
-                                demographicMapUpdate={props.demographicMapUpdate}/>
+                                demographicMapUpdate={props.demographicMapUpdate}
+                                originalMajMinDistrictDtos={props.originalMajMinDistrictDtos}/>
             </TabPanel>
             <TabPanel value={value} index={3}>
                 <DataDisplay stateData={props.stateData} precinctData={props.precinctData}

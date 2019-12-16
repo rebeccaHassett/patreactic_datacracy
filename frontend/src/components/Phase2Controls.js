@@ -26,6 +26,8 @@ export default class Phase2Controls extends Component {
         this.resultsViewOn = this.resultsViewOn.bind(this);
         this.resultsViewOff = this.resultsViewOff.bind(this);
         this.handleDistrictView = this.handleDistrictView.bind(this);
+        this.createMajMinData = this.createMajMinData.bind(this);
+        this.buildMajMinRows = this.buildMajMinRows.bind(this);
     }
 
     state = {
@@ -44,7 +46,9 @@ export default class Phase2Controls extends Component {
         phase2ControlsDisabled: false,
         phase2ButtonText: "Start Phase 2",
         districtView: "View Original Districts",
-        currentDistrictView: "Original Districts"
+        currentDistrictView: "Original Districts",
+        generatedMajMinDistrictDtos: [],
+        majorityMinorityRows: [['-', '-', '-', '-']]
     };
 
     async runPhase2() {
@@ -122,6 +126,7 @@ export default class Phase2Controls extends Component {
     }
 
     phase2Update(data) {
+        this.setState({generatedMajMinDistrictDtos: data.majMinDistrictDtos});
         let objFuncResults = {
             convexHullCompactness: data.CONVEX_HULL_COMPACTNESS,
             edgeCompactness: data.EDGE_COMPACTNESS,
@@ -183,14 +188,19 @@ export default class Phase2Controls extends Component {
     }
 
     handleDistrictView() {
+        /* Selected Original Districts */
         if (this.state.districtView === "View Original Districts") {
             this.setState({districtView: "View Generated Districts"});
             this.setState({currentDistrictView: "Original Districts"});
             this.props.loadOriginalDistricts();
-        } else {
+            this.setState({majorityMinorityRows: this.buildMajMinRows(this.props.originalMajMinDistrictDtos)});
+        }
+        /* Selected Generated Districts */
+        else {
             this.setState({districtView: "View Original Districts"});
             this.setState({currentDistrictView: "Generated Districts"});
             this.props.removeOriginalDistricts();
+            this.setState({majorityMinorityRows: this.buildMajMinRows(this.state.generatedMajMinDistrictDtos)});
         }
     };
 
@@ -252,103 +262,124 @@ export default class Phase2Controls extends Component {
         this.setState({resultsInView: false});
     }
 
+    createMajMinData(districtId, minorityPopulation, totalPopulation) {
+        let percentage = ((minorityPopulation / totalPopulation) * 100);
+        return {districtId, minorityPopulation, totalPopulation, percentage};
+    }
 
-    render() {
-        if (!this.state.resultsInView && !this.props.phase2ControlsTabDisabled) {
-            return (
-                <Phase2Styles>
-                    <Button variant="contained" color="primary" onClick={this.handlePhase2}
-                            style={{width: '25vw', marginBottom: '2vw'}}>{this.state.phase2ButtonText}</Button>
-                    <Button variant="contained" color="primary" disabled={this.state.resultsUnavailable}
-                            style={{width: '25vw'}} onClick={this.resultsViewOn}>
-                        View Results
-                    </Button>
-                    <ControlGroup>
-                        <label className="label">Convex Hull Compactness Weighting:</label>
-                        <SliderControlSingleValue min={0} max={1} step={0.01} marks={OFMarks}
-                                                  exportState={this.handleConvexHullCompactnessWeight}/>
-                    </ControlGroup>
-                    <ControlGroup>
-                        <label className="label">Reock Compactness Weighting:</label>
-                        <SliderControlSingleValue min={0} max={1} step={0.01} marks={OFMarks}
-                                                  exportState={this.handleReockCompactnessWeight}/>
-                    </ControlGroup>
-                    <ControlGroup>
-                        <label className="label">Edge Compactness Weighting:</label>
-                        <SliderControlSingleValue min={0} max={1} step={0.01} marks={OFMarks}
-                                                  exportState={this.handleEdgeCompactnessWeight}/>
-                    </ControlGroup>
-                    <ControlGroup>
-                        <label className="label">Efficiency Gap Weighting:</label>
-                        <SliderControlSingleValue min={0} max={1} step={0.01} marks={OFMarks}
-                                                  exportState={this.handleEfficiencyGapWeight}/>
-                    </ControlGroup>
-                    <ControlGroup>
-                        <label className="label">Population Homogeneity Weighting:</label>
-                        <SliderControlSingleValue min={0} max={1} step={0.01} marks={OFMarks}
-                                                  exportState={this.handlePopulationHomogeneityWeight}/>
-                    </ControlGroup>
-                    <ControlGroup>
-                        <label className="label">Population Equality Weighting:</label>
-                        <SliderControlSingleValue min={0} max={1} step={0.01} marks={OFMarks}
-                                                  exportState={this.handlePopulationEqualityWeight}/>
-                    </ControlGroup>
-                    <ControlGroup>
-                        <label className="label">Partisan Fairness Weighting:</label>
-                        <SliderControlSingleValue min={0} max={1} step={0.01} marks={OFMarks}
-                                                  exportState={this.handlePartisanFairnessWeight}/>
-                    </ControlGroup>
-                    <ControlGroup>
-                        <label className="label">Competitiveness Weighting:</label>
-                        <SliderControlSingleValue min={0} max={1} step={0.01} marks={OFMarks}
-                                                  exportState={this.handleCompetitivenessWeight}/>
-                    </ControlGroup>
-                    <ControlGroup>
-                        <label className="label">Gerrymander Republican Weighting:</label>
-                        <SliderControlSingleValue min={0} max={1} step={0.01} marks={OFMarks}
-                                                  exportState={this.handleGerrymanderRepublicanWeight}/>
-                    </ControlGroup>
-                    <ControlGroup>
-                        <label className="label">Gerrymander Democrat Weighting:</label>
-                        <SliderControlSingleValue min={0} max={1} step={0.01} marks={OFMarks}
-                                                  exportState={this.handleGerrymanderDemocratWeight}/>
-                    </ControlGroup>
-                </Phase2Styles>
-            );
-        } else {
-            let gerrymanderingRows = [['-', '-']];
-            let that = this;
-            if (this.props.selectedStateGerrymandering !== null && this.props.selectedStateGerrymandering !== undefined) {
-                Object.keys(this.props.selectedStateGerrymandering).forEach(function (key) {
-                    let measure = key;
-                    let value = that.props.selectedStateGerrymandering[key];
-                    gerrymanderingRows.push([measure, value]);
-                });
-            }
+    buildMajMinRows(majMinDistrictDtos) {
+        let tempRows = [];
 
-            return (
-                <Phase2Styles>
-                    <h3>Final Phase 2 Results: {this.state.currentDistrictView}</h3>
-                    <Button variant="contained" color="primary" style={{width: '25vw', marginBottom: '2vw', marginTop: '1vw'}}
-                            onClick={this.resultsViewOff} disabled={this.props.phase2ControlsTabDisabled}>Back to
-                        Controls</Button>
-                    <Button variant="contained" color="primary"
-                            style={{width: '25vw', marginBottom: '2vw',}} onClick={this.handleDistrictView}
-                            disabled={this.props.districtToggleDisabled}>
-                        {this.state.districtView}
-                    </Button>
-                    <h4>{this.state.objFuncType} Gerrymandering Calculations</h4>
-                    <GerrymanderingScoresSummaryDialog/>
-                    <TableDisplay columns={columns} rows={gerrymanderingRows}/>
-                    <h4 style={{marginTop: '1vw'}}>Final Majority-Minority Districts</h4>
-                    <MajorityMinoritySummaryDialog/>
-                    <RestartAlertDialog restart={this.restart}
-                                        districtToggleDisabled={this.props.districtToggleDisabled}
-                                        disableBackdropClick={true}/>
-                </Phase2Styles>
-            );
+        majMinDistrictDtos.forEach((majMinDistrict) => {
+            let districtId = majMinDistrict.districtId;
+            let minorityPopulation = majMinDistrict.minorityPopulation;
+            let totalPopulation = majMinDistrict.totalPopulation;
+            tempRows.push(this.createData(districtId, minorityPopulation, totalPopulation));
+        });
+
+        return tempRows;
+    }
+
+render()
+{
+    if (!this.state.resultsInView && !this.props.phase2ControlsTabDisabled) {
+        return (
+            <Phase2Styles>
+                <Button variant="contained" color="primary" onClick={this.handlePhase2}
+                        style={{width: '25vw', marginBottom: '2vw'}}>{this.state.phase2ButtonText}</Button>
+                <Button variant="contained" color="primary" disabled={this.state.resultsUnavailable}
+                        style={{width: '25vw'}} onClick={this.resultsViewOn}>
+                    View Results
+                </Button>
+                <ControlGroup>
+                    <label className="label">Convex Hull Compactness Weighting:</label>
+                    <SliderControlSingleValue min={0} max={1} step={0.01} marks={OFMarks}
+                                              exportState={this.handleConvexHullCompactnessWeight}/>
+                </ControlGroup>
+                <ControlGroup>
+                    <label className="label">Reock Compactness Weighting:</label>
+                    <SliderControlSingleValue min={0} max={1} step={0.01} marks={OFMarks}
+                                              exportState={this.handleReockCompactnessWeight}/>
+                </ControlGroup>
+                <ControlGroup>
+                    <label className="label">Edge Compactness Weighting:</label>
+                    <SliderControlSingleValue min={0} max={1} step={0.01} marks={OFMarks}
+                                              exportState={this.handleEdgeCompactnessWeight}/>
+                </ControlGroup>
+                <ControlGroup>
+                    <label className="label">Efficiency Gap Weighting:</label>
+                    <SliderControlSingleValue min={0} max={1} step={0.01} marks={OFMarks}
+                                              exportState={this.handleEfficiencyGapWeight}/>
+                </ControlGroup>
+                <ControlGroup>
+                    <label className="label">Population Homogeneity Weighting:</label>
+                    <SliderControlSingleValue min={0} max={1} step={0.01} marks={OFMarks}
+                                              exportState={this.handlePopulationHomogeneityWeight}/>
+                </ControlGroup>
+                <ControlGroup>
+                    <label className="label">Population Equality Weighting:</label>
+                    <SliderControlSingleValue min={0} max={1} step={0.01} marks={OFMarks}
+                                              exportState={this.handlePopulationEqualityWeight}/>
+                </ControlGroup>
+                <ControlGroup>
+                    <label className="label">Partisan Fairness Weighting:</label>
+                    <SliderControlSingleValue min={0} max={1} step={0.01} marks={OFMarks}
+                                              exportState={this.handlePartisanFairnessWeight}/>
+                </ControlGroup>
+                <ControlGroup>
+                    <label className="label">Competitiveness Weighting:</label>
+                    <SliderControlSingleValue min={0} max={1} step={0.01} marks={OFMarks}
+                                              exportState={this.handleCompetitivenessWeight}/>
+                </ControlGroup>
+                <ControlGroup>
+                    <label className="label">Gerrymander Republican Weighting:</label>
+                    <SliderControlSingleValue min={0} max={1} step={0.01} marks={OFMarks}
+                                              exportState={this.handleGerrymanderRepublicanWeight}/>
+                </ControlGroup>
+                <ControlGroup>
+                    <label className="label">Gerrymander Democrat Weighting:</label>
+                    <SliderControlSingleValue min={0} max={1} step={0.01} marks={OFMarks}
+                                              exportState={this.handleGerrymanderDemocratWeight}/>
+                </ControlGroup>
+            </Phase2Styles>
+        );
+    } else {
+        let gerrymanderingRows = [['-', '-']];
+        let that = this;
+        if (this.props.selectedStateGerrymandering !== null && this.props.selectedStateGerrymandering !== undefined) {
+            Object.keys(this.props.selectedStateGerrymandering).forEach(function (key) {
+                let measure = key;
+                let value = that.props.selectedStateGerrymandering[key];
+                gerrymanderingRows.push([measure, value]);
+            });
         }
-    };
+
+        return (
+            <Phase2Styles>
+                <h3>Final Phase 2 Results: {this.state.currentDistrictView}</h3>
+                <Button variant="contained" color="primary"
+                        style={{width: '25vw', marginBottom: '2vw', marginTop: '1vw'}}
+                        onClick={this.resultsViewOff} disabled={this.props.phase2ControlsTabDisabled}>Back to
+                    Controls</Button>
+                <Button variant="contained" color="primary"
+                        style={{width: '25vw', marginBottom: '2vw',}} onClick={this.handleDistrictView}
+                        disabled={this.props.districtToggleDisabled}>
+                    {this.state.districtView}
+                </Button>
+                <h4>{this.state.objFuncType} Gerrymandering Calculations</h4>
+                <GerrymanderingScoresSummaryDialog/>
+                <TableDisplay columns={columns} rows={gerrymanderingRows}/>
+                <h4 style={{marginTop: '1vw'}}>{this.state.currentDistrictView.split(" ")[0]} Majority-Minority Districts</h4>
+                <MajorityMinoritySummaryDialog/>
+                <TableDisplay columns={this.props.majMinColumns} rows={this.state.majorityMinorityRows}/>
+                <RestartAlertDialog restart={this.restart}
+                                    districtToggleDisabled={this.props.districtToggleDisabled}
+                                    disableBackdropClick={true}/>
+            </Phase2Styles>
+        );
+    }
+}
+;
 }
 
 const Phase2Styles = styled.div`
