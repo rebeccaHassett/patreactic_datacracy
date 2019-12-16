@@ -367,6 +367,20 @@ manual_neighbors = {
         ],
         "LEE C": [
             "MOORE CAM"
+        ],
+        "HARNETT PR27": [
+            "HARNETT PR24",
+            "HARNETT PR17",
+        ],
+        "LINCOLN HC33": [
+            "LINCOLN LB34",
+            "LINCOLN NB35",
+            "LINCOLN ST36"
+        ],
+        "LINCOLN TA37": [
+            "LINCOLN CF19",
+            "LINCOLN LW31",
+            "LINCOLN DW28"
         ]
     }
 }
